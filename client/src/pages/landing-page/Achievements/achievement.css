@@ -1,0 +1,119 @@
+/* src/components/Achievements/Achievements.css */
+.achievements {
+    padding: 80px 20px;
+    max-width: 1440px;
+    margin: 0px 90px 0px 90px;
+  }
+  
+  .achievements-title {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 60px;
+  }
+  
+  .title-primary {
+    color: #003B73;
+    font-weight: bolder;
+  }
+  
+  .title-secondary {
+    color: #FF7F50;
+    font-weight: bolder;
+  }
+  
+  .achievements-container {
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+    gap: 50px;
+  }
+  
+  .achievements-left {
+    flex: 1;
+    position: relative;
+  }
+  
+  .achievement-image {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+  }
+  
+  .achievements-right {
+    flex: 1;
+  }
+  
+  .stats-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .stat-card {
+
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.492);
+    text-align: center;
+  }
+  
+  .stat-card.wide {
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .stat-number {
+    font-size: 48px;
+    font-weight: bold;
+    color: #FF7F50;
+    margin-bottom: 10px;
+  }
+  
+  .stat-description {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #333;
+    font-size: 16px;
+  }
+  
+  .stat-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 968px) {
+    .achievements-container {
+      flex-direction: column;
+    }
+  
+    .achievements-left,
+    .achievements-right {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .stats-container {
+      grid-template-columns: 1fr;
+    }
+  
+    .stat-card.wide {
+      grid-column: span 1;
+      flex-direction: column;
+    }
+  
+    .achievements-title {
+      font-size: 28px;
+    }
+  
+    .stat-number {
+      font-size: 36px;
+    }
+  }

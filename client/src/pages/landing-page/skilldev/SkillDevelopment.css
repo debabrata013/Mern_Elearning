@@ -1,0 +1,176 @@
+/* SkillDevelopment.css */
+
+.skill-development {
+    /* max-width: 1200px; */
+    
+    margin-top:2rem;
+  }
+  .who-can-join{
+    padding-top: 50px;
+    max-width: 100%;
+  }
+  .section-subtitle {
+    font-style: inherit;
+    color: #FF7A41;
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  } 
+  
+  .section-title {
+    color: #0c3866;
+    font-size: 3rem;
+    font-weight: bolder;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  
+  .join-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+  }
+  
+  .join-categories {
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 500px;
+  }
+  .illustration{
+    height: 30rem;
+  }
+  .category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .category-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #003B7B;
+    margin-bottom: 16px;
+  }
+  
+  .category-icon {
+    
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1px;
+  }
+  
+  .category-title {
+    font-size: 16px;
+    color: #333;
+    white-space: pre-line;
+    line-height: 1.4;
+  }
+  
+  .illustration {
+    flex: 1;
+    max-width: 500px;
+  }
+  
+  .illustration img {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* How It Works Section */
+  .how-it-works {
+    height:20rem;
+    margin-top: 40px;
+    background-color: #003B7B;
+    border-radius: 20px;
+    padding: 40px;
+    position: relative;
+    overflow: visible;
+  }
+  
+  .workflow-title {
+    color: white;
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 40px;
+    background-color: #FF7A41;
+    padding: 10px 30px;
+    border-radius: 10px ;
+    display: flex;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .workflow-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 0;
+  }
+
+  /* Decorative elements */
+  .how-it-works::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    background: repeating-linear-gradient(
+      45deg,
+      #FF7A41,
+      #FF7A41 2px,
+      transparent 2px,
+      transparent 8px
+    );
+    opacity: 0.2;
+  }
+  
+  .how-it-works::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    background: #FF7A41;
+    border-radius: 50%;
+    opacity: 0.1;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .join-content {
+      flex-direction: column;
+    }
+  
+    .illustration {
+      order: -1;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .workflow-container {
+      flex-direction: column;
+    }
+  
+    .workflow-steps {
+      flex-direction: column;
+    }
+  
+    .arrow {
+      transform: rotate(90deg);
+    }
+  
+    .join-categories {
+      grid-template-columns: 1fr;
+    }
+  
+  }
