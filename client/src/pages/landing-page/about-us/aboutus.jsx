@@ -1,10 +1,8 @@
 // src/components/AboutUs.js
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import CollaborationsAndFooter from './footer/footer';
-import Nav from "./nav";
-import Fuoter from "./footer/footer"
-import "./he.css"
+import CollaborationsAndFooter from "../footer/footer";
+import Nav from "../nav-bar/nav";
 const AboutUs = () => {
   return (
     <>
@@ -147,7 +145,7 @@ const AboutUs = () => {
       </div>
     </div>
     </div>
-    <Fuoter/>
+    <CollaborationsAndFooter/>
     </>
   );
 };

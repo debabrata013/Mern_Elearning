@@ -58,6 +58,12 @@ const Nav = () => {
               Home
             </a>
             <a 
+              href="/coursess" 
+              className={`nav-link ${isActiveLink('/coursess') ? 'active-link' : ''}`}
+            >
+              Courses
+            </a>
+            <a 
               href="/pricing" 
               className={`nav-link ${isActiveLink('/pricing') ? 'active-link' : ''}`}
             >
@@ -84,7 +90,7 @@ const Nav = () => {
           </div>
 
           <div className="auth-buttons">
-            <a  href="/log" className="get-started-button">Get Started</a>
+            <button className="get-started-button">Get Started</button>
           </div>
 
           <div className="menu-icon" onClick={toggleMenu}>

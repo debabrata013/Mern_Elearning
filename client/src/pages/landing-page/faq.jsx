@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import Nav from './nav';
+import Nav from './nav-bar/nav';
 import Fuoter from "./footer/footer"
 import "./he.css"
 const FAQ = () => {

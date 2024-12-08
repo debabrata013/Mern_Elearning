@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CollaborationsAndFooter from './footer/footer';
 import "./App.css";
 import "./he.css"
-import Nav from "./nav";
+import Nav from "./nav-bar/nav";
 import Fuoter from "./footer/footer"
 const ContactForm = () => {
     const navigate = useNavigate();

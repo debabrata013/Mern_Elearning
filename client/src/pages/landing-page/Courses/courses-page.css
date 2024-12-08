@@ -1,0 +1,81 @@
+/* General Styling */
+
+.course-page {
+  margin-top:6rem;
+  margin-left: 2rem;
+  margin-right:2rem;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+/* Filter Bar */
+.filter-bar {
+  font-weight: bold;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #ffffff00;
+}
+
+.search-bar {
+  width: 200px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 90px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  color: #333;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.filter-btn.active {
+  color: #ff7f50;
+}
+
+.sort-dropdown {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Course Grid */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-btn {
+  margin: 0 5px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: #e5e7eb;
+  cursor: pointer;
+}
+
+.page-btn.active {
+  background-color: #2563eb;
+  color: #ffffff;
+}
