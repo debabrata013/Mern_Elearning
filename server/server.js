@@ -75,10 +75,10 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
-  credentials: true,
-}));
+// app.use(cors({
+//   origin: process.env.CLIENT_URL || 'http://localhost:5173',
+//   credentials: true,
+// }));
 
 app.use(express.json());
 
@@ -90,6 +90,14 @@ mongoose
     console.error("MongoDB connection error", err);
     process.exit(1); // Exit process if MongoDB connection fails
   });
+
+
+// Use CORS with specific options
+app.use(cors({
+  origin: 'http://localhost:5173',  // Replace with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow these methods
+  credentials: true,  // Enable cookies or authorization headers
+}));
 
 // Routes configuration
 app.use("/auth", authRoutes);

@@ -14,7 +14,7 @@ import StudentViewCourseDetailsPage from "./pages/student/course-details";
 import PaypalPaymentReturnPage from "./pages/student/payment-return";
 import StudentCoursesPage from "./pages/student/student-courses";
 import StudentViewCourseProgressPage from "./pages/student/course-progress";
-import Dashboard from "./pages/admin";
+import Dashboard from "./pages/admin2/dashboard";
 import FAQ from "./pages/landing-page/faq";
 import PricingPage from "./pages/landing-page/Pricing/pricing";
 import ContactForm from "./pages/landing-page/contactus";
@@ -25,6 +25,7 @@ import  LoginPage from "./pages/log/login";
 import  ForgetPage from "./pages/log/forget";
 import PopularCourses from "./pages/landing-page/popular_courses/courses";
 import Coursess from "./pages/landing-page/Courses/courses-page"
+
 function App() {
   const { auth } = useContext(AuthContext);
 
@@ -41,9 +42,12 @@ function App() {
       <Route path="/contactus" element={<ContactForm />} />
       <Route path="/coursed" element={<Co/>} />
       <Route path="/teacher" element={<Teacher/>} />
+      <Route path="/student" element={<StudentHomePage/>} />
+     
+
       
       <Route path="/coursess" element={<Coursess/>} />
-      <Route path="/ad" element={<Dashboard />} />
+      <Route path="/admin" element={<Dashboard />} />
       
       {/* Auth page route */}
       <Route

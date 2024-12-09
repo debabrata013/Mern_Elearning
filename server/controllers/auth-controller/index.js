@@ -4,24 +4,24 @@ const jwt = require("jsonwebtoken");
 
 // Function to register a new user
 const registerUser = async (req, res) => {
-  console.log("Reg");
   
-  const { userName, userEmail, password, role } = req.body;
+  
+  const { userName, userEmail, password} = req.body;
 
   try {
     // Check if the user already exists
     const existingUser = await User.findOne({
-      $or: [{ userEmail }, { userName }],
+      $or: [{ userEmail }],
     });
-    console.log("Reg"+userName);
+  
     if (existingUser) {
       return res.status(400).json({
         success: false,
         message: "User name or user email already exists",
       });
     }
-
-    console.log("Reg"+userEmail);
+    const role="student";
+   
     // Hash the password
     const hashPassword = await bcrypt.hash(password, 10);
 
@@ -33,8 +33,10 @@ const registerUser = async (req, res) => {
       password: hashPassword,
     });
 
+    console.log(newUser);
+    
     await newUser.save();
-
+    console.log("created");
     return res.status(201).json({
       success: true,
       message: "User registered successfully!",

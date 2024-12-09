@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import './nav.css';
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -89,8 +91,12 @@ const Nav = () => {
             </a>
           </div>
 
-          <div className="auth-buttons">
-            <button className="get-started-button">Get Started</button>
+          <div className="auth-buttons" >
+          <Link to="/log">
+      <button className="get-started-button">
+        Get Started
+      </button>
+    </Link>
           </div>
 
           <div className="menu-icon" onClick={toggleMenu}>
