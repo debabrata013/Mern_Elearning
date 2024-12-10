@@ -1,0 +1,185 @@
+/* PricingCard.css */
+
+/* General Container Styles */
+.pricing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Individual Pricing Card Styles */
+.pricing-card {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.pricing-card:hover {
+  transform: scale(1.05);
+}
+
+.pricing-card-inner {
+  position: relative;
+}
+
+.pricing-card-front, .pricing-card-back {
+  padding: 20px;
+}
+
+.pricing-card-front {
+  background-color: white;
+  border-radius: 15px;
+}
+
+.pricing-card-back {
+  background-color: #f4f4f4;
+  border-radius: 15px;
+  transform: rotateY(180deg);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transition: transform 0.5s ease-in-out;
+}
+
+.pricing-card:hover .pricing-card-back {
+  transform: rotateY(0);
+}
+
+/* Plan Title and Price */
+.plan-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.plan-description {
+  font-size: 1rem;
+  color: #666;
+}
+
+.plan-price {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.plan-price strong {
+  color: #4A90E2;
+}
+
+/* Get Started Button */
+.get-started {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #4A90E2;
+  color: white;
+  font-size: 1rem;
+  border-radius: 25px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.get-started:hover {
+  background-color: transparent;
+  border: 2px solid #4A90E2;
+  color: #4A90E2;
+}
+
+/* Features and Lacks List */
+.features-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.features-list {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #4A90E2;
+}
+
+.lack-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #FF5C5C;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+/* Neon Light Border Effect */
+.pricing-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.pricing-card::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(45deg, #ff0044, #00d4ff, #ff0044, #00d4ff);
+  background-size: 400% 400%;
+  border-radius: 15px; /* Only outer border radius */
+  z-index: -1;
+  animation: neon 4s ease-in-out infinite, borderMove 6s linear infinite;
+}
+
+/* Neon Light Animation */
+@keyframes neon {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Move the neon light border */
+@keyframes borderMove {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Apply glow effect to the card */
+.pricing-card:hover::before {
+  box-shadow: 0 0 20px 10px rgba(255, 0, 68, 0.8), 0 0 30px 15px rgba(0, 212, 255, 0.8);
+}
