@@ -50,15 +50,14 @@ const App = () => {
   return (
     <div className="app-container">
       <img className="top-image"src={images} alt="bete" />
-      {/* Ripple effect */}
-      <RippleBackground />
-      
+  
       <Nav />
       
       {/* Main Content */}
       <div className="main-content">
         <section className="landing section">
           <LandingSection />
+          
         </section>
         <section>
           <Collaborators />

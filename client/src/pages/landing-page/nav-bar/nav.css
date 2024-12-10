@@ -4,8 +4,53 @@
   position: fixed;
   z-index: 1000;
   transition: all 0.3s ease;
+  animation: myAnim 1.7s ease 0s 1 normal none;
 }
+@keyframes myAnim {
+	0% {
+		animation-timing-function: ease-in;
+		opacity: 1;
+		transform: translateY(-45px);
+	}
 
+	24% {
+		opacity: 1;
+	}
+
+	40% {
+		animation-timing-function: ease-in;
+		transform: translateY(-24px);
+	}
+
+	65% {
+		animation-timing-function: ease-in;
+		transform: translateY(-12px);
+	}
+
+	82% {
+		animation-timing-function: ease-in;
+		transform: translateY(-6px);
+	}
+
+	93% {
+		animation-timing-function: ease-in;
+		transform: translateY(-4px);
+	}
+
+	25%,
+	55%,
+	75%,
+	87% {
+		animation-timing-function: ease-out;
+		transform: translateY(0px);
+	}
+
+	100% {
+		animation-timing-function: ease-out;
+		opacity: 1;
+		transform: translateY(0px);
+	}
+}
 .navbar-wrapper {
   max-width: 1440px;
   margin: 0 auto;
@@ -49,7 +94,7 @@
 .logo-icon {
   width: 3rem;
   height: 3rem;
-  background-color: #2563EB;
+  background-color: #01285b;
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
@@ -75,13 +120,13 @@
 .logo-ezy {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #2563EB;
+  color: #01285b;
 }
 
 .logo-skills {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #ED8936;
+  color: #ff7700;
 }
 
 /* Navigation Links */
@@ -94,25 +139,27 @@
 .nav-link {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 1.1rem;
-  color: #4B5563;
+  color: #707d90;
   text-decoration: none;
   transition: color 0.3s ease;
   padding: 0.5rem 0.75rem;
 }
 
 .nav-link:hover {
-  color: #ED8936;
+  color: #ff7700;
 }
 
 .active-link {
-  color: #2563EB;
+  border-radius: 100px;
+  color: #01285b;
+  font-weight: bolder;
 }
 
 /* Get Started Button */
 .get-started-button {
   padding: 0.8rem 1.8rem;
   color: #ffffff;
-  background-color: #ED8936;
+  background-color: #ff7700;
   border-radius: 100px;
   border: none;
   cursor: pointer;
@@ -123,7 +170,7 @@
 }
 
 .get-started-button:hover {
-  background-color: #DD7722;
+  background-color: #FF5F15;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(237, 137, 54, 0.25);
 }

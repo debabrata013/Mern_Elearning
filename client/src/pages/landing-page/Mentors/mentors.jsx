@@ -1,122 +1,85 @@
-// src/components/Mentors/Mentors.js
-import React, { useEffect, useRef } from 'react';
-import './mentors.css';
+import React, { useState } from "react";
+import "./mentors.css";
 
-function Mentors() {
-  const cardRef = useRef(null);
+const mentors = [
+  {
+    name: "Ruchika Tuteja",
+    occupation: "UI/UX Trainer",
+    rating: 4.3,
+    reviews: 65,
+    modules: 44,
+    students: 212,
+    description:
+      "I have 9 years of experience in Fullstack development. I can provide real-time simulations of various development languages and frameworks by means of multiple projects. Can provide guidance...",
+  },
+  {
+    name: "Sandeep",
+    occupation: ".Net & Azure Trainer",
+    rating: 4.5,
+    reviews: 72,
+    modules: 39,
+    students: 375,
+    description:
+      "Sandeep is a Software Developer with expertise in .Net & Azure for more than 24 years. He has trained 100s of students to accomplish their goals and dreams.",
+  },
+  {
+    name: "Sudhansu",
+    occupation: "Cloud & Cybersecurity Expert",
+    rating: 4.2,
+    reviews: 38,
+    modules: 27,
+    students: 169,
+    description:
+      "Sudhansu is a Software Developer specializing in Cloud Security, Data Centers, and Forensics for over 22 years. He has helped hundreds of students achieve their aspirations.",
+  },
+];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-          }
-        });
-      },
-      {
-        threshold: 0.1
-      }
-    );
-
-    const cards = document.querySelectorAll('.mentor-card');
-    cards.forEach(card => observer.observe(card));
-
-    return () => observer.disconnect();
-  }, []);
+const App = () => {
+  const [isPaused, setIsPaused] = useState(false);
 
   return (
-    <section className="mentors">
+    <div className="mentors-container">
       <div className="mentors-title">
         <h2>
           <span className="title-primary">Meet Our Professional</span><br />
           <span className="title-secondary">Mentors & Trainers</span>
         </h2>
       </div>
-
-      <div className="mentors-container">
-        <div className="mentor-card" ref={cardRef}>
-          <div className="best-trainer">
-            <span className="trophy-icon">🏆</span>
-            BEST TRAINER
-          </div>
-          
-          <div className="mentor-profile">
-            <div className="mentor-avatar">
-              {/* Avatar image will be imported */}
-            </div>
-            
-            <div className="mentor-info">
-              <h3>Sandeep</h3>
-              <p className="mentor-specialty">.Net & Azure</p>
-              
-              <div className="rating">
-                <div className="stars">
-                  {'★'.repeat(4)}{'☆'.repeat(1)}
-                </div>
-                <span className="reviews">72 Reviews</span>
-              </div>
-              
-              <div className="stats">
-                <div className="stat">
-                  <span className="icon">📚</span>
-                  <span>39 Modules</span>
-                </div>
-                <div className="stat">
-                  <span className="icon">👥</span>
-                  <span>375 Students</span>
+      <div
+        className={`carousel ${isPaused ? "paused" : ""}`}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        <div className="carousel-track">
+          {/* Duplicating the mentor cards for infinite loop effect */}
+          {mentors.concat(mentors).map((mentor, index) => (
+            <div key={index} className="card">
+              <div className="card-top">
+                <div className="mentor-image"></div>
+                <div>
+                  <h2 className="mentor-name">{mentor.name}</h2>
+                  <p className="mentor-occupation">{mentor.occupation}</p>
                 </div>
               </div>
-              
-              <p className="mentor-description">
-                Sandeep is a Software Developer who expertised in .NET & Azure 
-                for more than 24 years and training 100's of students to 
-                accomplish their goals & dreams.
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="mentor-card">
-          <div className="mentor-profile">
-            <div className="mentor-avatar">
-              {/* Avatar image will be imported */}
-            </div>
-            
-            <div className="mentor-info">
-              <h3>Sudhansu</h3>
-              <p className="mentor-specialty">Cloud & Cyber Security, Forensic</p>
-              
-              <div className="rating">
-                <div className="stars">
-                  {'★'.repeat(4)}{'☆'.repeat(1)}
-                </div>
-                <span className="reviews">38 Reviews</span>
+              <div className="mentor-rating">
+                {"⭐".repeat(Math.floor(mentor.rating))}
+                {"☆".repeat(5 - Math.floor(mentor.rating))} ({mentor.reviews} Reviews)
               </div>
-              
-              <div className="stats">
-                <div className="stat">
-                  <span className="icon">📚</span>
-                  <span>27 Modules</span>
-                </div>
-                <div className="stat">
-                  <span className="icon">👥</span>
-                  <span>169 Students</span>
-                </div>
+              <div className="mentor-stats">
+                <p>
+                  <span className="icon">📄</span> {mentor.modules} Modules
+                </p>
+                <p>
+                  <span className="icon">👨‍🎓</span> {mentor.students} Students
+                </p>
               </div>
-              
-              <p className="mentor-description">
-                Sudhansu is a Software Developer who expertised in Cloud security,
-                Cyber Security, Data Center & Forensic for more than 22 years and
-                training 100's of students to accomplish their goals & dreams.
-              </p>
+              <p className="mentor-description">{mentor.description}</p>
             </div>
-          </div>
-          
+          ))}
         </div>
       </div>
-    </section>
+    </div>
   );
-}
+};
 
-export default Mentors;
+export default App;

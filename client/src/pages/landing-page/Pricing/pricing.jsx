@@ -29,7 +29,7 @@ const PricingCard = () => {
       <nav className="navbar mt-5">
         <Nav />
       </nav>
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-8">
+      <div className=" background flex items-center justify-center min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
           {plans.map((plan, index) => (
             <div

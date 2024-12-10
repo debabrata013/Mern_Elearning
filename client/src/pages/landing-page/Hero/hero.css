@@ -17,7 +17,7 @@
 .main-heading {
   font-size: 3.3rem;
   font-weight: bold;
-  color: #1E3A8A;
+  color:#01285b;
   line-height: 1.2;
   margin-bottom: 1rem;
 }
@@ -58,7 +58,7 @@
   height: 2.4rem;
   width: 2.4rem;
   transform: translateY(-50%);
-  background-color: #1E3A8A;
+  background-color:#01285b;
   color: #ffffff;
   border-radius: 50%;
   border: none;
@@ -91,7 +91,7 @@
 }
 
 .primary-tag {
-  background-color: #ED8936;
+  background-color: #ff7700;
   color: #ffffff;
 }
 
