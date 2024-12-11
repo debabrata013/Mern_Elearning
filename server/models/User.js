@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 const StudentCourses = require("./StudentCourses");  // Import the StudentCourses schema
 
 const UserSchema = new mongoose.Schema({
+  courseChats: [{
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "CourseChat"
+  }],
+
   // User common fields
   userName: {
     type: String,
@@ -82,6 +87,7 @@ const UserSchema = new mongoose.Schema({
       return this.role === 'student';  // Only required if the user is a student
     },
   }],
+  
 }, {
   timestamps: true,  // Automatically adds createdAt and updatedAt fields
 });
