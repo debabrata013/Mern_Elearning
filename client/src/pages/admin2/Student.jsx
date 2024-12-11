@@ -5,42 +5,77 @@ const ManageStudentsContent = () => {
   const [showStudentForm, setShowStudentForm] = useState(false);
   const [students, setStudents] = useState([]);
   const [formData, setFormData] = useState({
-    profileImage: '',
+    profileImage: null, // Change to store file instead of URL
     name: '',
     email: '',
     mobile: '',
     age: '',
-    coursesEnrolled: '',
+    coursesEnrolled: [''], // Initializing with an empty string array to represent courses
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
+
+  const handleCourseChange = (e, index) => {
+    const newCourses = [...formData.coursesEnrolled];
+    newCourses[index] = e.target.value;
+    setFormData({ ...formData, coursesEnrolled: newCourses });
+  };
+
+  const handleAddCourse = () => {
+    setFormData({
+      ...formData,
+      coursesEnrolled: [...formData.coursesEnrolled, ''],
+    });
+  };
+
+  const handleRemoveCourse = (index) => {
+    const newCourses = formData.coursesEnrolled.filter((_, i) => i !== index);
+    setFormData({ ...formData, coursesEnrolled: newCourses });
+  };
+
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prevData) => ({
+        ...prevData,
+        profileImage: file,
+      }));
+    }
+  };
+
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleContent = () => {
     setIsVisible((prevIsVisible) => !prevIsVisible);
   };
+
   const handleAddStudent = (e) => {
     e.preventDefault();
-    setStudents((prevStudents) => [...prevStudents, { ...formData, id: Date.now() }]);
+    setStudents((prevStudents) => [
+      ...prevStudents,
+      { ...formData, id: Date.now() },
+    ]);
     setFormData({
-      profileImage: '',
+      profileImage: null,
       name: '',
       email: '',
       mobile: '',
       age: '',
-      coursesEnrolled: '',
+      coursesEnrolled: [''], // Reset courses to an empty array after adding the student
     });
     setShowStudentForm(false);
   };
 
   const handleRemoveStudent = (id) => {
-    setStudents((prevStudents) => prevStudents.filter((student) => student.id !== id));
+    setStudents((prevStudents) =>
+      prevStudents.filter((student) => student.id !== id)
+    );
   };
 
   const handleModifyStudentDetails = (id, newDetails) => {
@@ -54,7 +89,7 @@ const ManageStudentsContent = () => {
   const renderStudentCard = (student) => (
     <div key={student.id} className="bg-white p-6 rounded-lg shadow-md">
       <img
-        src={student.profileImage || '/api/placeholder/300/200'}
+        src={student.profileImage ? URL.createObjectURL(student.profileImage) : '/api/placeholder/300/200'}
         alt={student.name}
         className="w-full h-48 object-cover rounded-md mb-4"
       />
@@ -63,7 +98,7 @@ const ManageStudentsContent = () => {
         <p className="text-sm text-gray-600 mb-2">{student.email}</p>
         <p className="text-sm text-gray-600 mb-2">{student.mobile}</p>
         <p className="text-sm text-gray-600 mb-2">Age: {student.age}</p>
-        <p className="text-sm text-gray-600 mb-2">Courses Enrolled: {student.coursesEnrolled}</p>
+        <p className="text-sm text-gray-600 mb-2">Courses Enrolled: {student.coursesEnrolled.join(', ')}</p>
         <button
           onClick={() => {
             const newDetails = prompt("Enter new student details (name, email, mobile, etc.)", `${student.name}, ${student.email}`);
@@ -92,11 +127,11 @@ const ManageStudentsContent = () => {
       {/* Add Student Button */}
       <div className="flex justify-end mb-6">
         <button
-         onClick={toggleContent}
+          onClick={toggleContent}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
-          {isVisible ? 'Cancle' : 'Add'}
+          {isVisible ? 'Cancel' : 'Add'}
         </button>
       </div>
 
@@ -107,18 +142,21 @@ const ManageStudentsContent = () => {
           <form onSubmit={handleAddStudent}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="profileImage">Profile Image URL</label>
+                <label className="block text-sm font-medium mb-1" htmlFor="profileImage">
+                  Profile Image
+                </label>
                 <input
-                  type="url"
+                  type="file"
                   id="profileImage"
                   name="profileImage"
-                  value={formData.profileImage}
-                  onChange={handleInputChange}
+                  onChange={handleProfileImageChange}
                   className="w-full p-2 border rounded-lg"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="name">Student Name</label>
+                <label className="block text-sm font-medium mb-1" htmlFor="name">
+                  Student Name
+                </label>
                 <input
                   type="text"
                   id="name"
@@ -130,7 +168,9 @@ const ManageStudentsContent = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="email">Email</label>
+                <label className="block text-sm font-medium mb-1" htmlFor="email">
+                  Email
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -142,7 +182,9 @@ const ManageStudentsContent = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="mobile">Mobile No</label>
+                <label className="block text-sm font-medium mb-1" htmlFor="mobile">
+                  Mobile No
+                </label>
                 <input
                   type="tel"
                   id="mobile"
@@ -154,7 +196,9 @@ const ManageStudentsContent = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="age">Age</label>
+                <label className="block text-sm font-medium mb-1" htmlFor="age">
+                  Age
+                </label>
                 <input
                   type="number"
                   id="age"
@@ -165,17 +209,35 @@ const ManageStudentsContent = () => {
                   required
                 />
               </div>
+
+              {/* Dynamic Courses Enrolled */}
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="coursesEnrolled">Courses Enrolled</label>
-                <input
-                  type="text"
-                  id="coursesEnrolled"
-                  name="coursesEnrolled"
-                  value={formData.coursesEnrolled}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded-lg"
-                  required
-                />
+                <label className="block text-sm font-medium mb-1">Courses Enrolled</label>
+                {formData.coursesEnrolled.map((course, index) => (
+                  <div key={index} className="flex items-center mb-2">
+                    <input
+                      type="text"
+                      value={course}
+                      onChange={(e) => handleCourseChange(e, index)}
+                      className="w-full p-2 border rounded-lg"
+                      placeholder={`Course ${index + 1}`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCourse(index)}
+                      className="ml-2 text-red-600"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={handleAddCourse}
+                  className="text-blue-600"
+                >
+                  + Add Another Course
+                </button>
               </div>
             </div>
 
@@ -196,32 +258,6 @@ const ManageStudentsContent = () => {
         ) : (
           students.map(renderStudentCard)
         )}
-      </div>
-
-      {/* Demo Students (optional) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        {/* Demo Student 1 */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <img src="/api/placeholder/300/200" alt="Demo Student" className="w-full h-48 object-cover rounded-md mb-4" />
-          <div className="flex flex-col">
-            <h3 className="text-lg font-semibold">John Doe</h3>
-            <p className="text-sm text-gray-600 mb-2">john.doe@example.com</p>
-            <p className="text-sm text-gray-600 mb-2">Mobile: 123-456-7890</p>
-            <p className="text-sm text-gray-600 mb-2">Age: 22</p>
-            <p className="text-sm text-gray-600 mb-2">Courses Enrolled: Math 101, English 102</p>
-          </div>
-        </div>
-        {/* Demo Student 2 */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <img src="/api/placeholder/300/200" alt="Demo Student" className="w-full h-48 object-cover rounded-md mb-4" />
-          <div className="flex flex-col">
-            <h3 className="text-lg font-semibold">Jane Smith</h3>
-            <p className="text-sm text-gray-600 mb-2">jane.smith@example.com</p>
-            <p className="text-sm text-gray-600 mb-2">Mobile: 987-654-3210</p>
-            <p className="text-sm text-gray-600 mb-2">Age: 20</p>
-            <p className="text-sm text-gray-600 mb-2">Courses Enrolled: Biology 101, History 201</p>
-          </div>
-        </div>
       </div>
     </div>
   );

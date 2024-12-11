@@ -6,20 +6,50 @@ const ManageTeachersContent = () => {
   const [teachers, setTeachers] = useState([]);
   const [formData, setFormData] = useState({
     profileImage: '',
+    decription:"",
     name: '',
     email: '',
     mobile: '',
     age: '',
-    subjectKnowledge: '',
+    subjectKnowledge: [''], // Changed to an array to handle multiple subjects
     salary: '',
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e, index) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+    if (name === 'subjectKnowledge') {
+      // If the subject knowledge field is updated, handle it dynamically
+      const updatedSubjects = [...formData.subjectKnowledge];
+      updatedSubjects[index] = value;
+      setFormData({ ...formData, subjectKnowledge: updatedSubjects });
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleAddSubject = () => {
+    setFormData({
+      ...formData,
+      subjectKnowledge: [...formData.subjectKnowledge, ''], // Add a new empty subject field
+    });
+  };
+
+  const handleRemoveSubject = (index) => {
+    const updatedSubjects = formData.subjectKnowledge.filter((_, i) => i !== index);
+    setFormData({ ...formData, subjectKnowledge: updatedSubjects });
+  };
+
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files[0]; // Get the selected file
+    if (file) {
+      setFormData((prevData) => ({
+        ...prevData,
+        profileImage: file, // Store the image file
+      }));
+    }
   };
 
   const handleAddTeacher = (e) => {
@@ -31,7 +61,7 @@ const ManageTeachersContent = () => {
       email: '',
       mobile: '',
       age: '',
-      subjectKnowledge: '',
+      subjectKnowledge: [''], // Reset to default single empty subject knowledge
       salary: '',
     });
     setShowTeacherForm(false);
@@ -52,7 +82,7 @@ const ManageTeachersContent = () => {
   const renderTeacherCard = (teacher) => (
     <div key={teacher.id} className="bg-white p-6 rounded-lg shadow-md">
       <img
-        src={teacher.profileImage || '/api/placeholder/300/200'}
+        src={teacher.profileImage ? URL.createObjectURL(teacher.profileImage) : '/api/placeholder/300/200'}
         alt={teacher.name}
         className="w-full h-48 object-cover rounded-md mb-4"
       />
@@ -61,7 +91,9 @@ const ManageTeachersContent = () => {
         <p className="text-sm text-gray-600 mb-2">{teacher.email}</p>
         <p className="text-sm text-gray-600 mb-2">{teacher.mobile}</p>
         <p className="text-sm text-gray-600 mb-2">Age: {teacher.age}</p>
-        <p className="text-sm text-gray-600 mb-2">Subject Knowledge: {teacher.subjectKnowledge}</p>
+        <div className="text-sm text-gray-600 mb-2">
+          Subject Knowledge: {teacher.subjectKnowledge.join(', ')}
+        </div>
         <p className="text-sm text-gray-500">Salary: ${teacher.salary}</p>
         <button
           onClick={() => handleModifySalary(teacher.id, prompt("Enter new salary", teacher.salary))}
@@ -100,13 +132,12 @@ const ManageTeachersContent = () => {
           <form onSubmit={handleAddTeacher}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="profileImage">Profile Image URL</label>
+                <label className="block text-sm font-medium mb-1" htmlFor="profileImage">Profile Image</label>
                 <input
-                  type="url"
+                  type="file"
                   id="profileImage"
                   name="profileImage"
-                  value={formData.profileImage}
-                  onChange={handleInputChange}
+                  onChange={handleProfileImageChange}
                   className="w-full p-2 border rounded-lg"
                 />
               </div>
@@ -135,6 +166,19 @@ const ManageTeachersContent = () => {
                 />
               </div>
               <div className="mb-4">
+                <label className="block text-sm font-medium mb-1" htmlFor="decription">Decription</label>
+                <input
+                  type="text"
+                  id="decription"
+                  name="decription"
+                  value={formData.decription}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-1" htmlFor="mobile">Mobile No</label>
                 <input
                   type="tel"
@@ -158,18 +202,40 @@ const ManageTeachersContent = () => {
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="subjectKnowledge">Subject Knowledge</label>
-                <input
-                  type="text"
-                  id="subjectKnowledge"
-                  name="subjectKnowledge"
-                  value={formData.subjectKnowledge}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded-lg"
-                  required
-                />
-              </div>
+
+              {/* Render subject knowledge inputs dynamically */}
+              {formData.subjectKnowledge.map((subject, index) => (
+                <div key={index} className="mb-4">
+                  <label className="block text-sm font-medium mb-1" htmlFor={`subjectKnowledge-${index}`}>Subject Knowledge {index + 1}</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      id={`subjectKnowledge-${index}`}
+                      name="subjectKnowledge"
+                      value={subject}
+                      onChange={(e) => handleInputChange(e, index)}
+                      className="w-full p-2 border rounded-lg"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSubject(index)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={handleAddSubject}
+                className="bg-green-600 text-white py-2 w-32 rounded-lg hover:bg-green-700"
+              >
+                Add Subject
+              </button>
+
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1" htmlFor="salary">Salary</label>
                 <input
@@ -188,6 +254,7 @@ const ManageTeachersContent = () => {
               type="submit"
               className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
+
               Submit Teacher
             </button>
           </form>
@@ -201,34 +268,6 @@ const ManageTeachersContent = () => {
         ) : (
           teachers.map(renderTeacherCard)
         )}
-      </div>
-
-      {/* Demo Teachers */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        {/* Demo Teacher 1 */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <img src="/api/placeholder/300/200" alt="Demo Teacher" className="w-full h-48 object-cover rounded-md mb-4" />
-          <div className="flex flex-col">
-            <h3 className="text-lg font-semibold">John Doe</h3>
-            <p className="text-sm text-gray-600 mb-2">john.doe@example.com</p>
-            <p className="text-sm text-gray-600 mb-2">Mobile: 123-456-7890</p>
-            <p className="text-sm text-gray-600 mb-2">Age: 35</p>
-            <p className="text-sm text-gray-600 mb-2">Subject Knowledge: Mathematics</p>
-            <p className="text-sm text-gray-500">Salary: $50,000</p>
-          </div>
-        </div>
-        {/* Demo Teacher 2 */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <img src="/api/placeholder/300/200" alt="Demo Teacher" className="w-full h-48 object-cover rounded-md mb-4" />
-          <div className="flex flex-col">
-            <h3 className="text-lg font-semibold">Jane Smith</h3>
-            <p className="text-sm text-gray-600 mb-2">jane.smith@example.com</p>
-            <p className="text-sm text-gray-600 mb-2">Mobile: 987-654-3210</p>
-            <p className="text-sm text-gray-600 mb-2">Age: 28</p>
-            <p className="text-sm text-gray-600 mb-2">Subject Knowledge: English</p>
-            <p className="text-sm text-gray-500">Salary: $45,000</p>
-          </div>
-        </div>
       </div>
     </div>
   );
