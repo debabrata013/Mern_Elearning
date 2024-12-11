@@ -11,16 +11,24 @@ import { useNavigate } from "react-router-dom";
 import "./App.css";
 import CertificateSection from "./CertificateSection/CertificateSection";
 import Nav from "./nav-bar/nav";
+import images from "./images/blur-image.png";
+
+// Ripple effect component
+const RippleBackground = () => (
+  <div className="ripple-background">
+    <div className="circle xxlarge shade1"></div>
+    <div className="circle xlarge shade2"></div>
+    <div className="circle large shade3"></div>
+    <div className="circle medium shade4"></div>
+    <div className="circle small shade5"></div>
+  </div>
+);
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Add smooth scroll effect when component mounts
   useEffect(() => {
-    // Get all sections for intersection observer
     const sections = document.querySelectorAll('section');
-    
-    // Create intersection observer
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -29,59 +37,49 @@ const App = () => {
           }
         });
       },
-      {
-        threshold: 0.1
-      }
+      { threshold: 0.1 }
     );
 
-    // Observe all sections
-    sections.forEach(section => {
-      observer.observe(section);
-    });
+    sections.forEach(section => observer.observe(section));
 
-    // Cleanup
     return () => {
-      sections.forEach(section => {
-        observer.unobserve(section);
-      });
+      sections.forEach(section => observer.unobserve(section));
     };
   }, []);
-  
+
   return (
     <div className="app-container">
+      <img className="top-image"src={images} alt="bete" />
+  
       <Nav />
       
       {/* Main Content */}
       <div className="main-content">
         <section className="landing section">
           <LandingSection />
+          
         </section>
         <section>
-          <Collaborators/>
+          <Collaborators />
         </section>
         <section className="ai-section section">
           <Appi />
         </section>
-        
         <section className="skilldev section">
           <SkillDevelopment />
         </section>
-        
         <section className="courses-section section">
           <PopularCourses />
         </section>
-        
         <section className="achievement-section">
           <Achievements />
         </section>
-        
         <section className="mentors-section section">
           <Mentors />
         </section>
         <section className="certification-section">
-        <CertificateSection />
+          <CertificateSection />
         </section>
-        
       </div>
 
       {/* Footer and Collaborations Section */}

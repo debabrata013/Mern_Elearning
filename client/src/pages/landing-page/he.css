@@ -1,14 +1,103 @@
-.mm{
-    padding: 10vh 5vw;
-    display: flex;
-    align-items: center ;justify-content: space-between;
-}
-.me{
+/* Global Styles */
+body {
+    left:0;
+    font-family: 'Roboto', sans-serif;
+    /* background-color: #f9fafb; */
+    margin: 0;
+    padding: 0;
+  }
+  
+  .me {
     padding: 5vh 0;
-}
-.m3{
-    padding: 5vh 0;
-    background-color: rgb(30 58 138 /1 );
-    color: black;
-
-}
+  }
+  
+  .faq-item button {
+    transition: all 0.3s ease;
+  }
+  
+  /* Animated Answer Slide */
+  @keyframes slideIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .faq-item button {
+    padding: 1rem 1.5rem;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    font-size: 1.125rem;
+  }
+  
+  .faq-answer {
+    padding: 1rem 1.5rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    margin-top: 1rem;
+    font-size: 1rem;
+    animation: slideIn 0.5s ease-out forwards;
+  }
+  
+  .faq-item button {
+    font-size: 1.125rem;
+    font-weight: 500;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  
+  .faq-item button:hover {
+    color: #fb923c;
+    transform: scale(1.05);
+  }
+  
+  .faq-answer {
+    animation: slideIn 0.5s ease-out forwards;
+  }
+  
+  /* Hover Effect */
+  .faq-item button:hover {
+    background-color: #f7fafc;
+    border-color: #ddd;
+  }
+  
+  .faq-answer {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .faq-item button span {
+    transition: transform 0.3s ease;
+  }
+  
+  .faq-item button:hover span {
+    transform: scale(1.1);
+  }
+  
+  @media (max-width: 768px) {
+    .me {
+      padding: 3vh 2vw;
+    }
+  
+    .faq-item button {
+      font-size: 1rem;
+    }
+  
+    h1 {
+      font-size: 2.5rem;
+    }
+  }
+  
