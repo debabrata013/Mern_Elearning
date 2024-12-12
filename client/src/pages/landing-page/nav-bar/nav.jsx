@@ -1,7 +1,9 @@
+// Import React and necessary hooks
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
+import NextButton from "./button";
 import './nav.css';
+
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -46,8 +48,8 @@ const Nav = () => {
               </div>
             </div>
             <div className="logo-text">
-              <span className="logo-ezy">DIGI</span>
-              <span className="logo-skills">TORIA</span>
+              <span className="logo-ezy">EZY</span>
+              <span className="logo-skills">SKILLS</span>
             </div>
           </div>
 
@@ -91,14 +93,17 @@ const Nav = () => {
             </a>
           </div>
 
-          <div className="auth-buttons" >
-          <Link to="/log">
-      <button className="get-started-button">
-        Get Started
-      </button>
-    </Link>
+          {/* Auth Buttons Section */}
+          <div className="auth-buttons">
+            <Link to="/log">
+              {/* Replacing button with NextButton */}
+              <NextButton>
+                Get Started
+              </NextButton>
+            </Link>
           </div>
 
+          {/* Mobile Menu Icon */}
           <div className="menu-icon" onClick={toggleMenu}>
             <div className="menu-bar"></div>
             <div className="menu-bar"></div>

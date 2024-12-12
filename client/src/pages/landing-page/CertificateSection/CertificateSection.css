@@ -5,8 +5,8 @@
     align-items: center;
     gap: 2rem;
     padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    flex-direction: row; /* Horizontal layout for larger screens */
+    box-shadow: 0px 0px 21px 2px #00000032;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     text-align: left;

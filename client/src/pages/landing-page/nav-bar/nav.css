@@ -6,51 +6,7 @@
   transition: all 0.3s ease;
   animation: myAnim 1.7s ease 0s 1 normal none;
 }
-@keyframes myAnim {
-	0% {
-		animation-timing-function: ease-in;
-		opacity: 1;
-		transform: translateY(-45px);
-	}
 
-	24% {
-		opacity: 1;
-	}
-
-	40% {
-		animation-timing-function: ease-in;
-		transform: translateY(-24px);
-	}
-
-	65% {
-		animation-timing-function: ease-in;
-		transform: translateY(-12px);
-	}
-
-	82% {
-		animation-timing-function: ease-in;
-		transform: translateY(-6px);
-	}
-
-	93% {
-		animation-timing-function: ease-in;
-		transform: translateY(-4px);
-	}
-
-	25%,
-	55%,
-	75%,
-	87% {
-		animation-timing-function: ease-out;
-		transform: translateY(0px);
-	}
-
-	100% {
-		animation-timing-function: ease-out;
-		opacity: 1;
-		transform: translateY(0px);
-	}
-}
 .navbar-wrapper {
   max-width: 1440px;
   margin: 0 auto;
@@ -137,7 +93,6 @@
 }
 
 .nav-link {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 1.1rem;
   color: #707d90;
   text-decoration: none;
@@ -152,28 +107,14 @@
 .active-link {
   border-radius: 100px;
   color: #01285b;
+  font-size: larger;
   font-weight: bolder;
 }
 
-/* Get Started Button */
-.get-started-button {
-  padding: 0.8rem 1.8rem;
-  color: #ffffff;
-  background-color: #ff7700;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(237, 137, 54, 0.15);
+.auth-buttons{
+margin-right: 30px;
 }
 
-.get-started-button:hover {
-  background-color: #FF5F15;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(237, 137, 54, 0.25);
-}
 
 /* Mobile Menu Icon */
 .menu-icon {
@@ -259,4 +200,50 @@
   .logo-section {
     flex-grow: 1;
   }
+}
+
+@keyframes myAnim {
+	0% {
+		animation-timing-function: ease-in;
+		opacity: 1;
+		transform: translateY(-45px);
+	}
+
+	24% {
+		opacity: 1;
+	}
+
+	40% {
+		animation-timing-function: ease-in;
+		transform: translateY(-24px);
+	}
+
+	65% {
+		animation-timing-function: ease-in;
+		transform: translateY(-12px);
+	}
+
+	82% {
+		animation-timing-function: ease-in;
+		transform: translateY(-6px);
+	}
+
+	93% {
+		animation-timing-function: ease-in;
+		transform: translateY(-4px);
+	}
+
+	25%,
+	55%,
+	75%,
+	87% {
+		animation-timing-function: ease-out;
+		transform: translateY(0px);
+	}
+
+	100% {
+		animation-timing-function: ease-out;
+		opacity: 1;
+		transform: translateY(0px);
+	}
 }

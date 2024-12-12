@@ -1,85 +1,118 @@
 import React, { useState } from "react";
 import "./mentors.css";
+import p1 from "../Mentors/person-1.jpg";
+import p2 from "../Mentors/person-2.jpg";
+import p3 from "../Mentors/person-3.jpg";
+import p4 from "../Mentors/person-4.jpg";
+import p5 from "../Mentors/person-5.jpg";
 
-const mentors = [
-  {
-    name: "Ruchika Tuteja",
-    occupation: "UI/UX Trainer",
-    rating: 4.3,
-    reviews: 65,
-    modules: 44,
-    students: 212,
-    description:
-      "I have 9 years of experience in Fullstack development. I can provide real-time simulations of various development languages and frameworks by means of multiple projects. Can provide guidance...",
-  },
-  {
-    name: "Sandeep",
-    occupation: ".Net & Azure Trainer",
-    rating: 4.5,
-    reviews: 72,
-    modules: 39,
-    students: 375,
-    description:
-      "Sandeep is a Software Developer with expertise in .Net & Azure for more than 24 years. He has trained 100s of students to accomplish their goals and dreams.",
-  },
-  {
-    name: "Sudhansu",
-    occupation: "Cloud & Cybersecurity Expert",
-    rating: 4.2,
-    reviews: 38,
-    modules: 27,
-    students: 169,
-    description:
-      "Sudhansu is a Software Developer specializing in Cloud Security, Data Centers, and Forensics for over 22 years. He has helped hundreds of students achieve their aspirations.",
-  },
-];
 
-const App = () => {
-  const [isPaused, setIsPaused] = useState(false);
 
-  return (
-    <div className="mentors-container">
-      <div className="mentors-title">
-        <h2>
+const Mentors = () => {
+  const mentors = [
+    { 
+      src: p1, 
+      alt: "Mentor 1", 
+      title: "Joe", 
+      description: "Mentor 1 is an expert in web development and loves teaching React."
+    },
+    { 
+      src: p2, 
+      alt: "Mentor 2", 
+      title: "Mark", 
+      description: "Mentor 2 specializes in UI/UX design with years of experience in the field."
+    },
+    { 
+      src: p3, 
+      alt: "Mentor 3", 
+      title: "stephen", 
+      description: "Mentor 3 is a cloud computing expert, helping companies scale their infrastructure."
+    },
+    { 
+      src: p4, 
+      alt: "Mentor 4", 
+      title: "Daniel Peterson", 
+      description: "Mentor 4 focuses on data science and machine learning, guiding aspiring data scientists."
+    },
+    { 
+      src: p5, 
+      alt: "Mentor 5", 
+      title: "William Hughes", 
+      description: "Mentor 5 is a mobile app developer, passionate about creating impactful mobile experiences."
+    },
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(1);
+  const [animating, setAnimating] = useState(false);
+
+  const handlePrev = () => {
+    if (animating) return; // Prevent new actions while animating
+    setAnimating(true);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev > 0 ? prev - 1 : mentors.length - 1));
+      setAnimating(false);
+    }, 500); // Matches the animation duration
+  };
+
+  const handleNext = () => {
+    if (animating) return; // Prevent new actions while animating
+    setAnimating(true);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev < mentors.length - 1 ? prev + 1 : 0));
+      setAnimating(false);
+    }, 500); // Matches the animation duration
+  };
+
+  const getClassName = (index) => {
+    if (index === currentIndex - 1 || (currentIndex === 0 && index === mentors.length - 1)) {
+      return "mentor-card past";
+    } else if (index === currentIndex) {
+      return "mentor-card present";
+    } else if (index === currentIndex + 1 || (currentIndex === mentors.length - 1 && index === 0)) {
+      return "mentor-card future";
+    } else {
+      return "mentor-card hidden";
+    }
+  };
+
+  return (  
+      <div className="mentor-container" >
+        <h2 className="Heading-section">
           <span className="title-primary">Meet Our Professional</span><br />
           <span className="title-secondary">Mentors & Trainers</span>
         </h2>
-      </div>
-      <div
-        className={`carousel ${isPaused ? "paused" : ""}`}
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
-        <div className="carousel-track">
-          {/* Duplicating the mentor cards for infinite loop effect */}
-          {mentors.concat(mentors).map((mentor, index) => (
-            <div key={index} className="card">
-              <div className="card-top">
-                <div className="mentor-image"></div>
-                <div>
-                  <h2 className="mentor-name">{mentor.name}</h2>
-                  <p className="mentor-occupation">{mentor.occupation}</p>
-                </div>
+    <div className="container">
+      <div className="left-container">
+        
+        <div className="mentor-gallery">
+          {mentors.map((mentor, index) => (
+            <div className={getClassName(index)} key={index}>
+              <img src={mentor.src} alt={mentor.alt} className="mentor-image" />
+              <div className="mentor-details">
+                <h2 className="mentor-name">{mentor.title}</h2>
               </div>
-              <div className="mentor-rating">
-                {"⭐".repeat(Math.floor(mentor.rating))}
-                {"☆".repeat(5 - Math.floor(mentor.rating))} ({mentor.reviews} Reviews)
-              </div>
-              <div className="mentor-stats">
-                <p>
-                  <span className="icon">📄</span> {mentor.modules} Modules
-                </p>
-                <p>
-                  <span className="icon">👨‍🎓</span> {mentor.students} Students
-                </p>
-              </div>
-              <p className="mentor-description">{mentor.description}</p>
             </div>
           ))}
         </div>
+        <div className="mentor-actions">
+          <button className="mentor-btn left-btn" onClick={handlePrev}>
+            &lt; Prev
+          </button>
+          <button className="mentor-btn right-btn" onClick={handleNext}>
+            Next &gt;
+          </button>
+        </div>
       </div>
+
+      <div className="right-container">
+        <div className={`mentor-description-card ${animating ? "animating" : ""}`}>
+          <h2 className="mentor-description-title">{mentors[currentIndex].title}</h2>
+          <p className="mentor-description">{mentors[currentIndex].description}</p>
+        </div>
+      </div>
+    </div>
     </div>
   );
 };
 
-export default App;
+export default Mentors;

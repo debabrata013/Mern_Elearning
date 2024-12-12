@@ -34,7 +34,7 @@
   position: relative;
   width: 20rem; /* Default smaller size */
   margin-bottom: 1.2rem;
-  transition: width 0.3s ease; /* Smooth expansion animation */
+  transition: width 0.6s ease; /* Smooth expansion animation */
 }
 
 .search-bar:hover,
@@ -48,7 +48,7 @@
   padding: 1rem 3rem 1rem 1.5rem; /* Extra right padding for icon */
   background-color: #F9FAFB;
   border-radius: 9rem;
-  border: 1px solid #dfdfdf;
+  border: 1px solid #afafaf;
 }
 
 .search-button {
