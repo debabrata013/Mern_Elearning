@@ -58,6 +58,12 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const aws = require('aws-sdk');
+const fs = require('fs');
+const path = require('path');
+
+
+const userRoutes = require('./routes/userRoutes');
 const authRoutes = require("./routes/auth-routes/index");
 const mediaRoutes = require("./routes/instructor-routes/media-routes");
 const instructorCourseRoutes = require("./routes/instructor-routes/course-routes");
@@ -65,10 +71,14 @@ const studentViewCourseRoutes = require("./routes/student-routes/course-routes")
 const studentViewOrderRoutes = require("./routes/student-routes/order-routes");
 const studentCoursesRoutes = require("./routes/student-routes/student-courses-routes");
 const studentCourseProgressRoutes = require("./routes/student-routes/course-progress-routes");
-
+const apiRoutes =require("./routes/api/job")
+const courseRoutes = require('./routes/courseRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const progressRoutes = require('./routes/progressRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
+const chatRoutes = require('./routes/chat');
 
 if (!MONGO_URI) {
   console.error("MONGO_URI is not set in the environment variables.");
@@ -81,6 +91,8 @@ if (!MONGO_URI) {
 // }));
 
 app.use(express.json());
+const s3 = new aws.S3();
+
 
 // Database connection
 mongoose
@@ -101,13 +113,19 @@ app.use(cors({
 
 // Routes configuration
 app.use("/auth", authRoutes);
+app.use("/api/jobs",apiRoutes)
 app.use("/media", mediaRoutes);
 app.use("/instructor/course", instructorCourseRoutes);
 app.use("/student/course", studentViewCourseRoutes);
 app.use("/student/order", studentViewOrderRoutes);
 app.use("/student/courses-bought", studentCoursesRoutes);
 app.use("/student/course-progress", studentCourseProgressRoutes);
+app.use('/courses', courseRoutes);
+app.use('/upload', uploadRoutes);
+app.use('/progress', progressRoutes);
+app.use('/api', userRoutes);
 
+app.use('/api/chat', chatRoutes);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack); // Log detailed error

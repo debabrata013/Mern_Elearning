@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, X } from 'lucide-react';
+import jobService from './api/jobService';
 
 const JobsContent = () => {
   const [showJobForm, setShowJobForm] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [jobs, setJobs] = useState([]);
   const [formData, setFormData] = useState({
     jobTitle: '',
@@ -14,6 +16,24 @@ const JobsContent = () => {
     imageUrl: '',
     jobLink: ''
   });
+  const [currentJobId, setCurrentJobId] = useState(null);
+
+  // Fetch jobs from the backend
+  const fetchJobs = async () => {
+    setLoading(true);
+    try {
+      const data = await jobService.getAllJobs();
+      setJobs(data);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,24 +43,54 @@ const JobsContent = () => {
     }));
   };
 
-  const handleAddJob = (e) => {
+  const handleAddJob = async (e) => {
     e.preventDefault();
-    setJobs((prevJobs) => [...prevJobs, { ...formData, id: Date.now() }]);
-    setFormData({
-      jobTitle: '',
-      jobDescription: '',
-      salary: '',
-      experience: '',
-      applyStartDate: '',
-      applyEndDate: '',
-      imageUrl: '',
-      jobLink: ''
-    });
-    setShowJobForm(false);
+    try {
+      if (currentJobId) {
+        await jobService.updateJob(currentJobId, formData); // Update the job if editing
+      } else {
+        await jobService.createJob(formData); // Create a new job
+      }
+      fetchJobs(); // Refresh job list
+      setShowJobForm(false);
+      setFormData({
+        jobTitle: '',
+        jobDescription: '',
+        salary: '',
+        experience: '',
+        applyStartDate: '',
+        applyEndDate: '',
+        imageUrl: '',
+        jobLink: ''
+      });
+      setCurrentJobId(null); // Reset the current job id
+    } catch (error) {
+      console.error('Error submitting job:', error);
+    }
   };
 
-  const handleRemoveJob = (id) => {
-    setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
+  const handleRemoveJob = async (id) => {
+    try {
+      await jobService.deleteJob(id);
+      fetchJobs(); // Refresh job list after deletion
+    } catch (error) {
+      console.error('Error deleting job:', error);
+    }
+  };
+
+  const handleEditJob = (job) => {
+    setFormData({
+      jobTitle: job.jobTitle,
+      jobDescription: job.jobDescription,
+      salary: job.salary,
+      experience: job.experience,
+      applyStartDate: job.applyStartDate,
+      applyEndDate: job.applyEndDate,
+      imageUrl: job.imageUrl,
+      jobLink: job.jobLink
+    });
+    setCurrentJobId(job.id); // Set the job id to update
+    setShowJobForm(true); // Show the form to edit
   };
 
   const renderJobCard = (job) => (
@@ -54,6 +104,13 @@ const JobsContent = () => {
         <p className="text-sm text-gray-500">Apply from: {job.applyStartDate} to {job.applyEndDate}</p>
         <a href={job.jobLink} className="text-blue-600 hover:text-blue-700" target="_blank" rel="noopener noreferrer">Apply Now</a>
         <button
+          onClick={() => handleEditJob(job)}
+          className="mt-4 text-yellow-600 hover:text-yellow-700 flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Modify Job
+        </button>
+        <button
           onClick={() => handleRemoveJob(job.id)}
           className="mt-4 text-red-600 hover:text-red-700 flex items-center gap-2"
         >
@@ -66,21 +123,21 @@ const JobsContent = () => {
 
   return (
     <div className="bg-gray-50 p-6 rounded-xl">
-      {/* Add Job Button */}
+      {/* Add/Modify Job Button */}
       <div className="flex justify-end mb-6">
         <button
           onClick={() => setShowJobForm(!showJobForm)}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
-          Add Job
+          {currentJobId ? 'Edit Job' : 'Add Job'}
         </button>
       </div>
 
       {/* Job Form (visible when showJobForm is true) */}
       {showJobForm && (
         <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
-          <h3 className="text-xl font-semibold mb-4">Add New Job</h3>
+          <h3 className="text-xl font-semibold mb-4">{currentJobId ? 'Edit Job' : 'Add New Job'}</h3>
           <form onSubmit={handleAddJob}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="mb-4">
@@ -177,6 +234,13 @@ const JobsContent = () => {
         </div>
       )}
 
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="text-center my-6">
+          <div className="spinner"></div> {/* You can replace this with your own loader */}
+        </div>
+      )}
+
       {/* Display Jobs as Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {jobs.length === 0 ? (
@@ -184,34 +248,6 @@ const JobsContent = () => {
         ) : (
           jobs.map(renderJobCard)
         )}
-      </div>
-
-      {/* Demo Jobs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        {/* Demo Job 1 */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <img src="/api/placeholder/300/200" alt="Demo Job" className="w-full h-48 object-cover rounded-md mb-4" />
-          <div className="flex flex-col">
-            <h3 className="text-lg font-semibold">Frontend Developer</h3>
-            <p className="text-sm text-gray-600 mb-2">Build beautiful and responsive websites</p>
-            <p className="text-sm text-gray-500">Salary: $80,000</p>
-            <p className="text-sm text-gray-500">Experience: 3-5 years</p>
-            <p className="text-sm text-gray-500">Apply from: 2024-01-01 to 2024-02-01</p>
-            <a href="#" className="text-blue-600 hover:text-blue-700" target="_blank" rel="noopener noreferrer">Apply Now</a>
-          </div>
-        </div>
-        {/* Demo Job 2 */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <img src="/api/placeholder/300/200" alt="Demo Job" className="w-full h-48 object-cover rounded-md mb-4" />
-          <div className="flex flex-col">
-            <h3 className="text-lg font-semibold">Backend Developer</h3>
-            <p className="text-sm text-gray-600 mb-2">Work on server-side logic and databases</p>
-            <p className="text-sm text-gray-500">Salary: $95,000</p>
-            <p className="text-sm text-gray-500">Experience: 5+ years</p>
-            <p className="text-sm text-gray-500">Apply from: 2024-02-01 to 2024-03-01</p>
-            <a href="#" className="text-blue-600 hover:text-blue-700" target="_blank" rel="noopener noreferrer">Apply Now</a>
-          </div>
-        </div>
       </div>
     </div>
   );
