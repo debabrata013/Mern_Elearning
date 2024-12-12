@@ -10,11 +10,11 @@
   .section-title {
     font-size: 50px;
     font-weight: bolder;
-    color: #1d4f91;
+    color: #01285b;
   }
   
   .section-title span {
-    color: #ff7f50;
+    color: #ff7700;
   }
   
   .courses-grid {
@@ -32,7 +32,7 @@
     max-height: 25rem;
   }
   .course-card {
-    background-color: #1d4f91;
+    background-color: #01285b;
     border-radius:12px 12px 6px 6px;
     overflow: hidden;
     width: 100%;
@@ -86,14 +86,14 @@
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    color: #1d4f91;
+    color: #01285b;
     background-color: white;
-    border: 2px solid #1d4f91;
+    border: 2px solid #01285b;
     box-shadow: 0px 0px 5px 1px #0000004b;
   }
   
   .download-curriculum {
-    background-color: #ff7f50;
+    background-color: #ff7700;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -104,7 +104,7 @@
   }
   
   .view-all-btn {
-    background-color: #1d4f91;
+    background-color: #01285b;
     color: white;
     border: none;
     padding: 15px 30px;
@@ -130,7 +130,7 @@
   }
   
   .btn:hover {
-    background-color: #1d4f91;
+    background-color: #01285b;
     color: white;
     box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5); /* Subtle shadow for hover effect */
   }
@@ -150,7 +150,7 @@
   }
   
   .view-all-btn:hover {
-    background-color: #ff7f50;
+    background-color: #ff7700;
     transform: scale(1.05); /* Slight enlargement for emphasis */
   }
   

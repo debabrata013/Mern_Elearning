@@ -1,11 +1,9 @@
-// App.js
-import image1 from './assets/2225.png';  // Replace with your actual image name
+import React, { useState, useEffect } from 'react';
+import './AI.css';
+import image1 from './assets/2225.png';
 import image2 from './assets/2226.png';
 import image3 from './assets/2227.png';
 import image4 from './assets/2228.png';
-// App.js
-import React, { useState, useEffect } from 'react';
-import './AI.css';
 
 const Appi = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -20,18 +18,18 @@ const Appi = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="containeri">
       <div className="text-section">
         <h1 className="title">
           World's
           <br />
-          First AI Based
+          First AI-Based
           <br />
           <span className="highlight">Online Learning</span>
           <br />
           Platform
         </h1>
-        
+
         <div className="dots-container">
           {[...Array(20)].map((_, index) => (
             <div key={index} className="dot"></div>
@@ -41,11 +39,10 @@ const Appi = () => {
 
       <div className="image-section">
         <div className="image-card">
-
           <div className="carousel">
             {images.map((img, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className={`carousel-item ${index === currentImage ? 'active' : ''}`}
               >
                 <img

@@ -4,7 +4,7 @@ import "./CourseCard.css";
 const CourseCard = ({ course }) => {
   return (
     <div className="course-container">
-       <div className="course-card">
+       <div className="course-cards">
          <div className="course-card-header">
            <img src={course.image} alt={course.title} className="course-icon" />
          </div>

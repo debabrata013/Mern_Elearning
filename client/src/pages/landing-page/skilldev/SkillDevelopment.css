@@ -1,8 +1,6 @@
 /* SkillDevelopment.css */
 
 .skill-development {
-    /* max-width: 1200px; */
-    
     margin-top:2rem;
   }
   .who-can-join{
@@ -11,14 +9,14 @@
   }
   .section-subtitle {
     font-style: inherit;
-    color: #FF7A41;
+    color: #ff7700;
     font-size: 1.3rem;
     margin-bottom: 16px;
     text-transform: uppercase;
   } 
   
-  .section-title {
-    color: #0c3866;
+  .section {
+    color: #01285b;
     font-size: 3rem;
     font-weight: bolder;
     line-height: 1.2;
@@ -53,7 +51,7 @@
   .category-number {
     font-size: 24px;
     font-weight: bold;
-    color: #003B7B;
+    color: #01285b;
     margin-bottom: 16px;
   }
   
@@ -85,7 +83,7 @@
   .how-it-works {
     height:20rem;
     margin-top: 40px;
-    background-color: #003B7B;
+    background-color: #01285b;
     border-radius: 20px;
     padding: 40px;
     position: relative;
@@ -97,7 +95,7 @@
     text-align: center;
     font-size: 32px;
     margin-bottom: 40px;
-    background-color: #FF7A41;
+    background-color: #ff7700;
     padding: 10px 30px;
     border-radius: 10px ;
     display: flex;
@@ -125,8 +123,8 @@
     height: 80px;
     background: repeating-linear-gradient(
       45deg,
-      #FF7A41,
-      #FF7A41 2px,
+      #ff7700,
+      #ff7700 2px,
       transparent 2px,
       transparent 8px
     );
@@ -140,7 +138,7 @@
     right: 0;
     width: 120px;
     height: 120px;
-    background: #FF7A41;
+    background: #ff7700;
     border-radius: 50%;
     opacity: 0.1;
   }
@@ -174,3 +172,27 @@
     }
   
   }
+  /* Base styles remain unchanged */
+
+/* Animation styles */
+.fade-in {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animation reversal for scrolling up */
+.skill-development .fade-in {
+  will-change: opacity, transform;
+}
+
+/* Ensure smooth reverse animations */
+.skill-development .fade-in:not(.animate) {
+  opacity: 0;
+  transform: translateY(-50px);
+}

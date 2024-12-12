@@ -8,7 +8,10 @@ const CertificateSection = () => {
     <div className="certificate-section">
       <div className="certificate-text">
         <h2 className="heading">Certificate</h2>
-        <h3>The Certification of Digitoria</h3>
+        <h3>
+          <span className="top">The Certification of<br/></span> 
+          <span className="bottom">Digitoria</span>
+        </h3>
         <p>
             Digitoria Education Certificates honor your hard work, preparing you for the future of work.
         </p>

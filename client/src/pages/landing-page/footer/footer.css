@@ -18,9 +18,28 @@
   width: 150px;
   margin-bottom: 20px;
 }
-
+.logo-head {
+  display: flex;
+  align-items: baseline;
+}
+.l{
+  color:#ff7700
+}
+.digi {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fdfeff;
+}
+.N{
+  color: #ff7700;
+}
+.toria {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ff7700;
+}
 .footer-description {
-  font-size: 14px;
+  font-size: 17px;
   line-height: 1.6;
   margin-bottom: 30px;
 }
@@ -84,7 +103,7 @@
 
 .contact-info p {
   margin-bottom: 15px;
-  font-size: 14px;
+  font-size: 17px;
   line-height: 1.6;
 }
 
@@ -123,6 +142,18 @@
 .social-icon:hover {
   color: #FF7F50;
 }
+
+
+.footer-section1{
+  position: absolute;
+  margin-left: 650px;
+  font-size: 17px;
+}
+.footer-section2{
+  position: absolute;
+  margin-left: 930px;   
+}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

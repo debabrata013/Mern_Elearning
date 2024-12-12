@@ -35,6 +35,9 @@
   width: 20rem; /* Default smaller size */
   margin-bottom: 1.2rem;
   transition: width 0.6s ease; /* Smooth expansion animation */
+  font-size: 20px;
+  font-weight: lighter;
+
 }
 
 .search-bar:hover,
@@ -49,6 +52,7 @@
   background-color: #F9FAFB;
   border-radius: 9rem;
   border: 1px solid #afafaf;
+  font-size: 20px;
 }
 
 .search-button {
@@ -79,6 +83,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  font-size: 20px;
+  font-weight: lighter;
+
 }
 
 .tag-button {
@@ -88,11 +95,16 @@
   border-radius: 1rem;
   border: none;
   cursor: pointer;
+  font-size: 20px;
+  font-weight: lighter;
+
 }
 
 .primary-tag {
   background-color: #ff7700;
   color: #ffffff;
+  font-size:20px;
+  font-weight: lighter;
 }
 
 /* Right Content */

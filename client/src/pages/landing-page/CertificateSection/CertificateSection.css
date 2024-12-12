@@ -25,11 +25,16 @@
     color: #555;
     text-transform: uppercase;
     margin-bottom: 80px;
+    color: #ff7700;
   }
-  
-  
+  .top{
+    color:#01285b;
+  }
+  .bottom{
+    color: #ff7700;
+  }
   .certificate-text h3 {
-    font-size: 3rem;
+    font-size: 45px;
     font-weight: bold;
     margin: 1rem 0;
     color: #000;

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import './hero.css';
 import imgs from './landing.svg';
-import magnifyingGlass from './search.png'; // Path for magnifying glass icon
-
+import magnifyingGlass from './search.png';
 const LandingSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isFocused, setIsFocused] = useState(false);
