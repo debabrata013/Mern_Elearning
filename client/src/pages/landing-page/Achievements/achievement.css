@@ -8,6 +8,19 @@
     flex-direction: row;
     
   }
+  .stat-number {
+    font-size: 48px;
+    font-weight: bold;
+    color: #FF7F50;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, color 0.3s ease;
+    display: inline-block;
+  }
+  
+  .stat-number:hover {
+    transform: scale(1.1);
+    color: #003B73;
+  }
   
   .achievements-title {
     text-align: center;

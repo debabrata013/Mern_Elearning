@@ -1,62 +1,101 @@
 /* General Styling */
-
 .course-page {
-  margin-top:6rem;
+  margin-top: 6rem;
   margin-left: 2rem;
-  margin-right:2rem;
+  margin-right: 2rem;
   font-family: Arial, sans-serif;
   padding: 20px;
-  background-color: #ffffff;
+  background: linear-gradient(to bottom, #ffffff, #f4f8fb);
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* Fade-in animation applied properly */
+.course-page.fade-in-bottom {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Section Title */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #01285b;
+}
+
+.section-title span {
+  color: #ff7700;
 }
 
 /* Filter Bar */
 .filter-bar {
-  font-weight: bold;
-  font-size: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
   padding: 10px;
-  background: #ffffff00;
 }
 
 .search-bar {
-  width: 200px;
-  padding: 8px;
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 90px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  background-color: white;
+  color: #01285b;
+  margin-top: 10px;
 }
 
+.search-bar:focus {
+  outline: none;
+  border-color: #01285b;
+  box-shadow: 0 0 5px rgba(1, 40, 91, 0.5);
+}
+
+/* Filter Buttons */
 .filter-buttons {
   display: flex;
   gap: 10px;
+  margin-bottom: 20px; /* Space between buttons and search bar */
 }
 
 .filter-btn {
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  color: #333;
   cursor: pointer;
-  font-size: 17px;
+  font-size: 1rem;
+  color: #01285b;
+  background: white;
+  border: 2px solid #01285b;
+  transition: all 0.3s ease;
 }
 
-.filter-btn.active {
-  color: #ff7f50;
+.filter-btn.active,
+.filter-btn:hover {
+  background: #01285b;
+  color: white;
 }
 
-.sort-dropdown {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-/* Course Grid */
-.course-grid {
+/* Courses Grid */
+.courses-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  gap: 2rem;
+  margin-top: 30px;
+}
+
+.no-results {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
 }
 
 /* Pagination */
@@ -75,7 +114,64 @@
   cursor: pointer;
 }
 
-.page-btn.active {
+.page-btn.active,
+.page-btn:hover {
   background-color: #2563eb;
-  color: #ffffff;
+  color: white;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .course-page {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-btn {
+    width: 100%; /* Buttons will stack vertically on mobile */
+    margin-bottom: 10px;
+  }
+
+  .search-bar {
+    width: 100%; /* Full width on mobile */
+    margin-top: 20px;
+  }
+
+  .courses-grid {
+    grid-template-columns: 1fr; /* Stack course cards in a single column */
+    gap: 15px; /* Adjust gap for mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 2rem; /* Adjust font size for smaller screens */
+  }
+
+  .filter-bar {
+    padding: 8px;
+  }
+
+  .filter-btn {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .search-bar {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .pagination {
+    margin-top: 15px;
+  }
+
+  .page-btn {
+    padding: 6px 10px;
+  }
 }

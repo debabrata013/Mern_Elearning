@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./courses-page.css";
 import CourseCard from "./CourseCard";
+import Nav from "../nav-bar/nav";
 import AJS from "./images/Ajs.png";
 import rjs from "./images/reactjs.png";
 import py from "./images/pyh.png";
 import st from "./images/selenium.png";
-import Nav from "../nav-bar/nav";
+import Footer from '../footer/footer';
 
 const CoursePage = () => {
   const allCourses = [
@@ -16,6 +17,7 @@ const CoursePage = () => {
   ];
 
   const [filter, setFilter] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [visible, setVisible] = useState(false); // Animation visibility state
   const coursesPerPage = 6;
@@ -30,10 +32,11 @@ const CoursePage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const filteredCourses =
-    filter === "All"
-      ? allCourses
-      : allCourses.filter((course) => course.status === filter);
+  const filteredCourses = allCourses.filter((course) => {
+    const matchesFilter = filter === "All" || course.status === filter;
+    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
 
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
@@ -46,9 +49,17 @@ const CoursePage = () => {
       <nav className="navbar">
         <Nav />
       </nav>
-      <div className={`course-page ${visible ? "animate" : ""}`}>
+      <section className={`course-page ${visible ? "fade-in-bottom" : ""}`}>
+        <h2 className="section-title">Explore <span>Courses</span></h2>
         <div className="filter-bar">
-          <input type="text" placeholder="Search The Course" className="search-bar" />
+          <input
+            type="text"
+            placeholder="Search for a course"
+            className="search-bar"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Search courses"
+          />
           <div className="filter-buttons">
             {["All", "Opened", "Coming Soon", "Archived"].map((status) => (
               <button
@@ -60,16 +71,18 @@ const CoursePage = () => {
               </button>
             ))}
           </div>
-          <select className="sort-dropdown">
+          <select className="sort-dropdown" aria-label="Sort courses">
             <option>Sort by Popular Class</option>
             <option>Sort by Recently Added</option>
           </select>
         </div>
         <hr className="text-bold" />
-        <div className="course-grid mt-3">
-          {currentCourses.map((course, index) => (
-            <CourseCard key={index} course={course} />
-          ))}
+        <div className="courses-grid">
+          {currentCourses.length > 0 ? (
+            currentCourses.map((course, index) => <CourseCard key={index} course={course} />)
+          ) : (
+            <p className="no-results">No courses match your search.</p>
+          )}
         </div>
         <div className="pagination">
           {[...Array(totalPages)].map((_, pageIndex) => (
@@ -82,9 +95,11 @@ const CoursePage = () => {
             </button>
           ))}
         </div>
-      </div>
+      </section>
+      <Footer />
     </>
   );
 };
 
 export default CoursePage;
+  

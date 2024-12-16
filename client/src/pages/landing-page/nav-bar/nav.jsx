@@ -4,7 +4,7 @@ import NextButton from "./button";  // Ensure NextButton is the updated componen
 import './nav.css';
 
 const Nav = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to toggle the menu visibility
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentPath, setCurrentPath] = useState('');
 
@@ -24,7 +24,7 @@ const Nav = () => {
   }, []);
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen(!isMenuOpen); // Toggle the menu visibility
   };
 
   const isActiveLink = (path) => {
@@ -53,55 +53,23 @@ const Nav = () => {
 
           {/* Navigation Section */}
           <div className={`nav-links ${isMenuOpen ? "open" : ""}`}>
-            <a 
-              href="/" 
-              className={`nav-link ${isActiveLink('/') ? 'active-link' : ''}`}
-            >
-              Home
-            </a>
-            <a 
-              href="/coursess" 
-              className={`nav-link ${isActiveLink('/coursess') ? 'active-link' : ''}`}
-            >
-              Courses
-            </a>
-            <a 
-              href="/pricing" 
-              className={`nav-link ${isActiveLink('/pricing') ? 'active-link' : ''}`}
-            >
-              Pricing
-            </a>
-            <a 
-              href="/faq" 
-              className={`nav-link ${isActiveLink('/faq') ? 'active-link' : ''}`}
-            >
-              FAQ
-            </a>
-            <a 
-              href="/contactus" 
-              className={`nav-link ${isActiveLink('/contactus') ? 'active-link' : ''}`}
-            >
-              Contact Us
-            </a>
-            <a 
-              href="/aboutus" 
-              className={`nav-link ${isActiveLink('/aboutus') ? 'active-link' : ''}`}
-            >
-              About Us
-            </a>
-          </div>
+            <a href="/" className={`nav-link ${isActiveLink('/') ? 'active-link' : ''}`}>Home</a>
+            <a href="/coursess" className={`nav-link ${isActiveLink('/coursess') ? 'active-link' : ''}`}>Courses</a>
+            <a href="/pricing" className={`nav-link ${isActiveLink('/pricing') ? 'active-link' : ''}`}>Pricing</a>
+            <a href="/faq" className={`nav-link ${isActiveLink('/faq') ? 'active-link' : ''}`}>FAQ</a>
+            <a href="/contactus" className={`nav-link ${isActiveLink('/contactus') ? 'active-link' : ''}`}>Contact Us</a>
+            <a href="/aboutus" className={`nav-link ${isActiveLink('/aboutus') ? 'active-link' : ''}`}>About Us</a>
 
-          {/* Auth Buttons Section */}
-          <div className="auth-buttons">
-            <Link to="/log">
-              <NextButton>
-                Get Started
-              </NextButton>
-            </Link>
+            {/* Auth Buttons Section */}
+            <div className="auth-buttons">
+              <Link to="/log">
+                <NextButton>Get Started</NextButton>
+              </Link>
+            </div>
           </div>
 
           {/* Mobile Menu Icon */}
-          <div className="menu-icon" onClick={toggleMenu}>
+          <div className={`menu-icon ${isMenuOpen ? 'opened' : ''}`} onClick={toggleMenu}>
             <div className="menu-bar"></div>
             <div className="menu-bar"></div>
             <div className="menu-bar"></div>

@@ -1,116 +1,91 @@
-/* General Course Card Styling */
-.course-container{
+.course-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   max-width: 17rem;
   max-height: 25rem;
 }
-.course-cards {
-    width: 280px;
-    background-color: #1e3a8a;
-    border-radius: 16px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin: auto;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Header: Course Icon */
-  .course-card-header {
-    width: 100%;
-    height: 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .course-icon {
-    width: 64px;
-    height: 64px;
-  }
-  
-  /* Body: White Rectangle Overlay */
-  .course-card-body {
-    background-color: white;
-    color: black;
-    padding: 15px;
-    border-radius:12px 12px 0 0;
-    max-height: 200px;
-    width: 90%;
-    margin: 0 auto;
-  }
-  
-  .course-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #1e3a8a;
-  }
-  
-  .course-description {
-    font-size: 14px;
-    margin-bottom: 16px;
-    color: #6b7280; /* Grayish text */
-  }
-  
-  /* Buttons: Live Demo and Enroll Now */
-  .course-buttons {
-    display: flex;
-    gap: 7px;
-    justify-content: center;
-  }
-  
-  .course-btn {
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: bold;
-    border: 2px solid #ff7f50; /* Orange border */
-    border-radius: 20px; /* Circle edges */
-    background-color: transparent;
-    color: #1e3a8a;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .course-btn:hover {
-    background-color: #ff7f50; /* Orange on hover */
-    color: #ffffff;
-    transform: scale(1.05); /* Pop-up effect */
-  }
-  
-  /* Footer: Download Button */
-  .course-card-footer {
-    width: 100%;
-    padding: 10px 0;
-    border-radius: 0 0 16px 16px; /* Rounded corners for the footer */
-    text-align: center;
-  }
-  
-  .download-btn {
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: bold;
-    border: 2px solid #ff7f50; /* Orange border */
-    border-radius: 20px; /* Circle edges */
-    background-color:#ff7f50 ;
-    color: #ffffff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .download-btn:hover {
-    color:#ff7f50;
-    background-color: white;
-    transform: scale(1.05); /* Slight enlargement on hover */
-  }
-  
-  .download-icon::before {
-    content: "⤓"; /* Unicode for download icon */
-    font-size: 16px;
-  }
-  
+
+.course-card {
+  background-color: #01285b;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  text-align: center;
+  color: white;
+  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  padding: 20px;
+}
+
+.course-logo {
+  max-height: 80px;
+  object-fit: contain;
+}
+
+.card-body {
+  background-color: white;
+  color: black;
+  padding: 15px;
+  border-radius: 12px;
+  height: 150px;
+  margin: 0 auto;
+}
+
+.course-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.course-description {
+  font-size: 0.9rem;
+  margin: 10px 0 0;
+  line-height: 1.4;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  font-size: 0.9rem;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #01285b;
+  background-color: white;
+  border: 2px solid #01285b;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+}
+
+.btn:hover {
+  background-color: #01285b;
+  color: white;
+  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+}
+
+.download-curriculum {
+  margin-top: 10px;
+  background-color: #ff7700;
+  color: white;
+  width: 100%;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+}
+
+.download-curriculum:hover {
+  background-color: #e65c00;
+  transform: scale(1.05);
+}

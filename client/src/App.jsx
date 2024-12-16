@@ -15,9 +15,9 @@ import PaypalPaymentReturnPage from "./pages/student/payment-return";
 import StudentCoursesPage from "./pages/student/student-courses";
 import StudentViewCourseProgressPage from "./pages/student/course-progress";
 import Dashboard from "./pages/admin2/dashboard";
-import FAQ from "./pages/landing-page/faq";
+import FAQ from "./pages/landing-page/FAQ-page/faq";
 import PricingPage from "./pages/landing-page/Pricing/pricing";
-import ContactForm from "./pages/landing-page/contactus";
+import ContactForm from "./pages/landing-page/contact-us/contactus";
 import Co from "./pages/demo/cource" 
 import Teacher from "./pages/teacherdashboard/dashboard"
 import AboutUs from "./pages/landing-page/about-us/aboutus";

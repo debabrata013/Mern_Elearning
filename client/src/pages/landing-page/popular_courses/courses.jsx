@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import './courses.css';
-import ajs from './Ajs.png'
+import ajs from './Ajs.png';
 import aws from './aws.png';
 import vue from './viewjs.png';
 import bi from './PBI.png';
@@ -61,8 +61,33 @@ const courses = [
 ];
 
 const Courses = () => {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          sectionRef.current.classList.add('fade-in-bottom');
+        } else {
+          sectionRef.current.classList.remove('fade-in-bottom');
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <section className="popular-courses">
+    <section ref={sectionRef} className="popular-courses">
       <h2 className="section-title">Popular <span>Courses</span></h2>
       <div className="courses-grid">
         {courses.map(course => (

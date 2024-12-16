@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import Nav from './nav-bar/nav';
-import Footer from "./footer/footer";
+import Nav from '../nav-bar/nav';
+import Footer from "../footer/footer";
 import "./he.css";
 
 const FAQ = () => {
@@ -58,29 +58,25 @@ const FAQ = () => {
   return (
     <> 
       <Nav />
-      <div className="me">
-        <div className="flex min-h-screen flex-col items-center bg-gradient-to-b  to-white py-12">
-          <h1 className="text-4xl font-extrabold text-white mb-6">Frequently Asked Questions</h1>
-          <div className="w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg transform transition duration-500 ease-in-out hover:scale-105">
+      <div className="faq-page-container">
+        <div className="faq-container">
+          <h1 className="faq-title">Frequently Asked Questions</h1>
+          <div className="faq-list">
             {faqs.map((faq, index) => (
-              <div key={index} className="faq-item border-b mb-4">
+              <div key={index} className="faq-item">
                 <button
                   onClick={() => toggleQuestion(index)}
-                  className="flex w-full items-center justify-between py-4 text-left text-lg font-medium transition-all duration-300 ease-in-out hover:text-orange-500"
+                  className="faq-question"
                 >
-                  <span
-                    className={`font-medium ${activeIndex === index ? 'text-orange-500' : 'text-gray-700'}`}
-                  >
+                  <span className={`question-text ${activeIndex === index ? 'active' : ''}`}>
                     {faq.question}
                   </span>
-                  <span
-                    className={`text-2xl ${activeIndex === index ? 'text-orange-500' : 'text-gray-700'}`}
-                  >
+                  <span className={`toggle-icon ${activeIndex === index ? 'rotate' : ''}`}>
                     {activeIndex === index ? '−' : '+'}
                   </span>
                 </button>
                 {activeIndex === index && (
-                  <div className="faq-answer mt-4 border-l-4 border-orange-500 pl-4 text-gray-600">
+                  <div className="faq-answer">
                     {faq.answer}
                   </div>
                 )}

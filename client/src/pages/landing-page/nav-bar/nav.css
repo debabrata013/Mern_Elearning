@@ -1,3 +1,4 @@
+/* General Styling */
 .navbar-container {
   top: 1rem;
   width: 100%;
@@ -33,12 +34,6 @@
   transition: all 0.3s ease;
   border: 1px solid rgba(0, 0, 0, 0.148);
 }
-
-/* .nav-island.merged-island:hover {
-  background: rgba(255, 255, 255, 0.35);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-} */
 
 /* Logo Section */
 .logo-section {
@@ -111,10 +106,9 @@
   font-weight: bolder;
 }
 
-.auth-buttons{
-margin-right: 30px;
+.auth-buttons {
+  margin-right: 30px;
 }
-
 
 /* Mobile Menu Icon */
 .menu-icon {
@@ -122,6 +116,7 @@ margin-right: 30px;
   flex-direction: column;
   gap: 0.3rem;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .menu-bar {
@@ -129,6 +124,23 @@ margin-right: 30px;
   height: 0.2rem;
   background-color: #4B5563;
   transition: all 0.3s ease;
+}
+
+/* Change menu bar appearance when the menu is opened */
+.menu-icon.opened .menu-bar:nth-child(1) {
+  transform: rotate(45deg);
+  position: relative;
+  top: 0.35rem;
+}
+
+.menu-icon.opened .menu-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-icon.opened .menu-bar:nth-child(3) {
+  transform: rotate(-45deg);
+  position: relative;
+  top: -0.35rem;
 }
 
 /* Scroll Effect */
@@ -157,10 +169,10 @@ margin-right: 30px;
   }
 
   .nav-links {
-    display: none;
-    position: absolute;
-    top: calc(100% + 1rem);
-    right: 2rem;
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: -100%;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(8px);
     flex-direction: column;
@@ -170,17 +182,19 @@ margin-right: 30px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     min-width: 220px;
     border: 1px solid rgba(255, 255, 255, 0.18);
+    height: 100vh;
+    transition: right 0.3s ease; /* Sliding effect */
   }
 
   .nav-links.open {
-    display: flex;
+    right: 0;
   }
 
   .menu-icon {
     display: flex;
   }
 
-  .get-started-button {
+  .auth-buttons {
     display: none;
   }
 }
@@ -202,51 +216,67 @@ margin-right: 30px;
   }
 }
 
-@keyframes myAnim {
-	0% {
-		animation-timing-function: ease-in;
-		opacity: 1;
-		transform: translateY(-45px);
-	}
-
-	24% {
-		opacity: 1;
-	}
-
-	40% {
-		animation-timing-function: ease-in;
-		transform: translateY(-24px);
-	}
-
-	65% {
-		animation-timing-function: ease-in;
-		transform: translateY(-12px);
-	}
-
-	82% {
-		animation-timing-function: ease-in;
-		transform: translateY(-6px);
-	}
-
-	93% {
-		animation-timing-function: ease-in;
-		transform: translateY(-4px);
-	}
-
-	25%,
-	55%,
-	75%,
-	87% {
-		animation-timing-function: ease-out;
-		transform: translateY(0px);
-	}
-
-	100% {
-		animation-timing-function: ease-out;
-		opacity: 1;
-		transform: translateY(0px);
-	}
+/* Keyframes for the Slide-in Effect */
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
+@keyframes slideOutToRight {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
 
+@keyframes myAnim {
+  0% {
+    animation-timing-function: ease-in;
+    opacity: 1;
+    transform: translateY(-45px);
+  }
 
+  24% {
+    opacity: 1;
+  }
+
+  40% {
+    animation-timing-function: ease-in;
+    transform: translateY(-24px);
+  }
+
+  65% {
+    animation-timing-function: ease-in;
+    transform: translateY(-12px);
+  }
+
+  82% {
+    animation-timing-function: ease-in;
+    transform: translateY(-6px);
+  }
+
+  93% {
+    animation-timing-function: ease-in;
+    transform: translateY(-4px);
+  }
+
+  25%,
+  55%,
+  75%,
+  87% {
+    animation-timing-function: ease-out;
+    transform: translateY(0px);
+  }
+
+  100% {
+    animation-timing-function: ease-out;
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}

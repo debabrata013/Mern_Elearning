@@ -1,0 +1,120 @@
+/* Global Styles for FAQ Page */
+
+.faq-page-container {
+  padding-top: 100px; /* Added space to prevent navbar overlap */
+}
+
+.faq-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem;
+  background: white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.faq-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #01285b; /* Dark Blue Color for Title */
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.faq-item {
+  background: #fff;
+  border-radius: 8px; /* Rounded corners for each FAQ item */
+  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  background-color: #fff;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px; /* Rounded corners for the question button */
+}
+
+.faq-question:hover {
+  background-color: #ff7700; /* Orange Hover Color */
+  color: white;
+}
+
+.faq-question .question-text {
+  color: #333;
+}
+
+.faq-question .toggle-icon {
+  font-size: 1.5rem;
+  color: #ff7700; /* Orange Color for Icons */
+  transition: transform 0.3s ease;
+}
+
+/* Active state */
+.faq-question .question-text.active {
+  color: #ff7700; /* Orange for Active State */
+  font-weight: bold;
+}
+
+.faq-question .toggle-icon.rotate {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  padding: 1rem 1.5rem;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: #555;
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover and focus effects */
+.faq-item button span {
+  transition: transform 0.3s ease;
+}
+
+.faq-item button:hover span {
+  transform: scale(1.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .faq-title {
+    font-size: 2rem;
+  }
+
+  .faq-question {
+    font-size: 1rem;
+  }
+
+  .faq-answer {
+    font-size: 0.95rem;
+  }
+}
