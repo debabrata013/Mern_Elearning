@@ -1,7 +1,6 @@
-// Import React and necessary hooks
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import NextButton from "./button";
+import NextButton from "./button";  // Ensure NextButton is the updated component
 import './nav.css';
 
 const Nav = () => {
@@ -10,7 +9,6 @@ const Nav = () => {
   const [currentPath, setCurrentPath] = useState('');
 
   useEffect(() => {
-    // Set initial path
     setCurrentPath(window.location.pathname);
 
     const handleScroll = () => {
@@ -96,7 +94,6 @@ const Nav = () => {
           {/* Auth Buttons Section */}
           <div className="auth-buttons">
             <Link to="/log">
-              {/* Replacing button with NextButton */}
               <NextButton>
                 Get Started
               </NextButton>

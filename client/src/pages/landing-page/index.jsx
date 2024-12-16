@@ -11,18 +11,6 @@ import { useNavigate } from "react-router-dom";
 import "./App.css";
 import CertificateSection from "./CertificateSection/CertificateSection";
 import Nav from "./nav-bar/nav";
-import images from "./images/blur-image.png";
-
-// Ripple effect component
-const RippleBackground = () => (
-  <div className="ripple-background">
-    <div className="circle xxlarge shade1"></div>
-    <div className="circle xlarge shade2"></div>
-    <div className="circle large shade3"></div>
-    <div className="circle medium shade4"></div>
-    <div className="circle small shade5"></div>
-  </div>
-);
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

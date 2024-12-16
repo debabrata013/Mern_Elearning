@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import './hero.css';
+import "../Hero/hero.css"
 import imgs from './landing.svg';
 import magnifyingGlass from './search.png';
+
 const LandingSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isFocused, setIsFocused] = useState(false);
@@ -13,10 +14,20 @@ const LandingSection = () => {
   return (
     <div className="content-wrapper">
       <div className="content-left">
-        <h1 className="main-heading">Skill Your Way<br />Up To Success<br />With Us</h1>
-        <p className="main-description">Get the skills you need for<br />the future of work.</p>
+        <h1 className="main-heading">
+          Skill Your Way
+          <br />
+          Up To Success
+          <br />
+          With Us
+        </h1>
+        <p className="main-description">
+          Get the skills you need for
+          <br />
+          the future of work.
+        </p>
 
-        <div 
+        <div
           className={`search-bar ${isFocused || searchTerm ? 'expanded' : ''}`}
           onMouseEnter={() => setIsFocused(true)}
           onMouseLeave={() => {
@@ -33,10 +44,14 @@ const LandingSection = () => {
               if (!searchTerm) setIsFocused(false);
             }}
             onChange={(e) => setSearchTerm(e.target.value)}
+            name="searchTerm"  // Add name attribute here
+            id="searchTerm"    // Add id attribute here
+            autoComplete="off"
           />
-          <button 
-            className={`search-button ${searchTerm ? 'active' : ''}`} 
+          <button
+            className={`search-button ${searchTerm ? 'active' : ''}`}
             onClick={handleSearch}
+            aria-label="Search"
           >
             {searchTerm ? 'Search' : <img src={magnifyingGlass} alt="Search Icon" className="search-icon" />}
           </button>
