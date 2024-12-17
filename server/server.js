@@ -79,6 +79,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 const chatRoutes = require('./routes/chat');
+const DocRouter = require('./routes/generate')
 
 if (!MONGO_URI) {
   console.error("MONGO_URI is not set in the environment variables.");
@@ -124,6 +125,7 @@ app.use('/courses', courseRoutes);
 app.use('/upload', uploadRoutes);
 app.use('/progress', progressRoutes);
 app.use('/api', userRoutes);
+app.use('/doc', DocRouter);
 
 app.use('/api/chat', chatRoutes);
 // Error handling middleware
