@@ -2,6 +2,26 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Default padding for larger screens */
 .main-content {
   padding: 0.5rem 7.5rem 0rem 7.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 0.5rem 5rem 0rem 5rem; /* Adjust padding for tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0.5rem 3rem 0rem 3rem; /* Adjust padding for smaller tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 0.5rem 1rem 0rem 1rem; /* Adjust padding for mobile */
+  }
 }

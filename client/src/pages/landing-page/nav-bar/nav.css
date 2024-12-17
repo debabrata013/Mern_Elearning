@@ -122,7 +122,7 @@
 .menu-bar {
   width: 2rem;
   height: 0.2rem;
-  background-color: #4B5563;
+  background-color: #4b5563;
   transition: all 0.3s ease;
 }
 
@@ -148,10 +148,35 @@
   background: rgba(255, 255, 255, 0.35);
 }
 
-/* Mobile Responsive */
+/* Mobile Sidebar */
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: -100%; /* Initially off-screen */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  padding: 1.2rem;
+  gap: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  min-width: 220px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: left 0.3s ease; /* Slide-in effect */
+  display: none; /* Sidebar hidden initially */
+}
+
+.mobile-sidebar.show {
+  left: 0; /* Sidebar shown when the menu is clicked */
+}
+
 @media screen and (max-width: 1024px) {
   .navbar-container {
     padding: 1.2rem;
+    width: 100%;
   }
 
   .nav-island.merged-island {
@@ -161,9 +186,15 @@
   .nav-links {
     gap: 2rem;
   }
-}
 
-@media screen and (max-width: 968px) {
+  .menu-icon {
+    display: flex;
+  }
+
+  .auth-buttons {
+    display: none;
+  }
+
   .nav-island.merged-island {
     padding: 0.75rem;
   }
@@ -172,7 +203,7 @@
     display: flex;
     position: fixed;
     top: 0;
-    right: -100%;
+    right: -100%; /* Sidebar hidden by default */
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(8px);
     flex-direction: column;
@@ -183,36 +214,11 @@
     min-width: 220px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     height: 100vh;
-    transition: right 0.3s ease; /* Sliding effect */
+    transition: right 0.3s ease; /* Slide effect */
   }
 
   .nav-links.open {
-    right: 0;
-  }
-
-  .menu-icon {
-    display: flex;
-  }
-
-  .auth-buttons {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .navbar-container {
-    padding: 1rem;
-  }
-
-  .nav-island.merged-island {
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 1rem;
-    border-radius: 20px;
-  }
-
-  .logo-section {
-    flex-grow: 1;
+    right: 0; /* Show sidebar when open */
   }
 }
 

@@ -1,143 +1,179 @@
-/* src/components/Achievements/Achievements.css */
+/* General Styling for Achievements Section */
 .achievements {
-    width: 1275px;
-    box-shadow: 0px 0px 21px 2px #00000032;
-    margin-bottom: 40px;
-    padding: 0 20px 0 0;
-    border-radius: 1rem;
-    flex-direction: row;
-    
-  }
-  .stat-number {
-    font-size: 48px;
-    font-weight: bold;
-    color: #FF7F50;
-    margin-bottom: 10px;
-    transition: transform 0.3s ease, color 0.3s ease;
-    display: inline-block;
-  }
-  
-  .stat-number:hover {
-    transform: scale(1.1);
-    color: #003B73;
-  }
-  
-  .achievements-title {
-    text-align: center;
-    font-size: 45px;
-    margin-bottom: 60px;
-    font-weight: bold;
-  }
-  
-  .title-primary {
-    color: #003B73;
-  }
-  
-  .title-secondary {
-    color: #FF7F50;
-  }
-  
+  width: 1275px;
+  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+  margin-bottom: 40px;
+  padding: 0 20px 0 0;
+  border-radius: 1rem;
+  flex-direction: row;
+}
+
+.stat-number {
+  font-size: 48px;
+  font-weight: bold;
+  color: #FF7F50;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease, color 0.3s ease;
+  display: inline-block;
+}
+
+.stat-number:hover {
+  transform: scale(1.1);
+  color: #003B73;
+}
+
+.achievements-title {
+  text-align: center;
+  font-size: 45px;
+  margin-bottom: 60px;
+  font-weight: bold;
+}
+
+.title-primary {
+  color: #003B73;
+}
+
+.title-secondary {
+  color: #FF7F50;
+}
+
+.achievements-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.achievements-left {
+  flex: 1;
+  position: relative;
+}
+
+.achievement-image {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.achievements-right {
+  flex: 1;
+}
+
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  background: #f9f9f9;
+}
+
+.stat-card.wide {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.stat-number {
+  font-size: 48px;
+  font-weight: bold;
+  color: #FF7F50;
+  margin-bottom: 10px;
+}
+
+.stat-description {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #333;
+  font-size: 16px;
+}
+
+.stat-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Mobile Responsiveness */
+/* Mobile Responsiveness */
+@media (max-width: 968px) {
   .achievements-container {
-    display: flex;
-    justify-content: space-between;
-    /* align-items: center; */
-    gap: 50px;
+      flex-direction: column;
   }
-  
-  .achievements-left {
-    flex: 1;
-    position: relative;
-  }
-  
-  .achievement-image {
-    width: 100%;
-    max-width: 600px;
-    height: auto;
-    margin-bottom: 20px;
-  }
-  
+
+  .achievements-left,
   .achievements-right {
-    flex: 1;
-  }
-  
-  .stats-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-  
-  .stat-card {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.492);
-    text-align: center;
-    transition: all 0.3s ease;
-  }
-  
-  .stat-card:hover {
-    transform: translateY(-10px); 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-    background: #f9f9f9; 
-  }
-  
-  
-  .stat-card.wide {
-    grid-column: span 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .stat-number {
-    font-size: 48px;
-    font-weight: bold;
-    color: #FF7F50;
-    margin-bottom: 10px;
-  }
-  
-  .stat-description {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    color: #333;
-    font-size: 16px;
-  }
-  
-  .stat-icon {
-    width: 24px;
-    height: 24px;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 968px) {
-    .achievements-container {
-      flex-direction: column;
-    }
-  
-    .achievements-left,
-    .achievements-right {
       width: 100%;
-    }
+      margin-bottom: 2rem; /* Added margin to separate sections */
   }
-  
-  @media (max-width: 576px) {
-    .stats-container {
-      grid-template-columns: 1fr;
-    }
-  
-    .stat-card.wide {
-      grid-column: span 1;
-      flex-direction: column;
-    }
-  
-    .achievements-title {
+
+  .achievement-image {
+      width: 80%; /* Image scaling for mobile */
+      margin: 0 auto; /* Center the image */
+  }
+}
+
+@media (max-width: 576px) {
+  .achievements {
+    width: 100%; /* Ensure section takes full width */
+    padding: 0 10px; /* Add padding to prevent edge-to-edge content */
+  }
+
+  .achievements-title {
       font-size: 28px;
-    }
-  
-    .stat-number {
-      font-size: 36px;
-    }
+      margin-bottom: 1rem;
   }
+
+  .achievements-container {
+      padding: 1rem; /* Adjust container padding for small screens */
+      flex-direction: column;
+  }
+
+  .stats-container {
+      grid-template-columns: 1fr; /* Single column for stats */
+  }
+
+  .stat-card.wide {
+      grid-column: span 1; /* Make wide card normal width */
+      flex-direction: column; /* Stack the content vertically */
+      align-items: center;
+  }
+
+  .stat-card {
+      padding: 20px; /* Reduced padding for mobile */
+      width: 100%; /* Make each stat card take full width */
+  }
+
+  .stat-number {
+      font-size: 36px; /* Adjust stat number size for mobile */
+  }
+
+  .stat-description {
+      font-size: 14px; /* Smaller description text for mobile */
+  }
+
+  .stat-icon {
+      width: 20px;
+      height: 20px;
+  }
+
+  .stat-card:hover {
+      transform: translateY(0); /* Remove hover effect for mobile */
+      box-shadow: none; /* No hover effect on mobile */
+  }
+}

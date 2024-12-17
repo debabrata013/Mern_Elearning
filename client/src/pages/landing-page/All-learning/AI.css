@@ -10,7 +10,7 @@
   padding: 4rem 1rem;
   background: linear-gradient(135deg, #01285b 0%, #024e9f 100%);
   border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
   color: #ffffff;
 }
 
@@ -21,6 +21,7 @@
   flex-direction: column;
   justify-content: center;
   animation: fadeIn 1s ease-in-out;
+  margin-left: 10px;
 }
 
 .title {
@@ -81,6 +82,7 @@
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   animation: scaleUp 1.2s ease-in-out;
+  padding-bottom: 10px;
 }
 
 /* Carousel Styles */

@@ -84,13 +84,16 @@
 }
 
 .card-header {
-  padding: 20px;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
 }
 
 .course-logo {
   max-height: 80px;
   object-fit: contain;
 }
+
 
 .card-body {
   background-color: white;

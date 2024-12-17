@@ -2,7 +2,8 @@
   padding: 20px;
   border: 8px solid #01285b; 
   border-radius: 7px;
-  box-shadow: 0px 0px 29px 0px #0000003a;  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+  border-radius: 10px;
   background-color: #ffffff; 
   margin-bottom: 40px;
 }
@@ -121,6 +122,8 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+
 }
 
 .mentor-btn:hover {
@@ -139,7 +142,7 @@
   background: rgba(0, 80, 158, 0.1); /* Light blue glass effect */
   backdrop-filter: blur(10px);
   border: 2px solid rgba(0, 80, 158, 0.5); /* Blue border */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
   opacity: 1;
   transform: scale(1);
   transition: transform 0.6s ease, opacity 0.6s ease;
@@ -171,3 +174,115 @@
   font-size: 1rem;
   line-height: 1.5;
 }
+/* Existing Styles */
+/* ... Your existing CSS above ... */
+
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+  /* Container adjustments */
+  .container {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .left-container {
+    width: 100%; /* Take full width */
+  }
+
+  .mentor-gallery {
+    padding-left: 0;
+    height: 250px; /* Smaller height */
+  }
+
+  /* Show only the current card (present) */
+  .mentor-card {
+    position: relative; /* Reset positioning for clean stacking */
+    width: 90%; /* Make card wider for mobile */
+    height: 250px; /* Adjust card height */
+    transform: scale(1); /* Reset scale for mobile */
+    opacity: 1;
+    z-index: 1;
+    margin: 0 auto;
+  }
+
+  /* Hide past and future cards */
+  .mentor-card.past,
+  .mentor-card.future {
+    display: none;
+  }
+
+  .mentor-card.present {
+    transform: scale(1); /* Center and scale the main card */
+    z-index: 2;
+    opacity: 1;
+  }
+
+  .mentor-details {
+    padding: 8px; /* Smaller padding */
+  }
+
+  .mentor-name {
+    font-size: 1rem; /* Adjust font size */
+  }
+
+  /* Buttons remain centered */
+  .mentor-actions {
+    margin-top: 15px;
+  }
+
+  .mentor-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem; /* Smaller buttons */
+  }
+
+  /* Right Container (Description) */
+  .right-container {
+    padding-right: 0;
+    width: 100%;
+  }
+
+  .mentor-description-card {
+    width: 90%; /* Full width */
+    height: auto; /* Adjust height */
+    margin-top: 20px;
+    padding: 10px;
+  }
+
+  .mentor-description-title {
+    font-size: 1.4rem; /* Reduce title size */
+  }
+
+  .mentor-description {
+    font-size: 0.9rem; /* Reduce text size */
+    line-height: 1.4;
+    padding: 0 10px; /* Adjust padding */
+  }
+}
+
+@media (max-width: 480px) {
+  /* Further refinements for very small devices */
+  .mentor-gallery {
+    height: 220px;
+  }
+
+  .mentor-card {
+    height: 220px; /* Smaller height for small screens */
+  }
+
+  .mentor-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+
+  .mentor-description-title {
+    font-size: 1.2rem;
+  }
+
+  .mentor-description {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+}
+

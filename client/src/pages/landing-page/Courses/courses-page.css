@@ -1,8 +1,9 @@
 /* General Styling */
 .course-page {
   margin-top: 6rem;
-  margin-left: 2rem;
-  margin-right: 2rem;
+  margin-left: 5rem;
+  margin-bottom: 3rem;
+  margin-right: 5rem;
   font-family: Arial, sans-serif;
   padding: 20px;
   background: linear-gradient(to bottom, #ffffff, #f4f8fb);
@@ -18,6 +19,7 @@
   opacity: 1;
   transform: translateY(0);
 }
+
 
 /* Section Title */
 .section-title {
@@ -38,6 +40,7 @@
   align-items: center;
   margin-bottom: 20px;
   padding: 10px;
+  margin-right: 70px;
 }
 
 .search-bar {
