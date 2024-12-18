@@ -196,3 +196,30 @@
   opacity: 0;
   transform: translateY(-50px);
 }
+/* Responsive Design for How It Works Section */
+/* Responsive Design for How It Works Section */
+@media (max-width: 768px) {
+  .how-it-works {
+    height: auto;
+    padding:0 10px 0 10px;
+  }
+
+  .workflow-title {
+    font-size: 14px; /* Decrease font size */
+    margin-bottom: 20px;
+    top: -15px;
+    background-color: #ff7700; /* Keep the background color the same */
+    padding: 8px 20px; /* Reduce padding to adjust the background size */
+  }
+
+  .workflow-container {
+    height:100px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .workflow-endpoint {
+    margin-bottom: 20px;
+  }
+}
+

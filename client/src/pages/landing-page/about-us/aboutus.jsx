@@ -1,151 +1,105 @@
-// src/components/AboutUs.js
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import CollaborationsAndFooter from "../footer/footer";
+
 import Nav from "../nav-bar/nav";
+import Footer from "../footer/footer";
+import React from 'react';
+import './AboutUs.css';
+
+// Import Images
+import image1 from '../about-us/group.png'; // Top Section Image 1
+import image2 from '../about-us/mask.png'; // Top Section Image 2
+import circleImage from '../about-us/circle.png'; // Bottom Section Circle Image
+import missionIcon from '../about-us/Frame-1.png'; // Mission Icon
+import visionIcon from '../about-us/Frame.png'; // Vision Icon
+
+
 const AboutUs = () => {
   return (
     <>
-   <Nav/>
-   <div className="m3">
-    <div className="bg-blue-900 text-white py-12 px-6 md:px-16 ">
-      {/* Header Section */}
-      <div className="text-center md:text-left mb-12">
-        <h2 className="text-4xl font-bold mb-4">
-          The Platform For The Next Billion Learners
-        </h2>
-        <p className="text-gray-300 text-lg">
-          Transforming education to shape the next generation of students,
-          employees, and innovators.
-        </p>
+    <nav className="navbar">
+        <Nav />
+      </nav>
+    <section className="about-us">
+      
+    <div className="heading1">
+      <span className="hh1">About </span>
+      <span className="hh2">Us</span>
+    </div>
+      <div className="top-section">
+        <div className="top-left">
+          <h5 className="section-tag">ABOUT US</h5>
+          <h1 className="main-heading">The Platform For The Next Billion Learners</h1>
+          <p className="subtext">
+            Transforming tech education for the next generation of students & employees
+          </p>
+        </div>
+        <div className="top-right">
+          <img src={image1} alt="Top Section Image 1" className="image-placeholder img-1" />
+          <img src={image2} alt="Top Section Image 2" className="image-placeholder img-2" />
+        </div>
       </div>
 
-      {/* Image and Story Section */}
-      <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
-        <div className="flex flex-col md:flex-row gap-4 w-full md:w-1/2">
-          <img
-            src="https://imgs.search.brave.com/AehGQc1Es9BFnZkVCAlz4ge9JXFeFWhVDXEcQ-T_6EI/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/aW1nMmdvLmNvbS9h/c3NldHMvaW1nL2Jh/Y2tkb2MucG5n"
-            alt="Students"
-            className="w-full md:w-1/2 rounded-md"
-          />
-          <img
-            src="https://imgs.search.brave.com/_pIGNp-lfOpexzWlfyfRw-JWBvyG3LgQt2Pe-HDC0C8/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWdy/ZXNpemVycy5jb20v/aWRlYS5zdmc"
-            alt="Learning"
-            className="w-full md:w-1/2 rounded-md"
-          />
+      {/* Bottom Section */}
+      <div className="bottom-section">
+        <div className="bottom-left">
+          <img src={circleImage} alt="Circle Shape" className="circle-image img-3" />
+          <div className="decorative-shape"></div>
         </div>
-        <div className="w-full md:w-1/2">
-          <h3 className="text-orange-400 text-xl font-semibold mb-2">
-            Our Story
-          </h3>
-          <h4 className="text-2xl font-bold mb-4 text-gray-100">
-            Innovating new ways to train students
-          </h4>
-          <p className="text-gray-300">
-            We strive to redefine what we can achieve by providing resources,
-            guidance, and mentorship to help students achieve their dreams. Our
-            goal is to make learning available and affordable for everyone,
-            anywhere.
+        <div className="bottom-right">
+          <h5 className="story-tag">OUR STORY</h5>
+          <h2 className="story-heading">Innovating new ways to train students</h2>
+          <p className="story-text">
+            We see no limits to what we can achieve by harnessing our individual and collective strengths.
+            We are changing the world with our ideas, insights, and unique perspectives.
           </p>
         </div>
       </div>
 
       {/* Mission and Vision Section */}
-      <div className="bg-white text-blue-900 py-12 px-6 md:px-16 rounded-lg flex flex-col md:flex-row justify-between gap-8 mb-12">
-        <div className="flex-1 text-center md:text-left">
-          <h3 className="text-xl font-semibold text-orange-400 mb-4">
-            Our Mission
-          </h3>
-          <p>
-            Provide passion-based learning by using a unique approach to prepare
-            students for real-world challenges. Our mission is to create an
-            engaging, vibrant, and innovative learning experience.
+      <div className="mission-vision">
+        <div className="mission">
+          <img src={missionIcon} alt="Mission" className="icon1" />
+          <h2 className="section-title">Our <span>Mission</span></h2>
+          <p className="section-description">
+            Provide practice-based skill trainings using n unique teaching methodologies to enhance the right skills
+            required in industry for working professionals, college students, and startups.
           </p>
         </div>
-        <div className="flex-1 text-center md:text-left">
-          <h3 className="text-xl font-semibold text-orange-400 mb-4">
-            Our Vision
-          </h3>
-          <p>
-            To revolutionize the digital sphere by implementing learning
-            innovations that drive student success, fostering a supportive
-            environment for future leaders.
+        <div className="vision">
+          <img src={visionIcon} alt="Vision" className="icon" />
+          <h2 className="section-title">Our <span>Vision</span></h2>
+          <p className="section-description">
+            To transform students into skilled employees by imparting industry-relevant skills within a corporate
+            working environment with a holistic approach.
           </p>
         </div>
       </div>
 
       {/* Team Section */}
-      <div className="text-center mb-12">
-        <h3 className="text-2xl font-bold mb-6">Our Team</h3>
-        <div className="flex flex-wrap justify-center gap-8">
-          {/* Individual Team Member */}
-          <div className="w-40 text-center">
-            <img
-              src="https://imgs.search.brave.com/IAgd4knwQ7AD9eFSuQU9HLfvm0TSfFCMqpfdNSlc2gk/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91eHdp/bmcuY29tL3dwLWNv/bnRlbnQvdGhlbWVz/L3V4d2luZy9kb3du/bG9hZC9wZW9wbGVz/LWF2YXRhcnMvbWFu/LXVzZXItY2lyY2xl/LWljb24uc3Zn"
-              alt="Team Member"
-              className="w-full rounded-full mb-4"
-            />
-            <h4 className="font-semibold text-lg">Keshav Kumar</h4>
-            <p className="text-gray-300">Director of Operations</p>
+      {/* <div className="team-section">  
+        <h2 className="team-heading">Our <span>Team</span></h2>
+        <div className="team-members">
+          <div className="team-card">
+            <img src="" alt="Kishore Kumar" className="profile-pic" />
+            <h4>KISHORE KUMAR</h4>
+            <p>CEO & FOUNDER</p>
           </div>
-          <div className="w-40 text-center">
-            <img
-              src="https://imgs.search.brave.com/IAgd4knwQ7AD9eFSuQU9HLfvm0TSfFCMqpfdNSlc2gk/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91eHdp/bmcuY29tL3dwLWNv/bnRlbnQvdGhlbWVz/L3V4d2luZy9kb3du/bG9hZC9wZW9wbGVz/LWF2YXRhcnMvbWFu/LXVzZXItY2lyY2xl/LWljb24uc3Zn"
-              alt="Team Member"
-              className="w-full rounded-full mb-4"
-            />
-            <h4 className="font-semibold text-lg">Suchitra</h4>
-            <p className="text-gray-300">Design Lead</p>
+          <div className="team-card">
+            <img src="" alt="Suchitra" className="profile-pic" />
+            <h4>SUCHITRA</h4>
+            <p>DIRECTOR - HR & OPERATIONS</p>
           </div>
-          <div className="w-40 text-center">
-            <img
-              src="https://imgs.search.brave.com/IAgd4knwQ7AD9eFSuQU9HLfvm0TSfFCMqpfdNSlc2gk/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91eHdp/bmcuY29tL3dwLWNv/bnRlbnQvdGhlbWVz/L3V4d2luZy9kb3du/bG9hZC9wZW9wbGVz/LWF2YXRhcnMvbWFu/LXVzZXItY2lyY2xl/LWljb24uc3Zn"
-              alt="Team Member"
-              className="w-full rounded-full mb-4"
-            />
-            <h4 className="font-semibold text-lg">Naren M</h4>
-            <p className="text-gray-300">Tech Lead</p>
+          <div className="team-card">
+            <img src="" alt="Naren M" className="profile-pic" />
+            <h4>NAREN M</h4>
+            <p>Co-Founder</p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Advisors Section */}
-      <div className="text-center">
-        <h3 className="text-2xl font-bold mb-6">Our Advisors</h3>
-        <div className="flex flex-wrap justify-center gap-8">
-          {/* Individual Advisor */}
-          <div className="w-40 text-center">
-            <img
-              src="https://imgs.search.brave.com/IAgd4knwQ7AD9eFSuQU9HLfvm0TSfFCMqpfdNSlc2gk/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91eHdp/bmcuY29tL3dwLWNv/bnRlbnQvdGhlbWVz/L3V4d2luZy9kb3du/bG9hZC9wZW9wbGVz/LWF2YXRhcnMvbWFu/LXVzZXItY2lyY2xl/LWljb24uc3Zn"
-              alt="Advisor"
-              className="w-full rounded-full mb-4"
-            />
-            <h4 className="font-semibold text-lg">John Doe</h4>
-            <p className="text-gray-300">Strategic Advisor</p>
-          </div>
-          <div className="w-40 text-center">
-            <img
-              src="https://imgs.search.brave.com/IAgd4knwQ7AD9eFSuQU9HLfvm0TSfFCMqpfdNSlc2gk/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91eHdp/bmcuY29tL3dwLWNv/bnRlbnQvdGhlbWVz/L3V4d2luZy9kb3du/bG9hZC9wZW9wbGVz/LWF2YXRhcnMvbWFu/LXVzZXItY2lyY2xl/LWljb24uc3Zn"
-              alt="Advisor"
-              className="w-full rounded-full mb-4"
-            />
-            <h4 className="font-semibold text-lg">Jane Smith</h4>
-            <p className="text-gray-300">Mentor</p>
-          </div>
-          <div className="w-40 text-center">
-            <img
-              src="https://imgs.search.brave.com/IAgd4knwQ7AD9eFSuQU9HLfvm0TSfFCMqpfdNSlc2gk/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91eHdp/bmcuY29tL3dwLWNv/bnRlbnQvdGhlbWVz/L3V4d2luZy9kb3du/bG9hZC9wZW9wbGVz/LWF2YXRhcnMvbWFu/LXVzZXItY2lyY2xl/LWljb24uc3Zn"
-              alt="Advisor"
-              className="w-full rounded-full mb-4"
-            />
-            <h4 className="font-semibold text-lg">Aditi Patel</h4>
-            <p className="text-gray-300">Industry Expert</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-    <CollaborationsAndFooter/>
+
+    </section>
+    <Footer />
     </>
   );
 };
