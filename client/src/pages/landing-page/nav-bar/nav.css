@@ -1,4 +1,6 @@
 /* General Styling */
+
+
 .navbar-container {
   top: 1rem;
   width: 100%;
@@ -107,6 +109,7 @@
 
 .auth-buttons {
   margin-right: 30px;
+  margin-left: 100px;
 }
 
 /* Mobile Menu Icon */

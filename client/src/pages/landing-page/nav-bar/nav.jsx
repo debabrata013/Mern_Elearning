@@ -46,8 +46,8 @@ const Nav = () => {
               </div>
             </div>
             <div className="logo-text">
-              <span className="logo-ezy">EZY</span>
-              <span className="logo-skills">SKILLS</span>
+              <span className="logo-ezy">DIGI</span>
+              <span className="logo-skills">TORIA</span>
             </div>
           </div>
 
@@ -69,7 +69,7 @@ const Nav = () => {
 
             {/* Mobile Login Button */}
             <Link to="/log" className={`login-button ${isMenuOpen ? 'show' : ''}`}>
-              Login
+              Next
             </Link>
           </div>
 
