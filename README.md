@@ -1,4 +1,4 @@
-# Mearn_Elearning
+# MERN_Elearning
 
 # MERN eLearning Website - Data Storage and CSP (AWS)
 
