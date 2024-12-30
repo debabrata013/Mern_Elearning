@@ -23,6 +23,8 @@ const JobsContent = () => {
     setLoading(true);
     try {
       const data = await jobService.getAllJobs();
+      console.log(data);
+      
       setJobs(data);
     } catch (error) {
       console.error('Error fetching jobs:', error);
@@ -94,10 +96,12 @@ const JobsContent = () => {
   };
 
   const renderJobCard = (job) => (
-    <div key={job.id} className="bg-white p-6 rounded-lg shadow-md">
+   
+    
+    <div key={job._id} className="bg-white p-6 rounded-lg shadow-md">
       <img src={job.imageUrl || '/api/placeholder/300/200'} alt={job.jobTitle} className="w-full h-48 object-cover rounded-md mb-4" />
       <div className="flex flex-col">
-        <h3 className="text-lg font-semibold">{job.jobTitle}</h3>
+        <h3 className="text-lg font-semibold">{job.jobTitle}</h3>  
         <p className="text-sm text-gray-600 mb-2">{job.jobDescription}</p>
         <p className="text-sm text-gray-500">Salary: ${job.salary}</p>
         <p className="text-sm text-gray-500">Experience: {job.experience} years</p>
