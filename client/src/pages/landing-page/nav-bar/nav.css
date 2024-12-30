@@ -1,11 +1,12 @@
 /* General Styling */
+
+
 .navbar-container {
   top: 1rem;
   width: 100%;
   position: fixed;
   z-index: 1000;
   transition: all 0.3s ease;
-  animation: myAnim 1.7s ease 0s 1 normal none;
 }
 
 .navbar-wrapper {
@@ -108,6 +109,7 @@
 
 .auth-buttons {
   margin-right: 30px;
+  margin-left: 100px;
 }
 
 /* Mobile Menu Icon */
@@ -171,6 +173,23 @@
 
 .mobile-sidebar.show {
   left: 0; /* Sidebar shown when the menu is clicked */
+}
+
+/* Login Button inside the mobile menu */
+.login-button {
+  display: none; /* Hidden by default */
+  background-color: #ff7700;  /* Button color */
+  color: white;  /* Text color */
+  padding: 0.8rem 1.5rem;  /* Padding */
+  text-align: center;  /* Text alignment */
+  border-radius: 5px;  /* Rounded corners */
+  text-decoration: none;  /* Remove underline */
+  font-weight: bold;  /* Bold text */
+}
+
+.login-button.show {
+  display: block; /* Visible when the menu is open */
+  margin-top: 1rem; /* Add some spacing from the last link */
 }
 
 @media screen and (max-width: 1024px) {
@@ -248,40 +267,7 @@
     transform: translateY(-45px);
   }
 
-  24% {
-    opacity: 1;
-  }
-
-  40% {
-    animation-timing-function: ease-in;
-    transform: translateY(-24px);
-  }
-
-  65% {
-    animation-timing-function: ease-in;
-    transform: translateY(-12px);
-  }
-
-  82% {
-    animation-timing-function: ease-in;
-    transform: translateY(-6px);
-  }
-
-  93% {
-    animation-timing-function: ease-in;
-    transform: translateY(-4px);
-  }
-
-  25%,
-  55%,
-  75%,
-  87% {
-    animation-timing-function: ease-out;
-    transform: translateY(0px);
-  }
-
   100% {
-    animation-timing-function: ease-out;
     opacity: 1;
     transform: translateY(0px);
   }

@@ -14,7 +14,7 @@ const LandingSection = () => {
   return (
     <div className="content-wrapper">
       <div className="content-left">
-        <h1 className="main-heading">
+        <h1 className="main-headingi">
           Skill Your Way
           <br />
           Up To Success
