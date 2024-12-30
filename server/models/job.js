@@ -7,6 +7,10 @@ const jobSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    jobDescription: {
+      type: String,
+      required: true,
+    },
     salary: {
       type: String,  // If you want to store it as a number
       required: true,

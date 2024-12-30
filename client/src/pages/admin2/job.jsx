@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, X } from 'lucide-react';
 import jobService from './api/jobService';
 
@@ -13,29 +13,27 @@ const JobsContent = () => {
     experience: '',
     applyStartDate: '',
     applyEndDate: '',
-    imageUrl: '',
+    jobImageUrl: '',
     jobLink: ''
   });
   const [currentJobId, setCurrentJobId] = useState(null);
 
   // Fetch jobs from the backend
-  const fetchJobs = async () => {
+  const fetchJobs = useCallback(async () => {
     setLoading(true);
     try {
       const data = await jobService.getAllJobs();
-      console.log(data);
-      
       setJobs(data);
     } catch (error) {
       console.error('Error fetching jobs:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchJobs();
-  }, []);
+  }, [fetchJobs]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,11 +47,13 @@ const JobsContent = () => {
     e.preventDefault();
     try {
       if (currentJobId) {
-        await jobService.updateJob(currentJobId, formData); // Update the job if editing
+        await jobService.updateJob(currentJobId, formData);
+        console.log('Job updated successfully');
       } else {
-        await jobService.createJob(formData); // Create a new job
+        const response = await jobService.createJob(formData);
+        console.log('Job created successfully:', response);
       }
-      fetchJobs(); // Refresh job list
+      await fetchJobs(); // Refresh job list
       setShowJobForm(false);
       setFormData({
         jobTitle: '',
@@ -62,21 +62,22 @@ const JobsContent = () => {
         experience: '',
         applyStartDate: '',
         applyEndDate: '',
-        imageUrl: '',
+        jobjobImageUrl: '',
         jobLink: ''
       });
-      setCurrentJobId(null); // Reset the current job id
+      setCurrentJobId(null);
     } catch (error) {
-      console.error('Error submitting job:', error);
+      console.error('Error submitting job:', error.response?.data || error.message);
     }
   };
 
-  const handleRemoveJob = async (id) => {
+  const handleRemoveJob = async (jobId) => {
     try {
-      await jobService.deleteJob(id);
-      fetchJobs(); // Refresh job list after deletion
+      await jobService.deleteJob(jobId);
+      console.log('Job deleted successfully');
+      await fetchJobs(); // Refresh job list after deletion
     } catch (error) {
-      console.error('Error deleting job:', error);
+      console.error('Error deleting job:', error.response?.data || error.message);
     }
   };
 
@@ -88,39 +89,69 @@ const JobsContent = () => {
       experience: job.experience,
       applyStartDate: job.applyStartDate,
       applyEndDate: job.applyEndDate,
-      imageUrl: job.imageUrl,
+      jobImageUrl: job.jobImageUrl,
       jobLink: job.jobLink
     });
-    setCurrentJobId(job.id); // Set the job id to update
-    setShowJobForm(true); // Show the form to edit
+    setCurrentJobId(job._id); 
+    setShowJobForm(true);
   };
 
   const renderJobCard = (job) => (
-   
-    
-    <div key={job._id} className="bg-white p-6 rounded-lg shadow-md">
-      <img src={job.imageUrl || '/api/placeholder/300/200'} alt={job.jobTitle} className="w-full h-48 object-cover rounded-md mb-4" />
-      <div className="flex flex-col">
-        <h3 className="text-lg font-semibold">{job.jobTitle}</h3>  
-        <p className="text-sm text-gray-600 mb-2">{job.jobDescription}</p>
-        <p className="text-sm text-gray-500">Salary: ${job.salary}</p>
-        <p className="text-sm text-gray-500">Experience: {job.experience} years</p>
-        <p className="text-sm text-gray-500">Apply from: {job.applyStartDate} to {job.applyEndDate}</p>
-        <a href={job.jobLink} className="text-blue-600 hover:text-blue-700" target="_blank" rel="noopener noreferrer">Apply Now</a>
-        <button
-          onClick={() => handleEditJob(job)}
-          className="mt-4 text-yellow-600 hover:text-yellow-700 flex items-center gap-2"
+    <div key={job._id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+      <div className="relative">
+        <img 
+          src={job.jobImageUrl || '/api/placeholder/300/200'} 
+          alt={job.jobTitle} 
+          className="w-full h-56 object-cover rounded-lg mb-4" 
+        />
+        <div className="absolute top-2 right-2 flex gap-2">
+          <button
+            onClick={() => handleEditJob(job)}
+            className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition-colors"
+            title="Edit Job"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+            </svg>
+          </button>
+          <button
+            onClick={() => handleRemoveJob(job._id)}
+            className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+            title="Remove Job"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <div className="space-y-3">
+        <h3 className="text-xl font-bold text-gray-800">{job.jobTitle}</h3>  
+        <p className="text-gray-600 leading-relaxed">{job.jobDescription}</p>
+        
+        <div className="flex flex-wrap gap-2 my-3">
+          <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+            ₹{job.salary}
+          </span>
+          <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+            {job.experience} years exp
+          </span>
+        </div>
+        
+        <div className="text-sm text-gray-600">
+          <p>Application Period:</p>
+          <p className="font-medium">{job.applyStartDate} - {job.applyEndDate}</p>
+        </div>
+
+        <a 
+          href={job.jobLink} 
+          className="mt-4 block w-full text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          target="_blank" 
+          rel="noopener noreferrer"
         >
-          <Plus className="h-4 w-4" />
-          Modify Job
-        </button>
-        <button
-          onClick={() => handleRemoveJob(job.id)}
-          className="mt-4 text-red-600 hover:text-red-700 flex items-center gap-2"
-        >
-          <X className="h-4 w-4" />
-          Remove Job
-        </button>
+          Apply Now
+        </a>
       </div>
     </div>
   );
@@ -151,6 +182,18 @@ const JobsContent = () => {
                   id="jobTitle"
                   name="jobTitle"
                   value={formData.jobTitle}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1" htmlFor="jobDescription">Job Description</label>
+                <input
+                  type="text"
+                  id="jobDescription"
+                  name="jobDescription"
+                  value={formData.jobDescription}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-lg"
                   required
@@ -205,12 +248,12 @@ const JobsContent = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="imageUrl">Job Image URL</label>
+                <label className="block text-sm font-medium mb-1" htmlFor="jobImageUrl">Job Image URL</label>
                 <input
                   type="url"
-                  id="imageUrl"
-                  name="imageUrl"
-                  value={formData.imageUrl}
+                  id="jobImageUrl"
+                  name="jobImageUrl"
+                  value={formData.jobImageUrl}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-lg"
                 />
@@ -232,7 +275,7 @@ const JobsContent = () => {
               type="submit"
               className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Submit Job
+              {currentJobId ? 'Update Job' : 'Create Job'}
             </button>
           </form>
         </div>
@@ -241,7 +284,7 @@ const JobsContent = () => {
       {/* Loading Spinner */}
       {loading && (
         <div className="text-center my-6">
-          <div className="spinner"></div> {/* You can replace this with your own loader */}
+          <div className="spinner"></div>
         </div>
       )}
 
