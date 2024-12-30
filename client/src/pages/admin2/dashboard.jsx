@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { PlusCircle, Book, Users, DollarSign, TrendingUp, Home, Layout, BookOpen, ClipboardList, Settings, LogOut, Menu,School } from 'lucide-react';
-import RecordsContent from "./record"
+import RecordsContent from "./job"
 import ClassesContent from './class'
 import ManageTeachersContent from './Teacher';
 import ManageStudentsContent from './Student';
