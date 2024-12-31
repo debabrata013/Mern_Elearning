@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
+import { FaHome, FaBook, FaUserGraduate, FaChalkboardTeacher, FaCertificate, FaBullhorn, FaExclamationCircle, FaTags, FaPlusCircle, FaEdit } from 'react-icons/fa';
 
 import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { PlusCircle, Book, Users, DollarSign, TrendingUp, Home, Layout, BookOpen, ClipboardList, Settings, LogOut, Menu,School } from 'lucide-react';
+import { PlusCircle, Book, Users, DollarSign, TrendingUp, Home, Layout, BookOpen, ClipboardList, Settings, LogOut, Menu,School, ChevronDown } from 'lucide-react';
 import RecordsContent from "./job"
 import ClassesContent from './class'
 import ManageTeachersContent from './Teacher';
 import ManageStudentsContent from './Student';
+import JobsContent from './job';
 import { useAuth } from '../../context/auth';
 
 
@@ -175,6 +177,28 @@ const HomeContent = () => {
                 </div>
               </div>
             </div>
+
+            {/* New Cards for Total Instructors and Total Students */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white p-6 rounded-lg shadow flex items-center gap-4">
+                <div className="bg-indigo-100 p-3 rounded-full">
+                  <FaChalkboardTeacher className="text-indigo-500" />
+                </div>
+                <div>
+                  <p className="text-gray-500">Total Instructors</p>
+                  <p className="text-2xl font-bold">150</p> {/* Replace with dynamic data if available */}
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow flex items-center gap-4">
+                <div className="bg-pink-100 p-3 rounded-full">
+                  <FaUserGraduate className="text-pink-500" />
+                </div>
+                <div>
+                  <p className="text-gray-500">Total Students</p>
+                  <p className="text-2xl font-bold">3,200</p> {/* Replace with dynamic data if available */}
+                </div>
+              </div>
+            </div>
           </div>
         </main>
 
@@ -306,14 +330,30 @@ const Dashboard = () => {
 
   const renderContent = () => {
     switch (currentSection) {
-      case 'classes':
-        return <ClassesContent />;
-      case 'records':
-        return <RecordsContent />;
-      case 'settings':
-        return <ManageTeachersContent />;
-      case 'student':
-        return <ManageStudentsContent />;
+      case 'course-add':
+        return <AddCourseContent />;
+      case 'course-edit':
+        return <EditCourseContent />;
+      case 'student-add':
+        return <AddStudentContent />;
+      case 'student-edit':
+        return <EditStudentContent />;
+      case 'instructor-add':
+        return <AddInstructorContent />;
+      case 'instructor-edit':
+        return <EditInstructorContent />;
+      case 'certificate':
+        return <CertificateContent />;
+      case 'announcement':
+        return <AnnouncementContent />;
+      case 'complain':
+        return <ComplainContent />;
+      case 'coupon-add':
+        return <AddCouponContent />;
+      case 'coupon-view':
+        return <ViewCouponsContent />;
+      case 'jobs':
+        return <JobsContent />;
       default:
         return <HomeContent />;
     }
@@ -344,34 +384,114 @@ const Dashboard = () => {
         
         <nav className="space-y-2">
           <NavItem 
-            icon={<Home />} 
+            icon={<FaHome />} 
             label="Dashboard" 
             active={currentSection === 'home'}
             onClick={() => setCurrentSection('home')}
           />
-          <NavItem 
-            icon={<BookOpen />} 
-            label="Cources" 
-            active={currentSection === 'classes'}
-            onClick={() => setCurrentSection('classes')}
+          
+          <NavDropdown
+            icon={<FaBook />}
+            label="Manage Course"
+            active={currentSection.startsWith('course')}
+            items={[
+              { 
+                value: 'course-add',
+                label: 'Add Course',
+                icon: <FaPlusCircle className="w-4 h-4" />
+              },
+              {
+                value: 'course-edit',
+                label: 'Edit Course',
+                icon: <FaEdit className="w-4 h-4" />
+              }
+            ]}
+            onItemClick={(value) => setCurrentSection(value)}
           />
+
+          <NavDropdown
+            icon={<FaUserGraduate />}
+            label="Manage Student"
+            active={currentSection.startsWith('student')}
+            items={[
+              { 
+                value: 'student-add',
+                label: 'Add Student',
+                icon: <FaPlusCircle className="w-4 h-4" />
+              },
+              {
+                value: 'student-edit',
+                label: 'Edit Student',
+                icon: <FaEdit className="w-4 h-4" />
+              }
+            ]}
+            onItemClick={(value) => setCurrentSection(value)}
+          />
+
+          <NavDropdown
+            icon={<FaChalkboardTeacher />}
+            label="Manage Instructor"
+            active={currentSection.startsWith('instructor')}
+            items={[
+              { 
+                value: 'instructor-add',
+                label: 'Add Instructor',
+                icon: <FaPlusCircle className="w-4 h-4" />
+              },
+              {
+                value: 'instructor-edit',
+                label: 'Edit Instructor',
+                icon: <FaEdit className="w-4 h-4" />
+              }
+            ]}
+            onItemClick={(value) => setCurrentSection(value)}
+          />
+
           <NavItem 
-            icon={<ClipboardList />} 
+            icon={<FaCertificate />} 
+            label="Certificate" 
+            active={currentSection === 'certificate'}
+            onClick={() => setCurrentSection('certificate')}
+          />
+
+          <NavItem 
+            icon={<FaBullhorn />} 
+            label="Announcement" 
+            active={currentSection === 'announcement'}
+            onClick={() => setCurrentSection('announcement')}
+          />
+
+          <NavItem 
+            icon={<FaExclamationCircle />} 
+            label="Complain" 
+            active={currentSection === 'complain'}
+            onClick={() => setCurrentSection('complain')}
+          />
+
+          <NavDropdown
+            icon={<FaTags />}
+            label="Coupon"
+            active={currentSection.startsWith('coupon')}
+            items={[
+              { 
+                value: 'coupon-add',
+                label: 'Add Coupon',
+                icon: <FaPlusCircle className="w-4 h-4" />
+              },
+              {
+                value: 'coupon-view',
+                label: 'View Coupons',
+                icon: <FaEdit className="w-4 h-4" />
+              }
+            ]}
+            onItemClick={(value) => setCurrentSection(value)}
+          />
+
+          <NavItem 
+            icon={<FaTags />} 
             label="Jobs" 
-            active={currentSection === 'records'}
-            onClick={() => setCurrentSection('records')}
-          />
-          <NavItem 
-            icon={<Settings />} 
-            label="Manage Teachers" 
-            active={currentSection === 'settings'}
-            onClick={() => setCurrentSection('settings')}
-          />
-          <NavItem 
-            icon={<School />} 
-            label="Manage Student" 
-            active={currentSection === 'student'}
-            onClick={() => setCurrentSection('student')}
+            active={currentSection === 'jobs'}
+            onClick={() => setCurrentSection('jobs')}
           />
         </nav>
         
@@ -474,5 +594,111 @@ const ActivityItem = ({ day, title, time, status, subtitle }) => (
     </span>
   </div>
 );
+
+// Memoized dropdown item component
+const DropdownItem = memo(({ item, onClick }) => (
+  <button
+    onClick={onClick}
+    className="w-full text-left px-4 py-2 hover:bg-blue-700 transition-colors duration-200
+      flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
+  >
+    {item.icon}
+    {item.label}
+  </button>
+));
+
+DropdownItem.displayName = 'DropdownItem';
+
+// Optimized NavDropdown component
+const NavDropdown = ({ icon, label, items, active, onItemClick }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  // Handle escape key to close dropdown
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen]);
+
+  const handleItemClick = useCallback((value) => {
+    onItemClick(value);
+    setIsOpen(false);
+  }, [onItemClick]);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+        className={`flex items-center justify-between w-full p-2 rounded-lg 
+          transition-colors duration-200
+          ${active ? 'bg-blue-700' : 'hover:bg-blue-700'}`}
+      >
+        <div className="flex items-center gap-2">
+          {icon}
+          <span>{label}</span>
+        </div>
+        <ChevronDown 
+          className={`h-4 w-4 transition-transform duration-200 
+            ${isOpen ? 'rotate-180' : ''}`}
+        />
+      </button>
+      
+      <div 
+        className={`
+          absolute left-full top-0 ml-2 w-48 
+          md:left-0 md:top-full md:mt-1 md:ml-0
+          ${isOpen ? 'block' : 'hidden'}
+          bg-blue-500 rounded-lg shadow-lg 
+          z-50
+          transform transition-all duration-200 ease-in-out
+          ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+        `}
+        role="menu"
+        aria-orientation="vertical"
+        aria-labelledby="dropdown-button"
+      >
+        <div className="py-1">
+          {items.map((item, index) => (
+            <DropdownItem
+              key={item.value || index}
+              item={item}
+              onClick={() => handleItemClick(item.value)}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Dashboard;
