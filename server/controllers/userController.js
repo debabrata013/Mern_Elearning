@@ -97,6 +97,15 @@ const getAllStudents = async (req, res) => {
   }
 };
 
+const getUserByEmail = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.params.email });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching user", error: err });
+  }
+};
+
 module.exports = {
   createUser,
   getAllUsers,
@@ -105,5 +114,6 @@ module.exports = {
   deleteUser,
   addCourseToStudent,
   getAllTeachers,
-  getAllStudents
+  getAllStudents,
+  getUserByEmail
 };

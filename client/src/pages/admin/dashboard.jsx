@@ -6,6 +6,7 @@ import RecordsContent from "./job"
 import ClassesContent from './class'
 import ManageTeachersContent from './Teacher';
 import ManageStudentsContent from './Student';
+import { useAuth } from '../../context/auth';
 
 
 // Sample data for charts
@@ -54,6 +55,7 @@ const HomeContent = () => {
       [e.target.name]: e.target.value
     });
   };
+  const { user, isAuthenticated, logout, hasRole } = useAuth();
 
   return (
     <>
@@ -289,7 +291,7 @@ const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState('home');
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
-
+  const { logout } = useAuth();
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentDateTime(new Date());
@@ -316,6 +318,18 @@ const Dashboard = () => {
         return <HomeContent />;
     }
   };
+
+  const handleLogout = () => {
+    // Clear all cookies
+    document.cookie.split(";").forEach((cookie) => {
+      document.cookie = cookie
+        .replace(/^ +/, "")
+        .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+    });
+    
+    logout();
+  };
+  
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -362,7 +376,7 @@ const Dashboard = () => {
         </nav>
         
         <div className="absolute bottom-4 w-full pr-8">
-          <button className="flex items-center gap-2 text-white hover:bg-blue-700 p-2 rounded-lg w-full">
+          <button className="flex items-center gap-2 text-white hover:bg-blue-700 p-2 rounded-lg w-full" onClick={handleLogout}>
             <LogOut className="h-5 w-5" />
             Sign Out
           </button>
