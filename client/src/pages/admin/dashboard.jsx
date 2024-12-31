@@ -345,7 +345,7 @@ const Dashboard = () => {
         <nav className="space-y-2">
           <NavItem 
             icon={<Home />} 
-            label="Home" 
+            label="Dashboard" 
             active={currentSection === 'home'}
             onClick={() => setCurrentSection('home')}
           />

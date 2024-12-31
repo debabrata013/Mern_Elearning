@@ -63,6 +63,7 @@ function App() {
         } 
       />
       <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
 
 </AuthProvider>
