@@ -3,19 +3,22 @@ import { FaHome, FaBook, FaUserGraduate, FaChalkboardTeacher, FaCertificate, FaB
 
 import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { PlusCircle, Book, Users, DollarSign, TrendingUp, Home, Layout, BookOpen, ClipboardList, Settings, LogOut, Menu,School, ChevronDown } from 'lucide-react';
-import RecordsContent from "./job"
+
 import ClassesContent from './class'
-import ManageTeachersContent from './Teacher';
-import ManageStudentsContent from './Student';
+
 import JobsContent from './job';
 import { useAuth } from '../../context/auth';
-
+import ManageStudent from './ManageStudent';
+import ManageTeacher from './ManageTeacher';
+import Teacher from './Teacher';
+import Student from './Student';
+// import AddStudentContent from './Addstudent';
 
 // Sample data for charts
 const userActivityData = [
   { name: 'Jan', users: 4000 },
   { name: 'Feb', users: 3000 },
-  { name: 'Mar', users: 5000 },
+  { name: 'Mar', users: 500 },
   { name: 'Apr', users: 4500 },
   { name: 'May', users: 6000 },
   { name: 'Jun', users: 5500 }
@@ -270,78 +273,28 @@ const HomeContent = () => {
     </>
   );
 };
-const sampleCourses = [
-    {
-      id: 1,
-      title: "Mathematics 101",
-      description: "Introduction to Basic Mathematics",
-      image: "/api/placeholder/300/200",
-      lectureCount: 12
-    },
-    {
-      id: 2,
-      title: "Physics 201",
-      description: "Advanced Physics Concepts",
-      image: "/api/placeholder/300/200",
-      lectureCount: 8
-    },
-    {
-      id: 3,
-      title: "Chemistry 101",
-      description: "Basic Chemistry Principles",
-      image: "/api/placeholder/300/200",
-      lectureCount: 15
-    }
-  ];
-  
-  // Sample lectures data - replace with your actual data
-  const sampleLectures = [
-    {
-      id: 1,
-      title: "Introduction to Algebra",
-      type: "video",
-      duration: "45 mins"
-    },
-    {
-      id: 2,
-      title: "Linear Equations",
-      type: "pdf",
-      size: "2.3 MB"
-    }
-  ];
-  
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState('home');
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const { logout } = useAuth();
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentDateTime(new Date());
-    }, 1000); // Updates the time every second
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);
-
-  // Formatting the date and time
-  const date = currentDateTime.toLocaleDateString(); // "MM/DD/YYYY"
-  const time = currentDateTime.toLocaleTimeString(); // "HH:MM:SS AM/PM"
+  
 
   const renderContent = () => {
     switch (currentSection) {
       case 'course-add':
-        return <AddCourseContent />;
+        return <ClassesContent />;
       case 'course-edit':
         return <EditCourseContent />;
       case 'student-add':
-        return <AddStudentContent />;
+        return <Student/>;
       case 'student-edit':
-        return <EditStudentContent />;
+        return <ManageStudent />;
       case 'instructor-add':
-        return <AddInstructorContent />;
+        return <Teacher />;
       case 'instructor-edit':
-        return <EditInstructorContent />;
+        return <ManageTeacher />;
       case 'certificate':
         return <CertificateContent />;
       case 'announcement':
@@ -533,8 +486,7 @@ const Dashboard = () => {
           <div className="flex items-center gap-4">
           <div className="h-8 w-8 rounded-full bg-gray-300" aria-label="User profile" />
       <div className="text-gray-600">
-        <p>{date}</p>
-        <p>{time}</p>
+     hey
       </div>
             
           </div>

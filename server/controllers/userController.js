@@ -1,5 +1,25 @@
 const User = require('../models/User');
 const StudentCourses = require('../models/StudentCourses');
+const aws = require('aws-sdk');
+const fs = require('fs');
+const path = require('path');
+const { log } = require('console');
+const mongoose = require('mongoose');
+
+// Configure AWS S3
+const s3 = new aws.S3();
+
+const uploadFileToS3 = (filePath, fileName) => {
+  const fileStream = fs.createReadStream(filePath);
+  const uploadParams = {
+    Bucket: process.env.AWS_S3_BUCKET_NAME,
+    Key: fileName,
+    Body: fileStream,
+    ACL: 'public-read',
+  };
+
+  return s3.upload(uploadParams).promise();
+};
 
 // Create a new user
 const createUser = async (req, res) => {
@@ -11,109 +31,146 @@ const createUser = async (req, res) => {
     res.status(400).json({ message: "Error creating user", error: err });
   }
 };
-
-// Get all users
-const getAllUsers = async (req, res) => {
+const createTeacher = async (req, res) => {
   try {
-    const users = await User.find().populate('purchasedCourses');
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching users", error: err });
-  }
-};
+    const { file, body } = req;
 
-// Get user by ID
-const getUserById = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id).populate('purchasedCourses');
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    // Log request body to see what's coming in
+    console.log("Request body:", body);
+
+    const fileName = `${Date.now()}-${file.originalname}`;
+    const tempFilePath = path.join(__dirname, '../uploads', fileName);
+    fs.writeFileSync(tempFilePath, file.buffer);
+
+    // Upload the file to S3 and get the URL
+    const s3Response = await uploadFileToS3(tempFilePath, fileName);
+    fs.unlinkSync(tempFilePath);
+
+    const teacherData = { ...body, profileImage: s3Response.Location };
+
+    // Ensure email is neither null nor empty
+    if (!teacherData.email || teacherData.email.trim() === '') {
+      console.log('Email is required and cannot be null or empty');
+      return res.status(400).json({ message: "Email is required" });
     }
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching user", error: err });
-  }
-};
 
-// Update user details
-const updateUser = async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    // Log the teacherData before creating a new user
+    console.log("teacherData:", teacherData);
+
+    // Check if a user with the given email already exists
+    const existingUser = await User.findOne({ email: teacherData.email });
+    console.log("Existing User with email", teacherData.email, existingUser);
+
+    if (existingUser) {
+      console.log('Email already exists');
+      return res.status(400).json({ message: "Email already exists" });
     }
-    res.status(200).json({ message: "User updated successfully", user });
+
+    // Create and save the new teacher
+    const teacher = new User(teacherData);
+    await teacher.save();
+
+    console.log("Teacher saved successfully");
+    res.status(201).json({ message: "Teacher created successfully", teacher });
+
   } catch (err) {
-    res.status(400).json({ message: "Error updating user", error: err });
+    console.error('Error creating teacher:', err);
+    res.status(400).json({ message: "Error creating teacher", error: err.message });
   }
 };
 
-// Delete a user
-const deleteUser = async (req, res) => {
+
+const createStudent = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const { file, body } = req;
+    console.log('Received body:', body);
+    if (!body.email) {
+      return res.status(400).json({ message: "Email is required" });
     }
-    res.status(200).json({ message: "User deleted successfully" });
+
+    if (!file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    // Validate purchasedCourses
+    if (body.purchasedCourses) {
+      const isValidObjectIdArray = body.purchasedCourses.every(courseId => 
+        mongoose.Types.ObjectId.isValid(courseId)
+      );
+      if (!isValidObjectIdArray) {
+        return res.status(400).json({ message: "Invalid course IDs in purchasedCourses" });
+      }
+    }
+
+    const fileName = `${Date.now()}-${file.originalname}`;
+    const tempFilePath = path.join(__dirname, '../uploads', fileName);
+
+    // Save the file temporarily
+    fs.writeFileSync(tempFilePath, file.buffer);
+
+    // Upload to S3
+    const s3Response = await uploadFileToS3(tempFilePath, fileName);
+
+    // Delete the temporary file after uploading
+    fs.unlinkSync(tempFilePath);
+
+    const studentData = { ...body, profileImage: s3Response.Location };
+    console.log("studentData", studentData);
+    const student = new User(studentData);
+    console.log("student", student);
+    await student.save();
+    console.log("student saved");
+    res.status(201).json({ message: "Student created successfully", student });
   } catch (err) {
-    res.status(500).json({ message: "Error deleting user", error: err });
+    console.error('Error creating student:', err);
+    res.status(400).json({ message: "Error creating student", error: err.message });
   }
 };
-
-// Add a course to a student
-const addCourseToStudent = async (req, res) => {
+const createAdmin = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
-    const course = await StudentCourses.findById(req.params.courseId);
-    if (!user || !course) {
-      return res.status(404).json({ message: "User or Course not found" });
-    }
-    user.purchasedCourses.push(course._id);
-    await user.save();
-    res.status(200).json({ message: "Course added to student", user });
+    const admin = new User(req.body);
+    await admin.save();
+    res.status(201).json({ message: "Admin created successfully", admin });
   } catch (err) {
-    res.status(500).json({ message: "Error adding course to student", error: err });
+    res.status(400).json({ message: "Error creating admin", error: err.message });
   }
 };
 
-// Get all teachers
 const getAllTeachers = async (req, res) => {
   try {
-    const teachers = await User.find({ role: 'teacher' }).populate('purchasedCourses');
+    const teachers = await User.find({ role: 'teacher' });
     res.status(200).json(teachers);
   } catch (err) {
     res.status(500).json({ message: "Error fetching teachers", error: err });
   }
 };
 
-// Get all students
 const getAllStudents = async (req, res) => {
   try {
-    const students = await User.find({ role: 'student' }).populate('purchasedCourses');
+    const students = await User.find({ role: 'student' });
     res.status(200).json(students);
   } catch (err) {
     res.status(500).json({ message: "Error fetching students", error: err });
   }
 };
 
-const getUserByEmail = async (req, res) => {
+const deleteUser = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.params.email });
-    res.status(200).json(user);
+    await User.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Error fetching user", error: err });
+    res.status(500).json({ message: "Error deleting user", error: err });
   }
 };
 
+
 module.exports = {
   createUser,
-  getAllUsers,
-  getUserById,
-  updateUser,
-  deleteUser,
-  addCourseToStudent,
+  
   getAllTeachers,
   getAllStudents,
-  getUserByEmail
+createAdmin,
+  createTeacher,
+  createStudent,
+  deleteUser
 };

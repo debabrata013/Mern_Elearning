@@ -1,18 +1,20 @@
 const express = require('express');
-const router = express.Router();
 const userController = require('../controllers/userController');
+const upload = require('../middleware/upload'); // Import the upload middleware
 
-router.post('/users', userController.createUser);  // Create a new user
-router.get('/users', userController.getAllUsers);  // Get all users
-router.get('/users/:id', userController.getUserById);  // Get user by ID
-router.put('/users/:id', userController.updateUser);  // Update user by ID
-router.delete('/users/:id', userController.deleteUser);  // Delete user by ID
-router.get('/user/:email', userController.getUserByEmail);  // Get user by email
+const router = express.Router();
 
-router.get('/teachers', userController.getAllTeachers);  // Get all teachers
-router.get('/students', userController.getAllStudents);  // Get all students
+router.post('/teachers', upload.single('profileImage'), userController.createTeacher);
+router.post('/students', upload.single('profileImage'), userController.createStudent);
+router.get('/teachers', userController.getAllTeachers);
+router.get('/students', userController.getAllStudents);
+router.delete('/user/:id', userController.deleteUser);
+router.post('/admins', userController.createAdmin);
+// router.get('/user/:email', userController.getUserByEmail);
+// router.get("/user/:name", userController.getUserByName);
+// router.get('/user/:id', userController.getUserById);
+// router.put('/user/:id', userController.updateUser);
+// router.delete('/user/:id', userController.deleteUser);
 
-
-router.post('/users/:userId/courses/:courseId', userController.addCourseToStudent);  // Add a course to student
 
 module.exports = router;

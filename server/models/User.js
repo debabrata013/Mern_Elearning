@@ -2,94 +2,78 @@ const mongoose = require("mongoose");
 const StudentCourses = require("./StudentCourses");  // Import the StudentCourses schema
 
 const UserSchema = new mongoose.Schema({
-  courseChats: [{
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "CourseChat"
-  }],
+  email: {  
+    type: String,
+    required: true,  
+    unique: true,
+    trim: true,
+    validate: {
+      validator(value) {
+        return value === null || /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(value);
+      },
+      message: 'Please provide a valid email address'
+    }
+  },
+  
 
-  // User common fields
   userName: {
     type: String,
     required: true,
   },
-  Email: {
-    type: String,
-    required: true,
-    unique: true,  // Ensures unique email addresses
-  },
+
   password: {
     type: String,
     required: true,
   },
+
   otp: {
     type: String,
-    required: false, // Optional, will be used for OTP verification if needed
+    default: null, 
+  },
+
+  profileImage: {
+    type: String,
+    default: "https://via.placeholder.com/40" 
+  },
+
+  role: {
+    type: String,
+    enum: ['student', 'teacher', 'admin'],
+    default: 'student',
   },
 
   // Role-specific fields
-  role: {
+  description: {
     type: String,
-    enum: ['student', 'teacher', 'admin'],  // Added 'admin' role
-    default: 'student',  // Default to 'student' role
+    required: function() { return this.role === 'teacher'; },
   },
-  decription:{
-    type:String,
-    required: function(){
-      return this.role==='teacher';
-    }
-  },
-  // Admin-specific fields
-  adminName: {
-    type: String,
-    required: function() {
-      return this.role === 'admin';  // Only required if the user is an admin
-    },
-  },
-  adminProfileImage: {
-    type: String,  // URL to the admin's profile image
-    required: function() {
-      return this.role === 'admin';  // Only required if the user is an admin
-    },
-  },
-  
 
-  // Teacher-specific fields
-  teacherName: {
-    type: String,
-    required: function() {
-      return this.role === 'teacher';  // Only required if the user is a teacher
-    },
-  },
-  teacherProfileImage: {
-    type: String,  // URL to the teacher's profile image
-    required: function() {
-      return this.role === 'teacher';  // Only required if the user is a teacher
-    },
-  },
   subjectKnowledge: [{
     type: String,
-    required: function() {
-      return this.role === 'teacher';  // Only required if the user is a teacher
-    },
+    required: function() { return this.role === 'teacher'; },
   }],
+
   salary: {
     type: Number,
-    required: function() {
-      return this.role === 'teacher';  // Only required if the user is a teacher
-    },
+    required: function() { return this.role === 'teacher'; },
   },
 
   // Student-specific fields
   purchasedCourses: [{
-    type: mongoose.Schema.Types.ObjectId,  // Reference to the StudentCourses model
+    type: mongoose.Schema.Types.ObjectId, 
     ref: "StudentCourses",
-    required: function() {
-      return this.role === 'student';  // Only required if the user is a student
-    },
+    required: function() { return this.role === 'student'; },
   }],
-  
+
+  // Relationship with CourseChat
+  courseChats: [{
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "CourseChat"
+  }],
 }, {
   timestamps: true,  // Automatically adds createdAt and updatedAt fields
+  toJSON: { virtuals: true },  // Include virtuals in JSON output
+  toObject: { virtuals: true },  // Include virtuals in object output
 });
 
 module.exports = mongoose.model("User", UserSchema);

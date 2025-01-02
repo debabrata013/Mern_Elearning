@@ -122,6 +122,7 @@ app.use('/courses', courseRoutes);
 app.use('/upload', uploadRoutes);
 app.use('/progress', progressRoutes);
 app.use('/api', userRoutes);
+
 app.use('/doc', DocRouter);
 
 app.use('/api/chat', chatRoutes);

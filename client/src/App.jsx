@@ -38,6 +38,11 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<LandingPage />} />
+      <Route path="/faq" element={<FAQ />} />
+      <Route path="/coursess" element={<Coursess />} />
+      <Route path="/pricing" element={<PricingPage />} />
+      <Route path="/contactus" element={<ContactForm />} />
+      <Route path="/aboutus" element={<AboutUs />} />
       <Route 
         path="/user-dashboard" 
         element={

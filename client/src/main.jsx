@@ -9,15 +9,15 @@ import StudentProvider from "./context/student-context/index.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter future={{
-    v7_startTransition: true,  // Opt-in to the new state update behavior
-    v7_relativeSplatPath: true  // Opt-in to the new splat route resolution behavior
+    v7_startTransition: true,
+    v7_relativeSplatPath: true
   }}>
-    {/* <AuthProvider>
+    <AuthProvider>
       <InstructorProvider>
-        <StudentProvider> */}
+        <StudentProvider>
           <App />
-        {/* </StudentProvider>
+        </StudentProvider>
       </InstructorProvider>
-    </AuthProvider> */}
+    </AuthProvider>
   </BrowserRouter>
 );
