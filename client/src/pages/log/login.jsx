@@ -23,7 +23,7 @@ function AuthPage() {
     e.preventDefault();
     // login({ username: userName, role: "student" });
 
-    const userData = { userEmail: email, password };
+    const userData = { email: email, password };
     login(userData);
 
     // For registration, add user name and confirm password
@@ -146,7 +146,7 @@ function AuthPage() {
           )}
 
           {/* Display error if any */}
-          {/* {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>} */}
+          {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
           {/* Submit button */}
           <button
