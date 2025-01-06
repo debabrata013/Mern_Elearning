@@ -44,16 +44,17 @@ function AuthPage() {
         response = await axiosInstance.post("/auth/login", userData);
       } else {
         // Register request
-        response = await axiosInstance.post("/auth/register", userData);
+        response = await axiosInstance.post("/students/", userData);
       }
+      console.log(response.data);
 
       // Handle successful response
       if (response.data.success) {
         // Store access token in sessionStorage
-        sessionStorage.setItem("accessToken", JSON.stringify(response.data.data.accessToken));
+        sessionStorage.setItem("accessToken", JSON.stringify(response.data.accessToken));
 
         // Redirect based on role
-        const role = response.data.data.user.role;
+        const role = response.data.userData.role;
         if (role === "student") {
           navigate("/user-dashboard");
         } else if (role === "teacher") {

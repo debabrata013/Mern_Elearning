@@ -11,7 +11,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { filterOptions, sortOptions } from "@/config";
-import { AuthContext } from "@/context/auth-context";
+// import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
 import {
   checkCoursePurchaseInfoService,

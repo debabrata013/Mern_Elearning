@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { AuthContext } from "@/context/auth-context";
+// import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
 import { fetchStudentBoughtCoursesService } from "@/services";
 import { Watch } from "lucide-react";

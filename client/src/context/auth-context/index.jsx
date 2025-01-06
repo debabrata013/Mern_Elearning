@@ -1,103 +1,42 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { initialSignInFormData, initialSignUpFormData } from "@/config";
-import { checkAuthService, loginService, registerService } from "@/services";
-import { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from 'react';
+import axiosInstance from '../../api/axiosInstance';
 
-export const AuthContext = createContext(null);
+const AuthContext = createContext();
 
-export default function AuthProvider({ children }) {
-  const [signInFormData, setSignInFormData] = useState(initialSignInFormData);
-  const [signUpFormData, setSignUpFormData] = useState(initialSignUpFormData);
-  const [auth, setAuth] = useState({
-    authenticate: false,
-    user: null,
-  });
-  const [loading, setLoading] = useState(true);
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null); // Store user data here
 
-  async function handleRegisterUser(event) {
-    event.preventDefault();
-    const data = await registerService(signUpFormData);
-  }
+    const login = async (userData) => {
+        const response = await axiosInstance.post('/auth/login', userData);
+        if (response.data.success) {
+            setUser(response.data.userData); // Store user data on login
+            sessionStorage.setItem("accessToken", JSON.stringify(response.data.accessToken));
+        }
+    };
 
-  async function handleLoginUser(event) {
-    event.preventDefault();
-    const data = await loginService(signInFormData);
-    console.log(data, "datadatadatadatadata");
+    const logout = () => {
+        setUser(null); // Clear user data on logout
+        sessionStorage.removeItem("accessToken");
+    };
 
-    if (data.success) {
-      sessionStorage.setItem(
-        "accessToken",
-        JSON.stringify(data.data.accessToken)
-      );
-      setAuth({
-        authenticate: true,
-        user: data.data.user,
-      });
-    } else {
-      setAuth({
-        authenticate: false,
-        user: null,
-      });
-    }
-  }
+    return (
+        <AuthContext.Provider value={{ user, login, logout }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
 
-  //check auth user
+export const useAuth = () => useContext(AuthContext);
 
-  async function checkAuthUser() {
-    try {
-      const data = await checkAuthService();
-      if (data.success) {
-        setAuth({
-          authenticate: true,
-          user: data.data.user,
-        });
-        setLoading(false);
-      } else {
-        setAuth({
-          authenticate: false,
-          user: null,
-        });
-        setLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-      if (!error?.response?.data?.success) {
-        setAuth({
-          authenticate: false,
-          user: null,
-        });
-        setLoading(false);
-      }
-    }
-  }
+export const getUserFromCookie = () => {
+    const cookie = document.cookie;
+    const userData = cookie.split('; ').find(row => row.startsWith('userData=')).split('=')[1];
+    return userData ? JSON.parse(userData) : null;
+};
 
-  function resetCredentials() {
-    setAuth({
-      authenticate: false,
-      user: null,
-    });
-  }
+export const getUserFromSessionStorage = () => {
+    const userData = sessionStorage.getItem("userData");
+    return userData ? JSON.parse(userData) : null;
+};
 
-  useEffect(() => {
-    checkAuthUser();
-  }, []);
 
-  console.log(auth, "gf");
-
-  return (
-    <AuthContext.Provider
-      value={{
-        signInFormData,
-        setSignInFormData,
-        signUpFormData,
-        setSignUpFormData,
-        handleRegisterUser,
-        handleLoginUser,
-        auth,
-        resetCredentials,
-      }}
-    >
-      {loading ? <Skeleton /> : children}
-    </AuthContext.Provider>
-  );
-}

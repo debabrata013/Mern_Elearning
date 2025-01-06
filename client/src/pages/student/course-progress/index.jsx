@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoPlayer from "@/components/video-player";
-import { AuthContext } from "@/context/auth-context";
+// import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
 import {
   getCurrentCourseProgressService,

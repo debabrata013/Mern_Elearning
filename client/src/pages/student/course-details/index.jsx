@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import VideoPlayer from "@/components/video-player";
-import { AuthContext } from "@/context/auth-context";
+// import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
 import {
   checkCoursePurchaseInfoService,

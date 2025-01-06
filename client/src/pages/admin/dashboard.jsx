@@ -12,7 +12,7 @@ import ManageStudent from './ManageStudent';
 import ManageTeacher from './ManageTeacher';
 import Teacher from './Teacher';
 import Student from './Student';
-// import AddStudentContent from './Addstudent';
+
 
 // Sample data for charts
 const userActivityData = [
@@ -277,8 +277,8 @@ const HomeContent = () => {
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState('home');
-  const [currentDateTime, setCurrentDateTime] = useState(new Date());
-  const { logout } = useAuth();
+  // const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const { user, logout } = useAuth();
   
 
   const renderContent = () => {
@@ -486,7 +486,7 @@ const Dashboard = () => {
           <div className="flex items-center gap-4">
           <div className="h-8 w-8 rounded-full bg-gray-300" aria-label="User profile" />
       <div className="text-gray-600">
-     hey
+      <h2> {user.userName}!</h2>
       </div>
             
           </div>
@@ -531,21 +531,7 @@ const ProgressItem = ({ label, value, count }) => (
   </div>
 );
 
-const ActivityItem = ({ day, title, time, status, subtitle }) => (
-  <div className="flex gap-4">
-    <div className="bg-blue-600 text-white rounded-lg p-2 h-12 w-12 flex items-center justify-center">
-      {day}
-    </div>
-    <div className="flex-1">
-      <h4 className="font-medium">{title}</h4>
-      {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
-      <p className="text-sm text-gray-500">{time}</p>
-    </div>
-    <span className={`text-sm ${status === 'Due soon' ? 'text-red-500' : 'text-orange-500'}`}>
-      {status}
-    </span>
-  </div>
-);
+
 
 // Memoized dropdown item component
 const DropdownItem = memo(({ item, onClick }) => (

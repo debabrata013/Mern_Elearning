@@ -7,7 +7,7 @@ import {
   checkCoursePurchaseInfoService,
   fetchStudentViewCourseListService,
 } from "@/services";
-import { AuthContext } from "@/context/auth-context";
+// import { AuthContext } from "@/context/auth-context";
 import { useNavigate } from "react-router-dom";
 
 function StudentHomePage() {

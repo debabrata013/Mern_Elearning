@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const createTeacher = async (teacherData) => {
   try {
-    const response = await axios.post('http://localhost:4400/api/teachers', teacherData, {
+    const response = await axios.post('http://localhost:4400/teachers/', teacherData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -15,7 +15,7 @@ export const createTeacher = async (teacherData) => {
 
 export const createStudent = async (studentData) => {
   try {
-    const response = await axios.post('http://localhost:4400/api/students', studentData, {
+    const response = await axios.post('http://localhost:4400/students/', studentData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -27,7 +27,7 @@ export const createStudent = async (studentData) => {
 };
 export const deleteUser = async (userId) => {
   try {
-    const response = await axios.delete(`http://localhost:4400/api/user/${userId}`);
+    const response = await axios.delete(`http://localhost:4400/students/${userId}`);
     return response.data;
   } catch (error) {
     throw new Error('Error deleting user');
@@ -36,7 +36,7 @@ export const deleteUser = async (userId) => {
 
 export const getAllTeachers = async () => {
   try {
-    const response = await axios.get('http://localhost:4400/api/teachers');
+    const response = await axios.get('http://localhost:4400/teachers/');
     return response.data;
   } catch (error) {
     throw new Error('Error fetching teachers');
@@ -44,7 +44,7 @@ export const getAllTeachers = async () => {
 };
 export const getAllStudents = async () => {
   try {
-    const response = await axios.get('http://localhost:4400/api/students');
+    const response = await axios.get('http://localhost:4400/students/');
     return response.data;
   } catch (error) {
     throw new Error('Error fetching students');
