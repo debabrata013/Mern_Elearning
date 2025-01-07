@@ -25,12 +25,21 @@ export const createStudent = async (studentData) => {
     throw new Error('Error creating student');
   }
 };
-export const deleteUser = async (userId) => {
+export const deleteStudent = async (userId) => {
   try {
     const response = await axios.delete(`http://localhost:4400/students/${userId}`);
     return response.data;
   } catch (error) {
-    throw new Error('Error deleting user');
+    throw new Error('Error deleting student');
+  }
+};
+
+export const deleteTeacher = async (userId) => {
+  try {
+    const response = await axios.delete(`http://localhost:4400/teachers/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error('Error deleting teacher');
   }
 };
 
@@ -42,6 +51,7 @@ export const getAllTeachers = async () => {
     throw new Error('Error fetching teachers');
   }
 };
+
 export const getAllStudents = async () => {
   try {
     const response = await axios.get('http://localhost:4400/students/');

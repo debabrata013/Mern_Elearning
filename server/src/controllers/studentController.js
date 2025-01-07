@@ -27,6 +27,7 @@ const upload = multer({
 // Create a new student
 const createStudent = async (req, res) => {
     try {
+        console.log(JSON.stringify(req.body.userName));
         const student = new User({ ...req.body, role: 'student' });
         await student.save();
         res.status(201).send(student);

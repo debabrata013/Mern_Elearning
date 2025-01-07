@@ -38,6 +38,8 @@ exports.createTeacher = async (req, res) => {
 // Read teacher information
 exports.getTeacher = async (req, res) => {
     try {
+        console.log("getTeacher");
+        
         const teacher = await User.findById(req.params.id);
         if (!teacher || teacher.role !== 'teacher') {
             return res.status(404).send();
@@ -55,6 +57,15 @@ exports.getTeacherByName = async (req, res) => {
             return res.status(404).send();
         }
         res.send(teacher);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};
+
+exports.getAllTeachers = async (req, res) => {
+    try {
+        const teachers = await User.find({ role: 'teacher' });
+        res.send(teachers);
     } catch (error) {
         res.status(500).send(error);
     }

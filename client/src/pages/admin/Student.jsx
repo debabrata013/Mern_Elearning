@@ -1,73 +1,71 @@
 import React, { useState } from 'react';
-import { Plus, X } from 'lucide-react';
-import { createStudent } from './api/apiServices'; // Updated import path
+import { Plus } from 'lucide-react';
+import axiosInstance from '../../api/axiosInstance';
 
 const ManageStudentsContent = () => {
   const [showStudentForm, setShowStudentForm] = useState(false);
-  const [formData, setFormData] = useState({
-    userName: '',
-    email: '',
-    password: '',
-    role: 'student', 
-    profileImage:'',
-    purchasedCourses: [], 
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  // Handle input field changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleFileChange = (e, fieldName) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData((prevData) => ({
-        ...prevData,
-        [fieldName]: file,
-      }));
+    switch (name) {
+      case 'email':
+        setEmail(value);
+        break;
+      case 'password':
+        setPassword(value);
+        break;
+      case 'userName':
+        setUserName(value);
+        break;
+      default:
+        break;
     }
   };
 
-  const handleAddSubject = () => {
-    setFormData({
-      ...formData,
-      subjectKnowledge: [...formData.subjectKnowledge, ''],
-    });
+  // Validate required fields
+  const validateForm = () => {
+    if (!userName || !email || !password) {
+      setError('All fields are required!');
+      return false;
+    }
+    return true;
   };
 
-  const handleRemoveSubject = (index) => {
-    const newSubjects = formData.subjectKnowledge.filter((_, i) => i !== index);
-    setFormData({ ...formData, subjectKnowledge: newSubjects });
-  };
-
+  // Add new student
   const handleAddStudent = async (e) => {
     e.preventDefault();
-    const formDataToSend = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (key === 'profileImage' && formData[key]) {
-        formDataToSend.append(key, formData[key]);
-      } else {
-        formDataToSend.append(key, formData[key]);
-      }
-    });
+    if (!validateForm()) return;
+
+    const userData = {
+      email,
+      password,
+      userName,
+      role: 'student'
+    };
 
     try {
-      await createStudent(formDataToSend);
-      // Reset form after successful creation
-      setFormData({
-        userName: '',
-        email: '',
-        password: '',
-        role: 'student',
-        profileImage: null,
-        purchasedCourses: [],
-      });
+      setLoading(true);
+      const response = await axiosInstance.post('/students/', userData);
+      console.log(response);
       setShowStudentForm(false);
+      alert('Student added successfully!');
+      
+      // Reset form
+      setEmail("");
+      setPassword("");
+      setUserName("");
+      setError("");
     } catch (error) {
-      console.error('Error creating student:', error);
+      console.error('Error creating student:', error.response?.data || error.message);
+      setError(error.response?.data?.message || 'An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,7 +94,7 @@ const ManageStudentsContent = () => {
                   type="text"
                   id="userName"
                   name="userName"
-                  value={formData.userName}
+                  value={userName}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-lg"
                   required
@@ -110,7 +108,7 @@ const ManageStudentsContent = () => {
                   type="email"
                   id="email"
                   name="email"
-                  value={formData.email}
+                  value={email}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-lg"
                   required
@@ -124,44 +122,22 @@ const ManageStudentsContent = () => {
                   type="password"
                   id="password"
                   name="password"
-                  value={formData.password}
+                  value={password}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-lg"
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="profileImage">
-                  Student Profile Image
-                </label>
-                <input
-                  type="file"
-                  id="profileImage"
-                  name="profileImage"
-                  onChange={(e) => handleFileChange(e, 'profileImage')}
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="purchasedCourses">
-                  Purchased Courses
-                </label>
-                <input
-                  type="text"
-                  id="purchasedCourses"
-                  name="purchasedCourses"
-                  value={formData.purchasedCourses.join(', ')}
-                  onChange={(e) => setFormData({ ...formData, purchasedCourses: e.target.value.split(', ') })}
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
             </div>
+
+            {error && <div className="mb-4 text-red-500">{error}</div>}
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-300"
             >
-              Submit User
+              {loading ? 'Adding...' : 'Submit User'}
             </button>
           </form>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import { createTeacher } from './api/apiServices'; // Updated import path
+import axiosInstance from '../../api/axiosInstance';
 
 const ManageTeachersContent = () => {
   const [showTeacherForm, setShowTeacherForm] = useState(false);
@@ -14,6 +15,8 @@ const ManageTeachersContent = () => {
     subjectKnowledge: [''],
     salary: '',
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -47,23 +50,31 @@ const ManageTeachersContent = () => {
 
   const handleAddTeacher = async (e) => {
     e.preventDefault();
-    const formDataToSend = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (key === 'profileImage' && formData[key]) {
-        formDataToSend.append(key, formData[key]);
-      } else {
-        formDataToSend.append(key, formData[key]);
-      }
-    });
-
-    if (!formData.email) {
-      console.error('Email is required');
+    
+    // Validate required fields
+    if (!formData.userName || !formData.email || !formData.password) {
+      setError('Required fields cannot be empty');
       return;
     }
 
+    const userData = {
+      userName: formData.userName,
+      email: formData.email,
+      password: formData.password,
+      role: 'teacher',
+      description: formData.description,
+      subjectKnowledge: formData.subjectKnowledge.filter(subject => subject.trim() !== ''),
+      salary: formData.salary
+    };
+
     try {
-      await createTeacher(formDataToSend);
-      // Reset form after successful creation
+      setLoading(true);
+      const response = await axiosInstance.post('/teachers/', userData);
+      console.log(response);
+      setShowTeacherForm(false);
+      alert('Teacher added successfully!');
+      
+      // Reset form
       setFormData({
         userName: '',
         email: '',
@@ -74,9 +85,12 @@ const ManageTeachersContent = () => {
         subjectKnowledge: [''],
         salary: '',
       });
-      setShowTeacherForm(false);
+      setError("");
     } catch (error) {
-      console.error('Error creating teacher:', error);
+      console.error('Error creating teacher:', error.response?.data || error.message);
+      setError(error.response?.data?.message || 'An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -140,18 +154,7 @@ const ManageTeachersContent = () => {
                 />
               </div>
               
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="profileImage">
-                  Teacher Profile Image
-                </label>
-                <input
-                  type="file"
-                  id="profileImage"
-                  name="profileImage"
-                  onChange={(e) => handleFileChange(e, 'profileImage')}
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
+              
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Subject Knowledge</label>
                 {formData.subjectKnowledge.map((subject, index) => (
@@ -215,9 +218,10 @@ const ManageTeachersContent = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-300"
             >
-              Submit Teacher
+              {loading ? 'Adding...' : 'Submit Teacher'}
             </button>
           </form>
         </div>

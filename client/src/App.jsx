@@ -29,6 +29,8 @@ import Coursess from "./pages/landing-page/Courses/courses-page"
 import { AuthProvider } from './context/auth';
 import ProtectedRoute from "./context/ProtectedRoute";
 import Unauthorized from "./pages/Unauthorized";
+// import StudentRoutes from "./components/student-view/StudentRoutes";
+// import student from './components/student-view/AppLayout'
 
 function App() {
   
@@ -48,6 +50,8 @@ function App() {
         element={
           <ProtectedRoute role="student">
             {/* < StudentHomePage /> */}
+            {/* <StudentRoutes />
+            <student /> */}
           </ProtectedRoute>
         } 
       />

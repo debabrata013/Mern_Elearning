@@ -5,6 +5,7 @@ const teacherController = require('../controllers/teacherController');
 // Create a new teacher
 router.post('/', teacherController.createTeacher);
 
+router.get('/', teacherController.getAllTeachers);
 // Read teacher information
 router.get('/:id', teacherController.getTeacher);
 

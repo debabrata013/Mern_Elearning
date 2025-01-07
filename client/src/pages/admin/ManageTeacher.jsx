@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
-import { getAllTeachers, deleteUser } from './api/apiServices'; // Import the API calls
+import { getAllTeachers, deleteTeacher } from './api/apiServices'; // Import the API calls
 
 const ManageTeacher = () => {
   const [teachers, setTeachers] = useState([]);
@@ -39,7 +39,7 @@ const ManageTeacher = () => {
   // Handler for deleting teacher
   const handleDeleteTeacher = async (teacherId) => {
     try {
-      await deleteUser(teacherId);
+      await deleteTeacher(teacherId);
       setTeachers(teachers.filter(teacher => teacher._id !== teacherId));
     } catch (error) {
       console.error('Error deleting teacher:', error);
