@@ -14,6 +14,7 @@ const CoursePage = () => {
     { title: "React JS", status: "Opened", description: "Learn to build dynamic UIs.", image: rjs },
     { title: "Python", status: "Coming Soon", description: "Master Python programming.", image: py },
     { title: "Angular JS", status: "Archived", description: "Develop modern web apps.", image: AJS },
+    
   ];
 
   const [filter, setFilter] = useState("All");

@@ -1,11 +1,12 @@
 /* General Styling */
 .course-page {
-  margin-top: 6rem;
+  margin-top: 4.3rem;
   margin-left: 5rem;
   margin-bottom: 3rem;
   margin-right: 5rem;
   font-family: Arial, sans-serif;
   padding: 20px;
+  padding-bottom: 50px;
   background: linear-gradient(to bottom, #ffffff, #f4f8fb);
   border-radius: 1rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);

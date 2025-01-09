@@ -43,7 +43,7 @@ const App = () => {
         <section className="landing section">
           <LandingSection />
         </section>
-        <section>
+        <section className="collab ">
           <Collaborators />
         </section>
         <section className="ai-section section">

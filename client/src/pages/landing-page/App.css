@@ -2,9 +2,14 @@ html {
   scroll-behavior: smooth;
 }
 
+
 /* Default padding for larger screens */
 .main-content {
   padding: 0.5rem 7.5rem 0rem 7.5rem;
+}
+
+
+.collab{
 }
 
 /* Responsive adjustments */
