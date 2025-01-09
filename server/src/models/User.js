@@ -57,6 +57,10 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     required: function() { return this.role === 'teacher'; },
   },
+  mobile:{
+    type:Number
+
+  },
 
   // Student-specific fields
   purchasedCourses: [{

@@ -14,6 +14,7 @@ const ManageTeachersContent = () => {
     profileImage: null,
     subjectKnowledge: [''],
     salary: '',
+    mobile:''
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -134,6 +135,20 @@ const ManageTeachersContent = () => {
                   id="email"
                   name="email"
                   value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1" htmlFor="mobile">
+                  Mobile
+                </label>
+                <input
+                  type="number"
+                  id="mobile"
+                  name="mobile"
+                  value={formData.mobile}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-lg"
                   required

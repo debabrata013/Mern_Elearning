@@ -98,7 +98,7 @@ exports.updateTeacher = async (req, res) => {
                 // Update the profile image URL
                 req.body.profileImage = req.file.location;
             }
-
+            console.log(req.body);
             // Update teacher details
             const updatedTeacher = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
             res.send(updatedTeacher);

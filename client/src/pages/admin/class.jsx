@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Trash, Eye, Save, RefreshCcw } from 'lucide-react';
+import axiosInstance from '../../api/axiosInstance';
 
-// Sample instructor and category options (you can replace these with dynamic data)
+// Sampleteacher and category options (you can replace these with dynamic data)
 const categories = ['Programming', 'Design', 'Business', 'Data Science', 'Marketing'];
-const instructors = ['John Doe', 'Jane Smith', 'Alice Johnson', 'Bob Lee'];
 
 const CourseManagementForm = () => {
 
   const [isVisible, setIsVisible] = useState(false);
+  const [error, setError] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  
 
   const toggleContent = () => {
     setIsVisible((prevIsVisible) => !prevIsVisible);
@@ -15,25 +19,52 @@ const CourseManagementForm = () => {
 
   const [formData, setFormData] = useState({
     title: '',
+    coverImage:"",
+    introVideo:"",
+ 
     courseCode: '',
     category: '',
     description: '',
+    
     startDate: '',
     endDate: '',
     duration: '',
-    material: null,
+    syllabusPDF:"",
     chapters: [{ title: '', description: '' }],
-    instructor: '',
+   teacher: '',
     contact: '',
     maxStudents: '',
     enrollmentDeadline: '',
     courseFee: '',
     discount: '',
-    publishStatus: 'draft',
+ 
   });
 
   const [savedCourses, setSavedCourses] = useState([]); // To store saved drafts
-  const [previewMode, setPreviewMode] = useState(false); // For preview mode
+
+  const [teachers, setteachers] = useState([]); // State to holdteacher data
+  const [teacher, setTeacher] = useState([]);
+
+  // Fetchteachers from the backend
+  useEffect(() => {
+    const fetchteachers = async () => {
+      try {
+        const response = await axiosInstance.get('/teachers'); // Replace with your API endpoint
+        console.log(response);
+        const data =  response.data;
+        setteachers(data.map(teacher => teacher
+
+       
+        
+        )); // Extracting userName from each teacher object
+
+      } catch (error) {
+        console.error('Error fetchingteachers:', error);
+      }
+    };
+
+    fetchteachers();
+  }, []); // Empty dependency array to run once on component mount
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -77,13 +108,12 @@ const CourseManagementForm = () => {
       duration: '',
       material: null,
       chapters: [{ title: '', description: '' }],
-      instructor: '',
+     teacher: '',
       contact: '',
       maxStudents: '',
       enrollmentDeadline: '',
       courseFee: '',
-      discount: '',
-      publishStatus: 'draft',
+    
     });
     setPreviewMode(false); // Reset preview mode
   };
@@ -94,16 +124,17 @@ const CourseManagementForm = () => {
     handleReset();
   };
 
-  // Preview the course
-  const handlePreview = () => {
-    setPreviewMode(true);
-  };
-
+ 
   // Submit the form (this can be connected to an API or state management)
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Course Data Submitted:', formData);
     // Handle actual submission logic here
+  };
+
+  // Assuming you have a function to handle the selection of a teacher
+  const handleTeacherSelect = (selectedTeacher) => {
+    setTeacher(selectedTeacher); // Update the teacher state with the selected teacher's details
   };
 
   return (
@@ -172,6 +203,26 @@ const CourseManagementForm = () => {
                 className="mt-1 p-2 border rounded-md w-full"
                 rows="4"
                 required
+              />
+            </div>
+            <div>
+              <label htmlFor="coverImage" className="block text-sm font-medium">Cover Image</label>
+              <input
+                type="file"
+                id="coverImage"
+                name="coverImage"
+                onChange={handleChange}
+                className="mt-1 p-2 border rounded-md w-full"
+              />
+            </div>
+            <div>
+              <label htmlFor="introVideo" className="block text-sm font-medium">Intro Video</label>
+              <input
+                type="file"
+                id="introVideo"
+                name="introVideo"
+                onChange={handleChange}
+                className="mt-1 p-2 border rounded-md w-full"
               />
             </div>
           </div>
@@ -279,37 +330,35 @@ const CourseManagementForm = () => {
           </div>
         </section>
 
-        {/* 4. Instructor Details */}
+        {/* 4. Teacher Details */}
         <section>
-          <h3 className="text-lg font-semibold mb-4">Instructor Details</h3>
+          <h3 className="text-lg font-semibold mb-4">Teacher Details</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="instructor" className="block text-sm font-medium">Instructor Name</label>
+              <label htmlFor="teacher" className="block text-sm font-medium">Teacher Name</label>
               <select
-                id="instructor"
-                name="instructor"
-                value={formData.instructor}
-                onChange={handleChange}
+                id="teacher"
+                name="teacher"
+                value={teacher.userName}
+                onChange={(e) => {
+                  handleChange(e);
+                  const selectedTeacher = teachers.find(t => t.userName === e.target.value);
+                  setTeacher(selectedTeacher || {});
+                }}
                 className="mt-1 p-2 border rounded-md w-full"
                 required
               >
-                <option value="">Select Instructor</option>
-                {instructors.map((instructor, index) => (
-                  <option key={index} value={instructor}>{instructor}</option>
+                <option value="">Select Teacher</option>
+                {teachers.map((teacher, index) => (
+                  <option key={index} value={teacher.userName}>{teacher.userName}</option>
                 ))}
               </select>
             </div>
             <div>
               <label htmlFor="contact" className="block text-sm font-medium">Instructor Contact</label>
-              <input
-                type="text"
-                id="contact"
-                name="contact"
-                value={formData.contact}
-                onChange={handleChange}
-                className="mt-1 p-2 border rounded-md w-full"
-                required
-              />
+              <p className="mt-1 p-2 border rounded-md w-full bg-gray-100">
+                {teacher.email || 'No email available'}
+              </p>
             </div>
           </div>
         </section>
@@ -375,48 +424,7 @@ const CourseManagementForm = () => {
           </div>
         </section>
 
-        {/* 7. Status */}
-        <section>
-          <h3 className="text-lg font-semibold mb-4">Status</h3>
-          <div>
-            <label className="block text-sm font-medium">Publish Status</label>
-            <div className="flex items-center gap-6">
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  name="publishStatus"
-                  value="draft"
-                  checked={formData.publishStatus === 'draft'}
-                  onChange={handleChange}
-                  className="form-radio"
-                />
-                <span className="ml-2">Draft</span>
-              </label>
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  name="publishStatus"
-                  value="published"
-                  checked={formData.publishStatus === 'published'}
-                  onChange={handleChange}
-                  className="form-radio"
-                />
-                <span className="ml-2">Published</span>
-              </label>
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  name="publishStatus"
-                  value="archived"
-                  checked={formData.publishStatus === 'archived'}
-                  onChange={handleChange}
-                  className="form-radio"
-                />
-                <span className="ml-2">Archived</span>
-              </label>
-            </div>
-          </div>
-        </section>
+       
 
         {/* Buttons */}
         <section className="flex gap-4 mt-6">
@@ -428,22 +436,8 @@ const CourseManagementForm = () => {
             <RefreshCcw className="h-5 w-5 mr-2" />
             Reset
           </button>
-          <button
-            type="button"
-            onClick={handlePreview}
-            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-          >
-            <Eye className="h-5 w-5 mr-2" />
-            Preview
-          </button>
-          <button
-            type="button"
-            onClick={handleSaveDraft}
-            className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
-          >
-            <Save className="h-5 w-5 mr-2" />
-            Save Draft
-          </button>
+          
+          
           <button
             type="submit"
             className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
@@ -453,46 +447,7 @@ const CourseManagementForm = () => {
         </section>
       </form>
 
-      {/* Preview */}
-      {previewMode && (
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold">Course Preview</h2>
-          <div className="border p-6 rounded-lg shadow-lg mt-4">
-            <h3 className="text-lg font-semibold">{formData.title}</h3>
-            <p className="mt-2">{formData.description}</p>
-            <div className="mt-4">
-              <strong>Instructor:</strong> {formData.instructor}
-            </div>
-            <div className="mt-2">
-              <strong>Duration:</strong> {formData.duration} weeks
-            </div>
-            <div className="mt-2">
-              <strong>Price:</strong> ${formData.courseFee}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Saved Drafts */}
-      {savedCourses.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold">Saved Drafts</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-            {savedCourses.map((course, index) => (
-              <div key={index} className="border p-6 rounded-lg shadow-lg">
-                <h3 className="text-lg font-semibold">{course.title}</h3>
-                <p>{course.description}</p>
-                <div className="mt-2">
-                  <strong>Instructor:</strong> {course.instructor}
-                </div>
-                <div className="mt-2">
-                  <strong>Status:</strong> {course.publishStatus}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      
     </div>)}
     </>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { getAllTeachers, deleteTeacher } from './api/apiServices'; // Import the API calls
+import axiosInstance from '../../api/axiosInstance';
 
 const ManageTeacher = () => {
   const [teachers, setTeachers] = useState([]);
@@ -33,7 +34,39 @@ const ManageTeacher = () => {
 
   // Handler for editing teacher
   const handleEditTeacher = (teacherId) => {
-    console.log('Edit teacher:', teacherId);
+    const studentToEdit = teachers.find(student => student._id === teacherId);
+    if (!studentToEdit) {
+      setError('teacher not found');
+      return;
+    }
+
+    const updatedUserName = prompt('Enter new user name:', studentToEdit.userName);
+    const updatedEmail = prompt('Enter new email:', studentToEdit.email);
+    const updatedPassword = prompt('Enter new password:', studentToEdit.password);
+    const updatedSalary = prompt('Enter new salary:', studentToEdit.salary);
+    const updatedSubjectKnowledge = prompt('Enter new subject knowledge:', studentToEdit.subjectKnowledge);
+    if (updatedUserName && updatedEmail && updatedPassword && updatedSalary && updatedSubjectKnowledge) {
+      const updatedStudent = {
+        ...studentToEdit,
+        userName: updatedUserName,
+        email: updatedEmail,
+        password: updatedPassword,
+        salary: updatedSalary,
+        subjectKnowledge: updatedSubjectKnowledge
+      };
+      console.log(updatedStudent);
+      axiosInstance.put(`/teachers/${teacherId}`, updatedStudent)
+        .then(response => {
+          setTeachers(teachers.map(teacher => teacher._id === teacherId ? response.data : teacher));
+          alert('teacher updated successfully!');
+        })
+        .catch(error => {
+          console.error('Error updating teacher:', error);
+          setError('Failed to update teacher');
+        });
+    } else {
+      setError('All fields are required to update the teacher');
+    }
   };
 
   // Handler for deleting teacher
@@ -72,7 +105,7 @@ const ManageTeacher = () => {
           <div className="block sm:hidden">
             {teachers.map((teacher) => (
               <div key={teacher._id} className="bg-white rounded-lg shadow mb-4 p-4">
-                <div className="flex items-center mb-3">
+                <div className="flex items-center mb-3 ">
                   <img
                     className="h-10 w-10 rounded-full"
                     src={teacher.teacherProfileImage || 'https://via.placeholder.com/40'}
@@ -80,7 +113,7 @@ const ManageTeacher = () => {
                   />
                   <div className="ml-3">
                     <div className="font-medium">{teacher.teacherName}</div>
-                    <div className="text-sm text-gray-500">{teacher.email}</div>
+                    <div className="text-sm font-semibold text-gray-500">{teacher.email}</div>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -111,6 +144,7 @@ const ManageTeacher = () => {
             <table className="min-w-full table-auto">
               <thead className="bg-gray-50">
                 <tr>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pic</th>
                   <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                   <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                   <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subjects</th>
@@ -131,7 +165,7 @@ const ManageTeacher = () => {
                           />
                         </div>
                         <div className="ml-3 sm:ml-4">
-                          <div className="text-sm font-medium text-gray-900">{teacher.teacherName}</div>
+                          <div className="text-sm font-medium text-gray-900">{teacher.userName} </div>
                         </div>
                       </div>
                     </td>
