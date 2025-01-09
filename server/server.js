@@ -35,12 +35,15 @@ const studentRoutes = require('./src/routes/studentRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const teacherRoutes = require('./src/routes/teacherRoutes');
 const authRoutes = require('./src/routes/authRoutes');
+const cours=require("./src/routes/course")
 
 // Use routes
 app.use('/students', studentRoutes);
 app.use('/admins', adminRoutes);
 app.use('/teachers', teacherRoutes);
 app.use('/auth', authRoutes);
+app.use("/course",cours);
+
 
 // Start the server
 app.listen(PORT, () => {

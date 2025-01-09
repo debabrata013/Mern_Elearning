@@ -2,10 +2,6 @@ const Course = require('../models/Course');
 const uploadToS3 = require('../utils/uploadToS3');
 
 
-// Controller to create a new course
-const Course = require('../models/Course');
-const uploadToS3 = require('../utils/uploadToS3');
-
 exports.createCourse = async (req, res) => {
   try {
     const {
