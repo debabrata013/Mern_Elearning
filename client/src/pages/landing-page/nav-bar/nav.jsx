@@ -68,7 +68,7 @@ const Nav = () => {
             </div>
 
             {/* Mobile Login Button */}
-            <Link to="/log" className={`login-button ${isMenuOpen ? 'show' : ''}`}>
+            <Link to="/login" className={`login-button ${isMenuOpen ? 'show' : ''}`}>
               Next
             </Link>
           </div>
