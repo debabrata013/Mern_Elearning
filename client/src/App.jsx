@@ -1,122 +1,82 @@
-import { Route, Routes } from "react-router-dom";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { useContext } from "react";
-import { AuthContext } from "./context/auth-context";
-import AuthPage from "./pages/auth";
-import RouteGuard from "./components/route-guard";
+// import { AuthContext } from "./context/auth-context";
+// import AuthPage from "./pages/auth";
+// import RouteGuard from "./components/route-guard";
 import LandingPage from "./pages/landing-page"; // Import the new landing page component
-import InstructorDashboardpage from "./pages/instructor";
-import StudentViewCommonLayout from "./components/student-view/common-layout";
-import StudentHomePage from "./pages/student/home";
+// import InstructorDashboardpage from "./pages/instructor";
+// import StudentViewCommonLayout from "./components/student-view/common-layout";
+// import StudentHomePage from "./pages/student/home";
 import NotFoundPage from "./pages/not-found";
-import AddNewCoursePage from "./pages/instructor/add-new-course";
-import StudentViewCoursesPage from "./pages/student/courses";
-import StudentViewCourseDetailsPage from "./pages/student/course-details";
-import PaypalPaymentReturnPage from "./pages/student/payment-return";
-import StudentCoursesPage from "./pages/student/student-courses";
-import StudentViewCourseProgressPage from "./pages/student/course-progress";
-import Dashboard from "./pages/admin2/dashboard";
+// // import AddNewCoursePage from "./pages/instructor/add-new-course";
+// import StudentViewCoursesPage from "./pages/student/courses";
+// import StudentViewCourseDetailsPage from "./pages/student/course-details";
+// import PaypalPaymentReturnPage from "./pages/student/payment-return";
+// import StudentCoursesPage from "./pages/student/student-courses";
+// import StudentViewCourseProgressPage from "./pages/student/course-progress";
+import AdminDashboard from "./pages/admin/dashboard";
 import FAQ from "./pages/landing-page/FAQ-page/faq";
 import PricingPage from "./pages/landing-page/Pricing/pricing";
 import ContactForm from "./pages/landing-page/contact-us/contactus";
-import Co from "./pages/demo/cource" 
-import Teacher from "./pages/teacherdashboard/dashboard"
+// import Co from "./pages/demo/cource" 
+import TeacherDashboard from "./pages/teacherdashboard/dashboard"
 import AboutUs from "./pages/landing-page/about-us/aboutus";
-import  LoginPage from "./pages/log/login";
-import  ForgetPage from "./pages/log/forget";
-import PopularCourses from "./pages/landing-page/popular_courses/courses";
+import  Login from "./pages/log/login";
+// import  ForgetPage from "./pages/log/forget";
+// import PopularCourses from "./pages/landing-page/popular_courses/courses";
 import Coursess from "./pages/landing-page/Courses/courses-page"
+import { AuthProvider } from './context/auth';
+import ProtectedRoute from "./context/ProtectedRoute";
+import Unauthorized from "./pages/Unauthorized";
+// import StudentRoutes from "./components/student-view/StudentRoutes";
+// import student from './components/student-view/AppLayout'
 
 function App() {
-  const { auth } = useContext(AuthContext);
-
+  
   return (
+    <AuthProvider>
+
     <Routes>
-      {/* Landing page route */}
+      <Route path="/login" element={<Login />} />
       <Route path="/" element={<LandingPage />} />
-      <Route path="/log" element={<LoginPage/>} />
-      <Route path="/pop" element={<PopularCourses/>} />
-      <Route path="/aboutus" element={<AboutUs/>} />
-      <Route path="/logf" element={<ForgetPage/>} />
       <Route path="/faq" element={<FAQ />} />
+      <Route path="/coursess" element={<Coursess />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/contactus" element={<ContactForm />} />
-      <Route path="/coursed" element={<Co/>} />
-      <Route path="/teacher" element={<Teacher/>} />
-      <Route path="/student" element={<StudentHomePage/>} />
-      <Route path="/coursess" element={<Coursess/>} />
-      <Route path="/admin" element={<Dashboard />} />
-      
-      {/* Auth page route */}
-      <Route
-        path="/auth"
+      <Route path="/aboutus" element={<AboutUs />} />
+      <Route 
+        path="/user-dashboard" 
         element={
-          <RouteGuard
-            element={<AuthPage />}
-            authenticated={auth?.authenticate}
-            user={auth?.user}
-          />
-        }
+          <ProtectedRoute role="student">
+            {/* < StudentHomePage /> */}
+            {/* <StudentRoutes />
+            <student /> */}
+          </ProtectedRoute>
+        } 
       />
-      
-      {/* Instructor dashboard route */}
-      <Route
-        path="/instructor"
+      <Route 
+        path="/teacher-dashboard" 
         element={
-          <RouteGuard
-            element={<InstructorDashboardpage />}
-            authenticated={auth?.authenticate}
-            user={auth?.user}
-          />
-        }
+          <ProtectedRoute role="teacher">
+            <TeacherDashboard />
+          </ProtectedRoute>
+        } 
       />
-      
-      {/* Add new course page route */}
-      <Route
-        path="/instructor/create-new-course"
+      <Route 
+        path="/admin-dashboard" 
         element={
-          <RouteGuard
-            element={<AddNewCoursePage />}
-            authenticated={auth?.authenticate}
-            user={auth?.user}
-          />
-        }
+          <ProtectedRoute role="admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        } 
       />
-      
-      {/* Edit course page route */}
-      <Route
-        path="/instructor/edit-course/:courseId"
-        element={
-          <RouteGuard
-            element={<AddNewCoursePage />}
-            authenticated={auth?.authenticate}
-            user={auth?.user}
-          />
-        }
-      />
-      
-      {/* Student view common layout route */}
-      <Route
-        path="/"
-        // element={
-          // <RouteGuard
-          //   element={<StudentViewCommonLayout />}
-          //   authenticated={auth?.authenticate}
-          //   user={auth?.user}
-          // />
-        // }
-      >
-        {/* Nested routes under student layout */}
-        <Route path="home" element={<StudentHomePage />} />
-        <Route path="courses" element={<StudentViewCoursesPage />} />
-        <Route path="course/details/:id" element={<StudentViewCourseDetailsPage />} />
-        <Route path="payment-return" element={<PaypalPaymentReturnPage />} />
-        <Route path="student-courses" element={<StudentCoursesPage />} />
-        <Route path="course-progress/:id" element={<StudentViewCourseProgressPage />} />
-      </Route>
-      
-      {/* Fallback route for 404 */}
+      <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
+
+</AuthProvider>
+
   );
 }
 

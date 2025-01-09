@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axiosInstance from "../../api/axiosInstance"; // Assuming axiosInstance is set up to make requests
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/auth';
+
 
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true); // To toggle between login and signup
@@ -10,7 +12,7 @@ function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState(""); // Confirm password input state (for registration)
   const [error, setError] = useState(""); // To display error messages
   const [loading, setLoading] = useState(false); // To show loader during API call
-
+  const { login } = useAuth();
   const navigate = useNavigate(); // Hook to programmatically navigate
 
   // Function to toggle between login and register forms
@@ -19,8 +21,10 @@ function AuthPage() {
   // Handle form submission (login or register)
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // login({ username: userName, role: "student" });
 
-    const userData = { userEmail: email, password };
+    const userData = { email: email, password };
+    login(userData);
 
     // For registration, add user name and confirm password
     if (!isLogin) {
@@ -40,22 +44,23 @@ function AuthPage() {
         response = await axiosInstance.post("/auth/login", userData);
       } else {
         // Register request
-        response = await axiosInstance.post("/auth/register", userData);
+        response = await axiosInstance.post("/students/", userData);
       }
+      console.log(response.data);
 
       // Handle successful response
       if (response.data.success) {
         // Store access token in sessionStorage
-        sessionStorage.setItem("accessToken", JSON.stringify(response.data.data.accessToken));
+        sessionStorage.setItem("accessToken", JSON.stringify(response.data.accessToken));
 
         // Redirect based on role
-        const role = response.data.data.user.role;
+        const role = response.data.userData.role;
         if (role === "student") {
-          navigate("/student");
+          navigate("/user-dashboard");
         } else if (role === "teacher") {
-          navigate("/teacher");
+          navigate("/teacher-dashboard");
         } else if (role === "admin") {
-          navigate("/admin");
+          navigate("/admin-dashboard");
         }
 
         alert(isLogin ? "Login successful!" : "Registration successful!");
@@ -142,7 +147,7 @@ function AuthPage() {
           )}
 
           {/* Display error if any */}
-          {/* {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>} */}
+          {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
           {/* Submit button */}
           <button

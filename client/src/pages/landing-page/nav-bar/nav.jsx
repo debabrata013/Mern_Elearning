@@ -62,7 +62,7 @@ const Nav = () => {
 
             {/* Auth Buttons Section */}
             <div className="auth-buttons">
-              <Link to="/log">
+              <Link to="/login">
                 <NextButton>Get Started</NextButton>
               </Link>
             </div>

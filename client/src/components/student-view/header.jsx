@@ -2,7 +2,7 @@ import { GraduationCap, TvMinimalPlay } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useContext } from "react";
-import { AuthContext } from "@/context/auth-context";
+// import { AuthContext } from "@/context/auth-context";
 
 function StudentViewCommonHeader() {
   const navigate = useNavigate();
