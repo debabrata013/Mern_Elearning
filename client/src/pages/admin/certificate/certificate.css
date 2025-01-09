@@ -1,0 +1,364 @@
+    /* General Styling */
+    body {
+        
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f6f9;
+        padding-top: 20px;
+        color: #333;
+        border:1px solid rgba(166, 166, 166, 0.597);
+        margin: 30px 70px 50px 70px;
+        border-radius: 20px;
+        box-shadow: 0px 5px 10px 1px #0000003b;
+    }
+    
+
+    .certificate-page {
+        padding: 20px;
+        max-width: 1400px;
+        margin: auto;
+    }
+
+    /* Heading Styles */
+    h1 {
+        text-align: center;
+        font-weight: bold;
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+        color: #01285b;
+    }
+
+    /* Controls Row */
+    .controls-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .search-bar {
+        width: 70%;
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    .add-button {
+        padding: 10px 20px;
+        background-color: #01285b;
+        color: white;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .add-button:hover {
+        background-color: #0248a1;
+    }
+
+    /* Certificate Cards */
+    .certificates-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .certificate-card {
+        width: 250px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.3s ease;
+    }
+
+    .certificate-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .certificate-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .certificate-details {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .certificate-details p {
+        margin: 5px 0;
+    }
+
+    .card-actions {
+        display: flex;
+        justify-content: space-around;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+    }
+
+    .edit-btn, .delete-btn {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: #01285b;
+        transition: color 0.3s ease;
+    }
+
+    .edit-btn:hover, .delete-btn:hover {
+        color: #0248a1;
+    }
+
+    /* Add Certificate Page */
+    .add-certificate-page {
+        background-color: #ffffff00;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .add-certificate-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; 
+    }
+
+    .form-section {
+        flex: 2;
+        padding: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .preview-section {
+        flex: 3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f4f4f4;
+        border: 1px dashed #ccc;
+        height:440px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .preview-section img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+
+    /* Form Styles */
+    form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #01285b;
+    }
+
+    form input, form textarea, form button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    form textarea {
+        resize: none;
+        height: 100px;
+    }
+
+    form input[type="file"] {
+        padding: 5px;
+    }
+
+    .submit-button {
+        background-color: #01285b;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .submit-button:hover {
+        background-color: #0248a1;
+    }
+
+    .cancel-button {
+        background-color: #ccc;
+        color: #333;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .cancel-button:hover {
+        background-color: #aaa;
+    }
+
+    /* .print-button{
+        background-color: #ccc;
+        color: #333;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .print-button:hover{
+        background-color: #aaa;
+    } */
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .controls-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        }
+
+        .certificates-container {
+        justify-content: center;
+        }
+
+        .add-certificate-container {
+        flex-direction: column;
+        }
+
+        .form-section, .preview-section {
+        flex: unset;
+        width: 100%;
+        }
+    }
+
+    .certificate-page {
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .add-certificate-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .form-section {
+        width: 40%;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+
+    .form-section label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .form-section input,
+    .form-section textarea {
+        width: 100%;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .preview-section {
+        width: 55%;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .action-buttons {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .action-buttons button {
+        padding: 10px 20px;
+        margin: 5px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .action-buttons button:hover {
+        background-color: #0056b3;
+    }
+
+
+    .text-manipulation-box {
+        max-height:500px ;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      
+      .save-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #01285b;                        /* save button ------------------------------ */
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        position:absolute;
+        right:337px;
+        top:600px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      
+      .save-button:hover {
+        background-color: #00509e;
+      }
+      
+
+
+      .text-manipulation-box h3 {
+        font-size: 1.2rem;
+        color: #01285b;
+      }
+      
+      .text-manipulation-box label {
+        display: block;
+        margin: 10px 0 5px;
+        color: #01285b;
+      }
+      
+      .text-manipulation-box input[type="range"],
+      .text-manipulation-box input[type="color"] {
+        width: 100%;
+      }
+      
+      .certificate-preview-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      
+      .certificate-text {
+        position: absolute;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+      }
+      
+      

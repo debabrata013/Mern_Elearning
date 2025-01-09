@@ -4,8 +4,11 @@ import { FaHome, FaBook, FaUserGraduate, FaChalkboardTeacher, FaCertificate, FaB
 import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { PlusCircle, Book, Users, DollarSign, TrendingUp, Home, Layout, BookOpen, ClipboardList, Settings, LogOut, Menu,School, ChevronDown } from 'lucide-react';
 
+import CertificateContent from "./certificate/certificate";
+import AnnouncementContent from "./anouncement/anouncement";
+import CouponContent from "./coupon/coupon";
+import ComplainContent from "./tickets/ticket";
 import ClassesContent from './class'
-
 import JobsContent from './job';
 import { useAuth } from '../../context/auth';
 import ManageStudent from './ManageStudent';
@@ -301,10 +304,8 @@ const Dashboard = () => {
         return <AnnouncementContent />;
       case 'complain':
         return <ComplainContent />;
-      case 'coupon-add':
-        return <AddCouponContent />;
-      case 'coupon-view':
-        return <ViewCouponsContent />;
+      case 'coupon':
+        return <CouponContent />;
       case 'jobs':
         return <JobsContent />;
       default:
@@ -421,23 +422,11 @@ const Dashboard = () => {
             onClick={() => setCurrentSection('complain')}
           />
 
-          <NavDropdown
+          <NavItem
             icon={<FaTags />}
             label="Coupon"
-            active={currentSection.startsWith('coupon')}
-            items={[
-              { 
-                value: 'coupon-add',
-                label: 'Add Coupon',
-                icon: <FaPlusCircle className="w-4 h-4" />
-              },
-              {
-                value: 'coupon-view',
-                label: 'View Coupons',
-                icon: <FaEdit className="w-4 h-4" />
-              }
-            ]}
-            onItemClick={(value) => setCurrentSection(value)}
+            active={currentSection=='coupon'}
+            onClick={() => setCurrentSection('coupon')}
           />
 
           <NavItem 
