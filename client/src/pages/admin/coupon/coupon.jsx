@@ -166,19 +166,7 @@ const AddCouponPage = ({ couponToEdit, onSaveCoupon, onBack }) => {
           onChange={(e) => setDiscount(e.target.value)}
         />
       </div>
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">Coupon Type *</label>
-        <select
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
-          <option value="Global">Global</option>
-          <option value="Courses">Courses</option>
-          <option value="Category">Category</option>
-          <option value="Instructor">Instructor</option>
-        </select>
-      </div>
+     
       <div className="mb-4">
         <label className="block mb-2 font-semibold">
           Number of Students Allowed *

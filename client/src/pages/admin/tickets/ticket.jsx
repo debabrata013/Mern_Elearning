@@ -45,13 +45,13 @@ const AdminDashboard = () => {
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Tickets</h1>
 
       {/* Ticket Summary Boxes (Only shown if not viewing a ticket and tickets are available) */}
-      {!viewTicket && ticketData.length > 0 && (
-        <div className="ticket-summary grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div className="summary-box bg-white shadow-md p-4 text-center rounded-md">
+      {/* {!viewTicket && ticketData.length > 0 && (
+        <div className="ticket-summary grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          {/* <div className="summary-box bg-white shadow-md p-4 text-center rounded-md">
             <h3 className="text-gray-700 text-lg font-medium">Closed Tickets</h3>
             <p className="text-blue-600 text-2xl font-bold">{ticketCounts.Closed}</p>
-          </div>
-          <div className="summary-box bg-white shadow-md p-4 text-center rounded-md">
+          </div> */}
+        {/*  <div className=" summary-box bg-white shadow-md p-4 text-center rounded-md">
             <h3 className="text-gray-700 text-lg font-medium">Answered Tickets</h3>
             <p className="text-blue-600 text-2xl font-bold">{ticketCounts.Answered}</p>
           </div>
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
             <p className="text-blue-600 text-2xl font-bold">{ticketCounts.Pending}</p>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Conditional Rendering: If viewing a ticket */}
       {viewTicket ? (
@@ -81,7 +81,7 @@ const AdminDashboard = () => {
             <option value="">Select Status</option>
             <option value="Answered">Answered</option>
             <option value="Pending">Pending</option>
-            <option value="Closed">Closed</option>
+            {/* <option value="Closed">Closed</option> */}
           </select>
           <button
             onClick={handleSubmit}

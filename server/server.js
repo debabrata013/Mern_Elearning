@@ -4,6 +4,13 @@ const dotenv = require('dotenv');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const announcementRoutes = require('./src/routes/announcementRoutes');
+const schedule = require('node-schedule');
+const couponRoutes = require('./src/routes/couponRoutes'); // Import coupon routes
+const complaintRoutes = require('./src/routes/complaintRoutes');
+ // Import coupon model
+const { deleteExpiredCoupons } = require('./src/controllers/couponController'); // Import the deleteExpiredCoupons function
+
 
 dotenv.config();
 
@@ -43,7 +50,25 @@ app.use('/admins', adminRoutes);
 app.use('/teachers', teacherRoutes);
 app.use('/auth', authRoutes);
 app.use("/course",cours);
-
+app.use('/announcements', announcementRoutes);
+app.use('/coupons', couponRoutes);
+app.use('/complaints', complaintRoutes);
+const deleteOldAnnouncements = async () => {
+    try {
+      const sixDaysAgo = new Date();
+      sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
+  
+      // Delete all announcements older than 6 days
+      const result = await Announcement.deleteMany({ createdAt: { $lt: sixDaysAgo } });
+      console.log(`${result.deletedCount} announcements older than 6 days deleted.`);
+    } catch (err) {
+      console.error('Error deleting old announcements:', err);
+    }
+  };
+  
+  schedule.scheduleJob('0 0 * * *', deleteOldAnnouncements); 
+  schedule.scheduleJob('0 0 * * *', deleteExpiredCoupons);
+  
 
 // Start the server
 app.listen(PORT, () => {
