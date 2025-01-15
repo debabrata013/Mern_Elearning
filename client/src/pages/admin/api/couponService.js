@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: 'http://localhost:4400/jobs',
+  baseURL: 'http://localhost:4400/coupons',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json'
@@ -15,20 +15,20 @@ const handleError = (error, operation) => {
   throw error;
 };
 
-const jobService = {
-  getAllJobs: async () => {
+const couponService = {
+  getAllcoupons: async () => {
     try {
       const { data } = await api.get('/');
       return data;
     } catch (error) {
-      handleError(error, 'fetching jobs');
+      handleError(error, 'fetching coupons');
     }
   },
 
-  createJob: async (jobData) => {
+  createcoupon: async (couponData) => {
     try {
-      console.log("Job Data:", jobData);
-      const { data } = await api.post('/', jobData);
+      console.log("coupon Data:", couponData);
+      const { data } = await api.post('/', couponData);
       console.log("Response Data:", data);
       return data;
     } catch (error) {
@@ -42,27 +42,27 @@ const jobService = {
         // Something else happened
         console.error("Error Message:", error.message);
       }
-      handleError(error, 'creating job');
+      handleError(error, 'creating coupon');
     }
   },
 
-  updateJob: async (jobId, updatedData) => {
+  updatecoupon: async (couponId, updatedData) => {
     try {
-      const { data } = await api.put(`/${jobId}`, updatedData);
+      const { data } = await api.put(`/${couponId}`, updatedData);
       return data;
     } catch (error) {
-      handleError(error, 'updating job');
+      handleError(error, 'updating coupon');
     }
   },
 
-  deleteJob: async (jobId) => {
+  deletecoupon: async (couponId) => {
     try {
-      const { data } = await api.delete(`/${jobId}`);
+      const { data } = await api.delete(`/${couponId}`);
       return data;
     } catch (error) {
-      handleError(error, 'deleting job');
+      handleError(error, 'deleting coupon');
     }
   }
 };
 
-export default jobService;
+export default couponService;

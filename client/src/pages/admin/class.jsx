@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash, Eye, Save, RefreshCcw } from 'lucide-react';
 import axiosInstance from '../../api/axiosInstance';
+import courseService from './api/courseService';
 
 // Sampleteacher and category options (you can replace these with dynamic data)
 const categories = ['Programming', 'Design', 'Business', 'Data Science', 'Marketing'];
@@ -126,12 +127,28 @@ const CourseManagementForm = () => {
 
  
   // Submit the form (this can be connected to an API or state management)
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
+    
     e.preventDefault();
+    formData.contact=teacher.email;
     console.log('Course Data Submitted:', formData);
     // Handle actual submission logic here
-  };
+   try {
+    const response = await courseService.createCourse(formData);
+      console.log('Job created successfully:', response);
+   } catch (error) {
+    console.log("error ", error);
+    
+    
+   }
+      
+    };
 
+
+  
+
+    
+    
   // Assuming you have a function to handle the selection of a teacher
   const handleTeacherSelect = (selectedTeacher) => {
     setTeacher(selectedTeacher); // Update the teacher state with the selected teacher's details

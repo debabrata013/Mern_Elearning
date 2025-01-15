@@ -5,7 +5,7 @@ const courseController = require('../controllers/courseController');
 const router = express.Router();
 
 router.post(
-  '/create-course',
+  '/cr',
   upload.fields([
     { name: 'coverImage', maxCount: 1 },
     { name: 'introVideo', maxCount: 1 },

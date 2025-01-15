@@ -10,7 +10,7 @@ const courseSchema = new mongoose.Schema({
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   duration: { type: Number, required: true },
-  syllabusPDF: { type: String },  // Store file path or URL
+  material: { type: String },  // Store file path or URL
   chapters: [{
     title: { type: String, required: true },
     description: { type: String, required: true },

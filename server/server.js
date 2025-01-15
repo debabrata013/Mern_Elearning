@@ -37,7 +37,7 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 });
 
 
-
+const jobRoutes=require('./src/routes/job')
 const studentRoutes = require('./src/routes/studentRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const teacherRoutes = require('./src/routes/teacherRoutes');
@@ -53,6 +53,7 @@ app.use("/course",cours);
 app.use('/announcements', announcementRoutes);
 app.use('/coupons', couponRoutes);
 app.use('/complaints', complaintRoutes);
+app.use('/jobs',jobRoutes)
 const deleteOldAnnouncements = async () => {
     try {
       const sixDaysAgo = new Date();

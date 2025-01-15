@@ -3,32 +3,39 @@ const uploadToS3 = require('../utils/uploadToS3');
 
 
 exports.createCourse = async (req, res) => {
+  console.log("creating course");
+  // console.log("Hello ",req.body);
+
+  
+  
   try {
+    console.log(JSON.stringify(req.body));
+    
     const {
-      title,
-      courseCode,
-      category,
+      title,//
+      courseCode,//
+      category,//
       description,
-      startDate,
-      endDate,
-      duration,
-      chapters,
-      instructor,
-      contact,
-      maxStudents,
-      enrollmentDeadline,
-      courseFee,
-      discount,
+      startDate,//
+      endDate,//
+      duration,//
+      chapters,//
+      teacher,
+      contact,//froent
+      maxStudents,//
+      enrollmentDeadline,//
+      courseFee,//
+      discount,//
       publishStatus,
     } = req.body;
 
     // Assuming files are uploaded via a form and available in req.files
-    const { coverImage, introVideo, syllabusPDF } = req.files;
+    const { coverImage, introVideo, material } = req.files;
 
     // Upload files to AWS S3 and get the URLs
     const coverImageUrl = await uploadToS3(coverImage[0]); // Upload the first file in the array
     const introVideoUrl = await uploadToS3(introVideo[0]); // Upload the first file in the array
-    const syllabusPDFUrl = await uploadToS3(syllabusPDF[0]); // Upload the first file in the array
+    const materialUrl = await uploadToS3(material[0]); // Upload the first file in the array
 
     // Create a new Course document
     const course = new Course({
@@ -41,9 +48,9 @@ exports.createCourse = async (req, res) => {
       duration,
       coverImage: coverImageUrl, // Save the URL in the database
       introVideo: introVideoUrl, // Save the URL in the database
-      syllabusPDF: syllabusPDFUrl, // Save the URL in the database
+      material: materialUrl, // Save the URL in the database
       chapters,
-      instructor,
+     teacher,
       contact,
       maxStudents,
       enrollmentDeadline,

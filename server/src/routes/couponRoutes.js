@@ -12,18 +12,18 @@ const {
 } = require('../controllers/couponController');
 
 // 1. Route to create a new coupon
-router.post('/coupons', createCoupon);
+router.post('/', createCoupon);
 
 // 2. Route to get all coupons
-router.get('/coupons', getCoupons);
+router.get('/', getCoupons);
 
 // 3. Route to get a specific coupon by coupon code
-router.get('/coupons/:couponCode', getCouponByCode);
+router.get('/:couponCode', getCouponByCode);
 
 // 4. Route to update a coupon by coupon code
-router.put('/coupons/:couponCode', updateCoupon);
+router.put('/:couponCode', updateCoupon);
 
 // 5. Route to delete a coupon by coupon code
-router.delete('/coupons/:couponCode', deleteCoupon);
+router.delete('/:couponCode', deleteCoupon);
 
 module.exports = router;

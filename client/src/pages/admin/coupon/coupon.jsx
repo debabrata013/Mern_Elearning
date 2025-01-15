@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import couponService from "../api/couponService";
 const HomePage = ({
   coupons,
   onAddCoupon,
@@ -101,33 +101,49 @@ const HomePage = ({
   );
 };
 
-const AddCouponPage = ({ couponToEdit, onSaveCoupon, onBack }) => {
-  const [title, setTitle] = useState(couponToEdit?.title || "");
-  const [code, setCode] = useState(couponToEdit?.code || "");
-  const [discount, setDiscount] = useState(
-    couponToEdit?.discount.replace("%", "") || ""
-  );
-  const [startDate, setStartDate] = useState(couponToEdit?.period?.start || "");
-  const [endDate, setEndDate] = useState(couponToEdit?.period?.end || "");
-  const [type, setType] = useState(couponToEdit?.type || "Global");
-  const [usageLimit, setUsageLimit] = useState(
-    couponToEdit?.usage?.limit || 0
-  );
+const AddCouponPage = ({ couponToEdit, onBack }) => {
+  const [formData, setFormData] = useState({
+    title: couponToEdit?.title || "",
+    couponCode: couponToEdit?.couponCode || "",
+    discount: couponToEdit?.discount || "",
+    numberOfStudentAllow: couponToEdit?.numberOfStudentAllow || "",
+    startDate: couponToEdit?.startDate || "",
+    endDate: couponToEdit?.endDate || "",
+  });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const handleSave = () => {
-    if (title && code && discount && startDate && endDate && usageLimit > 0) {
-      onSaveCoupon({
-        title,
-        code,
-        discount: `${discount}%`,
-        period: { start: startDate, end: endDate },
-        active: couponToEdit?.active || false,
-        type,
-        usage: {
-          limit: usageLimit,
-          current: couponToEdit?.usage?.current || 0,
-        },
-      });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({});
+    setLoading(true);
+
+    try {
+      let response;
+      if (couponToEdit) {
+        // Update existing coupon
+       response = await api.updateCoupon(couponToEdit.id, formData);
+
+      } else {
+        // Add a new coupon
+        // await axios.post("/api/coupons", formData);
+        response=  await couponService.createcoupon(formData)
+      }
+      alert("Coupon saved successfully!",response);
+      onBack();
+    } catch (error) {
+      if (error.response && error.response.data.errors) {
+        setErrors(error.response.data.errors);
+      } else {
+        alert("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -136,80 +152,126 @@ const AddCouponPage = ({ couponToEdit, onSaveCoupon, onBack }) => {
       <h1 className="text-3xl font-bold text-center text-blue-800 mb-6">
         {couponToEdit ? "Edit Coupon" : "Add Coupon"}
       </h1>
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">Coupon Title *</label>
-        <input
-          type="text"
-          placeholder="Enter Title"
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">Coupon Code *</label>
-        <input
-          type="text"
-          placeholder="Enter Code"
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">Discount (%) *</label>
-        <input
-          type="number"
-          placeholder="Enter Discount"
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          value={discount}
-          onChange={(e) => setDiscount(e.target.value)}
-        />
-      </div>
-     
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">
-          Number of Students Allowed *
-        </label>
-        <input
-          type="number"
-          placeholder="Enter Max Users"
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          value={usageLimit}
-          onChange={(e) => setUsageLimit(Number(e.target.value))}
-        />
-      </div>
-      <div className="mb-6">
-        <label className="block mb-2 font-semibold">Coupon Period *</label>
-        <div className="flex space-x-2">
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block mb-2 font-semibold">Coupon Title *</label>
           <input
-            type="date"
-            className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            type="text"
+            name="title"
+            placeholder="Enter Title"
+            className={`w-full p-2 border rounded-lg focus:outline-none ${
+              errors.title ? "border-red-500" : "border-gray-300"
+            }`}
+            value={formData.title}
+            onChange={handleChange}
           />
-          <input
-            type="date"
-            className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
+          {errors.title && (
+            <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+          )}
         </div>
-      </div>
-      <div className="flex space-x-4">
-        <button
-          onClick={handleSave}
-          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-        >
-          Submit
-        </button>
-        <button
-          onClick={onBack}
-          className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700"
-        >
-          Back
-        </button>
-      </div>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-semibold">Coupon Code *</label>
+          <input
+            type="text"
+            name="couponCode"
+            placeholder="Enter Code"
+            className={`w-full p-2 border rounded-lg focus:outline-none ${
+              errors.couponCode ? "border-red-500" : "border-gray-300"
+            }`}
+            value={formData.couponCode}
+            onChange={handleChange}
+          />
+          {errors.couponCode && (
+            <p className="text-red-500 text-sm mt-1">{errors.couponCode}</p>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-semibold">Discount (%) *</label>
+          <input
+            type="number"
+            name="discount"
+            placeholder="Enter Discount"
+            className={`w-full p-2 border rounded-lg focus:outline-none ${
+              errors.discount ? "border-red-500" : "border-gray-300"
+            }`}
+            value={formData.discount}
+            onChange={handleChange}
+          />
+          {errors.discount && (
+            <p className="text-red-500 text-sm mt-1">{errors.discount}</p>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-semibold">
+            Number of Students Allowed *
+          </label>
+          <input
+            type="number"
+            name="numberOfStudentAllow"
+            placeholder="Enter Max Users"
+            className={`w-full p-2 border rounded-lg focus:outline-none ${
+              errors.numberOfStudentAllow ? "border-red-500" : "border-gray-300"
+            }`}
+            value={formData.numberOfStudentAllow}
+            onChange={handleChange}
+          />
+          {errors.numberOfStudentAllow && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.numberOfStudentAllow}
+            </p>
+          )}
+        </div>
+
+        <div className="mb-6">
+          <label className="block mb-2 font-semibold">Coupon Period *</label>
+          <div className="flex space-x-2">
+            <input
+              type="date"
+              name="startDate"
+              className={`w-1/2 p-2 border rounded-lg focus:outline-none ${
+                errors.startDate ? "border-red-500" : "border-gray-300"
+              }`}
+              value={formData.startDate}
+              onChange={handleChange}
+            />
+            <input
+              type="date"
+              name="endDate"
+              className={`w-1/2 p-2 border rounded-lg focus:outline-none ${
+                errors.endDate ? "border-red-500" : "border-gray-300"
+              }`}
+              value={formData.endDate}
+              onChange={handleChange}
+            />
+          </div>
+          {errors.startDate && (
+            <p className="text-red-500 text-sm mt-1">{errors.startDate}</p>
+          )}
+          {errors.endDate && (
+            <p className="text-red-500 text-sm mt-1">{errors.endDate}</p>
+          )}
+        </div>
+
+        <div className="flex space-x-4">
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
+          >
+            {loading ? "Saving..." : "Submit"}
+          </button>
+          <button
+            type="button"
+            onClick={onBack}
+            className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700"
+          >
+            Back
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

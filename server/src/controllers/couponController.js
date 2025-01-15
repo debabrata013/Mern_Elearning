@@ -12,6 +12,8 @@ const createCoupon = async (req, res) => {
 
     const newCoupon = new Coupon({ title, couponCode, discount, numberOfStudentAllow, startDate, endDate });
     await newCoupon.save();
+    console.log("coupons created");
+    
     res.status(201).json({ message: 'Coupon created successfully', coupon: newCoupon });
   } catch (error) {
     console.error(error);
