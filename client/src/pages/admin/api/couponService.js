@@ -19,6 +19,8 @@ const couponService = {
   getAllcoupons: async () => {
     try {
       const { data } = await api.get('/');
+      console.log(data);
+      
       return data;
     } catch (error) {
       handleError(error, 'fetching coupons');

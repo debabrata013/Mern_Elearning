@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import couponService from "../api/couponService";
 const HomePage = ({
   coupons,
@@ -275,27 +275,56 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
     </div>
   );
 };
-
 const CouponDashboard = () => {
-  const [coupons, setCoupons] = useState([]);
+  const [coupons, setCoupons] = useState([]); // Initialize as an empty array
   const [isAdding, setIsAdding] = useState(false);
   const [couponToEdit, setCouponToEdit] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        const response = await couponService.getAllcoupons();
+        console.log("API Response:", response.coupons);
+        setCoupons(response.coupons || []); // Fallback to empty array if response is invalid
+      } catch (error) {
+        console.error("Error fetching coupons:", error);
+        setCoupons([]); // Set to empty array on error
+      }
+    };
+    fetchCoupons();
+  }, []);
+
+  const filteredCoupons = coupons.filter((coupon) =>
+    coupon.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
 
   const handleAddCoupon = () => {
     setCouponToEdit(null);
     setIsAdding(true);
   };
 
-  const handleSaveCoupon = (coupon) => {
-    if (couponToEdit) {
-      setCoupons((prev) =>
-        prev.map((c) => (c === couponToEdit ? coupon : c))
-      );
-    } else {
-      setCoupons([...coupons, coupon]);
+  const handleSaveCoupon = async (coupon) => {
+    try {
+      if (couponToEdit) {
+        // Update an existing coupon
+        const response = await couponService.updateCoupon(
+          couponToEdit.id,
+          coupon
+        ); // Replace with your API call
+        setCoupons((prev) =>
+          prev.map((c) => (c.id === couponToEdit.id ? response.data : c))
+        );
+      } else {
+        // Add a new coupon
+        const response = await couponService.createCoupon(coupon); // Replace with your API call
+        setCoupons((prev) => [...prev, response.data]);
+      }
+      setIsAdding(false);
+    } catch (error) {
+      console.error("Error saving coupon:", error);
     }
-    setIsAdding(false);
   };
 
   const handleEditCoupon = (index) => {
@@ -303,20 +332,33 @@ const CouponDashboard = () => {
     setIsAdding(true);
   };
 
-  const handleDeleteCoupon = (index) => {
-    setCoupons(coupons.filter((_, i) => i !== index));
+  const handleDeleteCoupon = async (index) => {
+    const couponToDelete = coupons[index];
+    try {
+      await couponService.deleteCoupon(couponToDelete.id); // Replace with your API call
+      setCoupons((prev) => prev.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error("Error deleting coupon:", error);
+    }
   };
 
-  const handleToggleStatus = (index) => {
-    const updatedCoupons = [...coupons];
-    updatedCoupons[index].active = !updatedCoupons[index].active;
-    setCoupons(updatedCoupons);
+  const handleToggleStatus = async (index) => {
+    const updatedCoupon = { ...coupons[index], active: !coupons[index].active };
+    try {
+      const response = await couponService.updatecoupon(
+        updatedCoupon.id,
+        updatedCoupon
+      ); // Replace with your API call
+      setCoupons((prev) =>
+        prev.map((c, i) => (i === index ? response.data : c))
+      );
+    } catch (error) {
+      console.error("Error toggling status:", error);
+    }
   };
 
-  const filteredCoupons = coupons.filter((coupon) =>
-    coupon.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+  
+  
   return isAdding ? (
     <AddCouponPage
       couponToEdit={couponToEdit}
@@ -325,7 +367,7 @@ const CouponDashboard = () => {
     />
   ) : (
     <HomePage
-      coupons={filteredCoupons}
+      coupons={filteredCoupons || []} // Ensure it's always an array
       onAddCoupon={handleAddCoupon}
       onEditCoupon={handleEditCoupon}
       onDeleteCoupon={handleDeleteCoupon}
