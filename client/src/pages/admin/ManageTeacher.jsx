@@ -1,19 +1,118 @@
 import React, { useState, useEffect } from 'react';
-import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { getAllTeachers, deleteTeacher } from './api/apiServices'; // Import the API calls
 import axiosInstance from '../../api/axiosInstance';
+
+const EditTeacher = ({ teacher, onSave, onCancel }) => {
+  const [userName, setUserName] = useState(teacher.userName);
+  const [email, setEmail] = useState(teacher.email);
+  const [password, setPassword] = useState(teacher.password);
+  const [salary, setSalary] = useState(teacher.salary);
+  const [subjectKnowledge, setSubjectKnowledge] = useState(teacher.subjectKnowledge.join(', '));
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleSave = () => {
+    if (userName && email && password && salary && subjectKnowledge) {
+      onSave({
+        ...teacher,
+        userName,
+        email,
+        password,
+        salary,
+        subjectKnowledge: subjectKnowledge.split(',').map((subject) => subject.trim())
+      });
+    } else {
+      alert('All fields are required!');
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-xl">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4">Edit Teacher</h2>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Username</label>
+          <input
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Password</label>
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-3 flex items-center text-gray-500 focus:outline-none"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Salary</label>
+          <input
+            type="number"
+            value={salary}
+            onChange={(e) => setSalary(e.target.value)}
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Subject Knowledge</label>
+          <input
+            type="text"
+            value={subjectKnowledge}
+            onChange={(e) => setSubjectKnowledge(e.target.value)}
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+          />
+        </div>
+        <div className="flex justify-end space-x-3">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ManageTeacher = () => {
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingTeacher, setEditingTeacher] = useState(null);
 
-  // Handler function to fetch teachers
   const fetchTeachers = async () => {
     try {
       setLoading(true);
       const response = await getAllTeachers();
-      console.log("response", response);
       setTeachers(response);
       setError(null);
     } catch (err) {
@@ -27,53 +126,24 @@ const ManageTeacher = () => {
     fetchTeachers();
   }, []);
 
-  // Handler for viewing teacher details
-  const handleViewTeacher = (teacherId) => {
-    console.log('View teacher:', teacherId);
-  };
-
-  // Handler for editing teacher
-  const handleEditTeacher = (teacherId) => {
-    const studentToEdit = teachers.find(student => student._id === teacherId);
-    if (!studentToEdit) {
-      setError('teacher not found');
-      return;
-    }
-
-    const updatedUserName = prompt('Enter new user name:', studentToEdit.userName);
-    const updatedEmail = prompt('Enter new email:', studentToEdit.email);
-    const updatedPassword = prompt('Enter new password:', studentToEdit.password);
-    const updatedSalary = prompt('Enter new salary:', studentToEdit.salary);
-    const updatedSubjectKnowledge = prompt('Enter new subject knowledge:', studentToEdit.subjectKnowledge);
-    if (updatedUserName && updatedEmail && updatedPassword && updatedSalary && updatedSubjectKnowledge) {
-      const updatedStudent = {
-        ...studentToEdit,
-        userName: updatedUserName,
-        email: updatedEmail,
-        password: updatedPassword,
-        salary: updatedSalary,
-        subjectKnowledge: updatedSubjectKnowledge
-      };
-      console.log(updatedStudent);
-      axiosInstance.put(`/teachers/${teacherId}`, updatedStudent)
-        .then(response => {
-          setTeachers(teachers.map(teacher => teacher._id === teacherId ? response.data : teacher));
-          alert('teacher updated successfully!');
-        })
-        .catch(error => {
-          console.error('Error updating teacher:', error);
-          setError('Failed to update teacher');
-        });
-    } else {
-      setError('All fields are required to update the teacher');
+  const handleSaveTeacher = async (updatedTeacher) => {
+    try {
+      const response = await axiosInstance.put(`/teachers/${updatedTeacher._id}`, updatedTeacher);
+      setTeachers(
+        teachers.map((teacher) =>
+          teacher._id === updatedTeacher._id ? response.data : teacher
+        )
+      );
+      setEditingTeacher(null);
+    } catch (error) {
+      console.error('Error updating teacher:', error);
     }
   };
 
-  // Handler for deleting teacher
   const handleDeleteTeacher = async (teacherId) => {
     try {
       await deleteTeacher(teacherId);
-      setTeachers(teachers.filter(teacher => teacher._id !== teacherId));
+      setTeachers(teachers.filter((teacher) => teacher._id !== teacherId));
     } catch (error) {
       console.error('Error deleting teacher:', error);
     }
@@ -97,10 +167,10 @@ const ManageTeacher = () => {
 
   return (
     <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
+      <div className="overflow-x-auto w-full bg-white rounded-lg shadow">
         <div className="p-4 sm:p-6">
           <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Manage Teachers</h1>
-          
+
           {/* Mobile view - Card layout */}
           <div className="block sm:hidden">
             {teachers.map((teacher) => (
@@ -124,10 +194,7 @@ const ManageTeacher = () => {
                     <span className="font-medium">Salary:</span> ${teacher.salary}
                   </div>
                   <div className="flex justify-end space-x-3 mt-3">
-                    <button onClick={() => handleViewTeacher(teacher._id)} className="text-blue-600">
-                      <FaEye className="h-5 w-5" />
-                    </button>
-                    <button onClick={() => handleEditTeacher(teacher._id)} className="text-yellow-600">
+                    <button onClick={() => setEditingTeacher(teacher)} className="text-yellow-600">
                       <FaEdit className="h-5 w-5" />
                     </button>
                     <button onClick={() => handleDeleteTeacher(teacher._id)} className="text-red-600">
@@ -164,10 +231,11 @@ const ManageTeacher = () => {
                             alt={teacher.teacherName}
                           />
                         </div>
-                        <div className="ml-3 sm:ml-4">
-                          <div className="text-sm font-medium text-gray-900">{teacher.userName} </div>
-                        </div>
+                        
                       </div>
+                    </td>
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">{teacher.userName}</div>
                     </td>
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{teacher.email}</div>
@@ -180,10 +248,7 @@ const ManageTeacher = () => {
                     </td>
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-3">
-                        <button onClick={() => handleViewTeacher(teacher._id)} className="text-blue-600 hover:text-blue-900">
-                          <FaEye className="h-5 w-5" />
-                        </button>
-                        <button onClick={() => handleEditTeacher(teacher._id)} className="text-yellow-600 hover:text-yellow-900">
+                        <button onClick={() => setEditingTeacher(teacher)} className="text-yellow-600 hover:text-yellow-900">
                           <FaEdit className="h-5 w-5" />
                         </button>
                         <button onClick={() => handleDeleteTeacher(teacher._id)} className="text-red-600 hover:text-red-900">
@@ -198,6 +263,10 @@ const ManageTeacher = () => {
           </div>
         </div>
       </div>
+
+      {editingTeacher && (
+        <EditTeacher teacher={editingTeacher} onSave={handleSaveTeacher} onCancel={() => setEditingTeacher(null)} />
+      )}
     </div>
   );
 };

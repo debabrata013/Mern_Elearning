@@ -5,6 +5,9 @@ export const tickets = [
   { name: "John Doe", email: "john@example.com", department: "IT", subject: "Login Issue", priority: "High" },
   { name: "Jane Smith", email: "jane@example.com", department: "Finance", subject: "Salary Delay", priority: "Medium" },
   { name: "Mark Lee", email: "mark@example.com", department: "HR", subject: "Leave Policy", priority: "Low" },
+  { name: "John Doe", email: "john@example.com", department: "IT", subject: "Login Issue", priority: "High" },
+  { name: "Jane Smith", email: "jane@example.com", department: "Finance", subject: "Salary Delay", priority: "Medium" },
+  { name: "Mark Lee", email: "mark@example.com", department: "HR", subject: "Leave Policy", priority: "Low" },
 ];
 
 const TicketPage = () => {
