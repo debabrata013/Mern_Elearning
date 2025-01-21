@@ -1,37 +1,139 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { BarChart, Bar, Line, LineChart, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import { Bell, Settings, LogOut, Home, Users, BookOpen, ClipboardList, BarChart2, Layout, MessageSquare, Menu } from 'lucide-react';
+import { BarChart, Bar, Line, LineChart, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { Bell, Settings, LogOut, Home, Users, BookOpen, ClipboardList, BarChart2, Layout, MessageSquare, Menu, Calendar, CheckCircle } from 'lucide-react';
 import RecordsContent from "./record";
 import ClassesContent from './class';
 import SettingsContent from './setting';
 
 const studentStats = [
-  { class: 'Class A', value: 30, avgPoint: 25 },
-  { class: 'Class B', value: 45, avgPoint: 35 },
-  { class: 'Class C', value: 55, avgPoint: 45 },
-  { class: 'Class D', value: 20, avgPoint: 40 },
-  { class: 'Class E', value: 60, avgPoint: 50 },
+  { class: 'Class A', value: 30, avgPoint: 25, attendance: 95 },
+  { class: 'Class B', value: 45, avgPoint: 35, attendance: 88 },
+  { class: 'Class C', value: 55, avgPoint: 45, attendance: 92 },
+  { class: 'Class D', value: 20, avgPoint: 40, attendance: 85 },
+  { class: 'Class E', value: 60, avgPoint: 50, attendance: 90 },
 ];
 
-const HomeContent = () => (
-  <div className="bg-blue-600 text-white p-6 rounded-xl mb-8 relative overflow-hidden">
-    <div className="relative z-10">
-      <h2 className="text-2xl font-bold mb-2">Welcome back, Ayodele Irepodun</h2>
-      <p className="text-blue-100">
-        You have 27 new student added to your domain. Please reach out to the
-        Head Teacher if you want them excluded from your domain.
-      </p>
+const recentActivities = [
+  { day: '21', title: 'Mathematics Test', time: '10:00 AM', status: 'Due soon', subtitle: 'Class A - Algebra' },
+  { day: '22', title: 'Parent Meeting', time: '2:00 PM', status: 'Scheduled', subtitle: 'John Smith\'s Parents' },
+  { day: '23', title: 'Science Project', time: '11:30 AM', status: 'Due soon', subtitle: 'Class C - Physics' },
+];
+const HomeContent = () => {
+  return (
+    <div className="space-y-6">
+      {/* Welcome Card */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-xl relative overflow-hidden">
+        <div className="relative z-10">
+          <h2 className="text-2xl font-bold mb-2">Welcome back, Ayodele Irepodun</h2>
+          <p className="text-blue-100 mb-4">
+            You have 27 new students added to your domain. Please reach out to the
+            Head Teacher if you want them excluded from your domain.
+          </p>
+          <div className="flex gap-4">
+            <button className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors">
+              View New Students
+            </button>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-400 transition-colors">
+              Take Attendance
+            </button>
+          </div>
+        </div>
+        <div className="absolute right-0 top-0 h-full w-1/3">
+          <div className="h-full w-full flex items-center justify-center">
+            <Calendar className="h-24 w-24 text-blue-200 opacity-50" />
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { title: 'Total Students', value: '210', icon: <Users className="h-6 w-6" />, change: '+27 this month' },
+          { title: 'Average Attendance', value: '92%', icon: <CheckCircle className="h-6 w-6" />, change: '+5% increase' },
+          { title: 'Classes Today', value: '5', icon: <BookOpen className="h-6 w-6" />, change: '2 remaining' },
+          { title: 'Pending Tasks', value: '8', icon: <ClipboardList className="h-6 w-6" />, change: '3 urgent' },
+        ].map((stat, index) => (
+          <div key={index} className="bg-white p-4 rounded-xl shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <div className="bg-blue-100 p-2 rounded-lg text-blue-600">
+                {stat.icon}
+              </div>
+              <span className="text-sm text-gray-500">{stat.change}</span>
+            </div>
+            <h3 className="text-2xl font-bold mb-1">{stat.value}</h3>
+            <p className="text-gray-600 text-sm">{stat.title}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Charts and Activities Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Performance Chart */}
+        <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm">
+          <h3 className="text-lg font-semibold mb-4">Class Performance Overview</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={studentStats}>
+              <XAxis dataKey="class" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="avgPoint" name="Average Points" fill="#3B82F6" />
+              <Bar dataKey="attendance" name="Attendance %" fill="#93C5FD" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Recent Activities */}
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Upcoming Activities</h3>
+            <button className="text-blue-600 text-sm hover:text-blue-700">View All</button>
+          </div>
+          <div className="space-y-4">
+            {recentActivities.map((activity, index) => (
+              <div key={index} className="flex gap-4">
+                <div className="bg-blue-600 text-white rounded-lg p-2 h-12 w-12 flex items-center justify-center">
+                  {activity.day}
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-medium">{activity.title}</h4>
+                  {activity.subtitle && (
+                    <p className="text-sm text-gray-500">{activity.subtitle}</p>
+                  )}
+                  <p className="text-sm text-gray-500">{activity.time}</p>
+                </div>
+                <span className={`text-sm ${activity.status === 'Due soon' ? 'text-red-500' : 'text-orange-500'}`}>
+                  {activity.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="bg-white p-6 rounded-xl shadow-sm">
+        <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { icon: <ClipboardList className="h-6 w-6" />, label: 'Take Attendance' },
+            { icon: <MessageSquare className="h-6 w-6" />, label: 'Message Parents' },
+            { icon: <BarChart2 className="h-6 w-6" />, label: 'Grade Assignments' },
+            { icon: <Calendar className="h-6 w-6" />, label: 'Schedule Class' },
+          ].map((action, index) => (
+            <button
+              key={index}
+              className="flex flex-col items-center justify-center p-4 rounded-lg border-2 border-gray-100 hover:border-blue-500 hover:text-blue-600 transition-colors"
+            >
+              {action.icon}
+              <span className="mt-2 text-sm font-medium">{action.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
-    <div className="absolute right-0 top-0 h-full w-1/3">
-      <img 
-        src="/api/placeholder/400/300" 
-        alt="" 
-        className="h-full w-full object-cover"
-      />
-    </div>
-  </div>
-);
+  );
+};
 
 const Dashboard = () => {
   const navigate = useNavigate(); // Initialize useNavigate for redirect
