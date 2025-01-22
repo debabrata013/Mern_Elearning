@@ -5,6 +5,7 @@ import { Bell, Settings, LogOut, Home, Users, BookOpen, ClipboardList, BarChart2
 import RecordsContent from "./record";
 import ClassesContent from './class';
 import SettingsContent from './setting';
+import NotificationContent from './NotificationContent';
 
 const studentStats = [
   { class: 'Class A', value: 30, avgPoint: 25, attendance: 95 },
@@ -167,8 +168,11 @@ const Dashboard = () => {
         return <ClassesContent />;
       case 'records':
         return <RecordsContent />;
+      case 'notification':
+        return <NotificationContent />;
       case 'settings':
         return <SettingsContent />;
+      
       default:
         return <HomeContent />;
     }
@@ -220,6 +224,12 @@ const Dashboard = () => {
             label="Records" 
             active={currentSection === 'records'}
             onClick={() => setCurrentSection('records')}
+          />
+          <NavItem
+          icon={<Bell />}
+          label="notification"
+          active={currentSection === 'notification'}
+          onClick={() => setCurrentSection('notification')}
           />
           <NavItem 
             icon={<Settings />} 
