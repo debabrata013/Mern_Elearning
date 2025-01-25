@@ -6,10 +6,10 @@ import { useContext } from "react";
 
 function StudentViewCommonHeader() {
   const navigate = useNavigate();
-  const { resetCredentials } = useContext(AuthContext);
+  // const { resetCredentials } = useContext(AuthContext);
 
   function handleLogout() {
-    resetCredentials();
+    // resetCredentials();
     sessionStorage.clear();
   }
 
