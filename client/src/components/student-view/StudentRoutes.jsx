@@ -1,54 +1,29 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import MyCourses from "./components/MyCourses";
+import MyCourses from "./studentComponent/MyCourses";
 import AppLayout from "./AppLayout";
-import Doubts from "./components/Doubts";
-import Project from "./components/Project";
-import Resources from "./components/Resources";
-import Assignment from "./components/Assignment";
-import Notice from "./components/Notice";
-import Profile from "./components/Profile";
-import CourseDetailPage from "./components/CourseDetailsPage";
-
-const router = createBrowserRouter([
-  {
-    element: <AppLayout />,
-
-    children: [
-      {
-        path: "/",
-        element: <MyCourses />,
-      },
-      {
-        path: "/coursedetails",
-        element: <CourseDetailPage />,
-      },
-      {
-        path: "/profile",
-        element: <Profile />,
-      },
-      {
-        path: "/doubts",
-        element: <Doubts />,
-      },
-      { path: "/projects", element: <Project /> },
-      {
-        path: "/resources",
-        element: <Resources />,
-      },
-      {
-        path: "/assignments",
-        element: <Assignment />,
-      },
-      {
-        path: "/notice",
-        element: <Notice />,
-      },
-    ],
-  },
-]);
+import Doubts from "./studentComponent/Doubts";
+import Project from "./studentComponent/Project";
+import Resources from "./studentComponent/Resources";
+import Assignment from "./studentComponent/Assignment";
+import Notice from "./studentComponent/Notice";
+import Profile from "./studentComponent/Profile";
+import CourseDetailPage from "./studentComponent/CourseDetailsPage";
+import { Route, Routes } from "react-router-dom";
 
 function StudentRoutes() {
-  return <RouterProvider router={router} />;
+  return (
+    <AppLayout>
+      <Routes>
+        <Route path="/" element={<MyCourses />} />
+        <Route path="/coursedetails" element={<CourseDetailPage />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/doubts" element={<Doubts />} />
+        <Route path="/projects" element={<Project />} />
+        <Route path="/resources" element={<Resources />} />
+        <Route path="/assignments" element={<Assignment />} />
+        <Route path="/notice" element={<Notice />} />
+      </Routes>
+    </AppLayout>
+  );
 }
 
 export default StudentRoutes;
