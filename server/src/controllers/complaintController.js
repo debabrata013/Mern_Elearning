@@ -1,62 +1,74 @@
 const Complaint = require('../models/complaint');
 
+// Utility function for error response
+const handleErrorResponse = (res, error, message) => {
+  console.error(error);
+  return res.status(500).json({ error: message });
+};
+
 // 1. Create a new complaint
 const createComplaint = async (req, res) => {
   try {
     const { name, email, dept, userid, subject, content } = req.body;
 
+    // Validate required fields
+    if (!name || !email || !dept || !userid || !subject || !content) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
     const newComplaint = new Complaint({ name, email, dept, userid, subject, content });
     await newComplaint.save();
+
     res.status(201).json({ message: 'Complaint created successfully', complaint: newComplaint });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error creating complaint' });
+    return handleErrorResponse(res, error, 'Error creating complaint');
   }
 };
 
 // 2. Get all complaints (both answered and unanswered)
 const getComplaints = async (req, res) => {
   try {
-    const complaints = await Complaint.find({});
+    const complaints = await Complaint.find({}).lean();
     res.status(200).json({ complaints });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching complaints' });
+    return handleErrorResponse(res, error, 'Error fetching complaints');
   }
 };
 
 // 3. Get answered complaints
 const getAnsweredComplaints = async (req, res) => {
   try {
-    const complaints = await Complaint.find({ status: 'answered' });
+    const complaints = await Complaint.find({ status: 'answered' }).lean();
     res.status(200).json({ complaints });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching answered complaints' });
+    return handleErrorResponse(res, error, 'Error fetching answered complaints');
   }
 };
 
 // 4. Get unanswered complaints
 const getUnansweredComplaints = async (req, res) => {
   try {
-    const complaints = await Complaint.find({ status: 'unanswered' });
+    const complaints = await Complaint.find({ status: 'unanswered' }).lean();
     res.status(200).json({ complaints });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching unanswered complaints' });
+    return handleErrorResponse(res, error, 'Error fetching unanswered complaints');
   }
 };
 
 // 5. Update complaint (Add replay and change status to answered)
 const updateComplaint = async (req, res) => {
-  const { complaintId } = req.params; // Get complaint ID from URL parameters
-  const { replay } = req.body; // Replay is expected to be in the request body
-
   try {
+    const { complaintId } = req.params;
+    const { replay } = req.body;
+
+    if (!replay) {
+      return res.status(400).json({ error: 'Replay message is required' });
+    }
+
     const updatedComplaint = await Complaint.findByIdAndUpdate(
       complaintId,
       { replay, status: 'answered' },
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!updatedComplaint) {
@@ -65,8 +77,7 @@ const updateComplaint = async (req, res) => {
 
     res.status(200).json({ message: 'Complaint answered successfully', complaint: updatedComplaint });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error updating complaint' });
+    return handleErrorResponse(res, error, 'Error updating complaint');
   }
 };
 
