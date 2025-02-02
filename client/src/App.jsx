@@ -30,6 +30,8 @@ import { AuthProvider } from "./context/auth";
 import ProtectedRoute from "./context/ProtectedRoute";
 import Unauthorized from "./pages/Unauthorized";
 import StudentRoutes from "./components/student-view/StudentRoutes";
+import Std from "./components/student-view/StudentViewCommonHeader";
+import Projile from "./components/student-view/profilepage"
 // import StudentRoutes from "./components/student-view/StudentRoutes";
 // import student from './components/student-view/AppLayout'
 
@@ -44,6 +46,9 @@ function App() {
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/contactus" element={<ContactForm />} />
         <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/abo" element={<Std />} />
+        <Route path="/abop" element={<Projile />} />
+
         <Route
           path="/user-dashboard"
           element={
