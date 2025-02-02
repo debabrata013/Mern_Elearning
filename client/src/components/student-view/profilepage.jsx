@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   GraduationCap,
   User,
@@ -16,6 +16,39 @@ import {
 } from 'lucide-react';
 
 const StudentProfile = () => {
+  // Manage whether the profile is in edit mode.
+  const [isEditing, setIsEditing] = useState(false);
+  // Separate toggle for "About Me" editing if needed.
+  const [isEditingAbout, setIsEditingAbout] = useState(false);
+
+  // Profile data state
+  const [profile, setProfile] = useState({
+    name: 'John Doe',
+    location: 'New York, USA',
+    email: 'john.doe@example.com',
+    phone: '+1 (123) 456-7890',
+    university: 'Columbia University',
+    branch: 'Computer Science',
+    semester: '6th Semester',
+    resumeLink: 'https://example.com/resume.pdf',
+    about:
+      'I am a motivated learner with a keen interest in software development, data science, and emerging technologies. I love collaborating with peers and contributing to community projects.',
+  });
+
+  // Handle change in profile details
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProfile((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Save changes and exit edit mode
+  const handleSave = (e) => {
+    e.preventDefault();
+    // In a real app, send the data to backend API here.
+    setIsEditing(false);
+    setIsEditingAbout(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-50 to-gray-100">
       {/* Header */}
@@ -53,31 +86,145 @@ const StudentProfile = () => {
                 alt="Profile"
                 className="object-cover w-full h-full"
               />
-              <button className="absolute bottom-0 right-0 bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600 transform translate-x-1/4 translate-y-1/4">
+              <button
+                onClick={() => alert('Implement profile image change')}
+                className="absolute bottom-0 right-0 bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600 transform translate-x-1/4 translate-y-1/4"
+              >
                 <Edit2 className="h-4 w-4" />
               </button>
             </div>
             {/* Profile Details */}
             <div className="mt-4 md:mt-0 md:ml-6 flex-1">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-800">John Doe</h2>
-                <button className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
-                  <Edit2 className="h-4 w-4 mr-2" /> Edit Profile
-                </button>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="name"
+                    value={profile.name}
+                    onChange={handleChange}
+                    className="text-2xl font-bold text-gray-800 border-b border-gray-300 focus:outline-none focus:border-blue-500"
+                  />
+                ) : (
+                  <h2 className="text-2xl font-bold text-gray-800">{profile.name}</h2>
+                )}
+                {isEditing ? (
+                  <button
+                    onClick={handleSave}
+                    className="flex items-center bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
+                  >
+                    Save
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                  >
+                    <Edit2 className="h-4 w-4 mr-2" /> Edit Profile
+                  </button>
+                )}
               </div>
               <p className="text-gray-600 mt-2">
-                Passionate about technology and lifelong learning. Currently pursuing a degree in Computer Science.
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="location"
+                    value={profile.location}
+                    onChange={handleChange}
+                    className="text-gray-600 border-b border-gray-300 focus:outline-none focus:border-blue-500"
+                  />
+                ) : (
+                  profile.location
+                )}
               </p>
-              <div className="flex items-center mt-4 space-x-4">
-                <div className="flex items-center text-gray-600">
-                  <MapPin className="h-5 w-5 mr-1" /> New York, USA
+              <div className="flex flex-wrap gap-4 mt-4">
+                <div className="flex flex-col">
+                  <label className="text-sm text-gray-500">Email</label>
+                  {isEditing ? (
+                    <input
+                      type="email"
+                      name="email"
+                      value={profile.email}
+                      onChange={handleChange}
+                      className="text-gray-800 border-b border-gray-300 focus:outline-none focus:border-blue-500"
+                    />
+                  ) : (
+                    <span className="text-gray-800">{profile.email}</span>
+                  )}
                 </div>
-                <div className="flex items-center text-gray-600">
-                  <Mail className="h-5 w-5 mr-1" /> john.doe@example.com
+                <div className="flex flex-col">
+                  <label className="text-sm text-gray-500">Phone</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="phone"
+                      value={profile.phone}
+                      onChange={handleChange}
+                      className="text-gray-800 border-b border-gray-300 focus:outline-none focus:border-blue-500"
+                    />
+                  ) : (
+                    <span className="text-gray-800">{profile.phone}</span>
+                  )}
                 </div>
-                <div className="flex items-center text-gray-600">
-                  <Phone className="h-5 w-5 mr-1" /> +1 (123) 456-7890
+              </div>
+              <div className="flex flex-wrap gap-4 mt-4">
+                <div className="flex flex-col">
+                  <label className="text-sm text-gray-500">University</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="university"
+                      value={profile.university}
+                      onChange={handleChange}
+                      className="text-gray-800 border-b border-gray-300 focus:outline-none focus:border-blue-500"
+                    />
+                  ) : (
+                    <span className="text-gray-800">{profile.university}</span>
+                  )}
                 </div>
+                <div className="flex flex-col">
+                  <label className="text-sm text-gray-500">Branch</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="branch"
+                      value={profile.branch}
+                      onChange={handleChange}
+                      className="text-gray-800 border-b border-gray-300 focus:outline-none focus:border-blue-500"
+                    />
+                  ) : (
+                    <span className="text-gray-800">{profile.branch}</span>
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-sm text-gray-500">Semester</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="semester"
+                      value={profile.semester}
+                      onChange={handleChange}
+                      className="text-gray-800 border-b border-gray-300 focus:outline-none focus:border-blue-500"
+                    />
+                  ) : (
+                    <span className="text-gray-800">{profile.semester}</span>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col mt-4">
+                <label className="text-sm text-gray-500">Resume Link</label>
+                {isEditing ? (
+                  <input
+                    type="url"
+                    name="resumeLink"
+                    value={profile.resumeLink}
+                    onChange={handleChange}
+                    className="text-gray-800 border-b border-gray-300 focus:outline-none focus:border-blue-500"
+                  />
+                ) : (
+                  <a href={profile.resumeLink} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">
+                    View Resume
+                  </a>
+                )}
               </div>
               <div className="flex items-center mt-4 space-x-4">
                 <a href="#" className="text-blue-500 hover:underline">
@@ -101,11 +248,29 @@ const StudentProfile = () => {
         <aside className="md:col-span-1 space-y-6">
           {/* About Me */}
           <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">About Me</h3>
-            <p className="text-gray-600">
-              I am a motivated learner with a keen interest in software development, data science, and emerging technologies.
-              I love collaborating with peers and contributing to community projects.
-            </p>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-800">About Me</h3>
+              {isEditingAbout ? (
+                <button onClick={() => setIsEditingAbout(false)} className="text-sm text-green-500 hover:underline">
+                  Save
+                </button>
+              ) : (
+                <button onClick={() => setIsEditingAbout(true)} className="text-sm text-blue-500 hover:underline">
+                  Edit
+                </button>
+              )}
+            </div>
+            {isEditingAbout ? (
+              <textarea
+                name="about"
+                value={profile.about}
+                onChange={handleChange}
+                rows="4"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              ></textarea>
+            ) : (
+              <p className="text-gray-600">{profile.about}</p>
+            )}
           </div>
 
           {/* Achievements */}
@@ -225,50 +390,7 @@ const StudentProfile = () => {
           </div>
 
           {/* Account Settings */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Settings</h3>
-            <form className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">First Name</label>
-                  <input
-                    type="text"
-                    defaultValue="John"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Last Name</label>
-                  <input
-                    type="text"
-                    defaultValue="Doe"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Email Address</label>
-                <input
-                  type="email"
-                  defaultValue="john.doe@example.com"
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-                <input
-                  type="text"
-                  defaultValue="+1 (123) 456-7890"
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              <div className="flex justify-end">
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </div>
+          
         </section>
       </main>
 
