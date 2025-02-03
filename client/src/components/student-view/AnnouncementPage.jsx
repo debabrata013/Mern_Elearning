@@ -2,7 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { Bell, BookOpen, Trash2, X, Filter, Search, AlertCircle, Clock, Undo } from 'lucide-react';
 
 const initialNotifications = [
-  // ... keep the same initial notifications array
+  {
+    id: 1,
+    title: "Welcome to the Course!",
+    message: "We are excited to have you on board. Let's start learning!",
+    date: "2023-10-01"
+  },
+  {
+    id: 2,
+    title: "Assignment Due",
+    message: "Don't forget to submit your assignment by the end of this week.",
+    date: "2023-10-05"
+  },
+  {
+    id: 3,
+    title: "Live Session",
+    message: "Join us for a live session on advanced topics this Friday.",
+    date: "2023-10-07"
+  }
 ];
 
 const AnnouncementPage = () => {
