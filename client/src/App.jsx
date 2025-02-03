@@ -32,6 +32,10 @@ import Unauthorized from "./pages/Unauthorized";
 import StudentRoutes from "./components/student-view/StudentRoutes";
 import Std from "./components/student-view/StudentViewCommonHeader";
 import Projile from "./components/student-view/profilepage"
+import StudentAnoument from "./components/student-view/AnnouncementPage"
+import Studentbuycourse from "./components/student-view/coursebuy"
+import Doubts from "./components/student-view/Doubts"
+import Assigment from "./components/student-view/Assigment"
 // import StudentRoutes from "./components/student-view/StudentRoutes";
 // import student from './components/student-view/AppLayout'
 
@@ -48,6 +52,10 @@ function App() {
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/abo" element={<Std />} />
         <Route path="/abop" element={<Projile />} />
+        <Route path="/aboa" element={<StudentAnoument />} />
+        <Route path="/abca" element={<Studentbuycourse />} />
+        <Route path="/abcd" element={<Doubts />} />
+        <Route path="/abas" element={<Assigment />} />
 
         <Route
           path="/user-dashboard"
