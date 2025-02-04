@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import certi from "../CertificateSection/certificate.png";
-import "./CertificateSection.css";
 
 const CertificateSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Dummy images: Replace with actual images later
   const certificates = [certi, certi, certi];
 
-  // Function to navigate next
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % certificates.length);
   };
 
-  // Function to navigate previous
   const prevSlide = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? certificates.length - 1 : prevIndex - 1
@@ -21,44 +16,51 @@ const CertificateSection = () => {
   };
 
   return (
-    <div className="certificate-section">
-      <div className="certificate-text">
-        <h2 className="heading">Certificate</h2>
-        <h3>
-          <span className="top">The Certification of<br /></span>
-          <span className="bottom">Digitoria</span>
+    <div className="my-4 md:my-24 grid grid-cols-1 md:grid-cols-2 items-center gap-8 p-8 shadow-xl  rounded-xl">
+      <div className="md:pr-48 text-center md:text-left">
+        <h2 className="text-xl text-orange-500 uppercase mb-20 font-semibold">Certificate</h2>
+        <h3 className="text-4xl font-bold text-black">
+          <span className="text-blue-900">The Certification of<br /></span>
+          <span className="text-orange-500">Digitoria</span>
         </h3>
-        <p>
+        <p className="text-gray-600 text-base leading-relaxed mt-4">
           Digitoria Education Certificates honor your hard work, preparing you
           for the future of work.
         </p>
       </div>
 
-      {/* Slider Section */}
-      <div className="certificate-slider">
-        <button className="slider-btn left" onClick={prevSlide}>
-          &#8592;
-        </button>
-
-        <div className="certificate-carousel">
-          {/* Dynamic sliding */}
+      <div className="relative w-full overflow-hidden">
+        <div className="overflow-hidden w-full">
           <div
-            className="carousel-track"
-            style={{
-              transform: `translateX(-${currentIndex * 100}%)`,
-            }}
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
           >
             {certificates.map((image, index) => (
-              <div className="carousel-slide" key={index}>
-                <img src={image} alt={`Certificate ${index + 1}`} />
+              <div className="min-w-full" key={index}>
+                <img
+                  src={image}
+                  alt={`Certificate ${index + 1}`}
+                  className="w-full h-auto border-2 border-gray-300 rounded-lg"
+                />
               </div>
             ))}
           </div>
         </div>
 
-        <button className="slider-btn right" onClick={nextSlide}>
-          &#8594;
-        </button>
+        <div className="flex justify-center mt-4 space-x-4">
+          <button
+            className="bg-orange-500 text-white p-3 rounded-full text-2xl hover:bg-blue-900 transition"
+            onClick={prevSlide}
+          >
+            &#8592;
+          </button>
+          <button
+            className="bg-orange-500 text-white p-3 rounded-full text-2xl hover:bg-blue-900 transition"
+            onClick={nextSlide}
+          >
+            &#8594;
+          </button>
+        </div>
       </div>
     </div>
   );
