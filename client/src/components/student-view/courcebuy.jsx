@@ -3,6 +3,7 @@ import {
   Box,
   Card,
   CardContent,
+  CardMedia,
   Typography,
   TextField,
   Grid,
@@ -19,111 +20,149 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  CardActions,
   Tooltip,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import SortIcon from '@mui/icons-material/Sort';
+import InfoIcon from '@mui/icons-material/Info';
 
-
-
-// Sample data for demonstration purposes.
-const sampleSources = [
-  { id: 1, title: 'Source One', description: 'This is the description for source one. It provides insightful details and interesting facts.', category: 'News' },
-  { id: 2, title: 'Source Two', description: 'This is the description for source two. It features engaging articles and blog posts.', category: 'Blog' },
-  { id: 3, title: 'Another Source', description: 'This is the description for another source. It offers tutorials and guides for various topics.', category: 'Tutorial' },
-  { id: 4, title: 'Amazing Source', description: 'This is the description for an amazing source. It covers a wide range of current events and news.', category: 'News' },
-  { id: 5, title: 'React Source', description: 'Learn React with this amazing source. It provides coding tips, best practices, and real-world examples.', category: 'Tutorial' },
+// Sample course data with image URLs for demonstration.
+const sampleCourses = [
+  {
+    id: 1,
+    title: 'React for Beginners',
+    description:
+      'Kickstart your journey with React, covering fundamental concepts and hands-on examples that empower you to build dynamic web applications.',
+    category: 'Web Development',
+    imageUrl: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8anN8ZW58MHx8MHx8fDA%3D',
+  },
+  {
+    id: 2,
+    title: 'Advanced JavaScript',
+    description:
+      'Dive deep into advanced JavaScript topics including closures, prototypes, and asynchronous programming to master the language.',
+    category: 'Programming',
+    imageUrl: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGpzfGVufDB8fDB8fHww',
+  },
+  {
+    id: 3,
+    title: 'UI/UX Design Essentials',
+    description:
+      'Learn the principles of UI/UX design and create engaging, user-friendly interfaces with practical examples and design tips.',
+    category: 'Design',
+    imageUrl: 'https://plus.unsplash.com/premium_photo-1661877737564-3dfd7282efcb?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cmVhY3R8ZW58MHx8MHx8fDA%3D',
+  },
+  {
+    id: 4,
+    title: 'Data Science Bootcamp',
+    description:
+      'Embark on a data-driven journey covering machine learning, data visualization, and statistical analysis with real-world projects.',
+    category: 'Data Science',
+    imageUrl: 'https://images.unsplash.com/photo-1552308995-2baac1ad5490?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHJlYWN0fGVufDB8fDB8fHww',
+  },
+  {
+    id: 5,
+    title: 'Full-Stack Development',
+    description:
+      'Master both frontend and backend development with a comprehensive course covering modern frameworks and best practices.',
+    category: 'Web Development',
+    imageUrl: 'https://plus.unsplash.com/premium_photo-1687509673996-0b9e35d58168?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8d2ViZGV2fGVufDB8fDB8fHww',
+  },
 ];
 
-const SourcePage = () => {
-  // State for search input, sorting, and filtering.
+const CoursePage = () => {
+  // Theme and responsive breakpoints.
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  // State variables for search, sorting, filtering, favorites, and modal.
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
   const [categoryFilter, setCategoryFilter] = useState('All');
-
-  // State for favorite sources (using the source id).
   const [favorites, setFavorites] = useState([]);
-  // State to control the details modal.
-  const [selectedSource, setSelectedSource] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
 
-  // Filter, sort, and optionally filter by category using useMemo for performance.
-  const filteredSources = useMemo(() => {
-    let sources = sampleSources.filter(source =>
-      source.title.toLowerCase().includes(searchTerm.toLowerCase())
+  // Memoized filtering and sorting of courses.
+  const filteredCourses = useMemo(() => {
+    let courses = sampleCourses.filter((course) =>
+      course.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (categoryFilter !== 'All') {
-      sources = sources.filter(source => source.category === categoryFilter);
+      courses = courses.filter((course) => course.category === categoryFilter);
     }
 
-    sources.sort((a, b) => {
-      return sortOrder === 'asc'
+    courses.sort((a, b) =>
+      sortOrder === 'asc'
         ? a.title.localeCompare(b.title)
-        : b.title.localeCompare(a.title);
-    });
-    return sources;
+        : b.title.localeCompare(a.title)
+    );
+    return courses;
   }, [searchTerm, sortOrder, categoryFilter]);
 
   // Toggle favorite status.
   const toggleFavorite = (id) => {
-    setFavorites(prev =>
-      prev.includes(id) ? prev.filter(favId => favId !== id) : [...prev, id]
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
     );
   };
 
+  // Get sorted categories.
+  const categories = useMemo(
+    () => ['All', ...new Set(sampleCourses.map((course) => course.category))].sort(),
+    []
+  );
+
   return (
-    <Box>
-      {/* App Bar for a polished header */}
-      <AppBar position="static">
+    <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+      <AppBar position="sticky" sx={{ bgcolor: 'primary.main', mb: 4 }}>
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Awesome Sources
+          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700 }}>
+            🎓 Course Catalog
           </Typography>
         </Toolbar>
       </AppBar>
 
-      <Box sx={{ p: 3 }}>
-        {/* Search, Sort, and Category Filters */}
-        <Grid container spacing={2} sx={{ mb: 2 }}>
+      <Box sx={{ p: isMobile ? 2 : 3, maxWidth: 1600, margin: '0 auto' }}>
+        <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid item xs={12} md={4}>
             <TextField
-              variant="outlined"
-              label="Search Sources"
               fullWidth
+              variant="filled"
+              label="Search courses..."
+              InputProps={{
+                sx: { borderRadius: 2, bgcolor: 'background.paper' },
+              }}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </Grid>
+
           <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
-              <InputLabel id="sort-label">
-                <SortIcon sx={{ mr: 1 }} />
-                Sort By
-              </InputLabel>
+            <FormControl fullWidth variant="filled">
+              <InputLabel>Sort by</InputLabel>
               <Select
-                labelId="sort-label"
-                label="Sort By"
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value)}
+                sx={{ borderRadius: 2 }}
               >
-                <MenuItem value="asc">Title (A–Z)</MenuItem>
-                <MenuItem value="desc">Title (Z–A)</MenuItem>
+                <MenuItem value="asc">A-Z</MenuItem>
+                <MenuItem value="desc">Z-A</MenuItem>
               </Select>
             </FormControl>
           </Grid>
+
           <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
-              <InputLabel id="category-label">Category</InputLabel>
+            <FormControl fullWidth variant="filled">
+              <InputLabel>Category</InputLabel>
               <Select
-                labelId="category-label"
-                label="Category"
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
+                sx={{ borderRadius: 2 }}
               >
-                <MenuItem value="All">All</MenuItem>
-                {Array.from(new Set(sampleSources.map(source => source.category))).map((cat) => (
+                {categories.map((cat) => (
                   <MenuItem key={cat} value={cat}>
                     {cat}
                   </MenuItem>
@@ -133,74 +172,177 @@ const SourcePage = () => {
           </Grid>
         </Grid>
 
-        {/* Display the filtered sources */}
-        <Grid container spacing={3}>
-          {filteredSources.map((source) => (
-            <Grid item xs={12} sm={6} md={4} key={source.id}>
-              <Card
-                sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'transform 0.3s',
-                  '&:hover': { transform: 'scale(1.03)' },
-                }}
-              >
-                <CardContent
-                  sx={{ flexGrow: 1, cursor: 'pointer' }}
-                  onClick={() => setSelectedSource(source)}
+        {filteredCourses.length === 0 ? (
+          <Box
+            sx={{
+              textAlign: 'center',
+              p: 8,
+              bgcolor: 'background.paper',
+              borderRadius: 4,
+              boxShadow: 1,
+            }}
+          >
+            <InfoIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+            <Typography variant="h6" color="text.secondary">
+              No courses found matching your criteria
+            </Typography>
+          </Box>
+        ) : (
+          <Grid container spacing={isMobile ? 2 : 4}>
+            {filteredCourses.map((course) => (
+              <Grid item xs={12} sm={6} lg={4} key={course.id}>
+                <Card
+                  sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: 'transform 0.3s, box-shadow 0.3s',
+                    '&:hover': {
+                      transform: 'translateY(-8px)',
+                      boxShadow: 6,
+                    },
+                    borderRadius: 4,
+                    overflow: 'hidden',
+                  }}
                 >
-                  <Typography variant="h5" gutterBottom>
-                    {source.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {source.description.substring(0, 100)}
-                    {source.description.length > 100 ? '...' : ''}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
-                    Category: {source.category}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Tooltip title={favorites.includes(source.id) ? 'Remove from favorites' : 'Add to favorites'}>
-                    <IconButton onClick={() => toggleFavorite(source.id)}>
-                      {favorites.includes(source.id) ? (
-                        <FavoriteIcon color="error" />
-                      ) : (
-                        <FavoriteBorderIcon />
-                      )}
-                    </IconButton>
-                  </Tooltip>
-                  <Button size="small" onClick={() => setSelectedSource(source)}>
-                    Learn More
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      height: 320,
+                      objectFit: 'cover',
+                      borderBottom: '4px solid',
+                      borderColor: 'primary.main',
+                    }}
+                    image={course.imageUrl}
+                    alt={course.title}
+                  />
+
+                  <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      sx={{
+                        fontWeight: 700,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      {course.title}
+                      <Tooltip title={`${favorites.includes(course.id) ? 'Remove from' : 'Add to'} favorites`}>
+                        <IconButton
+                          onClick={() => toggleFavorite(course.id)}
+                          aria-label={favorites.includes(course.id) ? 'Remove favorite' : 'Add favorite'}
+                          sx={{
+                            color: favorites.includes(course.id) ? 'error.main' : 'inherit',
+                            transition: 'transform 0.2s',
+                            '&:hover': { transform: 'scale(1.2)' },
+                          }}
+                        >
+                          {favorites.includes(course.id) ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                        </IconButton>
+                      </Tooltip>
+                    </Typography>
+
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{
+                        mb: 2,
+                        lineHeight: 1.6,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {course.description}
+                    </Typography>
+
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        mt: 'auto',
+                      }}
+                    >
+                      <Button
+                        variant="outlined"
+                        onClick={() => setSelectedCourse(course)}
+                        startIcon={<InfoIcon />}
+                        sx={{ borderRadius: 2 }}
+                      >
+                        Details
+                      </Button>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{
+                          bgcolor: 'action.selected',
+                          px: 1.5,
+                          py: 0.5,
+                          borderRadius: 2,
+                          fontWeight: 500,
+                        }}
+                      >
+                        {course.category}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Box>
 
-      {/* Modal for detailed view */}
+      {/* Details Dialog */}
       <Dialog
-        open={Boolean(selectedSource)}
-        onClose={() => setSelectedSource(null)}
+        open={Boolean(selectedCourse)}
+        onClose={() => setSelectedCourse(null)}
         fullWidth
-        maxWidth="sm"
+        maxWidth="md"
+        PaperProps={{ sx: { borderRadius: 4 } }}
       >
-        <DialogTitle>{selectedSource?.title}</DialogTitle>
-        <DialogContent dividers>
-          <DialogContentText>{selectedSource?.description}</DialogContentText>
-          <Typography variant="caption" display="block" sx={{ mt: 2 }}>
-            Category: {selectedSource?.category}
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setSelectedSource(null)}>Close</Button>
-        </DialogActions>
+        {selectedCourse && (
+          <>
+            <DialogTitle
+              sx={{
+                bgcolor: 'primary.main',
+                color: 'primary.contrastText',
+                fontWeight: 700,
+              }}
+            >
+              {selectedCourse.title}
+            </DialogTitle>
+
+            <DialogContent dividers sx={{ p: 3 }}>
+              <CardMedia
+                component="img"
+                image={selectedCourse.imageUrl}
+                alt={selectedCourse.title}
+                sx={{
+                  height: 300,
+                  objectFit: 'cover',
+                  borderRadius: 2,
+                  mb: 3,
+                }}
+              />
+
+              <DialogContentText>{selectedCourse.description}</DialogContentText>
+            </DialogContent>
+
+            <DialogActions sx={{ p: 2 }}>
+              <Button onClick={() => setSelectedCourse(null)} variant="contained" sx={{ borderRadius: 2 }}>
+                Close
+              </Button>
+            </DialogActions>
+          </>
+        )}
       </Dialog>
     </Box>
   );
 };
 
-export default SourcePage;
+export default CoursePage;
