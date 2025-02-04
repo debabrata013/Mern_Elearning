@@ -33,7 +33,7 @@ import StudentRoutes from "./components/student-view/StudentRoutes";
 import Std from "./components/student-view/StudentViewCommonHeader";
 import Projile from "./components/student-view/profilepage"
 import StudentAnoument from "./components/student-view/AnnouncementPage"
-import Studentbuycourse from "./components/student-view/coursebuy"
+import Studentbuycourse from "./components/student-view/courcebuy"
 import Doubts from "./components/student-view/Doubts"
 import Assigment from "./components/student-view/Assigment"
 
