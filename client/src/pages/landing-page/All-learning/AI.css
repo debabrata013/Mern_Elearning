@@ -16,7 +16,6 @@
 
 /* Text Section */
 .text-section {
-  
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -26,7 +25,8 @@
 }
 
 .title {
-  font-size: 3.5rem;
+  text-align: left;
+  font-size: 3.2rem;
   font-weight: 900;
   color: #ffffff;
   line-height: 1.3;
