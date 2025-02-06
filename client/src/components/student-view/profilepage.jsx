@@ -9,11 +9,12 @@ import {
   Phone,
   Link,
   Linkedin,
-  Twitter,
+  Github,
   Award,
   BookOpen,
   Settings,
 } from 'lucide-react';
+import { GitHub } from '@mui/icons-material';
 
 const StudentProfile = () => {
   // Manage whether the profile is in edit mode.
@@ -230,8 +231,8 @@ const StudentProfile = () => {
                 <a href="#" className="text-blue-500 hover:underline">
                   <Linkedin className="h-6 w-6" />
                 </a>
-                <a href="#" className="text-blue-400 hover:underline">
-                  <Twitter className="h-6 w-6" />
+                <a href="#" className="text-black-400 hover:underline">
+                  <GitHub className="h-6 w-6" />
                 </a>
                 <a href="#" className="text-gray-800 hover:underline">
                   <Link className="h-6 w-6" />

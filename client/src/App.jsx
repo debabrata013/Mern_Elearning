@@ -34,6 +34,7 @@ import Std from "./components/student-view/StudentViewCommonHeader";
 import Projile from "./components/student-view/profilepage"
 import StudentAnoument from "./components/student-view/AnnouncementPage"
 import Studentbuycourse from "./components/student-view/courcebuy"
+import Studentbuycourse2 from "./components/student-view/coursebuy"
 import Doubts from "./components/student-view/Doubts"
 import Assigment from "./components/student-view/Assigment"
 
@@ -55,6 +56,7 @@ function App() {
         <Route path="/abop" element={<Projile />} />
         <Route path="/aboa" element={<StudentAnoument />} />
         <Route path="/abca" element={<Studentbuycourse />} />
+        <Route path="/abca2" element={<Studentbuycourse2 />} />
         <Route path="/abcd" element={<Doubts />} />
         <Route path="/abas" element={<Assigment />} />
 
