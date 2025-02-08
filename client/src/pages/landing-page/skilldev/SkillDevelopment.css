@@ -9,14 +9,14 @@
   }
   .section-subtitle {
     font-style: inherit;
-    color: #ff7700;
+    color: #5491CA;
     font-size: 1.3rem;
     margin-bottom: 16px;
     text-transform: uppercase;
   } 
   
   .section {
-    color: #01285b;
+    color: #7670AC;
     font-size: 3rem;
     font-weight: bolder;
     line-height: 1.2;
@@ -51,7 +51,7 @@
   .category-number {
     font-size: 24px;
     font-weight: bold;
-    color: #01285b;
+    color: #5491CA;
     margin-bottom: 16px;
   }
   
@@ -83,7 +83,7 @@
   .how-it-works {
     height:20rem;
     margin-top: 40px;
-    background-color: #01285b;
+    background-color: #5491CA;
     border-radius: 20px;
     padding: 40px;
     position: relative;
@@ -91,11 +91,12 @@
   }
   
   .workflow-title {
-    color: white;
+    color: #ffffff;
+    border:solid #ffffff 2px;
     text-align: center;
     font-size: 32px;
     margin-bottom: 40px;
-    background-color: #ff7700;
+    background-color: #7670AC;
     padding: 10px 30px;
     border-radius: 10px ;
     display: flex;
@@ -121,26 +122,8 @@
     left: 0;
     width: 80px;
     height: 80px;
-    background: repeating-linear-gradient(
-      45deg,
-      #ff7700,
-      #ff7700 2px,
-      transparent 2px,
-      transparent 8px
-    );
+    
     opacity: 0.2;
-  }
-  
-  .how-it-works::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 120px;
-    height: 120px;
-    background: #ff7700;
-    border-radius: 50%;
-    opacity: 0.1;
   }
   
   /* Responsive Design */

@@ -4,7 +4,9 @@ import { BarChart, Bar, Line, LineChart, XAxis, YAxis, ResponsiveContainer, Tool
 import { Bell, Settings, LogOut, Home, Users, BookOpen, ClipboardList, BarChart2, Layout, MessageSquare, Menu, Calendar, CheckCircle } from 'lucide-react';
 import RecordsContent from "./record";
 import ClassesContent from './class';
+import QuizDashboard from "./quiz dashboard/quiz";
 import SettingsContent from './setting';
+
 import NotificationContent from './NotificationContent';
 
 const studentStats = [
@@ -172,6 +174,8 @@ const Dashboard = () => {
         return <NotificationContent />;
       case 'settings':
         return <SettingsContent />;
+      case 'quiz':
+        return <QuizDashboard />;
       
       default:
         return <HomeContent />;
@@ -230,6 +234,12 @@ const Dashboard = () => {
           label="notification"
           active={currentSection === 'notification'}
           onClick={() => setCurrentSection('notification')}
+          />
+          <NavItem 
+            icon={<Settings />} 
+            label="quiz" 
+            active={currentSection === 'quiz'}
+            onClick={() => setCurrentSection('quiz')}
           />
           <NavItem 
             icon={<Settings />} 

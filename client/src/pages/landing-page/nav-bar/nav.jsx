@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
+import logo from '../../../../../client/public/AIGIRI.png';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,7 +15,8 @@ export default function Navbar() {
   return (
     <nav className="w-full fixed top-0 z-50 backdrop-blur-md shadow-lg bg-white/70 border-b border-gray-200">
       <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
-        <Link to="/" className="text-2xl font-bold text-[#7670AC]">AI GIRI</Link>
+      <img className="h-10 w-auto" src={logo} alt="logo" />
+        {/* <Link to="/" className="text-2xl font-bold text-[#7670AC]">AIGIRI</Link> */}
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-8">
@@ -22,8 +24,11 @@ export default function Navbar() {
           <NavLink to="/coursess" isActive={isActiveLink("/coursess")}>
             Courses
           </NavLink>
-          <NavLink to="/pricing" isActive={isActiveLink("/pricing")}>
+          {/* <NavLink to="/pricing" isActive={isActiveLink("/pricing")}>
             Pricing
+          </NavLink> */}
+          <NavLink to="/aboutus" isActive={isActiveLink("/aboutus")}>
+            About Us
           </NavLink>
           <NavLink to="/faq" isActive={isActiveLink("/faq")}>
             FAQ
@@ -31,9 +36,7 @@ export default function Navbar() {
           <NavLink to="/contactus" isActive={isActiveLink("/contactus")}>
             Contact Us
           </NavLink>
-          <NavLink to="/aboutus" isActive={isActiveLink("/aboutus")}>
-            About Us
-          </NavLink>
+          
         </div>
 
         {/* Desktop Get Started Button */}
@@ -78,7 +81,7 @@ const isActiveLink = (path) => {
 const NavLink = ({ to, children, isActive, onClick }) => (
   <Link
     to={to}
-    className={`relative px-4 py-2 text-gray-700 hover:text-[#5491CA] transition-all before:absolute before:-bottom-1 before:left-0 before:w-0 before:h-[2px] before:bg-[#5491CA] hover:before:w-full before:transition-all cursor-pointer ${isActive ? "font-bold text-[#5491CA]" : ""}`}
+    className={`relative px-4 py-2 text-gray-700 hover:text-[#5491CA] transition-all before:absolute before:-bottom-1 before:left-0 before:w-0 before:h-[2px] before:bg-[#5491CA] hover:before:w-full before:transition-all cursor-pointer ${isActive ? "font-bold text-[#7670AC]" : ""}`}
     onClick={onClick}
   >
     {children}

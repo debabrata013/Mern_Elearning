@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import certi from "../CertificateSection/certificate.png";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const CertificateSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -16,49 +17,54 @@ const CertificateSection = () => {
   };
 
   return (
-    <div className="my-4 md:my-24 grid grid-cols-1 md:grid-cols-2 items-center gap-8 p-8 shadow-xl  rounded-xl">
-      <div className="md:pr-48 text-center md:text-left">
-        <h2 className="text-xl text-orange-500 uppercase mb-20 font-semibold">Certificate</h2>
-        <h3 className="text-4xl font-bold text-black">
-          <span className="text-blue-900">The Certification of<br /></span>
-          <span className="text-orange-500">Digitoria</span>
+    <div className="my-8 md:my-24 p-10 shadow-2xl rounded-2xl bg-white flex flex-col md:flex-row items-center gap-12">
+      {/* Text Section */}
+      <div className="md:w-1/2 text-center md:text-left">
+        <h2 className="text-lg text-[#5491CA] uppercase font-semibold tracking-wider mb-4">
+          Certificate
+        </h2>
+        <h3 className="text-4xl font-bold text-[#7670AC] leading-tight">
+          The Certification of <br />
+          <span className="text-[#5491CA]">Excellence</span>
         </h3>
-        <p className="text-gray-600 text-base leading-relaxed mt-4">
-          Digitoria Education Certificates honor your hard work, preparing you
-          for the future of work.
+        <p className="text-gray-600 text-lg leading-relaxed mt-4">
+          These certificates recognize your dedication and achievements, paving
+          the way for a brighter future.
         </p>
       </div>
 
-      <div className="relative w-full overflow-hidden">
+      {/* Certificate Slider */}
+      <div className="relative w-full md:w-1/2 overflow-hidden">
         <div className="overflow-hidden w-full">
           <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentIndex * 100}%)` }}
           >
             {certificates.map((image, index) => (
-              <div className="min-w-full" key={index}>
+              <div className="min-w-full flex justify-center" key={index}>
                 <img
                   src={image}
                   alt={`Certificate ${index + 1}`}
-                  className="w-full h-auto border-2 border-gray-300 rounded-lg"
+                  className="w-4/5 md:w-full h-auto shadow-lg border border-gray-300 rounded-xl"
                 />
               </div>
             ))}
           </div>
         </div>
 
-        <div className="flex justify-center mt-4 space-x-4">
+        {/* Navigation Buttons */}
+        <div className="flex justify-center mt-6 space-x-6">
           <button
-            className="bg-orange-500 text-white p-3 rounded-full text-2xl hover:bg-blue-900 transition"
+            className="p-3 bg-[#7670AC] text-white rounded-full shadow-md hover:bg-[#5491CA] transition"
             onClick={prevSlide}
           >
-            &#8592;
+            <ChevronLeft size={24} />
           </button>
           <button
-            className="bg-orange-500 text-white p-3 rounded-full text-2xl hover:bg-blue-900 transition"
+            className="p-3 bg-[#7670AC] text-white rounded-full shadow-md hover:bg-[#5491CA] transition"
             onClick={nextSlide}
           >
-            &#8594;
+            <ChevronRight size={24} />
           </button>
         </div>
       </div>

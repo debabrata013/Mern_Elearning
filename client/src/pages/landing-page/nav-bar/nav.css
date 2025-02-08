@@ -175,23 +175,6 @@
   left: 0; /* Sidebar shown when the menu is clicked */
 }
 
-/* Login Button inside the mobile menu */
-.login-button {
-  display: none; /* Hidden by default */
-  background-color: #ff7700;  /* Button color */
-  color: white;  /* Text color */
-  padding: 0.8rem 1.5rem;  /* Padding */
-  text-align: center;  /* Text alignment */
-  border-radius: 5px;  /* Rounded corners */
-  text-decoration: none;  /* Remove underline */
-  font-weight: bold;  /* Bold text */
-}
-
-.login-button.show {
-  display: block; /* Visible when the menu is open */
-  margin-top: 1rem; /* Add some spacing from the last link */
-}
-
 @media screen and (max-width: 1024px) {
   .navbar-container {
     padding: 1.2rem;

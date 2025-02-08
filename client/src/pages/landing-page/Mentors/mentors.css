@@ -1,10 +1,9 @@
 .mentor-container {
   padding: 20px;
-  border: 8px solid #01285b; 
-  border-radius: 7px;
-  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+  border: 2px solid #7670AC; 
   border-radius: 10px;
-  background-color: #ffffff; 
+  box-shadow: 0 4px 10px rgba(118, 112, 172, 0.5);
+  background-color: #ffffff;
   margin-bottom: 40px;
 }
 
@@ -13,15 +12,15 @@
   font-size: 45px;
   font-weight: bold;
   text-align: center;
-  color: #ff7700;
+  color: #5491CA;
 }
 
 .Heading-section .title-primary {
-  color: #01285b; /* Blue */
+  color: #7670AC;
 }
 
 .Heading-section .title-secondary {
-  color: #ff7700; /* Orange */
+  color: #5491CA;
 }
 
 /* Container */
@@ -51,20 +50,20 @@
   position: absolute;
   width: 200px;
   height: 270px;
-  background: #c76707cf; /* Orange */
+  background: #5491CA;
   border-radius: 10px;
   overflow: hidden;
   opacity: 0;
   transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.8s ease;
-  box-shadow: 0px 0px 14px 5px #0000001c;
-  border: 1px groove #0c1b45;
+  box-shadow: 0px 0px 14px 5px rgba(118, 112, 172, 0.3);
+  border: 2px solid #7670AC;
 }
 
 .mentor-card img {
   width: 100%;
   height: 80%;
   object-fit: cover;
-  border-bottom: 2px solid #01285b; /* Blue */
+  border-bottom: 2px solid #7670AC;
 }
 
 .mentor-card.present {
@@ -96,13 +95,13 @@
 .mentor-details {
   padding: 10px;
   text-align: center;
-  background: rgba(255, 255, 255, 0.8); /* Slight transparency */
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .mentor-name {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #01285b; /* Blue */
+  color: #7670AC;
 }
 
 /* Buttons */
@@ -117,36 +116,35 @@
   padding: 10px 20px;
   font-size: 1rem;
   color: white;
-  background-color: #01285b; /* Blue */
+  background-color: #7670AC;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.3s ease;
-  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
-
+  box-shadow: 0 4px 10px rgba(118, 112, 172, 0.5);
 }
 
 .mentor-btn:hover {
-  background-color: #ff7700; /* Orange */
+  background-color: #5491CA;
   transform: scale(1.1);
 }
 
 /* Right Container (Description Card) */
-.right-container{
+.right-container {
   padding-right: 51px;
 }
 
 .mentor-description-card {
   height: 300px;
   width: 350px;
-  background: rgba(0, 80, 158, 0.1); /* Light blue glass effect */
+  background: rgba(118, 112, 172, 0.1);
   backdrop-filter: blur(10px);
-  border: 2px solid rgba(0, 80, 158, 0.5); /* Blue border */
-  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+  border: 2px solid rgba(118, 112, 172, 0.5);
+  box-shadow: 0 4px 10px rgba(118, 112, 172, 0.5);
   opacity: 1;
   transform: scale(1);
   transition: transform 0.6s ease, opacity 0.6s ease;
-  border-radius: 10px; /* Rounded corners */
+  border-radius: 10px;
 }
 
 .mentor-description-card.animating {
@@ -163,23 +161,20 @@
   text-align: center;
   font-size: 1.8rem;
   font-weight: bold;
-  color: #ff7700; /* Orange */
+  color: #5491CA;
   margin-bottom: 10px;
 }
 
 .mentor-description {
   text-align: justify;
-  padding:  0 16px 0 16px;
-  color: #01285b; /* Blue */
+  padding: 0 16px;
+  color: #7670AC;
   font-size: 1rem;
   line-height: 1.5;
 }
-/* Existing Styles */
-/* ... Your existing CSS above ... */
 
-/* Responsive Design for Mobile */
+/* Responsive Design */
 @media (max-width: 768px) {
-  /* Container adjustments */
   .container {
     flex-direction: column;
     align-items: center;
@@ -188,87 +183,82 @@
   }
 
   .left-container {
-    width: 100%; /* Take full width */
+    width: 100%;
   }
 
   .mentor-gallery {
     padding-left: 0;
-    height: 250px; /* Smaller height */
+    height: 250px;
   }
 
-  /* Show only the current card (present) */
   .mentor-card {
-    position: relative; /* Reset positioning for clean stacking */
-    width: 90%; /* Make card wider for mobile */
-    height: 250px; /* Adjust card height */
-    transform: scale(1); /* Reset scale for mobile */
+    position: relative;
+    width: 90%;
+    height: 250px;
+    transform: scale(1);
     opacity: 1;
     z-index: 1;
     margin: 0 auto;
   }
 
-  /* Hide past and future cards */
   .mentor-card.past,
   .mentor-card.future {
     display: none;
   }
 
   .mentor-card.present {
-    transform: scale(1); /* Center and scale the main card */
+    transform: scale(1);
     z-index: 2;
     opacity: 1;
   }
 
   .mentor-details {
-    padding: 8px; /* Smaller padding */
+    padding: 8px;
   }
 
   .mentor-name {
-    font-size: 1rem; /* Adjust font size */
+    font-size: 1rem;
   }
 
-  /* Buttons remain centered */
   .mentor-actions {
     margin-top: 15px;
   }
 
   .mentor-btn {
     padding: 8px 16px;
-    font-size: 0.9rem; /* Smaller buttons */
+    font-size: 0.9rem;
   }
 
-  /* Right Container (Description) */
   .right-container {
     padding-right: 0;
     width: 100%;
   }
 
   .mentor-description-card {
-    width: 90%; /* Full width */
-    height: auto; /* Adjust height */
+    width: 90%;
+    height: auto;
     margin-top: 20px;
     padding: 10px;
   }
 
   .mentor-description-title {
-    font-size: 1.4rem; /* Reduce title size */
+    font-size: 1.4rem;
   }
 
   .mentor-description {
-    font-size: 0.9rem; /* Reduce text size */
+    font-size: 0.9rem;
     line-height: 1.4;
-    padding: 0 10px; /* Adjust padding */
+    padding: 0 10px;
   }
 }
 
 @media (max-width: 480px) {
-  /* Further refinements for very small devices */
   .mentor-gallery {
     height: 220px;
   }
 
   .mentor-card {
-    height: 220px; /* Smaller height for small screens */
+    height: 220px;
   }
 
   .mentor-btn {
@@ -285,4 +275,3 @@
     line-height: 1.3;
   }
 }
-

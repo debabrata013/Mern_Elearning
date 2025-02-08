@@ -1,7 +1,7 @@
 /* General Styling for Achievements Section */
 .achievements {
   width: 1275px;
-  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+  box-shadow: 0 4px 15px rgba(118, 112, 172, 0.5);
   margin-bottom: 40px;
   padding: 0 20px 0 0;
   border-radius: 1rem;
@@ -11,7 +11,7 @@
 .stat-number {
   font-size: 48px;
   font-weight: bold;
-  color: #FF7F50;
+  color: #5491CA;
   margin-bottom: 10px;
   transition: transform 0.3s ease, color 0.3s ease;
   display: inline-block;
@@ -19,7 +19,7 @@
 
 .stat-number:hover {
   transform: scale(1.1);
-  color: #003B73;
+  color: #7670AC;
 }
 
 .achievements-title {
@@ -30,11 +30,11 @@
 }
 
 .title-primary {
-  color: #003B73;
+  color: #7670AC;
 }
 
 .title-secondary {
-  color: #FF7F50;
+  color: #5491CA;
 }
 
 .achievements-container {
@@ -69,14 +69,14 @@
   background: white;
   padding: 30px;
   border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(29, 79, 145, 0.5);
+  box-shadow: 0 4px 15px rgba(118, 112, 172, 0.5);
   text-align: center;
   transition: all 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 20px rgba(118, 112, 172, 0.6);
   background: #f9f9f9;
 }
 
@@ -86,13 +86,6 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
-}
-
-.stat-number {
-  font-size: 48px;
-  font-weight: bold;
-  color: #FF7F50;
-  margin-bottom: 10px;
 }
 
 .stat-description {
@@ -110,7 +103,6 @@
 }
 
 /* Mobile Responsiveness */
-/* Mobile Responsiveness */
 @media (max-width: 968px) {
   .achievements-container {
       flex-direction: column;
@@ -119,19 +111,19 @@
   .achievements-left,
   .achievements-right {
       width: 100%;
-      margin-bottom: 2rem; /* Added margin to separate sections */
+      margin-bottom: 2rem;
   }
 
   .achievement-image {
-      width: 80%; /* Image scaling for mobile */
-      margin: 0 auto; /* Center the image */
+      width: 80%;
+      margin: 0 auto;
   }
 }
 
 @media (max-width: 576px) {
   .achievements {
-    width: 100%; /* Ensure section takes full width */
-    padding: 0 10px; /* Add padding to prevent edge-to-edge content */
+    width: 100%;
+    padding: 0 10px;
   }
 
   .achievements-title {
@@ -140,31 +132,31 @@
   }
 
   .achievements-container {
-      padding: 1rem; /* Adjust container padding for small screens */
+      padding: 1rem;
       flex-direction: column;
   }
 
   .stats-container {
-      grid-template-columns: 1fr; /* Single column for stats */
+      grid-template-columns: 1fr;
   }
 
   .stat-card.wide {
-      grid-column: span 1; /* Make wide card normal width */
-      flex-direction: column; /* Stack the content vertically */
+      grid-column: span 1;
+      flex-direction: column;
       align-items: center;
   }
 
   .stat-card {
-      padding: 20px; /* Reduced padding for mobile */
-      width: 100%; /* Make each stat card take full width */
+      padding: 20px;
+      width: 100%;
   }
 
   .stat-number {
-      font-size: 36px; /* Adjust stat number size for mobile */
+      font-size: 36px;
   }
 
   .stat-description {
-      font-size: 14px; /* Smaller description text for mobile */
+      font-size: 14px;
   }
 
   .stat-icon {
@@ -173,7 +165,7 @@
   }
 
   .stat-card:hover {
-      transform: translateY(0); /* Remove hover effect for mobile */
-      box-shadow: none; /* No hover effect on mobile */
+      transform: translateY(0);
+      box-shadow: none;
   }
 }

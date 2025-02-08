@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import './SkillDevelopment.css';
-import image1 from './Groupicons-1.png';
-import image2 from './Groupicons-2.png';
-import image3 from './Groupicons-3.png';
+import image1 from './Groupicons1.png';
+import image2 from './Groupicons2.png';
+import image3 from './Groupicons3.png';
 import image4 from './Groupicons.png';
 import groupImage from './Group 2224.png';
-import master from './working.png';
+import master from './working1.png';
 
 const SkillDevelopment = () => {
   const skillRef = useRef(null);
