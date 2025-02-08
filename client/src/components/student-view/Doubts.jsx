@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import Sidebar from './studentComponent/Sidebar';
 import {
   Clock,
   CheckCircle,
@@ -314,12 +316,20 @@ const Doubts = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-10">
-        <h2 className="text-3xl font-bold text-center">My Doubts</h2>
+    <div className="flex h-screen">
+  {/* Sidebar - Fixed on the Left */}
+  <div className="bg-white shadow-lg w-[250px] h-screen fixed top-0 left-0">
+    <Sidebar />
+  </div>
+
+  {/* Main Content - Scrollable */}
+  <div className="flex-1 ml-[260px] overflow-y-auto p-8 bg-gray-50 h-screen">
+    <div className="max-w-6xl mx-auto">
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-3xl font-bold text-gray-800">My Doubts</h2>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
         >
           <PlusCircle className="w-5 h-5" />
           Create New Doubt
@@ -330,18 +340,18 @@ const Doubts = () => {
       <section className="mb-12">
         <div className="flex items-center gap-2 mb-6">
           <AlertCircle className="text-yellow-500" />
-          <h3 className="text-2xl font-semibold">Pending Doubts</h3>
+          <h3 className="text-2xl font-semibold text-gray-800">Pending Doubts</h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {displayedPendingDoubts.map((doubt) => (
             <div
               key={doubt.id}
-              className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col justify-between"
+              className="bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 flex flex-col justify-between border"
             >
               <div>
                 <div className="flex justify-between items-start mb-3">
-                  <h4 className="font-semibold text-xl">{doubt.title}</h4>
+                  <h4 className="font-semibold text-lg text-gray-800">{doubt.title}</h4>
                   <PriorityBadge priority={doubt.priority} />
                 </div>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
@@ -378,15 +388,8 @@ const Doubts = () => {
               onClick={() => setShowAllPending((prev) => !prev)}
               className="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 font-medium"
             >
-              {showAllPending ? (
-                <>
-                  Show Less <ChevronUp className="w-4 h-4" />
-                </>
-              ) : (
-                <>
-                  Show More <ChevronDown className="w-4 h-4" />
-                </>
-              )}
+              {showAllPending ? "Show Less" : "Show More"}
+              {showAllPending ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>
           </div>
         )}
@@ -396,17 +399,17 @@ const Doubts = () => {
       <section>
         <div className="flex items-center gap-2 mb-6">
           <CheckCircle className="text-green-500" />
-          <h3 className="text-2xl font-semibold">Resolved Doubts</h3>
+          <h3 className="text-2xl font-semibold text-gray-800">Resolved Doubts</h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {displayedResolvedDoubts.map((doubt) => (
             <div
               key={doubt.id}
-              className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col justify-between"
+              className="bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 flex flex-col justify-between border"
             >
               <div>
-                <h4 className="font-semibold text-xl mb-3">{doubt.title}</h4>
+                <h4 className="font-semibold text-lg text-gray-800 mb-3">{doubt.title}</h4>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                   {doubt.description}
                 </p>
@@ -452,21 +455,14 @@ const Doubts = () => {
               onClick={() => setShowAllResolved((prev) => !prev)}
               className="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 font-medium"
             >
-              {showAllResolved ? (
-                <>
-                  Show Less <ChevronUp className="w-4 h-4" />
-                </>
-              ) : (
-                <>
-                  Show More <ChevronDown className="w-4 h-4" />
-                </>
-              )}
+              {showAllResolved ? "Show Less" : "Show More"}
+              {showAllResolved ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>
           </div>
         )}
       </section>
 
-      {/* Modal for viewing full details */}
+      {/* Modal for Viewing Full Details */}
       {selectedDoubt && (
         <DetailModal
           doubt={selectedDoubt}
@@ -475,7 +471,7 @@ const Doubts = () => {
         />
       )}
 
-      {/* Modal for creating a new doubt */}
+      {/* Modal for Creating a New Doubt */}
       {showCreateModal && (
         <CreateDoubtModal
           onClose={() => setShowCreateModal(false)}
@@ -483,6 +479,9 @@ const Doubts = () => {
         />
       )}
     </div>
+  </div>
+</div>
+
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Sidebar from './studentComponent/Sidebar';
 import {
   ChevronDown,
   ChevronUp,
@@ -70,8 +71,11 @@ const AssignmentCard = ({ item, type, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="bg-white shadow rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer relative"
+      className="bg-white shadow rounded-lg p-4 hover:shadow-xl transition-shadow duration-300 cursor-pointer relative"
     >
+      <div className="bg-white shadow-lg w-[250px] h-screen fixed top-0 left-0">
+    <Sidebar />
+  </div>
       {type === "pending" && (
         <div className="absolute top-2 right-2">
           {daysRemaining < 0 ? (
@@ -200,6 +204,9 @@ const AssignmentDetail = ({ assignment, onBack, onSubmitAssignment }) => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="bg-white shadow-lg w-[250px] h-screen fixed top-0 left-0">
+    <Sidebar />
+  </div>
       <div className="max-w-4xl mx-auto">
         <button
           onClick={onBack}
@@ -372,77 +379,88 @@ const AssignmentsAndQuizzes = () => {
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold text-center mb-8">Assignments & Quizzes</h1>
+    <div className="flex h-screen">
+  {/* Sidebar - Fixed on the Left */}
+  <div className="bg-white shadow-lg w-[250px] h-screen fixed top-0 left-0">
+    <Sidebar />
+  </div>
 
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-          📌 Pending Assignments
-          <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm">
-            {pending.length}
-          </span>
-        </h2>
-        {pending.length === 0 ? (
-          <p className="text-gray-600">No pending assignments. Great job! 🎉</p>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {(showAllPending ? pending : pending.slice(0, 2)).map(item => (
-                <AssignmentCard
-                  key={item.id}
-                  item={item}
-                  type="pending"
-                  onClick={() => setSelectedAssignment(item)}
-                />
-              ))}
-            </div>
-            {pending.length > 2 && (
-              <button
-                onClick={() => setShowAllPending(!showAllPending)}
-                className="mt-6 flex items-center gap-2 text-blue-500 hover:text-blue-600 mx-auto"
-              >
-                {showAllPending ? "Show Less" : "Show More"}
-                {showAllPending ? <ChevronUp /> : <ChevronDown />}
-              </button>
-            )}
-          </>
-        )}
-      </section>
+  {/* Main Content - Scrollable */}
+  <div className="flex-1 ml-[250px] overflow-y-auto p-6 bg-gray-50">
+    <h1 className="text-3xl font-bold text-center mb-8">Assignments & Quizzes</h1>
 
-      <section>
-        <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2 text-green-700">
-          ✅ Completed Assignments
-          <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">
-            {completed.length}
-          </span>
-        </h2>
-        {completed.length === 0 ? (
-          <p className="text-gray-600">No completed assignments yet. Let's get started! 💪</p>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {(showAllCompleted ? completed : completed.slice(0, 2)).map(item => (
-                <AssignmentCard
-                  key={item.id}
-                  item={item}
-                  type="completed"
-                  onClick={() => setSelectedAssignment(item)}
-                />
-              ))}
-            </div>
-            {completed.length > 2 && (
-              <button
-                onClick={() => setShowAllCompleted(!showAllCompleted)}
-                className="mt-6 flex items-center gap-2 text-blue-500 hover:text-blue-600 mx-auto"
-              >
-                {showAllCompleted ? "Show Less" : "Show More"}
-                {showAllCompleted ? <ChevronUp /> : <ChevronDown />}
-              </button>
-            )}
-          </>
-        )}
-      </section>
-    </div>
+    {/* Pending Assignments */}
+    <section className="mb-12">
+      <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+        📌 Pending Assignments
+        <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm">
+          {pending.length}
+        </span>
+      </h2>
+      {pending.length === 0 ? (
+        <p className="text-gray-600">No pending assignments. Great job! 🎉</p>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {(showAllPending ? pending : pending.slice(0, 2)).map(item => (
+              <AssignmentCard
+                key={item.id}
+                item={item}
+                type="pending"
+                onClick={() => setSelectedAssignment(item)}
+              />
+            ))}
+          </div>
+          {pending.length > 2 && (
+            <button
+              onClick={() => setShowAllPending(!showAllPending)}
+              className="mt-6 flex items-center gap-2 text-blue-500 hover:text-blue-600 mx-auto"
+            >
+              {showAllPending ? "Show Less" : "Show More"}
+              {showAllPending ? <ChevronUp /> : <ChevronDown />}
+            </button>
+          )}
+        </>
+      )}
+    </section>
+
+    {/* Completed Assignments */}
+    <section>
+      <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2 text-green-700">
+        ✅ Completed Assignments
+        <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">
+          {completed.length}
+        </span>
+      </h2>
+      {completed.length === 0 ? (
+        <p className="text-gray-600">No completed assignments yet. Let's get started! 💪</p>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {(showAllCompleted ? completed : completed.slice(0, 2)).map(item => (
+              <AssignmentCard
+                key={item.id}
+                item={item}
+                type="completed"
+                onClick={() => setSelectedAssignment(item)}
+              />
+            ))}
+          </div>
+          {completed.length > 2 && (
+            <button
+              onClick={() => setShowAllCompleted(!showAllCompleted)}
+              className="mt-6 flex items-center gap-2 text-blue-500 hover:text-blue-600 mx-auto"
+            >
+              {showAllCompleted ? "Show Less" : "Show More"}
+              {showAllCompleted ? <ChevronUp /> : <ChevronDown />}
+            </button>
+          )}
+        </>
+      )}
+    </section>
+  </div>
+</div>
+
   );
 };
 

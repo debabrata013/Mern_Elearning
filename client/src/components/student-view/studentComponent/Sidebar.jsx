@@ -1,41 +1,59 @@
-import { Link, useNavigate } from "react-router-dom";
-import { RxExit } from "react-icons/rx";
-import { GrResources } from "react-icons/gr";
+import { Link, useLocation } from "react-router-dom";
+import { 
+  GraduationCap, 
+  BookOpen, 
+  Calendar, 
+  BarChart3, 
+  Trophy, 
+  MessageSquare, 
+  LogOut 
+} from "lucide-react";
 
 const Sidebar = () => {
+  const location = useLocation(); // Get current route
+
+  // Navigation links data
+  const links = [
+    { path: "/abo", icon: <BookOpen className="h-5 w-5" />, label: "Home" },
+    { path: "/abca", icon: <Calendar className="h-5 w-5" />, label: "Courses" },
+    { path: "/abas", icon: <BarChart3 className="h-5 w-5" />, label: "Assignment" },
+    { path: "/abcd", icon: <Trophy className="h-5 w-5" />, label: "Doubts" },
+    // { path: "/discussions", icon: <MessageSquare className="h-5 w-5" />, label: "Discussions" },
+  ];
+
   return (
-    <div className="w-64 bg-blue-700 text-white flex flex-col p-4 ">
-      <h1 className="text-2xl font-bold mb-8 cursor-pointer">EduDash</h1>
-      <nav className="flex flex-col space-y-4">
-        <Link to="/" className="flex items-center space-x-2">
-          <i className="fa fa-home"></i>
-          <span>My Courses</span>
-        </Link>
-        <Link to="doubts" className="flex items-center space-x-2">
-          <i class="fa fa-question"></i>
-          <span>My Doubts</span>
-        </Link>
-        <Link to="notice" className="flex items-center space-x-2">
-          <i class="fa fa-envelope"></i>
-          <span>Notice</span>
-        </Link>
-        <Link to="assignments" className="flex items-center space-x-2">
-          <i class="fa fa-book"></i>
-          <span>Assignments and Quizzes</span>
-        </Link>
-        <Link to="resources" className="flex items-center space-x-2">
-          <GrResources />
-          <span>Study Resources</span>
-        </Link>
-        <Link to="projects" className="flex items-center space-x-2">
-          <span>⚙️</span>
-          <span>CapStone Projects & Career Guidance</span>
-        </Link>
+    <div className="h-screen w-64 bg-white shadow-lg flex flex-col p-4">
+      {/* Logo */}
+      <div className="flex items-center gap-3 mb-8">
+        <GraduationCap className="h-8 w-8 text-blue-600" />
+        <span className="text-xl font-bold text-gray-900">LMS Learn</span>
+      </div>
+
+      {/* Navigation Links */}
+      <nav className="flex flex-col gap-4">
+        {links.map((link) => (
+          <Link
+            key={link.path}
+            to={link.path}
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition ${
+              location.pathname === link.path
+                ? "text-blue-600 bg-blue-100 font-semibold"
+                : "text-gray-700 hover:text-blue-600"
+            }`}
+          >
+            {link.icon}
+            {link.label}
+          </Link>
+        ))}
       </nav>
-      <button className="mt-auto text-sm flex items-center space-x-2">
-        <RxExit />
-        <span>Sign Out</span>
-      </button>
+
+      {/* Logout */}
+      <div className="mt-auto">
+        <button className="flex items-center gap-3 text-red-600 hover:text-red-800 w-full">
+          <LogOut className="h-5 w-5 " />
+          Logout
+        </button>
+      </div>
     </div>
   );
 };
