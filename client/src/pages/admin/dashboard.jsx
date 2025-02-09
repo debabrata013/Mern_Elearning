@@ -15,7 +15,7 @@ import ManageStudent from './ManageStudent';
 import ManageTeacher from './ManageTeacher';
 import Teacher from './Teacher';
 import Student from './Student';
-
+import logo from "../../../../client/public/aigiri logo.png";
 
 // Sample data for charts
 const userActivityData = [
@@ -331,8 +331,8 @@ const Dashboard = () => {
       <aside className={`fixed left-0 top-0 h-full w-64 bg-blue-600 text-white p-4 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform z-20`}>
         <div className="mb-8">
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Layout className="h-6 w-6" />
-            EduDash Admin
+            <img src={logo} alt="" className='h-6 w-6' />
+            AIGIRI Admin
           </h1>
         </div>
         
