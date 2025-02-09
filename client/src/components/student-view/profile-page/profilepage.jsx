@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logo from '../../../../../client/public/AIGIRI.png';
 import {
   GraduationCap,
   User,
@@ -55,10 +56,10 @@ const StudentProfile = () => {
       {/* Header */}
       <header className="bg-white shadow sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <GraduationCap className="h-8 w-8 text-blue-500" />
-            <span className="text-xl font-bold text-gray-800">NextSkills</span>
-          </div>
+          <div className="flex items-center gap-3 mb-8">
+                  <img src={logo} alt="AIGIRI Logo" className="h-8 w-8" />
+                  <span className="text-xl font-bold text-[#7670AC]">AIGIRI</span>
+                </div>
           <div className="flex items-center space-x-4">
             <button className="p-2 hover:bg-gray-100 rounded-full">
               <Bell className="h-6 w-6 text-gray-700" />
@@ -398,7 +399,7 @@ const StudentProfile = () => {
       {/* Footer */}
       <footer className="bg-white shadow py-4 mt-10">
         <div className="max-w-7xl mx-auto px-6 text-center text-gray-600">
-          &copy; {new Date().getFullYear()} NextSkills. All rights reserved.
+          &copy; {new Date().getFullYear()} AIGIRI. All rights reserved.
         </div>
       </footer>
     </div>

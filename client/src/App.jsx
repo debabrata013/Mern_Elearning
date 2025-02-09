@@ -32,7 +32,7 @@ import Unauthorized from "./pages/Unauthorized";
 import StudentRoutes from "./components/student-view/StudentRoutes";
 
 import Std from "./components/student-view/StudentViewCommonHeader";
-import Projile from "./components/student-view/profilepage"
+import Projile from "./components/student-view/profile-page/profilepage"
 import StudentAnoument from "./components/student-view/AnnouncementPage"
 import Studentbuycourse from "./components/student-view/courcebuy"
 import Studentbuycourse2 from "./components/student-view/coursebuy"
