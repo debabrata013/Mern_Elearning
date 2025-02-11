@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth";
-import { FaGithub, FaEye, FaEyeSlash } from "react-icons/fa"; // Icons
-import logo from "../../../../client/public/aigiri logo.png"; // Replace with your actual logo path
-import dot from "./images/dots.png";
-import img from "./images/img.png"; // Your image
-import "./login.css"; // Updated CSS
+import { FaGithub, FaEye, FaEyeSlash } from "react-icons/fa"; 
+import logo from "../../../../client/public/aigiri logo.png"; 
+import img from "./images/img.png";
+import "./login.css"; 
 
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,20 +13,26 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSwitchAuthMode = () => {
-    setIsLogin(!isLogin);
-    setError("");
+  // Toggle between login and signup
+  const handleSwitchAuthMode = () => setIsLogin(!isLogin);
+
+  // GitHub login function (Placeholder)
+  const handleGitHubLogin = () => {
+    console.log("GitHub login clicked");
   };
 
+  // Handle form submission (login or register)
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // Clear previous errors
 
     if (!email || !password || (!isLogin && !userName)) {
       setError("Please fill all required fields.");
@@ -43,50 +48,51 @@ function AuthPage() {
     if (!isLogin) userData.userName = userName;
 
     setLoading(true);
+
     try {
       let response;
       if (isLogin) {
         response = await axiosInstance.post("/auth/login", userData);
       } else {
-        response = await axiosInstance.post("/students/", userData);
+        response = await axiosInstance.post("/auth/register", userData);
       }
 
-      if (response.data.success) {
-        if (rememberMe) {
-          localStorage.setItem("accessToken", response.data.accessToken);
-        } else {
-          sessionStorage.setItem("accessToken", response.data.accessToken);
-        }
+      console.log(response.data);
 
-        const role = response.data.userData.role;
-        navigate(
-          role === "student"
-            ? "/user-dashboard"
-            : role === "teacher"
-            ? "/teacher-dashboard"
-            : "/admin-dashboard"
-        );
+      if (response.data.success) {
+        sessionStorage.setItem("accessToken", JSON.stringify(response.data.accessToken));
+        login(response.data.userData);
+
+        switch (response.data.userData.role) {
+          case "student":
+            navigate("/user-dashboard");
+            break;
+          case "teacher":
+            navigate("/teacher-dashboard");
+            break;
+          case "admin":
+            navigate("/admin-dashboard");
+            break;
+          default:
+            navigate("/");
+        }
 
         alert(isLogin ? "Login successful!" : "Registration successful!");
       }
     } catch (error) {
-      setError(error.response?.data?.message || "An error occurred.");
+      console.error("Authentication error", error);
+      setError(error.response?.data?.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // GitHub Login Handler
-  const handleGitHubLogin = () => {
-    window.location.href = "http://localhost:5000/auth/github"; // Backend API for GitHub OAuth
-  };
-
   return (
     <div className="auth-page-container">
       <header className="auth-header">
-  <img src={logo} alt="AIGIRI Logo" className="auth-logo" />
-  <h1 className="auth-name">AIGIRI</h1>
-</header>
+        <img src={logo} alt="AIGIRI Logo" className="auth-logo" />
+        <h1 className="auth-name">AIGIRI</h1>
+      </header>
 
       {/* Left Side - Login/Signup Box */}
       <div className="auth-container">
@@ -129,10 +135,7 @@ function AuthPage() {
                 required
               />
               <label htmlFor="password">Password</label>
-              <span
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-              >
+              <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
@@ -148,7 +151,6 @@ function AuthPage() {
                 />
                 <label htmlFor="confirmPassword">Confirm Password</label>
               </div>
-              
             )}
 
             {isLogin && (
@@ -171,8 +173,8 @@ function AuthPage() {
           </form>
 
           {loading && <div className="loading-spinner"></div>}
-          <div class="or-divider">or</div>
 
+          <div className="or-divider">or</div>
 
           <button className="github-login" onClick={handleGitHubLogin}>
             <FaGithub className="github-icon" /> Login with GitHub
@@ -189,13 +191,13 @@ function AuthPage() {
                 Already have an account?{" "}
                 <button onClick={handleSwitchAuthMode}>Login here</button>
               </span>
-              
             )}
+
             {isLogin && (
-            <div className="forgot-password">
-              <a href="/forgot-password">Forgot Password?</a>
-            </div>
-          )}
+              <div className="forgot-password">
+                <a href="/forgot-password">Forgot Password?</a>
+              </div>
+            )}
           </div>
         </div>
       </div>
