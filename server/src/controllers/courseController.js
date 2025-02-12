@@ -1,157 +1,162 @@
 const Course = require('../models/Course');
 const uploadToS3 = require('../utils/uploadToS3');
 
-
+/**
+ * Create a new course.
+ * Supports optional file uploads (coverImage, introVideo, material).
+ */
 exports.createCourse = async (req, res) => {
-  console.log("creating course");
-  // console.log("Hello ",req.body);
-
-  
-  
   try {
-    console.log(JSON.stringify(req.body));
-    
-    const {
-      title,//
-      courseCode,//
-      category,//
-      description,
-      startDate,//
-      endDate,//
-      duration,//
-      chapters,//
-      teacher,
-      contact,//froent
-      maxStudents,//
-      enrollmentDeadline,//
-      courseFee,//
-      discount,//
-      publishStatus,
-    } = req.body;
+    // Copy all course fields from req.body
+    const courseData = { ...req.body };
 
-    // Assuming files are uploaded via a form and available in req.files
-    const { coverImage, introVideo, material } = req.files;
+    // If files are provided, upload them concurrently
+    if (req.files) {
+      const { coverImage, introVideo, material } = req.files;
 
-    // Upload files to AWS S3 and get the URLs
-    const coverImageUrl = await uploadToS3(coverImage[0]); // Upload the first file in the array
-    const introVideoUrl = await uploadToS3(introVideo[0]); // Upload the first file in the array
-    const materialUrl = await uploadToS3(material[0]); // Upload the first file in the array
+      // Create an array of promises for file uploads if they exist
+      const uploadPromises = [];
+      if (coverImage && coverImage[0]) {
+        uploadPromises.push(uploadToS3(coverImage[0]));
+      } else {
+        uploadPromises.push(Promise.resolve(null));
+      }
+      if (introVideo && introVideo[0]) {
+        uploadPromises.push(uploadToS3(introVideo[0]));
+      } else {
+        uploadPromises.push(Promise.resolve(null));
+      }
+      if (material && material[0]) {
+        uploadPromises.push(uploadToS3(material[0]));
+      } else {
+        uploadPromises.push(Promise.resolve(null));
+      }
 
-    // Create a new Course document
-    const course = new Course({
-      title,
-      courseCode,
-      category,
-      description,
-      startDate,
-      endDate,
-      duration,
-      coverImage: coverImageUrl, // Save the URL in the database
-      introVideo: introVideoUrl, // Save the URL in the database
-      material: materialUrl, // Save the URL in the database
-      chapters,
-     teacher,
-      contact,
-      maxStudents,
-      enrollmentDeadline,
-      courseFee,
-      discount,
-      publishStatus,
-    });
+      // Destructure the uploaded URLs (they will be null if not uploaded)
+      const [coverImageUrl, introVideoUrl, materialUrl] = await Promise.all(uploadPromises);
 
-    // Save the course to the database
+      // Attach URLs to courseData if they exist
+      if (coverImageUrl) courseData.coverImage = coverImageUrl;
+      if (introVideoUrl) courseData.introVideo = introVideoUrl;
+      if (materialUrl) courseData.material = materialUrl;
+    }
+
+    // Create and save the new course document
+    const course = new Course(courseData);
     await course.save();
 
-    // Respond with the created course
-    res.status(201).json({ message: 'Course created successfully', course });
+    return res.status(201).json({ message: 'Course created successfully', course });
   } catch (error) {
     console.error('Error creating course:', error);
-    res.status(500).json({ message: 'Error creating course', error });
+    return res.status(500).json({ message: 'Error creating course', error });
   }
 };
 
-// Controller to add a chapter
+/**
+ * Add a chapter to a course.
+ * Expects courseId in the URL params and chapter details in req.body.
+ */
 exports.addChapter = async (req, res) => {
   try {
     const { title, description, materialUrl } = req.body;
     const { courseId } = req.params;
 
-    const course = await Course.findById(courseId);
-    if (!course) {
+    // Validate required chapter fields
+    if (!title || !description) {
+      return res.status(400).json({ message: 'Title and description are required for a chapter.' });
+    }
+
+    // Use $push to add a new chapter to the chapters array
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId,
+      {
+        $push: { chapters: { title, description, material: materialUrl } }
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCourse) {
       return res.status(404).json({ message: 'Course not found' });
     }
 
-    course.chapters.push({ title, description, material: materialUrl });
-    await course.save();
-
-    res.status(200).json({ message: 'Chapter added successfully', course });
+    return res.status(200).json({ message: 'Chapter added successfully', course: updatedCourse });
   } catch (error) {
-    res.status(500).json({ message: 'Error adding chapter', error });
+    console.error('Error adding chapter:', error);
+    return res.status(500).json({ message: 'Error adding chapter', error });
   }
 };
 
-
-// Create a new course
-exports.createCourse = async (req, res) => {
-  try {
-    const courseData = req.body;
-    const course = new Course(courseData);
-    await course.save();
-    res.status(201).json({ message: 'Course created successfully', course });
-  } catch (error) {
-    res.status(500).json({ message: 'Error creating course', error });
-  }
-};
-
-// Get all courses
+/**
+ * Retrieve all courses.
+ */
 exports.getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find();
-    res.status(200).json(courses);
+    return res.status(200).json(courses);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching courses', error });
+    console.error('Error fetching courses:', error);
+    return res.status(500).json({ message: 'Error fetching courses', error });
   }
 };
 
-// Get a single course by ID
+/**
+ * Retrieve a single course by ID.
+ */
 exports.getCourseById = async (req, res) => {
   try {
     const { id } = req.params;
     const course = await Course.findById(id);
+
     if (!course) {
       return res.status(404).json({ message: 'Course not found' });
     }
-    res.status(200).json(course);
+
+    return res.status(200).json(course);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching course', error });
+    console.error('Error fetching course:', error);
+    return res.status(500).json({ message: 'Error fetching course', error });
   }
 };
 
-// Update a course by ID
+/**
+ * Update a course by ID.
+ */
 exports.updateCourse = async (req, res) => {
   try {
     const { id } = req.params;
     const courseData = req.body;
-    const course = await Course.findByIdAndUpdate(id, courseData, { new: true, runValidators: true });
-    if (!course) {
+
+    const updatedCourse = await Course.findByIdAndUpdate(id, courseData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedCourse) {
       return res.status(404).json({ message: 'Course not found' });
     }
-    res.status(200).json({ message: 'Course updated successfully', course });
+
+    return res.status(200).json({ message: 'Course updated successfully', course: updatedCourse });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating course', error });
+    console.error('Error updating course:', error);
+    return res.status(500).json({ message: 'Error updating course', error });
   }
 };
 
-// Delete a course by ID
+/**
+ * Delete a course by ID.
+ */
 exports.deleteCourse = async (req, res) => {
   try {
     const { id } = req.params;
-    const course = await Course.findByIdAndDelete(id);
-    if (!course) {
+    const deletedCourse = await Course.findByIdAndDelete(id);
+
+    if (!deletedCourse) {
       return res.status(404).json({ message: 'Course not found' });
     }
-    res.status(200).json({ message: 'Course deleted successfully' });
+
+    return res.status(200).json({ message: 'Course deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting course', error });
+    console.error('Error deleting course:', error);
+    return res.status(500).json({ message: 'Error deleting course', error });
   }
 };
