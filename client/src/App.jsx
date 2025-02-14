@@ -38,6 +38,7 @@ import Studentbuycourse from "./components/student-view/courcebuy"
 import Studentbuycourse2 from "./components/student-view/coursebuy"
 import Doubts from "./components/student-view/Doubts"
 import Assigment from "./components/student-view/Assigment"
+import Pr from "./pages/admin/profile"
 
 // import StudentRoutes from "./components/student-view/StudentRoutes";
 // import student from './components/student-view/AppLayout'
@@ -61,6 +62,7 @@ function App() {
         <Route path="/abas" element={<Assigment />} />
         <Route path="/abca2" element={<Studentbuycourse2 />} />
         <Route path="/abop" element={<Projile />} />
+        <Route path="/profile" element={<Pr />} />
         <Route
           path="/user-dashboard"
           element={

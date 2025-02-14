@@ -16,6 +16,7 @@ import ManageTeacher from './ManageTeacher';
 import Teacher from './Teacher';
 import Student from './Student';
 import logo from "../../../../client/public/aigiri logo.png";
+import ProfileContent from "./profile";
 
 // Sample data for charts
 const userActivityData = [
@@ -308,6 +309,8 @@ const Dashboard = () => {
         return <CouponContent />;
       case 'jobs':
         return <JobsContent />;
+      case 'profile':
+        return <ProfileContent />;
       default:
         return <HomeContent />;
     }
@@ -434,6 +437,12 @@ const Dashboard = () => {
             label="Jobs" 
             active={currentSection === 'jobs'}
             onClick={() => setCurrentSection('jobs')}
+          />
+          <NavItem 
+            icon={<Profile/>} 
+            label="Jobs" 
+            active={currentSection === 'profile'}
+            onClick={() => setCurrentSection('profile')}
           />
         </nav>
         
