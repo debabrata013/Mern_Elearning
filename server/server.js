@@ -43,6 +43,7 @@ const adminRoutes = require('./src/routes/adminRoutes');
 const teacherRoutes = require('./src/routes/teacherRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 const cours=require("./src/routes/course")
+const quize=require("./src/routes/quize")
 
 // Use routes
 app.use('/students', studentRoutes);
@@ -54,6 +55,7 @@ app.use('/announcements', announcementRoutes);
 app.use('/coupons', couponRoutes);
 app.use('/complaints', complaintRoutes);
 app.use('/jobs',jobRoutes)
+app.use('/quize',quize)
 const deleteOldAnnouncements = async () => {
     try {
       const sixDaysAgo = new Date();

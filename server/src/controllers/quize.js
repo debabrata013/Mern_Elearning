@@ -1,5 +1,5 @@
 // controllers/quizController.js
-const { Quiz, Question, Response } = require('../models/quizModels'); // adjust path as needed
+const { Quiz, Question, Response } = require('../models/teacher/quize'); // adjust path as needed
 
 // Create a new quiz with optional questions
 exports.createQuiz = async (req, res, next) => {
