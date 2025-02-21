@@ -45,7 +45,9 @@ function AuthPage() {
     }
 
     const userData = { email, password };
-    if (!isLogin) userData.userName = userName;
+    console.log(userData);
+    
+    // if (!isLogin) userData.userName = userName;
 
     setLoading(true);
 
