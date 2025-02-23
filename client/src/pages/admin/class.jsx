@@ -127,23 +127,61 @@ const CourseManagementForm = () => {
 
  
   // Submit the form (this can be connected to an API or state management)
-  const handleSubmit = async(e) => {
-    
+  const handleSubmit = async (e) => {
+    // Prevent the default form submission behavior
     e.preventDefault();
-    formData.contact=teacher.email;
-    console.log('Course Data Submitted:', formData);
-    // Handle actual submission logic here
-   try {
-    const response = await courseService.createCourse(formData);
-      console.log('Job created successfully:', response);
-   } catch (error) {
-    console.log("error ", error);
-    
-    
-   }
-      
-    };
-
+  
+    // Create a new FormData object to handle form data and files
+    const submitData = new FormData();
+  
+    // Append regular form fields
+    submitData.append("title", formData.title);
+    submitData.append("courseCode", formData.courseCode);
+    submitData.append("category", formData.category);
+    submitData.append("description", formData.description);
+    submitData.append("startDate", formData.startDate);
+    submitData.append("endDate", formData.endDate);
+    submitData.append("duration", formData.duration);
+    submitData.append("maxStudents", formData.maxStudents);
+    submitData.append("enrollmentDeadline", formData.enrollmentDeadline);
+    submitData.append("courseFee", formData.courseFee);
+    submitData.append("discount", formData.discount || "");
+  
+    // Append the teacher field (userName) and contact (teacher's email)
+    submitData.append("teacher", formData.teacher);
+    submitData.append("contact", teacher.email || "");
+  
+    // Append file fields (only if files are selected)
+    if (formData.coverImage) {
+      submitData.append("coverImage", formData.coverImage);
+    }
+    if (formData.introVideo) {
+      submitData.append("introVideo", formData.introVideo);
+    }
+    if (formData.syllabusPDF) {
+      submitData.append("syllabusPDF", formData.syllabusPDF);
+    }
+  
+    // Append chapters (array of objects) as a JSON string
+    submitData.append("chapters", JSON.stringify(formData.chapters));
+  
+    // Make the API call
+    try {
+      const response = await courseService.createCourse(submitData);
+      console.log("Course created successfully:", response);
+  
+      // Reset the form after successful submission
+      handleReset();
+  
+      // Optionally, show a success message to the user
+      // Example: setSuccessMessage("Course created successfully!");
+    } catch (error) {
+      console.error("Error creating course:", error);
+  
+      // Optionally, display an error message to the user
+      // Example: setError("Failed to create course. Please try again.");
+    }
+  };
 
   
 
