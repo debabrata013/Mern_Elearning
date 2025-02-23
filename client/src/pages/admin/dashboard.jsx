@@ -16,7 +16,7 @@ import ManageTeacher from './ManageTeacher';
 import Teacher from './Teacher';
 import Student from './Student';
 import logo from "../../../../client/public/aigiri logo.png";
-import ProfileContent from "./profile";
+// import Profile from "./profile";
 
 // Sample data for charts
 const userActivityData = [
@@ -438,12 +438,12 @@ const Dashboard = () => {
             active={currentSection === 'jobs'}
             onClick={() => setCurrentSection('jobs')}
           />
-          <NavItem 
+          {/* <NavItem 
             icon={<Profile/>} 
             label="Jobs" 
             active={currentSection === 'profile'}
             onClick={() => setCurrentSection('profile')}
-          />
+          /> */}
         </nav>
         
         <div className="absolute bottom-4 w-full pr-8">
