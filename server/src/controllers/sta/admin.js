@@ -30,7 +30,7 @@ const getTotalStudents = async (req, res) => {
 };
 const getCourse = async (req, res) => {
     try{
-        totalCourse= await Course.countDocuments();
+         const totalCourse= await Course.countDocuments();
         res.status(200).send(totalCourse.toString());
     }catch(error){
         res.status(500).send("Error fetching course count");
@@ -38,5 +38,4 @@ const getCourse = async (req, res) => {
 }
 module.exports = { getTotalUsers, getTotalTeachers, getTotalStudents,getCourse };
 
-module.exports = { getTotalUsers, getTotalTeachers, getTotalStudents };
 

@@ -57,7 +57,7 @@ app.use('/coupons', couponRoutes);
 app.use('/complaints', complaintRoutes);
 app.use('/jobs',jobRoutes)
 app.use('/quize',quize)
-app.use("/data",adminRoutes)
+app.use("/data",adminlandin)
 
 const deleteOldAnnouncements = async () => {
     try {
