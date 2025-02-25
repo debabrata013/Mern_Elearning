@@ -16,6 +16,8 @@ import ManageTeacher from './ManageTeacher';
 import Teacher from './Teacher';
 import Student from './Student';
 import logo from "../../../../client/public/aigiri logo.png";
+import axios from 'axios';
+
 // import Profile from "./profile";
 
 // Sample data for charts
@@ -50,6 +52,9 @@ const HomeContent = () => {
     duration: '',
     teacher: ''
   });
+
+  const [totaluser,setTotaluser]=useState(0);
+
 
   const handleAddSubject = () => {
     if (newSubject && specializedSubjects.length < 10) {
@@ -89,7 +94,7 @@ const HomeContent = () => {
               </div>
               <div>
                 <p className="text-gray-500">Active Users</p>
-                <p className="text-2xl font-bold">2,300</p>
+                <p className="text-2xl font-bold">{totaluser}</p>
               </div>
             </div>
             <div className="bg-white p-6 rounded-lg shadow flex items-center gap-4">

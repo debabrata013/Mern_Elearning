@@ -68,19 +68,19 @@ const Footer = () => {
 
       {/* Social Links Section (Icons at the bottom) */}
       <div className="flex justify-center gap-6 mb-6 mt-8">
-        <a href="#" className="text-white text-2xl hover:text-[#7670AC] transition duration-300 transform hover:scale-110">
+        <a href="#" className="text-white text-2xl hover:hover:text-[#1877F2] transition duration-300 transform hover:scale-110">
           <FontAwesomeIcon icon={faFacebook} />
         </a>
         <a href="#" className="text-white text-2xl hover:text-[#7670AC] transition duration-300 transform hover:scale-110">
           <FontAwesomeIcon icon={faTwitter} />
         </a>
-        <a href="#" className="text-white text-2xl hover:text-[#7670AC] transition duration-300 transform hover:scale-110">
+        <a href="#" className="text-white text-2xl hover:text-[#E4405F] transition duration-300 transform hover:scale-110">
           <FontAwesomeIcon icon={faInstagram} />
         </a>
         <a href="#" className="text-white text-2xl hover:text-[#7670AC] transition duration-300 transform hover:scale-110">
           <FontAwesomeIcon icon={faLinkedin} />
         </a>
-        <a href="#" className="text-white text-2xl hover:text-[#7670AC] transition duration-300 transform hover:scale-110">
+        <a href="#" className="text-white text-2xl hover:text-[red] transition duration-300 transform hover:scale-110">
           <FontAwesomeIcon icon={faYoutube} />
         </a>
       </div>

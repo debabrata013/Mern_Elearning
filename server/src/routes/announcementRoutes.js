@@ -10,15 +10,15 @@ const {
 } = require('../controllers/announcementController');
 
 // 1. Route to create a new announcement
-router.post('/announcements', createAnnouncement);
+router.post('/', createAnnouncement);
 
 // 2. Route to get announcements (optionally filter by audience)
-router.get('/announcements', getAnnouncements);
+router.get('/', getAnnouncements);
 
 // 3. Route to update an announcement by ID
-router.put('/announcements/:id', updateAnnouncement);
+router.put('/:id', updateAnnouncement);
 
 // 4. Route to delete an announcement by ID
-router.delete('/announcements/:id', deleteAnnouncement);
+router.delete('/:id', deleteAnnouncement);
 
 module.exports = router;
