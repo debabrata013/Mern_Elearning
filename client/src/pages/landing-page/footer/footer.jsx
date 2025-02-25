@@ -9,7 +9,7 @@ const Footer = () => {
         {/* Logo and Description Section */}
         <div className="text-center md:text-left">
           <div className="text-4xl font-bold text-[#5491CA] mb-6">
-            <span className="text-white">Digi</span> <span className="text-[#5491CA]">Toria</span>
+            <span className="text-white">AIGIRI</span>
           </div>
           <p className="text-lg mb-6">
             Let Us build your career together. Be the first person to transform yourself with our unique & world-class corporate-level trainings.
@@ -17,7 +17,7 @@ const Footer = () => {
           
           {/* Newsletter Subscription */}
           <div className="mt-6">
-            <h3 className="text-2xl font-semibold mb-3">Subscribe to Our <span className="text-[#5491CA]">Newsletter</span></h3>
+            <h3 className="text-2xl font-semibold mb-3">Subscribe to Our Newsletter</h3>
             <div className="flex justify-center md:justify-start gap-4">
               <input type="email" placeholder="Your Email address" className="p-3 rounded-lg text-black w-64 focus:outline-none focus:ring-2 focus:ring-[#5491CA]" />
               <button type="submit" className="p-3 bg-[grey] text-white rounded-lg hover:bg-[#7670AC] transition duration-300 transform hover:scale-105">
@@ -29,7 +29,7 @@ const Footer = () => {
 
         {/* Quick Links Section */}
         <div className="text-center md:text-left">
-          <h3 className="text-2xl font-semibold mb-6">Quick <span className="text-[#5491CA]">Links</span></h3>
+          <h3 className="text-2xl font-bold mb-6">Quick Links</h3>
           <ul className="list-none">
             <li className="mb-3">
               <a href="/" className="hover:text-[#7670AC] transition duration-300">Home</a>
@@ -51,7 +51,7 @@ const Footer = () => {
 
         {/* Contact Us Section */}
         <div className="text-center md:text-left">
-          <h3 className="text-2xl font-semibold mb-6">Contact <span className="text-[#5491CA]">Us</span></h3>
+          <h3 className="text-2xl font-bold mb-6">Contact Us</h3>
           <ul className="list-none">
             <li className="mb-3">
               <p className="hover:text-[#7670AC] transition duration-300">info@digitoria.com</p>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
 import './achievement.css';
 import images1 from './achiev.png';
 import images2 from './book.png';
@@ -13,28 +14,36 @@ function Achievements() {
 
   const achievementsRef = useRef(null);
 
-  const animateNumbers = (key, targetValue, duration) => {
-    let startValue = 0;
-    const increment = Math.ceil(targetValue / (duration / 10));
-    const timer = setInterval(() => {
-      startValue += increment;
-      if (startValue >= targetValue) {
-        startValue = targetValue;
-        clearInterval(timer);
-      }
-      setNumbers((prevNumbers) => ({
-        ...prevNumbers,
-        [key]: startValue,
-      }));
-    }, 10);
+  const animateNumbers = async (key, apiUrl, duration) => {
+    try {
+      const response = await axios.get(apiUrl);
+      const targetValue = response.data || 0; // Ensure a valid number
+
+      let startValue = 0;
+      const increment = Math.ceil(targetValue / (duration / 10));
+
+      const timer = setInterval(() => {
+        startValue += increment;
+        if (startValue >= targetValue) {
+          startValue = targetValue;
+          clearInterval(timer);
+        }
+        setNumbers((prevNumbers) => ({
+          ...prevNumbers,
+          [key]: startValue,
+        }));
+      }, 10);
+    } catch (error) {
+      console.error(`Error fetching ${key}:`, error);
+    }
   };
 
-  const handleIntersection = (entries) => {
+  const handleIntersection = async (entries) => {
     const [entry] = entries;
     if (entry.isIntersecting) {
-      animateNumbers('studentsTrained', 100, 2000);
-      animateNumbers('coursesAvailable', 50, 2000);
-      animateNumbers('jobPercentage', 70, 2000);
+      animateNumbers('studentsTrained', 'http://localhost:4400/data/totalstudent', 2000);
+      animateNumbers('coursesAvailable', 'http://localhost:4400/data/totalcourse', 2000);
+      animateNumbers('jobPercentage', 'http://localhost:4400/data/totalteacher', 2000);
     } else {
       setNumbers({ studentsTrained: 0, coursesAvailable: 0, jobPercentage: 0 });
     }
@@ -67,11 +76,7 @@ function Achievements() {
 
       <div className="achievements-container">
         <div className="achievements-left">
-          <img
-            src={images1}
-            alt="Achievement illustration"
-            className="achievement-image"
-          />
+          <img src={images1} alt="Achievement illustration" className="achievement-image" />
         </div>
 
         <div className="achievements-right">
