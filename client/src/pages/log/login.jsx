@@ -92,9 +92,9 @@ function AuthPage() {
   return (
     <div className="auth-page-container">
       <header className="auth-header">
-        <img src={logo} alt="AIGIRI Logo" className="auth-logo" />
-        <h1 className="auth-name">AIGIRI</h1>
-      </header>
+      <img src={logo} alt="AIGIRI Logo" className="auth-logo" onClick={() => navigate("/")} style={{ cursor: "pointer" }} />
+      <h1 className="auth-name" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>AIGIRI</h1>
+    </header>
 
       {/* Left Side - Login/Signup Box */}
       <div className="auth-container">

@@ -179,7 +179,7 @@
 .floating-card-top-right {
   display: flex;
   flex-direction: column;
-  height:150px;
+  height:130px;
   top: 10px;
   right: 10px;
 }
@@ -199,9 +199,9 @@
 
 
   /* Progress Circle */
-.bppkl{
-  height:50px;
-  background-color: #15803d;
+.bookl{
+  height:40px;
+  color:#5491CA;
 }
 
   /* Statistic Text */
@@ -218,10 +218,13 @@
 
   /* Statistic Icon */
   .stat-icon {
-    color: #16a34a;
+    color: #16a31f;
     font-size: 1.5rem;
   }
-
+  .stat-icon2{
+    color:#ff6403;
+    font-size: 1.5rem;
+  }
 
 
 /* Mobile Responsiveness */

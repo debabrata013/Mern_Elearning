@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./noti.css";
 
+import axios from 'axios';
 const AdminDashboard = () => {
   const [notifications, setNotifications] = useState([]);
   const [isAddNotificationVisible, setAddNotificationVisible] = useState(false);
@@ -16,32 +17,46 @@ const AdminDashboard = () => {
   };
 
   // Handle Notification Submission
-  const handleNotificationSubmit = (newNotification) => {
-    const currentDate = new Date().toLocaleDateString();
-    const currentTime = Date.now(); // Save timestamp
-    if (editingNotification !== null) {
-      setNotifications((prev) =>
-        prev.map((n, i) =>
-          i === editingNotification.index
-            ? {
-                ...newNotification,
-                date: editingNotification.date,
-                time: editingNotification.time,
-                for: editingNotification.for,
-              }
-            : n
-        )
-      );
-    } else {
-      setNotifications([
-        ...notifications,
-        { ...newNotification, date: currentDate, time: currentTime, for: notificationFor },
-      ]);
+  // const handleNotificationSubmit = (newNotification) => {
+  //   const currentDate = new Date().toLocaleDateString();
+  //   const currentTime = Date.now(); // Save timestamp
+  //   if (editingNotification !== null) {
+  //     setNotifications((prev) =>
+  //       prev.map((n, i) =>
+  //         i === editingNotification.index
+  //           ? {
+  //               ...newNotification,
+  //               date: editingNotification.date,
+  //               time: editingNotification.time,
+  //               for: editingNotification.for,
+  //             }
+  //           : n
+  //       )
+  //     );
+  //   } else {
+  //     setNotifications([
+  //       ...notifications,
+  //       { ...newNotification, date: currentDate, time: currentTime, for: notificationFor },
+  //     ]);
+  //   }
+  //   setAddNotificationVisible(false);
+  //   setEditingNotification(null);
+  // };
+  const handleNotificationSubmit = async (newNotification) => {
+    try {
+      const response = await axios.post("http://localhost:4400/announcements/", {
+        title: newNotification.title,
+        description: newNotification.description,
+        link: newNotification.link,
+        targetAudience: notificationFor, // 'student' or 'teacher'
+      });
+  
+      setNotifications([...notifications, response.data.announcement]); // Update state
+      setAddNotificationVisible(false);
+    } catch (error) {
+      console.error("Error creating announcement:", error);
     }
-    setAddNotificationVisible(false);
-    setEditingNotification(null);
   };
-
   // Delete Notification
   const handleDeleteNotification = (index) => {
     setNotifications(notifications.filter((_, i) => i !== index));

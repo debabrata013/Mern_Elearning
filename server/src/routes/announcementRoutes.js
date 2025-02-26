@@ -7,7 +7,6 @@ const {
 } = require('../controllers/announcementController');
 
 // 1. Route to create a new announcement
-router.post('/announcements', createAnnouncement);
-
+router.post('/', createAnnouncement);
 
 module.exports = router;

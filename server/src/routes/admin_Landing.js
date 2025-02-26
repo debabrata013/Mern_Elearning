@@ -7,4 +7,3 @@ router.get('/totalstudent', admin.getTotalStudents);
 router.get('/totalcourse', admin.getCourse);
 router.get('/totalteacher', admin.getTotalTeachers);
 module.exports = router;
-

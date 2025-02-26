@@ -42,7 +42,7 @@ export default function Navbar() {
         {/* Desktop Get Started Button */}
         <Link
           to="/login"
-          className="hidden md:block bg-gradient-to-r from-[#7670AC] to-[#5491CA] text-white px-6 py-2 rounded-full shadow-md hover:shadow-lg transition-all"
+          className="hidden md:block bg-gradient-to-r font-bold from-[#7670AC] to-[#5491CA] text-white px-6 py-2 rounded-full shadow-md hover:shadow-lg transition-all"
         >
           Get Started
         </Link>

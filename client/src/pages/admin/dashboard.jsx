@@ -16,6 +16,9 @@ import ManageTeacher from './ManageTeacher';
 import Teacher from './Teacher';
 import Student from './Student';
 import logo from "../../../../client/public/aigiri logo.png";
+import axios from 'axios';
+
+
 // import Profile from "./profile";
 
 // Sample data for charts
@@ -51,6 +54,52 @@ const HomeContent = () => {
     teacher: ''
   });
 
+  // the updated api call for the top data
+  const [revenue, setRevenue] = useState(null);
+  const [activeUsers, setActiveUsers] = useState(null);
+  const [totalCourses, setTotalCourses] = useState(null);
+  const [totalstudent, setTotalstudent] = useState(null);
+  const [totalteacher, setTotalTeacher] = useState(null);
+  // const [enrollmentRate, setEnrollmentRate] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch data from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const student = await axios.get("http://localhost:4400/data/totalstudent");
+        const activeUsersResponse = await axios.get("http://localhost:4400/data/totaluser");
+        const totalCoursesResponse = await axios.get("http://localhost:4400/data/totalcourse");
+        // const enrollmentRateResponse = await axios.get("YOUR_ENROLLMENT_RATE_API_URL");
+        const totalteacher=await axios.get("http://localhost:4400/data/totalteacher")
+
+        setRevenue(1200);
+        setTotalstudent(student.data);
+        setActiveUsers(activeUsersResponse.data);
+        setTotalCourses(totalCoursesResponse.data);
+        setTotalTeacher(totalteacher.data);
+        // setEnrollmentRate(12.5);
+      } catch (err) {
+        setError("Failed to load data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen bg-white">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  
+  if (error) return <p>{error}</p>;
+
+
   const handleAddSubject = () => {
     if (newSubject && specializedSubjects.length < 10) {
       setSpecializedSubjects([...specializedSubjects, newSubject]);
@@ -80,7 +129,7 @@ const HomeContent = () => {
               </div>
               <div>
                 <p className="text-gray-500">Revenue</p>
-                <p className="text-2xl font-bold">$53,000</p>
+                <p className="text-2xl font-bold">${revenue}</p>
               </div>
             </div>
             <div className="bg-white p-6 rounded-lg shadow flex items-center gap-4">
@@ -89,7 +138,7 @@ const HomeContent = () => {
               </div>
               <div>
                 <p className="text-gray-500">Active Users</p>
-                <p className="text-2xl font-bold">2,300</p>
+                <p className="text-2xl font-bold">{activeUsers}</p>
               </div>
             </div>
             <div className="bg-white p-6 rounded-lg shadow flex items-center gap-4">
@@ -98,7 +147,7 @@ const HomeContent = () => {
               </div>
               <div>
                 <p className="text-gray-500">Total Courses</p>
-                <p className="text-2xl font-bold">48</p>
+              <p className="text-2xl font-bold">{totalCourses}</p>
               </div>
             </div>
             <div className="bg-white p-6 rounded-lg shadow flex items-center gap-4">
@@ -193,7 +242,7 @@ const HomeContent = () => {
                 </div>
                 <div>
                   <p className="text-gray-500">Total Instructors</p>
-                  <p className="text-2xl font-bold">150</p> {/* Replace with dynamic data if available */}
+                  <p className="text-2xl font-bold">{totalteacher}</p> {/* Replace with dynamic data if available */}
                 </div>
               </div>
               <div className="bg-white p-6 rounded-lg shadow flex items-center gap-4">
@@ -202,7 +251,7 @@ const HomeContent = () => {
                 </div>
                 <div>
                   <p className="text-gray-500">Total Students</p>
-                  <p className="text-2xl font-bold">3,200</p> {/* Replace with dynamic data if available */}
+                  <p className="text-2xl font-bold">{totalstudent}</p> {/* Replace with dynamic data if available */}
                 </div>
               </div>
             </div>
