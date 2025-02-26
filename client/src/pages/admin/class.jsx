@@ -41,7 +41,7 @@ const CourseManagementForm = () => {
  
   });
 
-  const [savedCourses, setSavedCourses] = useState([]); // To store saved drafts
+
 
   const [teachers, setteachers] = useState([]); // State to holdteacher data
   const [teacher, setTeacher] = useState([]);
@@ -116,25 +116,19 @@ const CourseManagementForm = () => {
       courseFee: '',
     
     });
-    setPreviewMode(false); // Reset preview mode
-  };
-
-  // Save course as a draft
-  const handleSaveDraft = () => {
-    setSavedCourses([...savedCourses, formData]);
-    handleReset();
+   
   };
 
  
-  // Submit the form (this can be connected to an API or state management)
+
+ 
   const handleSubmit = async (e) => {
-    // Prevent the default form submission behavior
     e.preventDefault();
   
-    // Create a new FormData object to handle form data and files
+    // Create a new FormData instance for text and file data
     const submitData = new FormData();
   
-    // Append regular form fields
+    // Append text fields
     submitData.append("title", formData.title);
     submitData.append("courseCode", formData.courseCode);
     submitData.append("category", formData.category);
@@ -147,11 +141,14 @@ const CourseManagementForm = () => {
     submitData.append("courseFee", formData.courseFee);
     submitData.append("discount", formData.discount || "");
   
-    // Append the teacher field (userName) and contact (teacher's email)
-    submitData.append("teacher", formData.teacher);
+    // Append the required 'level' field. Use formData.level if available, otherwise default to "Beginner"
+    submitData.append("level", formData.level || "Beginner");
+  
+    // Append teacher and contact details (ensure teacher._id exists or adjust accordingly)
+    submitData.append("teacher", teacher._id || formData.teacher);
     submitData.append("contact", teacher.email || "");
   
-    // Append file fields (only if files are selected)
+    // Append file fields if provided
     if (formData.coverImage) {
       submitData.append("coverImage", formData.coverImage);
     }
@@ -162,35 +159,25 @@ const CourseManagementForm = () => {
       submitData.append("syllabusPDF", formData.syllabusPDF);
     }
   
-    // Append chapters (array of objects) as a JSON string
+    // Append chapters as a JSON string
     submitData.append("chapters", JSON.stringify(formData.chapters));
   
-    // Make the API call
+    // Make the API call to create the course
     try {
       const response = await courseService.createCourse(submitData);
       console.log("Course created successfully:", response);
-  
-      // Reset the form after successful submission
       handleReset();
-  
-      // Optionally, show a success message to the user
-      // Example: setSuccessMessage("Course created successfully!");
     } catch (error) {
       console.error("Error creating course:", error);
-  
-      // Optionally, display an error message to the user
-      // Example: setError("Failed to create course. Please try again.");
     }
   };
-
+  
   
 
     
     
   // Assuming you have a function to handle the selection of a teacher
-  const handleTeacherSelect = (selectedTeacher) => {
-    setTeacher(selectedTeacher); // Update the teacher state with the selected teacher's details
-  };
+  
 
   return (
     <>

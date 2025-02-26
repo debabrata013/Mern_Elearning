@@ -1,25 +1,26 @@
 import axios from 'axios';
 
-// Define the base URL
-const BASE_URL = 'http://localhost:4400/course';
+// Set the base URL to match your backend mounted endpoint (e.g., /courses)
+const BASE_URL = 'http://localhost:4400/courses';
 
-// Create an instance of axios with the base URL
 const api = axios.create({
   baseURL: BASE_URL,
+  // Default header for JSON requests; note that multipart requests override this header.
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Create the service methods
 const courseService = {
-  // Create a new course
-
+  // Create a new course (expects FormData with file uploads)
   createCourse: async (courseData) => {
     try {
-      const response = await api.post('/cr', courseData);
-      console.log("api call done ");
-      
+      const response = await api.post('/', courseData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log("API call done");
       return response.data;
     } catch (error) {
       console.error('Error creating course:', error);
@@ -49,10 +50,15 @@ const courseService = {
     }
   },
 
-  // Update a course by ID
+  // Update a course by ID (courseData can be JSON or FormData)
   updateCourse: async (courseId, courseData) => {
     try {
-      const response = await api.put(`/${courseId}`, courseData);
+      const headers =
+        courseData instanceof FormData
+          ? { 'Content-Type': 'multipart/form-data' }
+          : { 'Content-Type': 'application/json' };
+
+      const response = await api.put(`/${courseId}`, courseData, { headers });
       return response.data;
     } catch (error) {
       console.error('Error updating course:', error);
