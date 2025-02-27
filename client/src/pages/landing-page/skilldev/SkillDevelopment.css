@@ -132,7 +132,16 @@
       flex-direction: column;
     }
   
+    .who-can-join{
+      padding-top: none;
+      font-size: 10px;
+    }
+    .section{
+      font-size: 35px;
+      justify-self: center;
+    }
     .illustration {
+      display: none;
       order: -1;
     }
   }
@@ -155,8 +164,33 @@
     }
   
   }
-  /* Base styles remain unchanged */
 
+/* Responsive Design for How It Works Section */
+@media (max-width: 768px) {
+  .join-categories {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    justify-content: center;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .category-item {
+    padding: 10px;
+  }
+
+  .category-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .category-title {
+    font-size: 10px;
+  }
+  .how-it-works {
+    display: none;
+  }
+}
 /* Animation styles */
 .fade-in {
   opacity: 0;
@@ -179,30 +213,3 @@
   opacity: 0;
   transform: translateY(-50px);
 }
-/* Responsive Design for How It Works Section */
-/* Responsive Design for How It Works Section */
-@media (max-width: 768px) {
-  .how-it-works {
-    height: auto;
-    padding:0 10px 0 10px;
-  }
-
-  .workflow-title {
-    font-size: 14px; /* Decrease font size */
-    margin-bottom: 20px;
-    top: -15px;
-    background-color: #ff7700; /* Keep the background color the same */
-    padding: 8px 20px; /* Reduce padding to adjust the background size */
-  }
-
-  .workflow-container {
-    height:100px;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .workflow-endpoint {
-    margin-bottom: 20px;
-  }
-}
-

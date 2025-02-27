@@ -103,7 +103,7 @@ function AuthPage() {
             {isLogin ? "Login to Your Account" : "Create an Account"}
           </h2>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} autoComplete="on">
             {!isLogin && (
               <div className="input-group">
                 <input
@@ -120,10 +120,12 @@ function AuthPage() {
             <div className="input-group">
               <input
                 id="email"
+                name="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoComplete="email"
               />
               <label htmlFor="email">Email</label>
             </div>
@@ -131,10 +133,12 @@ function AuthPage() {
             <div className="input-group password-group">
               <input
                 id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autoComplete="current-password" 
               />
               <label htmlFor="password">Password</label>
               <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
