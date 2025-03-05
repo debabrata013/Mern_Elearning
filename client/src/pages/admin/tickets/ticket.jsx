@@ -138,8 +138,8 @@ const AdminDashboard = () => {
                     <tr className="bg-blue-600 text-white">
                       <th className="py-2 px-4 text-left">Name</th>
                       <th className="py-2 px-4 text-left">Email</th>
-                      <th className="py-2 px-4 text-left">Department</th>
-                      <th className="py-2 px-4 text-left">Subject</th>
+                      <th className="py-2 px-4 text-left">Phone no</th>
+                      <th className="py-2 px-4 text-left">Issue Related</th>
                       <th className="py-2 px-4 text-left">Status</th>
                       <th className="py-2 px-4 text-left">Actions</th>
                     </tr>
@@ -149,7 +149,7 @@ const AdminDashboard = () => {
                       <tr key={index} className="border-b">
                         <td className="py-2 px-4">{ticket.name}</td>
                         <td className="py-2 px-4">{ticket.email}</td>
-                        <td className="py-2 px-4">{ticket.department}</td>
+                        <td className="py-2 px-4">{ticket.phone}</td>
                         <td className="py-2 px-4">{ticket.subject}</td>
                         <td className="py-2 px-4">{ticket.status}</td>
                         <td className="py-2 px-4 flex space-x-2">
@@ -184,8 +184,8 @@ const AdminDashboard = () => {
                     <tr className="bg-blue-600 text-white">
                       <th className="py-2 px-4 text-left">Name</th>
                       <th className="py-2 px-4 text-left">Email</th>
-                      <th className="py-2 px-4 text-left">Department</th>
-                      <th className="py-2 px-4 text-left">Subject</th>
+                      <th className="py-2 px-4 text-left">Phone no</th>
+                      <th className="py-2 px-4 text-left">Issue Related</th>
                       <th className="py-2 px-4 text-left">Status</th>
                       <th className="py-2 px-4 text-left">Actions</th>
                     </tr>
@@ -195,7 +195,7 @@ const AdminDashboard = () => {
                       <tr key={index} className="border-b">
                         <td className="py-2 px-4">{ticket.name}</td>
                         <td className="py-2 px-4">{ticket.email}</td>
-                        <td className="py-2 px-4">{ticket.department}</td>
+                        <td className="py-2 px-4">{ticket.phone}</td>
                         <td className="py-2 px-4">{ticket.subject}</td>
                         <td className="py-2 px-4">{ticket.status}</td>
                         <td className="py-2 px-4">
