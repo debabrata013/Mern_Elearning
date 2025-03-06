@@ -15,6 +15,7 @@ import ManageStudent from './ManageStudent';
 import ManageTeacher from './ManageTeacher';
 import Teacher from './Teacher';
 import Student from './Student';
+import Queries from './queries';
 import logo from "../../../../client/public/aigiri logo.png";
 import axios from 'axios';
 
@@ -360,6 +361,8 @@ const Dashboard = () => {
         return <JobsContent />;
       case 'profile':
         return <ProfileContent />;
+      case 'queries':
+        return <Queries/>;
       default:
         return <HomeContent />;
     }
@@ -486,6 +489,12 @@ const Dashboard = () => {
             label="Jobs" 
             active={currentSection === 'jobs'}
             onClick={() => setCurrentSection('jobs')}
+          />
+          <NavItem 
+            icon={<FaTags />} 
+            label="queries" 
+            active={currentSection === 'queries'}
+            onClick={() => setCurrentSection('queries')}
           />
           {/* <NavItem 
             icon={<Profile/>} 

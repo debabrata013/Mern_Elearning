@@ -93,9 +93,12 @@ const CourseManagementForm = () => {
   };
 
   const removeChapter = (index) => {
-    const updatedChapters = formData.chapters.filter((_, i) => i !== index);
-    setFormData({ ...formData, chapters: updatedChapters });
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      chapters: prevFormData.chapters.filter((_, i) => i !== index),
+    }));
   };
+  
 
   // Reset form fields
   const handleReset = () => {
@@ -140,6 +143,8 @@ const CourseManagementForm = () => {
     submitData.append("enrollmentDeadline", formData.enrollmentDeadline);
     submitData.append("courseFee", formData.courseFee);
     submitData.append("discount", formData.discount || "");
+    submitData.append("teacher", teachers?._id || formData.teacher || "");
+
   
     // Append the required 'level' field. Use formData.level if available, otherwise default to "Beginner"
     submitData.append("level", formData.level || "Beginner");
@@ -168,13 +173,11 @@ const CourseManagementForm = () => {
       console.log("Course created successfully:", response);
       handleReset();
     } catch (error) {
+      setError(error.response?.data?.message || "Failed to create course");
       console.error("Error creating course:", error);
     }
-  };
-  
-  
-
     
+  };
     
   // Assuming you have a function to handle the selection of a teacher
   
