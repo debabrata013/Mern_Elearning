@@ -1,18 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash, Eye, Save, RefreshCcw } from 'lucide-react';
+import { Plus, Trash, Eye, Save, RefreshCcw, Loader2, Zap } from 'lucide-react';
 import axiosInstance from '../../api/axiosInstance';
 import courseService from './api/courseService';
 
 // Sampleteacher and category options (you can replace these with dynamic data)
 const categories = ['Programming', 'Design', 'Business', 'Data Science', 'Marketing'];
 
+// Enhanced Loader Component
+const EnhancedLoader = ({ message = "Creating Course..." }) => {
+  const [dots, setDots] = useState('');
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots(prev => 
+        prev.length >= 3 ? '' : prev + '.'
+      );
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-xl shadow-2xl flex flex-col items-center space-y-4 transform transition-all duration-300 ease-in-out animate-pulse">
+        <Zap 
+          className="text-blue-600 animate-spin-slow" 
+          size={48} 
+          strokeWidth={2} 
+        />
+        <div className="flex items-center space-x-2">
+          <span className="text-gray-700 font-semibold">{message}</span>
+          <span className="text-blue-500 font-bold">{dots}</span>
+        </div>
+        <div className="w-full bg-gray-200 h-1 rounded-full overflow-hidden">
+          <div 
+            className="bg-blue-500 h-full transform transition-transform duration-500 ease-in-out animate-progress-bar"
+            style={{ width: '100%' }}
+          ></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CourseManagementForm = () => {
 
   const [isVisible, setIsVisible] = useState(false);
   const [error, setError] = useState("");
-
   const [loading, setLoading] = useState(false);
-  
+   
+
 
   const toggleContent = () => {
     setIsVisible((prevIsVisible) => !prevIsVisible);
@@ -20,25 +57,23 @@ const CourseManagementForm = () => {
 
   const [formData, setFormData] = useState({
     title: '',
-    coverImage:"",
-    introVideo:"",
- 
     courseCode: '',
     category: '',
     description: '',
-    
+    level: 'Beginner', // Set default level
+    coverImage: null,
+    introVideo: null,
+    syllabusPDF: null,
     startDate: '',
     endDate: '',
     duration: '',
-    syllabusPDF:"",
-    chapters: [{ title: '', description: '' }],
-   teacher: '',
-    contact: '',
     maxStudents: '',
     enrollmentDeadline: '',
     courseFee: '',
-    discount: '',
- 
+    discount: '0',
+    chapters: [{ title: '', description: '' }],
+    language: 'English',
+    currency: 'INR'
   });
 
 
@@ -69,12 +104,15 @@ const CourseManagementForm = () => {
 
   // Handle form input changes
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (type === 'file') {
-      setFormData({ ...formData, [name]: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    const { name, value, type } = e.target;
+    
+    // Debug log
+    console.log(`Handling change for ${name}:`, value);
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'number' ? (value ? Number(value) : '') : value
+    }));
   };
 
   // Handle chapters (add/remove chapters)
@@ -107,19 +145,32 @@ const CourseManagementForm = () => {
       courseCode: '',
       category: '',
       description: '',
+      level: 'Beginner',
+      coverImage: null,
+      introVideo: null,
+      syllabusPDF: null,
       startDate: '',
       endDate: '',
       duration: '',
-      material: null,
-      chapters: [{ title: '', description: '' }],
-     teacher: '',
-      contact: '',
       maxStudents: '',
       enrollmentDeadline: '',
       courseFee: '',
-    
+      discount: '0',
+      chapters: [{ title: '', description: '' }],
+      language: 'English',
+      currency: 'INR'
     });
    
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    if (files && files[0]) {
+      setFormData(prev => ({
+        ...prev,
+        [name]: files[0]
+      }));
+    }
   };
 
  
@@ -127,56 +178,72 @@ const CourseManagementForm = () => {
  
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Create a new FormData instance for text and file data
-    const submitData = new FormData();
-  
-    // Append text fields
-    submitData.append("title", formData.title);
-    submitData.append("courseCode", formData.courseCode);
-    submitData.append("category", formData.category);
-    submitData.append("description", formData.description);
-    submitData.append("startDate", formData.startDate);
-    submitData.append("endDate", formData.endDate);
-    submitData.append("duration", formData.duration);
-    submitData.append("maxStudents", formData.maxStudents);
-    submitData.append("enrollmentDeadline", formData.enrollmentDeadline);
-    submitData.append("courseFee", formData.courseFee);
-    submitData.append("discount", formData.discount || "");
-    submitData.append("teacher", teachers?._id || formData.teacher || "");
+    setError("");
+    setLoading(true);
 
-  
-    // Append the required 'level' field. Use formData.level if available, otherwise default to "Beginner"
-    submitData.append("level", formData.level || "Beginner");
-  
-    // Append teacher and contact details (ensure teacher._id exists or adjust accordingly)
-    submitData.append("teacher", teacher._id || formData.teacher);
-    submitData.append("contact", teacher.email || "");
-  
-    // Append file fields if provided
-    if (formData.coverImage) {
-      submitData.append("coverImage", formData.coverImage);
+    // Debug log to check form data
+    console.log("Current form data:", formData);
+    console.log("Selected teacher:", teacher);
+
+    const submitData = new FormData();
+
+    // Validate required fields before submission
+    const requiredFields = {
+      title: formData.title,
+      courseCode: formData.courseCode,
+      category: formData.category,
+      level: formData.level || "Beginner" // Set default if not provided
+    };
+
+    // Check for missing required fields
+    const missingFields = Object.entries(requiredFields)
+      .filter(([_, value]) => !value)
+      .map(([key]) => key);
+
+    if (missingFields.length > 0) {
+      setError(`Missing required fields: ${missingFields.join(', ')}`);
+      setLoading(false);
+      return;
     }
-    if (formData.introVideo) {
-      submitData.append("introVideo", formData.introVideo);
+
+    // Append all form fields
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        if (key === 'chapters') {
+          submitData.append('chapters', JSON.stringify(value));
+        } else if (value instanceof File) {
+          submitData.append(key, value);
+        } else {
+          submitData.append(key, String(value));
+        }
+      }
+    });
+
+    // Append teacher information
+    if (teacher && teacher._id) {
+      submitData.append('teacher', teacher._id);
+      submitData.append('contact', teacher.email || '');
     }
-    if (formData.syllabusPDF) {
-      submitData.append("syllabusPDF", formData.syllabusPDF);
+
+    // Debug log to verify FormData contents
+    for (let pair of submitData.entries()) {
+      console.log('FormData entry:', pair[0], pair[1]);
     }
-  
-    // Append chapters as a JSON string
-    submitData.append("chapters", JSON.stringify(formData.chapters));
-  
-    // Make the API call to create the course
+
     try {
       const response = await courseService.createCourse(submitData);
       console.log("Course created successfully:", response);
+      setError("Course created successfully!");
       handleReset();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to create course");
+      const errorMessage = error.response?.data?.message || 
+                          error.message || 
+                          "Failed to create course. Please try again.";
+      setError(errorMessage);
       console.error("Error creating course:", error);
+    } finally {
+      setLoading(false);
     }
-    
   };
     
   // Assuming you have a function to handle the selection of a teacher
@@ -193,7 +260,27 @@ const CourseManagementForm = () => {
       {isVisible && (
     <div>
 
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg space-y-6">
+      {/* Error Message Display */}
+      {error && (
+        <div className={`
+          p-4 rounded-lg mb-4 
+          ${error.includes('successfully') 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-red-100 text-red-800'}
+        `}>
+          {error}
+        </div>
+      )}
+
+      {/* Enhanced Loader */}
+      {loading && <EnhancedLoader />}
+
+      {/* Disable form while loading */}
+      <form 
+        onSubmit={handleSubmit} 
+        className={`bg-white p-6 rounded-lg shadow-lg space-y-6 
+          ${loading ? 'opacity-50 pointer-events-none' : ''}`}
+      >
         {/* 1. Course Details */}
         <section>
           <h3 className="text-lg font-semibold mb-4">Course Details</h3>
@@ -238,6 +325,21 @@ const CourseManagementForm = () => {
                 ))}
               </select>
             </div>
+            <div>
+              <label htmlFor="level" className="block text-sm font-medium">Level</label>
+              <select
+                id="level"
+                name="level"
+                value={formData.level}
+                onChange={handleChange}
+                className="mt-1 p-2 border rounded-md w-full"
+                required
+              >
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
             <div className="col-span-2">
               <label htmlFor="description" className="block text-sm font-medium">Description</label>
               <textarea
@@ -256,7 +358,8 @@ const CourseManagementForm = () => {
                 type="file"
                 id="coverImage"
                 name="coverImage"
-                onChange={handleChange}
+                onChange={handleFileChange}
+                accept="image/*"
                 className="mt-1 p-2 border rounded-md w-full"
               />
             </div>
@@ -266,7 +369,8 @@ const CourseManagementForm = () => {
                 type="file"
                 id="introVideo"
                 name="introVideo"
-                onChange={handleChange}
+                onChange={handleFileChange}
+                accept="video/*"
                 className="mt-1 p-2 border rounded-md w-full"
               />
             </div>
@@ -483,11 +587,15 @@ const CourseManagementForm = () => {
           </button>
           
           
-          <button
-            type="submit"
-            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+          <button 
+            type="submit" 
+            disabled={loading}
+            className={`
+              bg-blue-600 text-white px-4 py-2 rounded-lg 
+              ${loading ? 'cursor-not-allowed' : 'hover:bg-blue-700'}
+            `}
           >
-            Submit
+            {loading ? 'Submitting...' : 'Create Course'}
           </button>
         </section>
       </form>
