@@ -8,7 +8,7 @@ import courseService from './api/courseService';
 // Sampleteacher and category options (you can replace these with dynamic data)
 const categories = ['Programming', 'Design', 'Business', 'Data Science', 'Marketing'];
 
-const EnhancedLoader = ({ message = "Creating Course..." }) => {
+const EnhancedLoader = ({ message = "Creating Course" }) => {
   const [dots, setDots] = useState("");
 
   useEffect(() => {
@@ -242,7 +242,7 @@ useEffect(() => {
       console.log('Course created successfully:', response);
       setError('Course created successfully!');
       handleReset();
-      
+
       // Handle success (e.g., show a success message, redirect, etc.)
     } catch (error) {
       console.error('Error creating course:', error);
@@ -575,12 +575,7 @@ useEffect(() => {
           ))}
         </select>
       </div>
-      <div>
-        <label htmlFor="contact" className="block text-sm font-medium">Instructor Contact</label>
-        <p className="mt-1 p-2 border rounded-md w-full bg-gray-100" >
-          {teacher.email || 'No email available'}
-        </p>
-      </div>
+      
     </div>
   </section>
 
