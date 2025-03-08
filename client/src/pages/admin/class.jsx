@@ -157,12 +157,20 @@ const CourseManagementForm = () => {
       endDate: '',
       duration: '',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> f0ca2e4 (changes made)
       material: null,
       chapters: [{ title: '', description: '' }],
       teacher: '',
       contact: '',
+<<<<<<< HEAD
 =======
 >>>>>>> 99b7edb34a1456e506eab16e27845f9d9af1ddc3
+=======
+>>>>>>> 478ce6c (updated the about us page)
+>>>>>>> f0ca2e4 (changes made)
       maxStudents: '',
       enrollmentDeadline: '',
       courseFee: '',
@@ -175,7 +183,10 @@ const CourseManagementForm = () => {
   };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> f0ca2e4 (changes made)
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     if (files && files[0]) {
@@ -187,7 +198,12 @@ const CourseManagementForm = () => {
   };
 
  
+<<<<<<< HEAD
 >>>>>>> 99b7edb34a1456e506eab16e27845f9d9af1ddc3
+=======
+=======
+>>>>>>> 478ce6c (updated the about us page)
+>>>>>>> f0ca2e4 (changes made)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
