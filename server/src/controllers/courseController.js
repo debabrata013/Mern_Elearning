@@ -411,3 +411,17 @@ exports.deleteCourse = async (req, res) => {
     });
   }
 };
+
+exports.getAllCourse = async (req, res) => {
+  try {
+    const courses = await Course.find();
+    res.status(200).json({ success: true, courses });
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message,
+      stack: error.stack 
+    });
+  }
+}
