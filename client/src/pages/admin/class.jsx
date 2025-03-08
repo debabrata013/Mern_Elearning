@@ -240,6 +240,9 @@ useEffect(() => {
     try {
       const response = await courseService.createCourse(dataToSend);
       console.log('Course created successfully:', response);
+      setError('Course created successfully!');
+      handleReset();
+      
       // Handle success (e.g., show a success message, redirect, etc.)
     } catch (error) {
       console.error('Error creating course:', error);
