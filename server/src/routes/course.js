@@ -66,4 +66,6 @@ router.delete(
  */
 router.delete('/:courseId', courseController.deleteCourse);
 
+router.get('/getallCourse', courseController.getAllCourse);
+
 module.exports = router;
