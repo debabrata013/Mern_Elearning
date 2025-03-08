@@ -2,7 +2,6 @@ import axios from 'axios';
 
 // Set the base URL for your backend API
 const BASE_URL = 'http://localhost:4400/courses';
-
 const api = axios.create({
   baseURL: BASE_URL,
 });

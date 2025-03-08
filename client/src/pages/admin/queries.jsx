@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const Queries = () => {
-  const [queries, setQueries] = useState([]); // Ensure state is always an array
+  const [queries, setQueries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 

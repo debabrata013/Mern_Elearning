@@ -43,7 +43,7 @@ const CourseManagementForm = () => {
 
 
 
-  const [teachers, setteachers] = useState([]); // State to holdteacher data
+  const [teachers, setteachers] = useState([]);
   const [teacher, setTeacher] = useState([]);
 
   // Fetchteachers from the backend
@@ -54,9 +54,6 @@ const CourseManagementForm = () => {
         console.log(response);
         const data =  response.data;
         setteachers(data.map(teacher => teacher
-
-       
-        
         )); // Extracting userName from each teacher object
 
       } catch (error) {
@@ -112,7 +109,7 @@ const CourseManagementForm = () => {
       duration: '',
       material: null,
       chapters: [{ title: '', description: '' }],
-     teacher: '',
+      teacher: '',
       contact: '',
       maxStudents: '',
       enrollmentDeadline: '',
@@ -122,9 +119,7 @@ const CourseManagementForm = () => {
    
   };
 
- 
 
- 
   const handleSubmit = async (e) => {
     e.preventDefault();
   
