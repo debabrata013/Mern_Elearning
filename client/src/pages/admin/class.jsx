@@ -3,46 +3,53 @@ import { Plus, Trash, Eye, Save, RefreshCcw, Loader2, Zap } from 'lucide-react';
 import axiosInstance from '../../api/axiosInstance';
 import courseService from './api/courseService';
 
+
 // Sampleteacher and category options (you can replace these with dynamic data)
 const categories = ['Programming', 'Design', 'Business', 'Data Science', 'Marketing'];
 
-// Enhanced Loader Component
 const EnhancedLoader = ({ message = "Creating Course..." }) => {
-  const [dots, setDots] = useState('');
+  const [dots, setDots] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setDots(prev => 
-        prev.length >= 3 ? '' : prev + '.'
-      );
+      setDots((prev) => (prev.length >= 3 ? "" : prev + "."));
     }, 500);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-xl shadow-2xl flex flex-col items-center space-y-4 transform transition-all duration-300 ease-in-out animate-pulse">
-        <Zap 
-          className="text-blue-600 animate-spin-slow" 
-          size={48} 
-          strokeWidth={2} 
-        />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
+      <div className="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center space-y-5 transform transition-all duration-300 ease-in-out">
+        {/* Fixed the spinning issue */}
+        <Loader2 className="text-blue-600 animate-spin-slow" size={50} strokeWidth={2} />
         <div className="flex items-center space-x-2">
-          <span className="text-gray-700 font-semibold">{message}</span>
-          <span className="text-blue-500 font-bold">{dots}</span>
+          <span className="text-gray-800 text-lg font-semibold">{message}</span>
+          <span className="text-blue-600 text-lg font-bold">{dots}</span>
         </div>
-        <div className="w-full bg-gray-200 h-1 rounded-full overflow-hidden">
-          <div 
-            className="bg-blue-500 h-full transform transition-transform duration-500 ease-in-out animate-progress-bar"
-            style={{ width: '100%' }}
-          ></div>
+        <div className="w-full bg-gray-300 h-2 rounded-full overflow-hidden">
+          <div className="bg-blue-600 h-full animate-[progress_1.5s_linear_infinite]"></div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes spin-slow {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+          animation: spin-slow 2s linear infinite;
+        }
+
+        @keyframes progress {
+          0% { width: 0%; }
+          50% { width: 80%; }
+          100% { width: 100%; }
+        }
+      `}</style>
     </div>
   );
 };
-
 const CourseManagementForm = () => {
 
   const [isVisible, setIsVisible] = useState(false);
