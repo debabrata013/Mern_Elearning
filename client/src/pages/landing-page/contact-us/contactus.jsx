@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Nav from '../nav-bar/nav';
+import Nav from "../nav-bar/nav";
 
 const ContactForm = () => {
   const navigate = useNavigate();
@@ -30,19 +30,31 @@ const ContactForm = () => {
     setErrorMessage("");
 
     try {
-      const response = await axios.post("http://localhost:4400/contactus/", formData, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await axios.post(
+        "http://localhost:4400/contactus/",
+        formData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (response.status === 201 || response.status === 200) {
         setSuccessMessage("Your message has been sent successfully!");
-        setFormData({ name: "", contactEmail: "", phoneNumber: "", issueRelated: "Billing", message: "" });
+        setFormData({
+          name: "",
+          contactEmail: "",
+          phoneNumber: "",
+          issueRelated: "Billing",
+          message: "",
+        });
       } else {
         setErrorMessage("Something went wrong. Please try again later.");
       }
     } catch (error) {
       console.error("Error submitting contact form:", error);
-      setErrorMessage("Failed to send message. Please check your details and try again.");
+      setErrorMessage(
+        "Failed to send message. Please check your details and try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -51,12 +63,14 @@ const ContactForm = () => {
   return (
     <>
       <Nav />
-      <div className="contact-page-container pt-20 bg-white">
-        <div className="flex min-h-screen flex-col items-center animate__animated animate__fadeIn px-4">
-          <h1 className="text-4xl font-extrabold text-[#5491CA] mb-6 text-center">Contact Our Team</h1>
+      <div className="contact-page-container mt-4 pt-20 bg-white px-4 md:px-8 lg:px-[7.5rem]">
+        <div className="flex min-h-screen flex-col items-center animate__animated animate__fadeIn">
 
-          <div className="w-full max-w-7xl rounded-xl bg-white p-8 shadow-xl border border-[#5491CA] transition duration-300 hover:shadow-2xl">
-            <p className="text-gray-600 mb-10 max-w text-center">
+          <div className="w-full max-w-7xl rounded-3xl bg-white p-6 md:p-8 shadow-xl border border-[#5491CA] transition duration-300 hover:shadow-2xl">
+            <h1 className="text-2xl md:text-4xl font-bold text-[#5491CA] mb-6 md:mb-10 text-center">
+              Contact Our Team
+            </h1>
+            <p className="text-gray-600 mb-6 md:mb-10 text-center">
               Have questions or need help? Fill out the form below, and we'll get back to you shortly.
             </p>
 
@@ -144,25 +158,23 @@ const ContactForm = () => {
           </div>
 
           {/* Contact Information */}
-          <div className="mt-12 mb-10 flex flex-col items-center space-y-6 md:flex-row md:space-x-12 md:space-y-0">
-          {/* Email Section */}
-          <a href="mailto:help@ezyskills.com" className="flex flex-col items-center cursor-pointer">
-            <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#5491CA] text-white">
-              ✉️
-            </div>
-            <p className="font-medium text-gray-700">Email Us</p>
-            <p className="text-sm text-gray-500">aigiri.company@gmail.com</p>
-          </a>
+          <div className="mt-12 mb-10 flex flex-col items-center space-y-6 md:flex-row md:space-x-12 md:space-y-0 w-full max-w-3xl">
+            <a href="mailto:aigiri.company@gmail.com" className="flex flex-col items-center cursor-pointer text-center w-full">
+              <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#5491CA] text-white">
+                ✉️
+              </div>
+              <p className="font-medium text-gray-700">Email Us</p>
+              <p className="text-sm text-gray-500">aigiri.company@gmail.com</p>
+            </a>
 
-          {/* WhatsApp Section */}
-          <a href="https://wa.me/918588899999" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center cursor-pointer">
-            <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#7670AC] text-white">
-              📞
-            </div>
-            <p className="font-medium text-gray-700">WhatsApp Us</p>
-            <p className="text-sm text-gray-500">+91 85888 99999</p>
-          </a>
-        </div>
+            <a href="https://wa.me/918588899999" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center cursor-pointer text-center w-full">
+              <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#7670AC] text-white">
+                📞
+              </div>
+              <p className="font-medium text-gray-700">WhatsApp Us</p>
+              <p className="text-sm text-gray-500">+91 85888 99999</p>
+            </a>
+          </div>
 
         </div>
       </div>

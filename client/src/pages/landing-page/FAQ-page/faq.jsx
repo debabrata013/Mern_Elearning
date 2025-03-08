@@ -28,17 +28,18 @@ const FAQ = () => {
   return (
     <> 
       <Nav />
-      <div className="faq-page-container mt-4 pt-20 mb-10 bg-white">
+      <div className="faq-page-container mt-4 pt-20 mb-10 bg-white mx-4 sm:mx-6 md:mx-[7.5rem]">
+
         <div className="flex min-h-screen flex-col items-center px-4 animate__animated animate__fadeIn">
-          <h1 className="text-4xl font-extrabold text-[#5491CA] mb-6 text-center">Frequently Asked Questions</h1>
 
           {/* FAQ Box */}
-          <div className="w-full max-w-4xl bg-white p-8 shadow-xl border border-[#5491CA] rounded-xl transition duration-300 hover:shadow-2xl">
+          <div className="w-full bg-white p-8 shadow-xl border border-[#5491CA] rounded-3xl transition duration-300 hover:shadow-2xl ">
+          <h1 className="text-4xl font-bold text-[#5491CA] mb-14 text-center">Frequently Asked Questions</h1>
             {faqs.map((faq, index) => (
-              <div key={index} className="faq-item border-b last:border-none">
+              <div key={index} className="faq-item italic border-b last:border-none">
                 <button
                   onClick={() => toggleQuestion(index)}
-                  className="w-full flex justify-between items-center text-left py-4 px-2 text-lg font-semibold text-[#5491CA] hover:text-[#7670AC] transition duration-200"
+                  className="w-full flex justify-between italic items-center text-left py-4 px-2 text-lg font-semibold text-[#5491CA] hover:text-[#7670AC] transition duration-200"
                 >
                   {faq.question}
                   <motion.span

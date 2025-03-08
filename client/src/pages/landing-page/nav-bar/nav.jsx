@@ -13,9 +13,9 @@ export default function Navbar() {
   }, [location.pathname]);
 
   return (
-    <nav className="w-full fixed top-0 z-50 backdrop-blur-md shadow-lg bg-white/70 border-b border-gray-200">
+    <nav className="w-full fixed top-0 z-50 shadow-lg bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
-      <img className="h-10 w-auto" src={logo} alt="logo" />
+        <img className="h-10 w-auto" src={logo} alt="logo" />
         {/* <Link to="/" className="text-2xl font-bold text-[#7670AC]">AIGIRI</Link> */}
         
         {/* Desktop Navigation */}
@@ -36,7 +36,6 @@ export default function Navbar() {
           <NavLink to="/contactus" isActive={isActiveLink("/contactus")}>
             Contact Us
           </NavLink>
-          
         </div>
 
         {/* Desktop Get Started Button */}
@@ -48,7 +47,10 @@ export default function Navbar() {
         </Link>
         
         {/* Mobile Menu Button */}
-        <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <button 
+          className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-all"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
           {isMenuOpen ? <X size={32} color="#7670AC" /> : <Menu size={32} color="#7670AC" />}
         </button>
       </div>
@@ -57,17 +59,26 @@ export default function Navbar() {
       <motion.div 
         initial={{ x: "-100%", opacity: 0 }}
         animate={{ x: isMenuOpen ? "0%" : "-100%", opacity: isMenuOpen ? 1 : 0 }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="md:hidden fixed top-16 left-0 w-full bg-white p-4 flex flex-col space-y-4 shadow-lg backdrop-blur-sm"
-        style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="md:hidden fixed top-[4.5rem] left-0 h-[calc(100vh-4.5rem)] w-full bg-white flex flex-col shadow-xl"
       >
-        <NavLink to="/" isActive={isActiveLink("/")} onClick={() => setIsMenuOpen(false)}>Home</NavLink>
-        <NavLink to="/coursess" isActive={isActiveLink("/coursess")} onClick={() => setIsMenuOpen(false)}>Courses</NavLink>
-        <NavLink to="/pricing" isActive={isActiveLink("/pricing")} onClick={() => setIsMenuOpen(false)}>Pricing</NavLink>
-        <NavLink to="/faq" isActive={isActiveLink("/faq")} onClick={() => setIsMenuOpen(false)}>FAQ</NavLink>
-        <NavLink to="/contactus" isActive={isActiveLink("/contactus")} onClick={() => setIsMenuOpen(false)}>Contact Us</NavLink>
-        <NavLink to="/aboutus" isActive={isActiveLink("/aboutus")} onClick={() => setIsMenuOpen(false)}>About Us</NavLink>
-        <Link to="/login" className="text-center bg-[#5491CA] text-white px-4 py-2 rounded-lg">Next</Link>
+        <div className="flex flex-col space-y-2 p-6">
+          <NavLink to="/" isActive={isActiveLink("/")} onClick={() => setIsMenuOpen(false)} className="mobile-nav-link">Home</NavLink>
+          <NavLink to="/coursess" isActive={isActiveLink("/coursess")} onClick={() => setIsMenuOpen(false)} className="mobile-nav-link">Courses</NavLink>
+          {/* <NavLink to="/pricing" isActive={isActiveLink("/pricing")} onClick={() => setIsMenuOpen(false)} className="mobile-nav-link">Pricing</NavLink> */}
+          <NavLink to="/faq" isActive={isActiveLink("/faq")} onClick={() => setIsMenuOpen(false)} className="mobile-nav-link">FAQ</NavLink>
+          <NavLink to="/contactus" isActive={isActiveLink("/contactus")} onClick={() => setIsMenuOpen(false)} className="mobile-nav-link">Contact Us</NavLink>
+          <NavLink to="/aboutus" isActive={isActiveLink("/aboutus")} onClick={() => setIsMenuOpen(false)} className="mobile-nav-link">About Us</NavLink>
+        </div>
+        <div className="mt-auto p-6 border-t border-gray-200">
+          <Link 
+            to="/login" 
+            className="block w-full bg-gradient-to-r from-[#7670AC] to-[#5491CA] text-white text-center py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Get Started
+          </Link>
+        </div>
       </motion.div>
     </nav>
   );
@@ -78,10 +89,10 @@ const isActiveLink = (path) => {
   return location.pathname === path;
 };
 
-const NavLink = ({ to, children, isActive, onClick }) => (
+const NavLink = ({ to, children, isActive, onClick, className = "" }) => (
   <Link
     to={to}
-    className={`relative px-4 py-2 text-gray-700 hover:text-[#5491CA] transition-all before:absolute before:-bottom-1 before:left-0 before:w-0 before:h-[2px] before:bg-[#5491CA] hover:before:w-full before:transition-all cursor-pointer ${isActive ? "font-bold text-[#7670AC]" : ""}`}
+    className={`relative px-4 py-2 text-gray-700 hover:text-[#5491CA] transition-all before:absolute before:-bottom-1 before:left-0 before:w-0 before:h-[2px] before:bg-[#5491CA] hover:before:w-full before:transition-all cursor-pointer ${isActive ? "font-bold text-[#7670AC]" : ""} ${className}`}
     onClick={onClick}
   >
     {children}

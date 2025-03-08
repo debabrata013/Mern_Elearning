@@ -1,181 +1,182 @@
-/* General Styling */
-.course-page {
-  margin-top: 4.3rem;
-  margin-left: 5rem;
-  margin-bottom: 3rem;
-  margin-right: 5rem;
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  padding-bottom: 50px;
-  background: linear-gradient(to bottom, #ffffff, #f4f8fb);
-  border-radius: 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-/* Fade-in animation applied properly */
-.course-page.fade-in-bottom {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-
-/* Section Title */
-.section-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  text-align: center;
-  color: #5491CA;
-}
-
-.section-title span {
-  color: #7670AC;
-}
-
-/* Filter Bar */
-.filter-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 10px;
-  margin-right: 70px;
-}
-
-.search-bar {
-  width: 100%;
-  max-width: 300px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 90px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  font-size: 1rem;
-  background-color: white;
-  color: #01285b;
-  margin-top: 10px;
-}
-
-.search-bar:focus {
-  outline: none;
-  border-color: #01285b;
-  box-shadow: 0 0 5px rgba(1, 40, 91, 0.5);
-}
-
-/* Filter Buttons */
-.filter-buttons {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px; /* Space between buttons and search bar */
-}
-
-.filter-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  color: #01285b;
-  background: white;
-  border: 2px solid #01285b;
-  transition: all 0.3s ease;
-}
-
-.filter-btn.active,
-.filter-btn:hover {
-  background: #01285b;
-  color: white;
-}
-
-/* Courses Grid */
-.courses-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-top: 30px;
-}
-
-.no-results {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #666;
-}
-
-/* Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.page-btn {
-  margin: 0 5px;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 5px;
-  background-color: #e5e7eb;
-  cursor: pointer;
-}
-
-.page-btn.active,
-.page-btn:hover {
-  background-color: #2563eb;
-  color: white;
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
+  /* General Styling */
   .course-page {
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-top: 5.8rem;
+    margin-left: 7.5rem;
+    margin-bottom: 3rem;
+    margin-right: 7.5rem;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    padding-bottom: 50px;
+    background: linear-gradient(to bottom, #ffffff, #f4f8fb);
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    border: 1px solid #5491CA; /* Added border */
   }
 
+  /* Fade-in animation applied properly */
+  .course-page.fade-in-bottom {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+
+  /* Section Title */
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: #5491CA;
+  }
+
+  .section-title span {
+    color: #7670AC;
+  }
+
+  /* Filter Bar */
   .filter-bar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .filter-btn {
-    width: 100%; /* Buttons will stack vertically on mobile */
-    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    margin-right: 70px;
   }
 
   .search-bar {
-    width: 100%; /* Full width on mobile */
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 90px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    background-color: white;
+    color: #01285b;
+    margin-top: 10px;
+  }
+
+  .search-bar:focus {
+    outline: none;
+    border-color: #01285b;
+    box-shadow: 0 0 5px rgba(1, 40, 91, 0.5);
+  }
+
+  /* Filter Buttons */
+  .filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px; /* Space between buttons and search bar */
+  }
+
+  .filter-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #01285b;
+    background: white;
+    border: 2px solid #01285b;
+    transition: all 0.3s ease;
+  }
+
+  .filter-btn.active,
+  .filter-btn:hover {
+    background: #01285b;
+    color: white;
+  }
+
+  /* Courses Grid */
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 30px;
+  }
+
+  .no-results {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+  }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    justify-content: center;
     margin-top: 20px;
   }
 
-  .courses-grid {
-    grid-template-columns: 1fr; /* Stack course cards in a single column */
-    gap: 15px; /* Adjust gap for mobile */
-  }
-}
-
-@media (max-width: 480px) {
-  .section-title {
-    font-size: 2rem; /* Adjust font size for smaller screens */
-  }
-
-  .filter-bar {
-    padding: 8px;
-  }
-
-  .filter-btn {
-    padding: 8px;
-    font-size: 0.9rem;
-  }
-
-  .search-bar {
-    padding: 8px;
-    font-size: 0.9rem;
-  }
-
-  .pagination {
-    margin-top: 15px;
-  }
-
   .page-btn {
-    padding: 6px 10px;
+    margin: 0 5px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #e5e7eb;
+    cursor: pointer;
   }
-}
+
+  .page-btn.active,
+  .page-btn:hover {
+    background-color: #2563eb;
+    color: white;
+  }
+
+  /* Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .course-page {
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+
+    .filter-bar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .filter-btn {
+      width: 100%; /* Buttons will stack vertically on mobile */
+      margin-bottom: 10px;
+    }
+
+    .search-bar {
+      width: 100%; /* Full width on mobile */
+      margin-top: 20px;
+    }
+
+    .courses-grid {
+      grid-template-columns: 1fr; /* Stack course cards in a single column */
+      gap: 15px; /* Adjust gap for mobile */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .section-title {
+      font-size: 2rem; /* Adjust font size for smaller screens */
+    }
+
+    .filter-bar {
+      padding: 8px;
+    }
+
+    .filter-btn {
+      padding: 8px;
+      font-size: 0.9rem;
+    }
+
+    .search-bar {
+      padding: 8px;
+      font-size: 0.9rem;
+    }
+
+    .pagination {
+      margin-top: 15px;
+    }
+
+    .page-btn {
+      padding: 6px 10px;
+    }
+  }
