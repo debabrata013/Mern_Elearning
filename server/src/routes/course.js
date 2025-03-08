@@ -21,6 +21,7 @@ router.post(
     { name: 'coverImage', maxCount: 1 },
     { name: 'introVideo', maxCount: 1 },
     { name: 'syllabusPDF', maxCount: 1 },
+    {name: "material", maxCount: 1}
   ]),
   courseController.createCourse
 );
@@ -35,6 +36,7 @@ router.put(
     { name: 'coverImage', maxCount: 1 },
     { name: 'introVideo', maxCount: 1 },
     { name: 'syllabusPDF', maxCount: 1 },
+    {name: "material", maxCount: 1}
   ]),
   courseController.updateCourse
 );
@@ -63,5 +65,7 @@ router.delete(
  * @desc    Delete a course by id along with its associated files
  */
 router.delete('/:courseId', courseController.deleteCourse);
+
+router.get('/getallCourse', courseController.getAllCourse);
 
 module.exports = router;

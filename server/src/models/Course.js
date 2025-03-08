@@ -51,8 +51,8 @@ const professionalCourseSchema = new Schema({
   chapters: [chapterSchema],
   
   // Instructor & contact details
-  instructor: { type: Schema.Types.ObjectId, ref: 'teacher', required: true },
-  contactEmail: { type: String, required: true, lowercase: true },
+  teacher: { type: String, required: true },
+
   
   // Enrollment & financial details
   maxStudents: { type: Number, required: true },
@@ -70,12 +70,6 @@ const professionalCourseSchema = new Schema({
     createdAt: { type: Date, default: Date.now }
   }],
   
-  // Additional metadata
-  status: {
-    type: String,
-    enum: ['draft', 'published', 'archived'],
-    default: 'draft'
-  },
   tags: [{ type: String }]
 }, {
   timestamps: true

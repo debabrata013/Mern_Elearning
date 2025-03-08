@@ -17,7 +17,7 @@ const uploadFileToS3 = async (file) => {
   }
 
   // Validate file size (optional: adjust max size as needed)
-  const MAX_FILE_SIZE = 5000 * 1024 * 1024; // 50MB
+  const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
   if (file.buffer.length > MAX_FILE_SIZE) {
     throw new Error(`File size exceeds maximum limit of ${MAX_FILE_SIZE / (1024 * 1024)}MB`);
   }
@@ -33,7 +33,6 @@ const uploadFileToS3 = async (file) => {
     Bucket: process.env.S3_BUCKET_NAME,
     Key: `uploads/${Date.now()}_${file.originalname}`,
     Body: file.buffer,
-    // Optional: Add content type for better S3 handling
     ContentType: file.mimetype || 'application/octet-stream'
   };
 
@@ -94,7 +93,7 @@ exports.createCourse = async (req, res) => {
     console.log('Request files:', req.files ? Object.keys(req.files) : 'No files');
 
     // Destructure fields from req.body (they might be strings)
-    let {
+    const {
       title,
       courseCode,
       category,
@@ -102,31 +101,34 @@ exports.createCourse = async (req, res) => {
       startDate,
       endDate,
       duration,
-      teacher,       // maps to instructor
-      contact,       // maps to contactEmail
       maxStudents,
       enrollmentDeadline,
-      courseFee,     // maps to price
+      price,
       discount,
       chapters,
-      level,         // now required
-      // other fields as needed
+      level,
+      language,
+      currency,
+      teacher,
+      contact,
+      courseFee
     } = req.body;
 
     // Validate required fields
-    // const requiredFields = ['title', 'courseCode', 'category', 'level'];
-    // const missingFields = requiredFields.filter(field => !req.body[field]);
-    // if (missingFields.length > 0) {
-    //   return res.status(400).json({ 
-    //     success: false, 
-    //     message: `Missing required fields: ${missingFields.join(', ')}` 
-    //   });
-    // }
+    const requiredFields = ['title', 'courseCode', 'category', 'level'];
+    const missingFields = requiredFields.filter(field => !req.body[field]);
+    if (missingFields.length > 0) {
+      return res.status(400).json({ 
+        success: false, 
+        message: `Missing required fields: ${missingFields.join(', ')}` 
+      });
+    }
 
     // Parse chapters if it's a JSON string
+    let parsedChapters = [];
     if (typeof chapters === "string") {
       try {
-        chapters = JSON.parse(chapters);
+        parsedChapters = JSON.parse(chapters);
       } catch (err) {
         console.error('Error parsing chapters:', err);
         return res.status(400).json({ success: false, message: "Invalid chapters format" });
@@ -134,7 +136,7 @@ exports.createCourse = async (req, res) => {
     }
 
     // Upload files if provided
-    let coverImageUrl, introVideoUrl, syllabusUrl;
+    let coverImageUrl, introVideoUrl, syllabusUrl, materialUrl;
     try {
       if (req.files && req.files.coverImage) {
         console.log('Uploading cover image');
@@ -147,6 +149,10 @@ exports.createCourse = async (req, res) => {
       if (req.files && req.files.syllabusPDF) {
         console.log('Uploading syllabus PDF');
         syllabusUrl = await uploadFileToS3(req.files.syllabusPDF[0]);
+      }
+      if (req.files && req.files.materialPDF) {
+        console.log('Uploading material PDF');
+        materialUrl = await uploadFileToS3(req.files.materialPDF[0]);
       }
     } catch (uploadError) {
       console.error('File upload error:', uploadError);
@@ -167,12 +173,12 @@ exports.createCourse = async (req, res) => {
       startDate,
       endDate,
       duration,
-      chapters: chapters || [],
-      instructor: teacher,    // teacher field maps to instructor (_id expected)
-      contactEmail: contact,
+      chapters: parsedChapters || [],
+      teacher,    // teacher field maps to instructor (_id expected)
+      
       maxStudents,
       enrollmentDeadline,
-      price: courseFee,
+      price,
       discount,
       level,                  // required field now provided
     };
@@ -405,3 +411,17 @@ exports.deleteCourse = async (req, res) => {
     });
   }
 };
+
+exports.getAllCourse = async (req, res) => {
+  try {
+    const courses = await Course.find();
+    res.status(200).json({ success: true, courses });
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message,
+      stack: error.stack 
+    });
+  }
+}
