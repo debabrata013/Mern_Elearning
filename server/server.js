@@ -47,6 +47,7 @@ const quize=require("./src/routes/quize")
 const adminlandin=require("./src/routes/admin_Landing");
 const contactRoutes = require('./src/routes/contactRoutes');
 const MailRoutes =require("./src/routes/Email")
+const landingRoutes = require('./src/routes/landingRouters');
 
 // Use routes
 app.use('/students', studentRoutes);
@@ -61,6 +62,8 @@ app.use('/complaints', complaintRoutes);
 app.use('/jobs',jobRoutes)
 app.use('/quize',quize)
 app.use("/data",adminlandin)
+app.use("/landing",landingRoutes);
+
 app.use("/contactus/",contactRoutes)
 app.use("/mail/",MailRoutes);
 
