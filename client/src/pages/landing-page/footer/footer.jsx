@@ -1,8 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faLinkedin, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { createSubscriber } from "../api/landingServices"
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [subscriptionMessage, setSubscriptionMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    
+    // Basic email validation
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      setSubscriptionMessage('Please enter a valid email address');
+      return;
+    }
+
+    setIsLoading(true);
+    setSubscriptionMessage('');
+
+    try {
+      const response = await createSubscriber({ email });
+      
+      if (response) {
+        setSubscriptionMessage('Thank you for subscribing!');
+        setEmail(''); // Clear input after successful subscription
+      }
+    } catch (error) {
+      setSubscriptionMessage(error.response?.data?.message || 'Subscription failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <footer className="bg-[#5491CA] text-white py-16">
       <div className="max-w-screen-xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -18,12 +49,33 @@ const Footer = () => {
           {/* Newsletter Subscription */}
           <div className="mt-6">
             <h3 className="text-2xl font-semibold mb-3">Subscribe to Our Newsletter</h3>
-            <div className="flex justify-center md:justify-start gap-4">
-              <input type="email" placeholder="Your Email address" className="p-3 rounded-lg text-black w-64 focus:outline-none focus:ring-2 focus:ring-[#5491CA]" />
-              <button type="submit" className="p-3 bg-[grey] text-white rounded-lg hover:bg-[#7670AC] transition duration-300 transform hover:scale-105">
-                →
+            <form onSubmit={handleSubscribe} className="flex justify-center md:justify-start gap-4">
+              <input 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your Email address" 
+                className="p-3 rounded-lg text-black w-64 focus:outline-none focus:ring-2 focus:ring-[#5491CA]" 
+              />
+              <button 
+                type="submit" 
+                disabled={isLoading}
+                className={`p-3 text-white rounded-lg transition duration-300 transform hover:scale-105 ${
+                  isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[grey] hover:bg-[#7670AC]'
+                }`}
+              >
+                {isLoading ? 'Subscribing...' : '→'}
               </button>
-            </div>
+            </form>
+            {subscriptionMessage && (
+              <p className={`mt-2 text-center ${
+                subscriptionMessage.includes('Thank you') 
+                  ? 'text-green-300' 
+                  : 'text-red-300'
+              }`}>
+                {subscriptionMessage}
+              </p>
+            )}
           </div>
         </div>
 
