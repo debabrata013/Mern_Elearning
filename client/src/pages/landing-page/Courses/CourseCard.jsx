@@ -6,7 +6,7 @@ const CourseCard = ({ course }) => {
     <div className="course-container">
       <div className="course-card">
         <div className="card-header">
-          <img src={course.image} alt={`${course.title} Logo`} className="course-logo" />
+          <img src={course.coverImage} alt={`${course.title} Logo`} className="course-logo" />
         </div>
         <div className="card-body">
           <h3 className="course-title">{course.title}</h3>

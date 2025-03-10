@@ -1,41 +1,54 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./courses-page.css";
 import CourseCard from "./CourseCard";
 import Nav from "../nav-bar/nav";
-import AJS from "./images/Ajs.png";
-import rjs from "./images/reactjs.png";
-import py from "./images/pyh.png";
-import st from "./images/selenium.png";
 import Footer from '../footer/footer';
+import { getAllCourses } from "../api/landingServices";
 
 const CoursePage = () => {
-  const allCourses = [
-    { title: "Software Testing", status: "Opened", description: "Evaluate and verify software.", image: st },
-    { title: "React JS", status: "Opened", description: "Learn to build dynamic UIs.", image: rjs },
-    { title: "Python", status: "Coming Soon", description: "Master Python programming.", image: py },
-    { title: "Angular JS", status: "Archived", description: "Develop modern web apps.", image: AJS },
-    
-  ];
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [visible, setVisible] = useState(false); // Animation visibility state
+  const [visible, setVisible] = useState(false);
   const coursesPerPage = 6;
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const data = await getAllCourses();
+        setCourses(data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+        setError(err);
+        setLoading(false);
+      }
+    };
+    fetchCourses();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       const position = window.scrollY;
-      setVisible(position > 100); // Adjust the threshold as needed
+      const sectionElement = sectionRef.current;
+      
+      if (sectionElement && sectionElement.classList) {
+        setVisible(position > 100);
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const filteredCourses = allCourses.filter((course) => {
+  const filteredCourses = courses.filter((course) => {
     const matchesFilter = filter === "All" || course.status === filter;
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = course.title?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
     return matchesFilter && matchesSearch;
   });
 
@@ -45,12 +58,23 @@ const CoursePage = () => {
 
   const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
 
+  if (loading) {
+    return <div>Loading courses...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading courses: {error.message || 'Unknown error'}</div>;
+  }
+
   return (
     <>
       <nav className="navbar">
         <Nav />
       </nav>
-      <section className={`course-page ${visible ? "fade-in-bottom" : ""}`}>
+      <section 
+        ref={sectionRef} 
+        className={`course-page ${visible ? "fade-in-bottom" : ""}`}
+      >
         <h2 className="section-title">Explore <span>Courses</span></h2>
         <div className="filter-bar">
           <input
@@ -80,7 +104,12 @@ const CoursePage = () => {
         <hr className="text-bold" />
         <div className="courses-grid">
           {currentCourses.length > 0 ? (
-            currentCourses.map((course, index) => <CourseCard key={index} course={course} />)
+            currentCourses.map((course, index) => (
+              <CourseCard 
+                key={course._id || `course-${index}`} 
+                course={course} 
+              />
+            ))
           ) : (
             <p className="no-results">No courses match your search.</p>
           )}
@@ -103,4 +132,3 @@ const CoursePage = () => {
 };
 
 export default CoursePage;
-  
