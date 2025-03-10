@@ -1,75 +1,61 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './courses.css';
-import ajs from './Ajs.png';
-import aws from './aws.png';
-import vue from './viewjs.png';
-import bi from './PBI.png';
-import pyy from './pyh.png';
-import reat from './reactjs.png';
-import sele from './selenium.png';
-import core from './coreui.png';
+import { getAllCourses } from '../api/landingServices';
+import { toast } from 'react-toastify';
 
-const courses = [
-  {
-    id: 1,
-    logo: ajs,
-    title: 'Angular JS',
-    description: 'A JavaScript-based open-source front-end web framework for developing single-page applications.',
-  },
-  {
-    id: 2,
-    logo: aws,
-    title: 'AWS',
-    description: 'AWS Coaching and Certification helps you build and validate your skills so you can get more out of the cloud.',
-  },
-  {
-    id: 3,
-    logo: vue,
-    title: 'Vue JS',
-    description: 'An open-source model with front end JavaScript framework for building user interfaces & single-page applications.',
-  },
-  {
-    id: 4,
-    logo: bi,
-    title: 'Power BI',
-    description: 'An interactive data visualization software developed by Microsoft with a primary focus on business intelligence.',
-  },
-  {
-    id: 5,
-    logo: pyy,
-    title: 'Python',
-    description: 'Python is an interpreted high-level general-purpose programming language.',
-  },
-  {
-    id: 6,
-    logo: reat,
-    title: 'React JS',
-    description: 'React is a free and open-source front-end JavaScript library for building user interfaces based on UI components.',
-  },
-  {
-    id: 7,
-    logo: sele,
-    title: 'Software Testing',
-    description: 'The process of evaluating and verifying that a software product or application does what it is supposed to do.',
-  },
-  {
-    id: 8,
-    logo: core,
-    title: 'Core UI',
-    description: 'Learn the fastest way to build a modern dashboard for any platform, browser, or device.',
-  },
-];
+// Fallback images in case course doesn't have an image
+import defaultAjs from './Ajs.png';
+import defaultAws from './aws.png';
+import defaultVue from './viewjs.png';
+import defaultPbi from './PBI.png';
+import defaultPython from './pyh.png';
+import defaultReact from './reactjs.png';
+import defaultSele from './selenium.png';
+import defaultCore from './coreui.png';
+
+const defaultImages = {
+  'Angular JS': defaultAjs,
+  'AWS': defaultAws,
+  'Vue JS': defaultVue,
+  'Power BI': defaultPbi,
+  'Python': defaultPython,
+  'React JS': defaultReact,
+  'Software Testing': defaultSele,
+  'Core UI': defaultCore
+};
 
 const Courses = () => {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const fetchedCourses = await getAllCourses();
+        setCourses(fetchedCourses);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching courses:', err);
+        toast.error('Failed to load courses');
+        setError(err);
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          sectionRef.current.classList.add('fade-in-bottom');
-        } else {
-          sectionRef.current.classList.remove('fade-in-bottom');
+        if (sectionRef.current) {
+          if (entry.isIntersecting) {
+            sectionRef.current.classList.add('fade-in-bottom');
+          } else {
+            sectionRef.current.classList.remove('fade-in-bottom');
+          }
         }
       },
       { threshold: 0.2 }
@@ -86,16 +72,56 @@ const Courses = () => {
     };
   }, []);
 
+  const handleDownloadSyllabus = (course) => {
+    // Check if syllabus exists
+    if (!course.syllabus) {
+      toast.error('No syllabus available for this course');
+      return;
+    }
+
+    try {
+      // If syllabus is a URL
+      if (course.syllabus.startsWith('http')) {
+        window.open(course.syllabus, '_blank');
+        return;
+      }
+
+      // If syllabus is a file path or base64 encoded file
+      const link = document.createElement('a');
+      link.href = course.syllabus;
+      link.download = `${course.title}_Syllabus.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success(`Downloading syllabus for ${course.title}`);
+    } catch (error) {
+      console.error('Error downloading syllabus:', error);
+      toast.error('Failed to download syllabus');
+    }
+  };
+
+  if (loading) {
+    return <div>Loading popular courses...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading courses: {error.message}</div>;
+  }
+
   return (
     <section ref={sectionRef} className="popular-courses">
       <h2 className="section-titlam">Popular <span>Courses</span></h2>
       <div className="courses-grid">
         {courses.map(course => (
-          <div key={course.id} className="course-container">
-            {/* Course Card */}
+          <div key={course._id} className="course-container">
             <div className="course-card">
               <div className="card-header">
-                <img src={course.logo} alt={`${course.title} Logo`} className="course-logo" />
+                <img 
+                  src={course.coverImage || defaultImages[course.title] || defaultAjs} 
+                  alt={`${course.title} Logo`} 
+                  className="course-logo" 
+                />
               </div>
               <div className="card-body">
                 <h3 className="course-title">{course.title}</h3>
@@ -103,12 +129,16 @@ const Courses = () => {
               </div>
             </div>
 
-            {/* Buttons */}
             <div className="buttons">
               <a href='/coursed' className="btn live-demo">Live Demo</a>
               <a href='/coursed' className="btn enroll-now">Enroll Now</a>
             </div>
-            <button className="btn download-curriculum">Download Curriculum</button>
+            <button 
+              className="btn download-curriculum"
+              onClick={() => handleDownloadSyllabus(course)}
+            >
+              Download Curriculum
+            </button>
           </div>
         ))}
       </div>
