@@ -29,71 +29,71 @@ const EditTeacher = ({ teacher, onSave, onCancel }) => {
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-xl">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4">Edit Teacher</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-[#5491CA]">Edit Teacher</h2>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Username</label>
+          <label className="block text-sm font-medium mb-1 text-[#5491CA]">Username</label>
           <input
             type="text"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-[#5491CA]"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Email</label>
+          <label className="block text-sm font-medium mb-1 text-[#5491CA]">Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-[#5491CA]"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Password</label>
+          <label className="block text-sm font-medium mb-1 text-[#5491CA]">Password</label>
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-[#5491CA]"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-3 flex items-center text-gray-500 focus:outline-none"
+              className="absolute inset-y-0 right-3 flex items-center text-[#5491CA] focus:outline-none"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Salary</label>
+          <label className="block text-sm font-medium mb-1 text-[#5491CA]">Salary</label>
           <input
             type="number"
             value={salary}
             onChange={(e) => setSalary(e.target.value)}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-[#5491CA]"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Subject Knowledge</label>
+          <label className="block text-sm font-medium mb-1 text-[#5491CA]">Subject Knowledge</label>
           <input
             type="text"
             value={subjectKnowledge}
             onChange={(e) => setSubjectKnowledge(e.target.value)}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-[#5491CA]"
           />
         </div>
         <div className="flex justify-end space-x-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-gray-700"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="px-4 py-2 bg-[#5491CA] text-white rounded hover:bg-[#4a82b6] transition-colors duration-300"
           >
             Save
           </button>
@@ -152,7 +152,7 @@ const ManageTeacher = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#5491CA]"></div>
       </div>
     );
   }
@@ -169,35 +169,35 @@ const ManageTeacher = () => {
     <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
       <div className="overflow-x-auto w-full bg-white rounded-lg shadow">
         <div className="p-4 sm:p-6">
-          <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Manage Teachers</h1>
+          <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-[#5491CA]">Manage Teachers</h1>
 
           {/* Mobile view - Card layout */}
           <div className="block sm:hidden">
             {teachers.map((teacher) => (
-              <div key={teacher._id} className="bg-white rounded-lg shadow mb-4 p-4">
+              <div key={teacher._id} className="bg-white rounded-lg shadow mb-4 p-4 border-l-4 border-[#5491CA]">
                 <div className="flex items-center mb-3 ">
                   <img
-                    className="h-10 w-10 rounded-full"
+                    className="h-10 w-10 rounded-full border-2 border-[#b1a9f1]"
                     src={teacher.teacherProfileImage || 'https://via.placeholder.com/40'}
                     alt={teacher.teacherName}
                   />
                   <div className="ml-3">
-                    <div className="font-medium">{teacher.teacherName}</div>
+                    <div className="font-medium text-[#5491CA]">{teacher.teacherName}</div>
                     <div className="text-sm font-semibold text-gray-500">{teacher.email}</div>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div className="text-sm">
-                    <span className="font-medium">Subjects:</span> {teacher.subjectKnowledge.join(', ')}
+                    <span className="font-medium text-[#5491CA]">Subjects:</span> {teacher.subjectKnowledge.join(', ')}
                   </div>
                   <div className="text-sm">
-                    <span className="font-medium">Salary:</span> ${teacher.salary}
+                    <span className="font-medium text-[#5491CA]">Salary:</span> ${teacher.salary}
                   </div>
                   <div className="flex justify-end space-x-3 mt-3">
-                    <button onClick={() => setEditingTeacher(teacher)} className="text-yellow-600">
+                    <button onClick={() => setEditingTeacher(teacher)} className="text-[#5491CA] hover:text-[#4a82b6] transition-colors duration-300">
                       <FaEdit className="h-5 w-5" />
                     </button>
-                    <button onClick={() => handleDeleteTeacher(teacher._id)} className="text-red-600">
+                    <button onClick={() => handleDeleteTeacher(teacher._id)} className="text-[#b1a9f1] hover:text-[#9f97e8] transition-colors duration-300">
                       <FaTrash className="h-5 w-5" />
                     </button>
                   </div>
@@ -209,14 +209,14 @@ const ManageTeacher = () => {
           {/* Desktop view - Table layout */}
           <div className="hidden sm:block">
             <table className="min-w-full table-auto">
-              <thead className="bg-gray-50">
+              <thead className="bg-[#5491CA] text-white">
                 <tr>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pic</th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subjects</th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salary</th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Pic</th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Name</th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Subjects</th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Salary</th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -226,7 +226,7 @@ const ManageTeacher = () => {
                       <div className="flex items-center">
                         <div className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
                           <img
-                            className="h-full w-full rounded-full"
+                            className="h-full w-full rounded-full border-2 border-[#b1a9f1]"
                             src={teacher.teacherProfileImage || 'https://via.placeholder.com/40'}
                             alt={teacher.teacherName}
                           />
@@ -235,7 +235,7 @@ const ManageTeacher = () => {
                       </div>
                     </td>
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{teacher.userName}</div>
+                          <div className="text-sm font-medium text-[#5491CA]">{teacher.userName}</div>
                     </td>
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{teacher.email}</div>
@@ -248,10 +248,10 @@ const ManageTeacher = () => {
                     </td>
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-3">
-                        <button onClick={() => setEditingTeacher(teacher)} className="text-yellow-600 hover:text-yellow-900">
+                        <button onClick={() => setEditingTeacher(teacher)} className="text-[#5491CA] hover:text-[#4a82b6] transition-colors duration-300">
                           <FaEdit className="h-5 w-5" />
                         </button>
-                        <button onClick={() => handleDeleteTeacher(teacher._id)} className="text-red-600 hover:text-red-900">
+                        <button onClick={() => handleDeleteTeacher(teacher._id)} className="text-[#b1a9f1] hover:text-[#9f97e8] transition-colors duration-300">
                           <FaTrash className="h-5 w-5" />
                         </button>
                       </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaTrash, FaPen } from "react-icons/fa"; // Different icons with no background
+import { FaTrash, FaPen, FaEye } from "react-icons/fa"; // Added FaEye for view button
 import { tickets } from "./ticketpage";
 
 const AdminDashboard = () => {
@@ -54,13 +54,15 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteTicket = (ticketToDelete) => {
-    const updatedTickets = ticketData.filter((ticket) => ticket !== ticketToDelete);
-    setTicketData(updatedTickets);
+    if (window.confirm("Are you sure you want to delete this ticket?")) {
+      const updatedTickets = ticketData.filter((ticket) => ticket !== ticketToDelete);
+      setTicketData(updatedTickets);
+    }
   };
 
   return (
-    <div className="admin-dashboard p-4 bg-white rounded-lg border border-gray-300 shadow-xl">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">
+    <div className="admin-dashboard p-4 bg-white rounded-lg border border-gray-200 shadow-md">
+      <h1 className="text-2xl font-bold text-[#5491CA] mb-6">
         {viewTicket
           ? isEditMode
             ? "Edit Ticket"
@@ -71,17 +73,17 @@ const AdminDashboard = () => {
       </h1>
 
       {!viewTicket && (
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-4 gap-3">
           <input
             type="text"
             placeholder="Search tickets..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-1/2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full md:w-1/2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5491CA]/50"
           />
           <button
             onClick={() => setShowAnsweredPage(!showAnsweredPage)}
-            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-500 ml-4"
+            className="w-full md:w-auto bg-[#5491CA] text-white py-2 px-4 rounded-md hover:bg-[#4a82b6] transition-colors"
           >
             {showAnsweredPage ? "Unanswered Tickets" : "Answered Tickets"}
           </button>
@@ -89,27 +91,39 @@ const AdminDashboard = () => {
       )}
 
       {viewTicket ? (
-        <div className="view-ticket-box bg-white shadow-md rounded-md p-6 max-w-lg mx-auto">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        <div className="view-ticket-box bg-white shadow-md rounded-md p-6 max-w-lg mx-auto border border-gray-200">
+          <h2 className="text-xl font-semibold text-[#5491CA] mb-4">
             {isEditMode ? "Edit Ticket" : "View Ticket"}
           </h2>
-          <div className="ticket-details mb-4">
+          <div className="ticket-details mb-4 space-y-2">
             <p>
-              <strong>Name:</strong> {viewTicket.name}
+              <strong className="text-gray-700">Name:</strong> {viewTicket.name}
             </p>
             <p>
-              <strong>Subject:</strong> {viewTicket.subject}
+              <strong className="text-gray-700">Email:</strong> {viewTicket.email}
+            </p>
+            <p>
+              <strong className="text-gray-700">Phone:</strong> {viewTicket.phone}
+            </p>
+            <p>
+              <strong className="text-gray-700">Subject:</strong> {viewTicket.subject}
+            </p>
+            <p>
+              <strong className="text-gray-700">Status:</strong>{" "}
+              <span className={viewTicket.status === "Answered" ? "text-green-600" : "text-yellow-600"}>
+                {viewTicket.status}
+              </span>
             </p>
           </div>
           <textarea
             placeholder="Reply to the student's problem"
-            className="w-full h-32 border border-gray-300 rounded-md p-2 mb-4 reply-textarea"
+            className="w-full h-32 border border-gray-300 rounded-md p-2 mb-4 reply-textarea focus:outline-none focus:ring-2 focus:ring-[#5491CA]/50"
             defaultValue={viewTicket.reply || ""}
           ></textarea>
           {!isEditMode && (
             <select
               id="status"
-              className="w-full border border-gray-300 rounded-md p-2 mb-4"
+              className="w-full border border-gray-300 rounded-md p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-[#5491CA]/50"
               defaultValue={viewTicket.status}
             >
               <option value="">Select Status</option>
@@ -117,25 +131,33 @@ const AdminDashboard = () => {
               <option value="Pending">Pending</option>
             </select>
           )}
-          <button
-            onClick={isEditMode ? handleUpdateTicket : handleSaveTicket}
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-500"
-          >
-            {isEditMode ? "Update Ticket" : "Save Ticket"}
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setViewTicket(null)}
+              className="flex-1 bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={isEditMode ? handleUpdateTicket : handleSaveTicket}
+              className="flex-1 bg-[#5491CA] text-white py-2 rounded-md hover:bg-[#4a82b6] transition-colors"
+            >
+              {isEditMode ? "Update Ticket" : "Save Ticket"}
+            </button>
+          </div>
         </div>
       ) : (
-        <div className="ticket-table-wrapper">
+        <div className="ticket-table-wrapper overflow-x-auto">
           {showAnsweredPage ? (
             <div>
               {answeredTickets.length === 0 ? (
-                <div className="text-center text-gray-600 text-lg">
+                <div className="text-center text-gray-600 text-lg p-8 bg-gray-50 rounded-lg border border-gray-200">
                   No answered tickets available.
                 </div>
               ) : (
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-blue-600 text-white">
+                    <tr className="bg-[#5491CA] text-white">
                       <th className="py-2 px-4 text-left">Name</th>
                       <th className="py-2 px-4 text-left">Email</th>
                       <th className="py-2 px-4 text-left">Phone no</th>
@@ -146,22 +168,35 @@ const AdminDashboard = () => {
                   </thead>
                   <tbody>
                     {answeredTickets.map((ticket, index) => (
-                      <tr key={index} className="border-b">
+                      <tr key={index} className="border-b hover:bg-gray-50">
                         <td className="py-2 px-4">{ticket.name}</td>
                         <td className="py-2 px-4">{ticket.email}</td>
                         <td className="py-2 px-4">{ticket.phone}</td>
                         <td className="py-2 px-4">{ticket.subject}</td>
-                        <td className="py-2 px-4">{ticket.status}</td>
+                        <td className="py-2 px-4">
+                          <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                            {ticket.status}
+                          </span>
+                        </td>
                         <td className="py-2 px-4 flex space-x-2">
                           <button
+                            onClick={() => handleViewTicket(ticket, false)}
+                            className="text-[#5491CA] p-1.5 hover:bg-[#5491CA]/10 rounded-full transition-colors"
+                            title="View Ticket"
+                          >
+                            <FaEye />
+                          </button>
+                          <button
                             onClick={() => handleViewTicket(ticket, true)}
-                            className="text-blue-600 p-2 hover:underline"
+                            className="text-[#b1a9f1] p-1.5 hover:bg-[#b1a9f1]/10 rounded-full transition-colors"
+                            title="Edit Ticket"
                           >
                             <FaPen />
                           </button>
                           <button
                             onClick={() => handleDeleteTicket(ticket)}
-                            className="text-red-600 p-2 hover:underline"
+                            className="text-red-500 p-1.5 hover:bg-red-50 rounded-full transition-colors"
+                            title="Delete Ticket"
                           >
                             <FaTrash />
                           </button>
@@ -175,13 +210,13 @@ const AdminDashboard = () => {
           ) : (
             <div>
               {unansweredTickets.length === 0 ? (
-                <div className="text-center text-gray-600 text-lg">
+                <div className="text-center text-gray-600 text-lg p-8 bg-gray-50 rounded-lg border border-gray-200">
                   No unanswered tickets available.
                 </div>
               ) : (
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-blue-600 text-white">
+                    <tr className="bg-[#5491CA] text-white">
                       <th className="py-2 px-4 text-left">Name</th>
                       <th className="py-2 px-4 text-left">Email</th>
                       <th className="py-2 px-4 text-left">Phone no</th>
@@ -192,18 +227,30 @@ const AdminDashboard = () => {
                   </thead>
                   <tbody>
                     {unansweredTickets.map((ticket, index) => (
-                      <tr key={index} className="border-b">
+                      <tr key={index} className="border-b hover:bg-gray-50">
                         <td className="py-2 px-4">{ticket.name}</td>
                         <td className="py-2 px-4">{ticket.email}</td>
                         <td className="py-2 px-4">{ticket.phone}</td>
                         <td className="py-2 px-4">{ticket.subject}</td>
-                        <td className="py-2 px-4">{ticket.status}</td>
                         <td className="py-2 px-4">
+                          <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
+                            {ticket.status}
+                          </span>
+                        </td>
+                        <td className="py-2 px-4 flex space-x-2">
                           <button
                             onClick={() => handleViewTicket(ticket)}
-                            className="text-blue-600 p-2 hover:underline"
+                            className="text-[#5491CA] p-1.5 hover:bg-[#5491CA]/10 rounded-full transition-colors"
+                            title="View Ticket"
                           >
-                            View
+                            <FaEye />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteTicket(ticket)}
+                            className="text-red-500 p-1.5 hover:bg-red-50 rounded-full transition-colors"
+                            title="Delete Ticket"
+                          >
+                            <FaTrash />
                           </button>
                         </td>
                       </tr>

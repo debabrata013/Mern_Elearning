@@ -1,7 +1,34 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./CourseCard.css";
 
 const CourseCard = ({ course }) => {
+  const navigate = useNavigate();
+
+  const handleLiveDemo = () => {
+    navigate(`/course-demo/${course._id}`, { state: { course } });
+  };
+
+  const handleEnrollNow = () => {
+    navigate(`/course-enrollment/${course._id}`, { state: { course } });
+  };
+
+  const handleDownloadCurriculum = () => {
+    // Check if curriculum PDF exists
+    if (course.curriculumPDF) {
+      // Create a temporary anchor element
+      const link = document.createElement('a');
+      link.href = course.curriculumPDF;
+      link.download = `${course.title}-curriculum.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // If no PDF is available, show an alert
+      alert("Curriculum PDF is not available for this course.");
+    }
+  };
+
   return (
     <div className="course-container">
       <div className="course-card">
@@ -12,13 +39,12 @@ const CourseCard = ({ course }) => {
           <h3 className="course-title">{course.title}</h3>
           <p className="course-description">{course.description}</p>
         </div>
-        
       </div>
       <div className="buttons">
-          <button className="btn live-demo">Live Demo</button>
-          <button className="btn enroll-now">Enroll Now</button>
-          <button className="btn download-curriculum">Download Curriculum</button>
-        </div>
+        <button className="btn live-demo" onClick={handleLiveDemo}>Live Demo</button>
+        <button className="btn enroll-now" onClick={handleEnrollNow}>Enroll Now</button>
+        <button className="btn download-curriculum" onClick={handleDownloadCurriculum}>Download Curriculum</button>
+      </div>
     </div>
   );
 };

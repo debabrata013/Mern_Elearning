@@ -18,6 +18,28 @@ const Sidebar = () => {
     { path: "/abcd", icon: <Trophy className="h-5 w-5" />, label: "Doubts" },
   ];
 
+  const handleLogout = () => {
+    // Clear all cookies properly
+    document.cookie.split(";").forEach((cookie) => {
+      const [name] = cookie.split("=");
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+    });
+
+    // Clear local storage & session storage
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // Implement your logout logic (redirecting to login page or API call)
+    if (typeof logout === "function") {
+      logout();  // Ensure `logout` function exists
+    } else {
+      console.warn("Logout function is not defined.");
+    }
+
+    // Redirect to login page after logout (optional)
+    window.location.href = "/login";
+  };
+
   return (
     <div className="h-screen w-64 bg-white shadow-lg flex flex-col p-4">
       {/* Logo */}
@@ -46,7 +68,7 @@ const Sidebar = () => {
 
       {/* Logout */}
       <div className="mt-auto">
-        <button className="flex items-center gap-3 text-red-600 hover:text-red-800 w-full">
+        <button className="flex items-center gap-3 text-red-600 hover:text-red-800 w-full" onClick={handleLogout}>
           <LogOut className="h-5 w-5" />
           Logout
         </button>

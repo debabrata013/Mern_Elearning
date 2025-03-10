@@ -1,5 +1,6 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import couponService from "../api/couponService";
+
 const HomePage = ({
   coupons,
   onAddCoupon,
@@ -10,13 +11,13 @@ const HomePage = ({
 }) => {
   return (
     <div className="max-w-7xl mx-auto p-6 bg-white rounded-xl shadow-md mt-10">
-      <h1 className="text-4xl font-bold text-center text-blue-800 mb-6">Coupons</h1>
+      <h1 className="text-3xl font-bold text-center text-[#5491CA] mb-6">Coupons</h1>
       {coupons.length > 0 && (
         <div className="mb-6 text-center">
           <input
             type="text"
             placeholder="Search coupons by title"
-            className="w-1/2 p-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-1/2 p-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-[#5491CA]/30"
             onChange={(e) => onSearch(e.target.value)}
           />
         </div>
@@ -26,7 +27,7 @@ const HomePage = ({
           <p className="text-lg mb-4">No Coupons Found</p>
           <button
             onClick={onAddCoupon}
-            className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-800"
+            className="bg-[#5491CA] text-white py-2 px-4 rounded hover:bg-[#4a82b6] transition-colors"
           >
             + Add Coupon
           </button>
@@ -34,58 +35,60 @@ const HomePage = ({
       ) : (
         <div className="overflow-x-auto">
           <button
-            className="bg-blue-600 text-white py-2 px-4 rounded mb-4 hover:bg-blue-700"
+            className="bg-[#5491CA] text-white py-2 px-4 rounded mb-4 hover:bg-[#4a82b6] transition-colors"
             onClick={onAddCoupon}
           >
             + Add Coupon
           </button>
           <table className="table-auto w-full border-collapse border border-gray-200 rounded-lg">
             <thead>
-              <tr className="bg-blue-500">
-                <th className="p-4 border border-gray-300">#</th>
-                <th className="p-4 border border-gray-300">Title</th>
-                <th className="p-4 border border-gray-300">Coupon Type</th>
-                <th className="p-4 border border-gray-300">Coupon Code</th>
-                <th className="p-4 border border-gray-300">Discount</th>
-                <th className="p-4 border border-gray-300">Period</th>
-                <th className="p-4 border border-gray-300">Usage</th>
-                <th className="p-4 border border-gray-300">Status</th>
-                <th className="p-4 border border-gray-300">Action</th>
+              <tr className="bg-[#5491CA] text-white">
+                <th className="p-3 border border-gray-300">#</th>
+                <th className="p-3 border border-gray-300">Title</th>
+                <th className="p-3 border border-gray-300">Coupon Type</th>
+                <th className="p-3 border border-gray-300">Coupon Code</th>
+                <th className="p-3 border border-gray-300">Discount</th>
+                <th className="p-3 border border-gray-300">Period</th>
+                <th className="p-3 border border-gray-300">Usage</th>
+                <th className="p-3 border border-gray-300">Status</th>
+                <th className="p-3 border border-gray-300">Action</th>
               </tr>
             </thead>
             <tbody>
               {coupons.map((coupon, index) => (
-                <tr key={index} className="hover:bg-gray-100">
-                  <td className="p-4 border border-gray-300 text-center">{index + 1}</td>
-                  <td className="p-4 border border-gray-300">{coupon.title}</td>
-                  <td className="p-4 border border-gray-300">{coupon.type}</td>
-                  <td className="p-4 border border-gray-300">{coupon.code}</td>
-                  <td className="p-4 border border-gray-300">{coupon.discount}</td>
-                  <td className="p-4 border border-gray-300">
-                    {coupon.period.start} - {coupon.period.end}
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="p-3 border border-gray-300 text-center">{index + 1}</td>
+                  <td className="p-3 border border-gray-300">{coupon.title}</td>
+                  <td className="p-3 border border-gray-300">{coupon.type || "Standard"}</td>
+                  <td className="p-3 border border-gray-300">{coupon.couponCode || coupon.code}</td>
+                  <td className="p-3 border border-gray-300">{coupon.discount}%</td>
+                  <td className="p-3 border border-gray-300">
+                    {coupon.startDate || coupon.period?.start} - {coupon.endDate || coupon.period?.end}
                   </td>
-                  <td className="p-4 border border-gray-300">
-                    {coupon.usage.current}/{coupon.usage.limit}
+                  <td className="p-3 border border-gray-300">
+                    {coupon.numberOfStudentAllow ? 
+                      `0/${coupon.numberOfStudentAllow}` : 
+                      coupon.usage ? `${coupon.usage.current}/${coupon.usage.limit}` : "0/0"}
                   </td>
-                  <td className="p-4 border border-gray-300 text-center">
+                  <td className="p-3 border border-gray-300 text-center">
                     <button
                       className={`py-1 px-2 rounded text-white ${
-                        coupon.active ? "bg-green-600" : "bg-red-600"
+                        coupon.active ? "bg-green-600" : "bg-red-500"
                       }`}
                       onClick={() => onToggleStatus(index)}
                     >
                       {coupon.active ? "Active" : "Inactive"}
                     </button>
                   </td>
-                  <td className="p-4 border border-gray-300 text-center">
+                  <td className="p-3 border border-gray-300 text-center">
                     <button
-                      className="bg-blue-600 text-white py-1 px-2 rounded mr-2 hover:bg-blue-700"
+                      className="bg-[#b1a9f1] text-white py-1 px-2 rounded mr-2 hover:bg-[#9f97e8] transition-colors"
                       onClick={() => onEditCoupon(index)}
                     >
                       Edit
                     </button>
                     <button
-                      className="bg-orange-600 text-white py-1 px-2 rounded hover:bg-orange-700"
+                      className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 transition-colors"
                       onClick={() => onDeleteCoupon(index)}
                     >
                       Delete
@@ -104,11 +107,11 @@ const HomePage = ({
 const AddCouponPage = ({ couponToEdit, onBack }) => {
   const [formData, setFormData] = useState({
     title: couponToEdit?.title || "",
-    couponCode: couponToEdit?.couponCode || "",
+    couponCode: couponToEdit?.couponCode || couponToEdit?.code || "",
     discount: couponToEdit?.discount || "",
-    numberOfStudentAllow: couponToEdit?.numberOfStudentAllow || "",
-    startDate: couponToEdit?.startDate || "",
-    endDate: couponToEdit?.endDate || "",
+    numberOfStudentAllow: couponToEdit?.numberOfStudentAllow || couponToEdit?.usage?.limit || "",
+    startDate: couponToEdit?.startDate || couponToEdit?.period?.start || "",
+    endDate: couponToEdit?.endDate || couponToEdit?.period?.end || "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -124,19 +127,17 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
     setLoading(true);
 
     try {
-      let response;
       if (couponToEdit) {
         // Update existing coupon
-       response = await api.updateCoupon(couponToEdit.id, formData);
-
+        await couponService.updateCoupon(couponToEdit._id || couponToEdit.id, formData);
       } else {
         // Add a new coupon
-        // await axios.post("/api/coupons", formData);
-        response=  await couponService.createcoupon(formData)
+        await couponService.createcoupon(formData);
       }
-      alert("Coupon saved successfully!",response);
+      alert("Coupon saved successfully!");
       onBack();
     } catch (error) {
+      console.error("Error saving coupon:", error);
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors);
       } else {
@@ -149,17 +150,17 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-md mt-10">
-      <h1 className="text-3xl font-bold text-center text-blue-800 mb-6">
+      <h1 className="text-2xl font-bold text-center text-[#5491CA] mb-6">
         {couponToEdit ? "Edit Coupon" : "Add Coupon"}
       </h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className="block mb-2 font-semibold">Coupon Title *</label>
+          <label className="block mb-2 font-medium text-gray-700">Coupon Title *</label>
           <input
             type="text"
             name="title"
             placeholder="Enter Title"
-            className={`w-full p-2 border rounded-lg focus:outline-none ${
+            className={`w-full p-2 border rounded-lg focus:outline-none focus:ring focus:ring-[#5491CA]/30 ${
               errors.title ? "border-red-500" : "border-gray-300"
             }`}
             value={formData.title}
@@ -171,12 +172,12 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2 font-semibold">Coupon Code *</label>
+          <label className="block mb-2 font-medium text-gray-700">Coupon Code *</label>
           <input
             type="text"
             name="couponCode"
             placeholder="Enter Code"
-            className={`w-full p-2 border rounded-lg focus:outline-none ${
+            className={`w-full p-2 border rounded-lg focus:outline-none focus:ring focus:ring-[#5491CA]/30 ${
               errors.couponCode ? "border-red-500" : "border-gray-300"
             }`}
             value={formData.couponCode}
@@ -188,12 +189,12 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2 font-semibold">Discount (%) *</label>
+          <label className="block mb-2 font-medium text-gray-700">Discount (%) *</label>
           <input
             type="number"
             name="discount"
             placeholder="Enter Discount"
-            className={`w-full p-2 border rounded-lg focus:outline-none ${
+            className={`w-full p-2 border rounded-lg focus:outline-none focus:ring focus:ring-[#5491CA]/30 ${
               errors.discount ? "border-red-500" : "border-gray-300"
             }`}
             value={formData.discount}
@@ -205,14 +206,14 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2 font-semibold">
+          <label className="block mb-2 font-medium text-gray-700">
             Number of Students Allowed *
           </label>
           <input
             type="number"
             name="numberOfStudentAllow"
             placeholder="Enter Max Users"
-            className={`w-full p-2 border rounded-lg focus:outline-none ${
+            className={`w-full p-2 border rounded-lg focus:outline-none focus:ring focus:ring-[#5491CA]/30 ${
               errors.numberOfStudentAllow ? "border-red-500" : "border-gray-300"
             }`}
             value={formData.numberOfStudentAllow}
@@ -226,12 +227,12 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
         </div>
 
         <div className="mb-6">
-          <label className="block mb-2 font-semibold">Coupon Period *</label>
+          <label className="block mb-2 font-medium text-gray-700">Coupon Period *</label>
           <div className="flex space-x-2">
             <input
               type="date"
               name="startDate"
-              className={`w-1/2 p-2 border rounded-lg focus:outline-none ${
+              className={`w-1/2 p-2 border rounded-lg focus:outline-none focus:ring focus:ring-[#5491CA]/30 ${
                 errors.startDate ? "border-red-500" : "border-gray-300"
               }`}
               value={formData.startDate}
@@ -240,7 +241,7 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
             <input
               type="date"
               name="endDate"
-              className={`w-1/2 p-2 border rounded-lg focus:outline-none ${
+              className={`w-1/2 p-2 border rounded-lg focus:outline-none focus:ring focus:ring-[#5491CA]/30 ${
                 errors.endDate ? "border-red-500" : "border-gray-300"
               }`}
               value={formData.endDate}
@@ -259,14 +260,14 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
+            className="bg-[#5491CA] text-white py-2 px-4 rounded hover:bg-[#4a82b6] transition-colors disabled:opacity-50"
           >
             {loading ? "Saving..." : "Submit"}
           </button>
           <button
             type="button"
             onClick={onBack}
-            className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700"
+            className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition-colors"
           >
             Back
           </button>
@@ -275,99 +276,84 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
     </div>
   );
 };
+
 const CouponDashboard = () => {
-  const [coupons, setCoupons] = useState([]); // Initialize as an empty array
+  const [coupons, setCoupons] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [couponToEdit, setCouponToEdit] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const fetchCoupons = async () => {
-      try {
-        const response = await couponService.getAllcoupons();
-        console.log("API Response:", response.coupons);
-        setCoupons(response.coupons || []); // Fallback to empty array if response is invalid
-      } catch (error) {
-        console.error("Error fetching coupons:", error);
-        setCoupons([]); // Set to empty array on error
-      }
-    };
     fetchCoupons();
   }, []);
 
-  const filteredCoupons = coupons.filter((coupon) =>
-    coupon.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const fetchCoupons = async () => {
+    try {
+      const response = await couponService.getAllcoupons();
+      console.log("API Response:", response);
+      setCoupons(response.coupons || []);
+    } catch (error) {
+      console.error("Error fetching coupons:", error);
+      setCoupons([]);
+    }
+  };
 
+  const filteredCoupons = coupons.filter((coupon) =>
+    coupon.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleAddCoupon = () => {
     setCouponToEdit(null);
     setIsAdding(true);
   };
 
-  const handleSaveCoupon = async (coupon) => {
-    try {
-      if (couponToEdit) {
-        // Update an existing coupon
-        const response = await couponService.updateCoupon(
-          couponToEdit.id,
-          coupon
-        ); // Replace with your API call
-        setCoupons((prev) =>
-          prev.map((c) => (c.id === couponToEdit.id ? response.data : c))
-        );
-      } else {
-        // Add a new coupon
-        const response = await couponService.createCoupon(coupon); // Replace with your API call
-        setCoupons((prev) => [...prev, response.data]);
-      }
-      setIsAdding(false);
-    } catch (error) {
-      console.error("Error saving coupon:", error);
-    }
-  };
-
   const handleEditCoupon = (index) => {
-    setCouponToEdit(coupons[index]);
+    setCouponToEdit(filteredCoupons[index]);
     setIsAdding(true);
   };
 
   const handleDeleteCoupon = async (index) => {
-    const couponToDelete = coupons[index];
+    if (!window.confirm("Are you sure you want to delete this coupon?")) {
+      return;
+    }
+    
+    const couponToDelete = filteredCoupons[index];
     try {
-      await couponService.deleteCoupon(couponToDelete.id); // Replace with your API call
-      setCoupons((prev) => prev.filter((_, i) => i !== index));
+      await couponService.deleteCoupon(couponToDelete._id || couponToDelete.id);
+      await fetchCoupons(); // Refresh the list after deletion
     } catch (error) {
       console.error("Error deleting coupon:", error);
+      alert("Failed to delete coupon. Please try again.");
     }
   };
 
   const handleToggleStatus = async (index) => {
-    const updatedCoupon = { ...coupons[index], active: !coupons[index].active };
+    const coupon = filteredCoupons[index];
+    const updatedStatus = !coupon.active;
+    
     try {
-      const response = await couponService.updatecoupon(
-        updatedCoupon.id,
-        updatedCoupon
-      ); // Replace with your API call
-      setCoupons((prev) =>
-        prev.map((c, i) => (i === index ? response.data : c))
-      );
+      await couponService.updateCoupon(coupon._id || coupon.id, {
+        ...coupon,
+        active: updatedStatus
+      });
+      await fetchCoupons(); // Refresh the list after update
     } catch (error) {
       console.error("Error toggling status:", error);
+      alert("Failed to update coupon status. Please try again.");
     }
   };
 
-  
-  
   return isAdding ? (
     <AddCouponPage
       couponToEdit={couponToEdit}
-      onSaveCoupon={handleSaveCoupon}
-      onBack={() => setIsAdding(false)}
+      onBack={() => {
+        setIsAdding(false);
+        fetchCoupons(); // Refresh the list when returning from add/edit
+      }}
     />
   ) : (
     <HomePage
-      coupons={filteredCoupons || []} // Ensure it's always an array
+      coupons={filteredCoupons || []}
       onAddCoupon={handleAddCoupon}
       onEditCoupon={handleEditCoupon}
       onDeleteCoupon={handleDeleteCoupon}

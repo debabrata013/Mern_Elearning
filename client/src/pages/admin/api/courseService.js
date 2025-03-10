@@ -1,4 +1,5 @@
 import axios from 'axios';
+import axiosInstance from '../../../api/axiosInstance';
 
 // Set the base URL for your backend API
 const BASE_URL = 'http://localhost:4400/courses';
@@ -7,6 +8,29 @@ const api = axios.create({
 });
 
 const courseService = {
+  // Get all courses
+  getAllCourses: async () => {
+    try {
+      const response = await axiosInstance.get('/courses');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+      throw error;
+    }
+  },
+
+  // Get a single course by ID
+  getCourseById: async (courseId) => {
+    try {
+      const response = await axiosInstance.get(`/courses/${courseId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching course with ID ${courseId}:`, error);
+      throw error;
+    }
+  },
+
+  // Create a new course
   createCourse: async (courseData) => {
     let dataToSend;
 
@@ -38,6 +62,28 @@ const courseService = {
       return response.data;
     } catch (error) {
       console.error('Error creating course:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  // Update an existing course
+  updateCourse: async (courseId, courseData) => {
+    try {
+      const response = await axiosInstance.put(`/courses/${courseId}`, courseData);
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating course with ID ${courseId}:`, error);
+      throw error;
+    }
+  },
+
+  // Delete a course
+  deleteCourse: async (courseId) => {
+    try {
+      const response = await axiosInstance.delete(`/courses/${courseId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error deleting course with ID ${courseId}:`, error);
       throw error;
     }
   },

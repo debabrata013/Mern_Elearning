@@ -1,17 +1,14 @@
-
     .certificate-page {
-                
         font-family: 'Arial', sans-serif;
         background-color: #f4f6f9;
         padding-top: 20px;
         color: #333;
-        border:1px solid rgba(166, 166, 166, 0.597);
-        margin: 30px 70px 50px 70px;
+        border: 1px solid rgba(166, 166, 166, 0.597);
         border-radius: 20px;
         box-shadow: 0px 5px 10px 1px #0000003b;
         padding: 20px;
         max-width: 1400px;
-        margin: auto;
+        margin: 30px auto;
     }
 
     /* Heading Styles */
@@ -20,7 +17,7 @@
         font-weight: bold;
         font-size: 2.2rem;
         margin-bottom: 20px;
-        color: #01285b;
+        color: #5491CA;
     }
 
     /* Controls Row */
@@ -35,23 +32,31 @@
         width: 70%;
         padding: 10px 15px;
         border: 1px solid #ccc;
-        border-radius: 5px;
+        border-radius: 8px;
         font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-bar:focus {
+        border-color: #5491CA;
+        outline: none;
+        box-shadow: 0 0 8px rgba(84, 145, 202, 0.3);
     }
 
     .add-button {
         padding: 10px 20px;
-        background-color: #01285b;
+        background-color: #5491CA;
         color: white;
         font-size: 1rem;
         border: none;
-        border-radius: 5px;
+        border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        transition: all 0.3s ease;
     }
 
     .add-button:hover {
-        background-color: #0248a1;
+        background-color: #4a82b6;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     /* Certificate Cards */
@@ -71,26 +76,28 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        transition: transform 0.3s ease;
+        transition: all 0.3s ease;
     }
 
     .certificate-card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(84, 145, 202, 0.2);
     }
 
     .certificate-image {
         width: 100%;
         height: 150px;
         object-fit: cover;
+        border-bottom: 2px solid #f0f0f0;
     }
 
     .certificate-details {
-        padding: 10px;
+        padding: 15px;
         font-size: 0.9rem;
     }
 
     .certificate-details p {
-        margin: 5px 0;
+        margin: 8px 0;
     }
 
     .card-actions {
@@ -105,12 +112,27 @@
         border: none;
         font-size: 1.2rem;
         cursor: pointer;
-        color: #01285b;
-        transition: color 0.3s ease;
+        transition: all 0.3s ease;
+        padding: 5px 10px;
+        border-radius: 5px;
     }
 
-    .edit-btn:hover, .delete-btn:hover {
-        color: #0248a1;
+    .edit-btn {
+        color: #5491CA;
+    }
+
+    .delete-btn {
+        color: #b1a9f1;
+    }
+
+    .edit-btn:hover {
+        color: #4a82b6;
+        background-color: rgba(84, 145, 202, 0.1);
+    }
+
+    .delete-btn:hover {
+        color: #9f97e8;
+        background-color: rgba(177, 169, 241, 0.1);
     }
 
     /* Add Certificate Page */
@@ -128,8 +150,10 @@
 
     .form-section {
         flex: 2;
-        padding: 10px;
+        padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        background-color: white;
     }
 
     .preview-section {
@@ -138,9 +162,10 @@
         justify-content: center;
         align-items: center;
         background-color: #f4f4f4;
-        border: 1px dashed #ccc;
-        height:440px;
+        border: 1px dashed #5491CA;
+        height: 440px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
     }
 
     .preview-section img {
@@ -149,22 +174,28 @@
         object-fit: contain;
     }
 
-
     /* Form Styles */
     form label {
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
-        color: #01285b;
+        color: #5491CA;
     }
 
-    form input, form textarea, form button {
+    form input, form textarea, form button, form select {
         width: 100%;
         padding: 10px;
         margin-bottom: 15px;
         border: 1px solid #ccc;
-        border-radius: 5px;
+        border-radius: 8px;
         font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    form input:focus, form textarea:focus, form select:focus {
+        border-color: #5491CA;
+        outline: none;
+        box-shadow: 0 0 8px rgba(84, 145, 202, 0.3);
     }
 
     form textarea {
@@ -173,188 +204,323 @@
     }
 
     form input[type="file"] {
-        padding: 5px;
+        padding: 8px;
+        background-color: #f8f9fc;
     }
 
     .submit-button {
-        background-color: #01285b;
+        background-color: #5491CA;
         color: white;
         border: none;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        transition: all 0.3s ease;
+        font-weight: bold;
     }
 
     .submit-button:hover {
-        background-color: #0248a1;
+        background-color: #4a82b6;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .cancel-button {
-        background-color: #ccc;
-        color: #333;
+        background-color: #b1a9f1;
+        color: white;
         border: none;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        transition: all 0.3s ease;
+        font-weight: bold;
     }
 
     .cancel-button:hover {
-        background-color: #aaa;
+        background-color: #9f97e8;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    /* .print-button{
-        background-color: #ccc;
-        color: #333;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    .print-button:hover{
-        background-color: #aaa;
-    } */
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .controls-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-        }
-
-        .certificates-container {
-        justify-content: center;
-        }
-
-        .add-certificate-container {
-        flex-direction: column;
-        }
-
-        .form-section, .preview-section {
-        flex: unset;
-        width: 100%;
-        }
+    /* Text Manipulation Box */
+    .text-manipulation-box {
+        max-height: 500px;
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        margin-top: 20px;
+        border: 1px solid #f0f0f0;
+        position: relative;
+        overflow: auto;
     }
 
-    .certificate-page {
-        padding: 20px;
-        font-family: Arial, sans-serif;
-    }
-
-    h1 {
-        text-align: center;
+    .text-manipulation-box h3 {
+        font-size: 1.3rem;
+        color: #5491CA;
         margin-bottom: 20px;
+        border-bottom: 2px solid #5491CA;
+        padding-bottom: 10px;
+        text-align: center;
+        font-weight: 600;
     }
 
-    .add-certificate-container {
+    .text-manipulation-box label {
+        display: block;
+        margin: 12px 0 8px;
+        color: #5491CA;
+        font-weight: bold;
+        font-size: 0.95rem;
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
 
-    .form-section {
-        width: 40%;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
+    .text-manipulation-box label span {
+        background-color: #f0f7ff;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        color: #5491CA;
+        font-weight: normal;
     }
 
-    .form-section label {
-        display: block;
-        margin-top: 10px;
-        font-weight: bold;
-    }
-
-    .form-section input,
-    .form-section textarea {
+    .text-manipulation-box input[type="range"] {
         width: 100%;
-        margin-top: 5px;
-        margin-bottom: 15px;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    .preview-section {
-        width: 55%;
-        border: 1px solid #ccc;
+        margin-bottom: 18px;
+        height: 6px;
+        background: linear-gradient(to right, #5491CA, #b1a9f1);
         border-radius: 10px;
-        overflow: hidden;
-        position: relative;
+        -webkit-appearance: none;
+        appearance: none;
+        outline: none;
     }
 
-    .action-buttons {
-        margin-top: 20px;
-        text-align: center;
-    }
-
-    .action-buttons button {
-        padding: 10px 20px;
-        margin: 5px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
+    .text-manipulation-box input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background-color: white;
+        border: 2px solid #5491CA;
+        border-radius: 50%;
         cursor: pointer;
+        transition: all 0.2s ease;
     }
 
-    .action-buttons button:hover {
-        background-color: #0056b3;
+    .text-manipulation-box input[type="range"]::-webkit-slider-thumb:hover {
+        background-color: #5491CA;
+        transform: scale(1.1);
     }
 
+    .text-manipulation-box input[type="color"] {
+        width: 100%;
+        height: 45px;
+        margin-bottom: 18px;
+        padding: 2px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
 
-    .text-manipulation-box {
-        max-height:500px ;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      
-      
-      .save-button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background-color: #01285b;                        /* save button ------------------------------ */
+    .text-manipulation-box input[type="color"]:hover {
+        border-color: #b1a9f1;
+    }
+
+    .text-manipulation-box input[type="color"]:focus {
+        border-color: #5491CA;
+        outline: none;
+    }
+
+    .text-manipulation-box select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 18px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #333;
+        background-color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235491CA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+    }
+
+    .text-manipulation-box select:hover {
+        border-color: #b1a9f1;
+    }
+
+    .text-manipulation-box select:focus {
+        border-color: #5491CA;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(84, 145, 202, 0.1);
+    }
+
+    .text-manipulation-box p {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        padding: 30px 0;
+        border: 1px dashed #ccc;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    .active-element-indicator {
+        background-color: #f0f7ff;
+        border-left: 4px solid #5491CA;
+        padding: 10px 15px;
+        margin-bottom: 20px;
+        border-radius: 0 8px 8px 0;
+        font-weight: 500;
+        color: #5491CA;
+    }
+
+    .save-button {
+        margin-top: 25px;
+        padding: 14px 24px;
+        background-color: #5491CA;
         color: white;
         border: none;
-        border-radius: 10px;
+        border-radius: 8px;
         cursor: pointer;
         font-size: 16px;
-        position:absolute;
-        right:337px;
-        top:600px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-      
-      .save-button:hover {
-        background-color: #00509e;
-      }
-      
-
-
-      .text-manipulation-box h3 {
-        font-size: 1.2rem;
-        color: #01285b;
-      }
-      
-      .text-manipulation-box label {
-        display: block;
-        margin: 10px 0 5px;
-        color: #01285b;
-      }
-      
-      .text-manipulation-box input[type="range"],
-      .text-manipulation-box input[type="color"] {
+        font-weight: bold;
         width: 100%;
-      }
-      
-      .certificate-preview-container {
+        box-shadow: 0 4px 12px rgba(84, 145, 202, 0.3);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .save-button:hover {
+        background-color: #4a82b6;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(84, 145, 202, 0.4);
+    }
+
+    .save-button:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 8px rgba(84, 145, 202, 0.3);
+    }
+
+    .save-button::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+    }
+
+    .save-button:focus:not(:active)::after {
+        animation: ripple 1s ease-out;
+    }
+
+    @keyframes ripple {
+        0% {
+            transform: scale(0, 0);
+            opacity: 0.5;
+        }
+        20% {
+            transform: scale(25, 25);
+            opacity: 0.3;
+        }
+        100% {
+            opacity: 0;
+            transform: scale(40, 40);
+        }
+    }
+
+    .certificate-preview-container {
         position: relative;
         width: 100%;
         height: 100%;
-      }
-      
-      .certificate-text {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .certificate-preview-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    /* Tooltip for better UX */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: help;
+        margin-left: 5px;
+        color: #5491CA;
+    }
+
+    .tooltip .tooltip-text {
+        visibility: hidden;
+        width: 200px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 8px;
         position: absolute;
-        font-family: Arial, sans-serif;
-        font-weight: bold;
-      }
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.8rem;
+        font-weight: normal;
+    }
+
+    .tooltip:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .controls-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+        }
+
+        .search-bar {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .certificates-container {
+            justify-content: center;
+        }
+
+        .add-certificate-container {
+            flex-direction: column;
+        }
+
+        .form-section, .preview-section {
+            flex: unset;
+            width: 100%;
+        }
+        
+        .save-button {
+            padding: 12px 20px;
+        }
+
+        .text-manipulation-box {
+            padding: 15px;
+        }
+        
+        .text-manipulation-box h3 {
+            font-size: 1.1rem;
+        }
+    }
       
       

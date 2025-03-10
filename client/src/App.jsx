@@ -43,6 +43,10 @@ import Pr from "./pages/admin/profile"
 // import StudentRoutes from "./components/student-view/StudentRoutes";
 // import student from './components/student-view/AppLayout'
 
+// Import the new pages
+import CourseDemo from './pages/landing-page/course-demo/CourseDemo';
+import CourseEnrollment from './pages/landing-page/course-enrollment/CourseEnrollment';
+
 function App() {
   return (
     <AuthProvider>
@@ -88,6 +92,9 @@ function App() {
           }
         />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/courses" element={<Coursess />} />
+        <Route path="/course-demo/:courseId" element={<CourseDemo />} />
+        <Route path="/course-enrollment/:courseId" element={<CourseEnrollment />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AuthProvider>
