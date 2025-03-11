@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-// Define the Lesson subdocument schema
 const lessonSchema = new Schema({
+  _id: { type: Schema.Types.ObjectId, auto: true },
   title: { type: String, required: true, trim: true },
   content: { type: String, required: true },
   videoUrl: { type: String },
   resourceUrl: { type: String },
-  duration: { type: Number } // duration in minutes
-}, { _id: false, timestamps: true });
+  duration: { type: Number }
+}, { timestamps: true });
+
 
 // Define the Chapter subdocument schema
 const chapterSchema = new Schema({
@@ -62,9 +63,8 @@ const professionalCourseSchema = new Schema({
   discount: { type: Number, default: 0 },
   
   // Reviews and ratings
-  rating: { type: Number, min: 0, max: 5 },
   reviews: [{
-    student: { type: Schema.Types.ObjectId, ref: 'User' },
+    student: { type: Schema.Types.ObjectId, ref: 'User', unique: true },
     comment: { type: String },
     rating: { type: Number, min: 0, max: 5 },
     createdAt: { type: Date, default: Date.now }
