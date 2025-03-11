@@ -54,6 +54,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: null, 
   },
+otpCount:{
+  type:Number,
+default:0
+},
   profileImage: {
     type: String,
     default: "https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg" 
@@ -69,7 +73,7 @@ const UserSchema = new mongoose.Schema({
   // Role-specific fields for teachers.
   description: {
     type: String,
-    required: function() { return this.role === 'teacher'; },
+    
   },
   subjectKnowledge: [{
     type: String,
@@ -88,6 +92,17 @@ const UserSchema = new mongoose.Schema({
     ref: "StudentCourses",
     required: function() { return this.role === 'student'; },
   }],
+  resumeurl:{
+    type:String
+  },
+  lindeninProfileUrl:{
+    type:String
+  },
+  githubprofileurl:{
+    type:String
+
+  },
+
   // Relationship with CourseChat.
   courseChats: [{
     type: mongoose.Schema.Types.ObjectId, 
