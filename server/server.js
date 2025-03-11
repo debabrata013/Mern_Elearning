@@ -8,6 +8,7 @@ const announcementRoutes = require('./src/routes/announcementRoutes');
 const schedule = require('node-schedule');
 const couponRoutes = require('./src/routes/couponRoutes'); // Import coupon routes
 const complaintRoutes = require('./src/routes/complaintRoutes');
+const ProfileRouters = require('./src/routes/profileRoutes');
  // Import coupon model
 const { deleteExpiredCoupons } = require('./src/controllers/couponController'); // Import the deleteExpiredCoupons function
 
@@ -63,6 +64,8 @@ app.use('/jobs',jobRoutes)
 app.use('/quize',quize)
 app.use("/data",adminlandin)
 app.use("/landing",landingRoutes);
+app.use("/profile",ProfileRouters)
+
 
 app.use("/contactus/",contactRoutes)
 app.use("/mail/",MailRoutes);
