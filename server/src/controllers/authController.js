@@ -16,11 +16,8 @@ const jwt = require('jsonwebtoken');
 // Login
 exports.login = async (req, res) => {
     try {
-        console.log("Login function ")
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-        console.log(email+password);
-        console.log(user);
         
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -34,6 +31,10 @@ exports.login = async (req, res) => {
                 userName: user.userName,
                 email: user.email,
                 profileImage: user.profileImage,
+                resumeurl:user.resumeurl,
+                lindeninProfileUrl:user.lindeninProfileUrl,
+                githubprofileurl:user.githubprofileurl,
+                
                 
                 role: user.role,
             },
