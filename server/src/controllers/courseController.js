@@ -424,4 +424,45 @@ exports.getAllCourse = async (req, res) => {
       stack: error.stack 
     });
   }
-}
+};
+exports.updateCourse = async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+    let course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ success: false, message: "Course not found" });
+    }
+
+    // Create an update object from req.body
+    const updateFields = { ...req.body };
+
+    // Handle file updates if new files are provided
+    if (req.files) {
+      if (req.files.coverImage) {
+        if (course.coverImage) await deleteFileFromS3(course.coverImage);
+        const coverImageUrl = await uploadFileToS3(req.files.coverImage[0]);
+        updateFields.coverImage = coverImageUrl;
+      }
+      if (req.files.introVideo) {
+        if (course.introVideo) await deleteFileFromS3(course.introVideo);
+        const introVideoUrl = await uploadFileToS3(req.files.introVideo[0]);
+        updateFields.introVideo = introVideoUrl;
+      }
+      if (req.files.syllabusPDF) {
+        if (course.syllabus) await deleteFileFromS3(course.syllabus);
+        const syllabusUrl = await uploadFileToS3(req.files.syllabusPDF[0]);
+        updateFields.syllabus = syllabusUrl;
+      }
+    }
+
+    course = await Course.findByIdAndUpdate(courseId, updateFields, { new: true });
+    res.status(200).json({ success: true, course });
+  } catch (error) {
+    console.error("Error updating course:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message,
+      stack: error.stack 
+    });
+  }
+};
