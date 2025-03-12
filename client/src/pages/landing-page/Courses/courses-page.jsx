@@ -160,17 +160,7 @@ const CoursePage = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             aria-label="Search courses"
           />
-          <div className="filter-buttons">
-            {["All", "Opened", "Coming Soon", "Archived"].map((status) => (
-              <button
-                key={status}
-                className={`filter-btn ${filter === status ? "active" : ""}`}
-                onClick={() => setFilter(status)}
-              >
-                {status}
-              </button>
-            ))}
-          </div>
+        
           <select className="sort-dropdown" aria-label="Sort courses">
             <option>Sort by Popular Class</option>
             <option>Sort by Recently Added</option>
@@ -186,7 +176,19 @@ const CoursePage = () => {
               />
             ))
           ) : (
-            <p className="no-results">No courses match your search.</p>
+            <div className="flex flex-col items-center justify-center h-64">
+              <div className="relative w-24 h-24 mb-4">
+                <div className="absolute inset-0 bg-gray-200 rounded-full animate-ping opacity-75"></div>
+                <div className="relative flex items-center justify-center w-full h-full bg-gray-400 rounded-full animate-pulse">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                </div>
+              </div>
+              <p className="text-gray-600 text-lg">No courses match your search.</p>
+            </div>
           )}
         </div>
         <div className="pagination">
