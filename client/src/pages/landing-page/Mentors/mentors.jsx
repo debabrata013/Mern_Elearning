@@ -2,6 +2,48 @@ import React, { useState, useEffect } from "react";
 import "./mentors.css";
 import { getAllTeachers } from "../api/landingServices";
 
+import { Loader2, AlertCircle } from 'lucide-react';
+
+// Loading Component
+const AnimatedLoading = () => {
+  return (
+    <div className="mentor-container flex flex-col items-center justify-center p-8 text-center">
+      <div className="relative mb-6">
+        <Loader2 size={64} className="text-blue-500 animate-spin" />
+      </div>
+      
+      <h3 className="text-xl font-medium mb-2 text-gray-700">Discovering Mentors</h3>
+      
+      <div className="w-64 h-2 bg-gray-200 rounded-full mt-2 overflow-hidden">
+        <div className="h-full bg-blue-500 rounded-full animate-pulse w-1/2"></div>
+      </div>
+      
+      
+    </div>
+  );
+};
+
+// Error Component
+const AnimatedError = ({ errorMessage }) => {
+  return (
+    <div className="mentor-container flex flex-col items-center justify-center p-8 text-center">
+      <div className="relative mb-6">
+        <div className="animate-pulse">
+          <AlertCircle size={64} className="text-red-500" />
+        </div>
+      </div>
+      
+      <h3 className="text-xl font-medium mb-2 text-gray-700">Oops! Something went wrong</h3>
+      
+      <p className="text-gray-500 mb-6 max-w-md">
+        {errorMessage || "We're having trouble loading your mentors. Please try again."}
+      </p>
+      
+     
+    </div>
+  );
+};
+
 const Mentors = () => {
   const [mentors, setMentors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,11 +105,11 @@ const Mentors = () => {
   };
 
   if (loading) {
-    return <div className="mentor-container">Loading mentors...</div>;
+    return <AnimatedLoading />;
   }
 
   if (error) {
-    return <div className="mentor-container">{error}</div>;
+    return <AnimatedError errorMessage={error} />;
   }
 
   return (  
