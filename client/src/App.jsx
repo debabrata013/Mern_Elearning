@@ -8,7 +8,7 @@ import LandingPage from "./pages/landing-page"; // Import the new landing page c
 // import InstructorDashboardpage from "./pages/instructor";
 // import StudentViewCommonLayout from "./components/student-view/common-layout";
 // import StudentHomePage from "./pages/student/home";
-import NotFoundPage from "./pages/not-found";
+import NotFoundPage from "./pages/Notfound";
 // // import AddNewCoursePage from "./pages/instructor/add-new-course";
 // import StudentViewCoursesPage from "./pages/student/courses";
 // import StudentViewCourseDetailsPage from "./pages/student/course-details";
