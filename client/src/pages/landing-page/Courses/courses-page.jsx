@@ -64,11 +64,24 @@ const CoursePage = () => {
         <nav className="navbar">
           <Nav />
         </nav>
-        <div className="loader-container">
-          <div className="loader">
-            <div className="loader-circle"></div>
-            <p className="loader-text">Loading courses...</p>
+        <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-slate-800">
+          <div className="relative w-48 h-48 mb-8">
+            {/* Outer orbit */}
+            <div className="absolute top-1/2 left-1/2 w-40 h-40 -mt-20 -ml-20 border border-white/20 rounded-full animate-spin" style={{ animationDuration: '4s' }}>
+              <div className="absolute -top-2 left-1/2 w-4 h-4 -ml-2 bg-blue-400 rounded-full shadow-lg shadow-blue-400"></div>
+            </div>
+            
+            {/* Inner orbit */}
+            <div className="absolute top-1/2 left-1/2 w-28 h-28 -mt-14 -ml-14 border border-white/20 rounded-full animate-spin" style={{ animationDuration: '3s', animationDirection: 'reverse' }}>
+              <div className="absolute -top-2 left-1/2 w-4 h-4 -ml-2 bg-purple-400 rounded-full shadow-lg shadow-purple-400"></div>
+            </div>
+            
+            {/* Center star */}
+            <div className="absolute top-1/2 left-1/2 w-10 h-10 -mt-5 -ml-5 bg-yellow-300 rounded-full shadow-lg shadow-yellow-300 animate-pulse"></div>
           </div>
+          
+          <h2 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">Preparing your learning journey...</h2>
+          <p className="text-white/80 text-lg">Discovering amazing courses just for you</p>
         </div>
       </>
     );
