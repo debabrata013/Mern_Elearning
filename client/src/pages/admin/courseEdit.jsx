@@ -3,6 +3,7 @@ import { Edit, Trash, Eye, Save, RefreshCcw, Loader2, ArrowLeft } from 'lucide-r
 import axiosInstance from '../../api/axiosInstance';
 import courseService from './api/courseService';
 import { toast } from 'react-toastify';
+import logo from '/AIGIRI.png';
 
 // Default images for courses without cover images
 const defaultImages = {

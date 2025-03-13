@@ -6,6 +6,7 @@
   import ClassesContent from './class';
   import QuizDashboard from "./quiz dashboard/quiz";
   import SettingsContent from './setting';
+  import ProfilePage from './profile/ProfilePage';
   import logo from '../../../public/AIGIRI.png';
   import NotificationContent from './NotificationContent';
 
@@ -240,6 +241,8 @@
     const time = currentDateTime.toLocaleTimeString(); // "HH:MM:SS AM/PM"
 
     const renderContent = () => {
+      console.log("Current section:", currentSection);
+      
       switch (currentSection) {
         case 'classes':
           return <ClassesContent />;
@@ -249,6 +252,8 @@
           return <NotificationContent />;
         case 'settings':
           return <SettingsContent />;
+        case 'profile':
+          return <ProfilePage onBack={() => setCurrentSection('home')} />;
         case 'quiz':
           return <QuizDashboard />;
         default:
