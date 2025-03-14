@@ -73,22 +73,24 @@ const RecordsContent = () => {
 
   // Course Card Component
   const CourseCard = ({ course }) => (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      <img 
-        src={course.image} 
-        alt={course.title} 
-        className="w-full h-48 object-cover"
-      />
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+      <div className="h-48 bg-gradient-to-r from-[#5491CA]/20 to-[#b1a9f1]/20 relative">
+        <img 
+          src={course.image} 
+          alt={course.title} 
+          className="w-full h-full object-cover mix-blend-overlay"
+        />
+      </div>
       <div className="p-4">
-        <h3 className="text-lg font-semibold mb-2">{course.title}</h3>
+        <h3 className="text-lg font-semibold mb-2 text-[#5491CA]">{course.title}</h3>
         <p className="text-gray-600 mb-2">{course.description}</p>
-        <p className="text-sm text-gray-500">{course.lectureCount} lectures</p>
+        <p className="text-sm text-[#b1a9f1]">{course.lectureCount} lectures</p>
         <button
           onClick={() => {
             setSelectedCourse(course);
             setView('lectures');
           }}
-          className="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="mt-3 w-full bg-[#5491CA] text-white py-2 rounded-lg hover:bg-[#4a82b5] transition-colors"
         >
           View Lectures
         </button>
@@ -106,16 +108,18 @@ const RecordsContent = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setView('courses')}
-                  className="text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                  className="text-[#5491CA] hover:text-[#b1a9f1] flex items-center gap-1 transition-colors"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Back to Courses
                 </button>
-                <h3 className="text-xl font-semibold">{selectedCourse?.title} - Lectures</h3>
+                <h3 className="text-xl font-semibold bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-transparent bg-clip-text">
+                  {selectedCourse?.title} - Lectures
+                </h3>
               </div>
               <button
                 onClick={() => setView('addLecture')}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                className="bg-[#5491CA] text-white px-4 py-2 rounded-lg hover:bg-[#4a82b5] transition-colors flex items-center gap-2"
               >
                 <Plus className="h-4 w-4" />
                 Add Lecture
@@ -124,21 +128,25 @@ const RecordsContent = () => {
             
             <div className="grid gap-4">
               {sampleLectures.map(lecture => (
-                <div key={lecture.id} className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between">
+                <div key={lecture.id} className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {lecture.type === 'video' ? (
-                      <Video className="h-5 w-5 text-blue-600" />
+                      <div className="h-10 w-10 rounded-full bg-[#5491CA]/10 flex items-center justify-center">
+                        <Video className="h-5 w-5 text-[#5491CA]" />
+                      </div>
                     ) : (
-                      <File className="h-5 w-5 text-blue-600" />
+                      <div className="h-10 w-10 rounded-full bg-[#b1a9f1]/10 flex items-center justify-center">
+                        <File className="h-5 w-5 text-[#b1a9f1]" />
+                      </div>
                     )}
                     <div>
-                      <h4 className="font-medium">{lecture.title}</h4>
+                      <h4 className="font-medium text-[#5491CA]">{lecture.title}</h4>
                       <p className="text-sm text-gray-500">
                         {lecture.type === 'video' ? lecture.duration : lecture.size}
                       </p>
                     </div>
                   </div>
-                  <button className="text-blue-600 hover:text-blue-700">
+                  <button className="text-[#5491CA] hover:text-[#b1a9f1] transition-colors px-3 py-1 rounded-md hover:bg-gray-50">
                     Download
                   </button>
                 </div>
@@ -153,17 +161,19 @@ const RecordsContent = () => {
             <div className="flex items-center gap-2 mb-6">
               <button
                 onClick={() => setView('lectures')}
-                className="text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                className="text-[#5491CA] hover:text-[#b1a9f1] flex items-center gap-1 transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to Lectures
               </button>
-              <h3 className="text-xl font-semibold">Add New Lecture</h3>
+              <h3 className="text-xl font-semibold bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-transparent bg-clip-text">
+                Add New Lecture
+              </h3>
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-sm">
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor="lectureName">
+                <label className="block text-sm font-medium mb-1 text-gray-700" htmlFor="lectureName">
                   Lecture Name
                 </label>
                 <input
@@ -171,30 +181,32 @@ const RecordsContent = () => {
                   id="lectureName"
                   value={formData.lectureName}
                   onChange={(e) => setFormData(prev => ({ ...prev, lectureName: e.target.value }))}
-                  className="w-full p-2 border rounded-lg"
+                  className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] outline-none"
                   required
                 />
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
+                <label className="block text-sm font-medium mb-1 text-gray-700">
                   PDF Material
                 </label>
-                <div className="border-2 border-dashed rounded-lg p-4 text-center">
+                <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-[#b1a9f1] transition-colors">
                   {formData.pdfFile ? (
                     <div className="flex items-center justify-between">
-                      <span>{formData.pdfFile.name}</span>
+                      <span className="text-[#5491CA]">{formData.pdfFile.name}</span>
                       <button
                         type="button"
                         onClick={() => handleFileChange('pdfFile', null)}
-                        className="text-red-500"
+                        className="text-red-500 hover:text-red-600 transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </button>
                     </div>
                   ) : (
                     <div>
-                      <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                      <div className="h-16 w-16 mx-auto mb-2 rounded-full bg-[#b1a9f1]/10 flex items-center justify-center">
+                        <Upload className="h-8 w-8 text-[#b1a9f1]" />
+                      </div>
                       <input
                         type="file"
                         accept=".pdf"
@@ -204,7 +216,7 @@ const RecordsContent = () => {
                       />
                       <label
                         htmlFor="pdfUpload"
-                        className="text-blue-600 hover:text-blue-700 cursor-pointer"
+                        className="text-[#5491CA] hover:text-[#b1a9f1] cursor-pointer transition-colors"
                       >
                         Upload PDF
                       </label>
@@ -214,24 +226,26 @@ const RecordsContent = () => {
               </div>
 
               <div className="mb-6">
-                <label className="block text-sm font-medium mb-1">
+                <label className="block text-sm font-medium mb-1 text-gray-700">
                   Lecture Video
                 </label>
-                <div className="border-2 border-dashed rounded-lg p-4 text-center">
+                <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-[#5491CA] transition-colors">
                   {formData.videoFile ? (
                     <div className="flex items-center justify-between">
-                      <span>{formData.videoFile.name}</span>
+                      <span className="text-[#5491CA]">{formData.videoFile.name}</span>
                       <button
                         type="button"
                         onClick={() => handleFileChange('videoFile', null)}
-                        className="text-red-500"
+                        className="text-red-500 hover:text-red-600 transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </button>
                     </div>
                   ) : (
                     <div>
-                      <Video className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                      <div className="h-16 w-16 mx-auto mb-2 rounded-full bg-[#5491CA]/10 flex items-center justify-center">
+                        <Video className="h-8 w-8 text-[#5491CA]" />
+                      </div>
                       <input
                         type="file"
                         accept="video/*"
@@ -241,7 +255,7 @@ const RecordsContent = () => {
                       />
                       <label
                         htmlFor="videoUpload"
-                        className="text-blue-600 hover:text-blue-700 cursor-pointer"
+                        className="text-[#5491CA] hover:text-[#b1a9f1] cursor-pointer transition-colors"
                       >
                         Upload Video
                       </label>
@@ -252,7 +266,7 @@ const RecordsContent = () => {
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="w-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white py-2 rounded-lg hover:opacity-90 transition-opacity"
               >
                 Submit Lecture
               </button>
@@ -262,13 +276,11 @@ const RecordsContent = () => {
 
       default:
         return (
-          <div>
-            <h2 className="text-2xl font-bold mb-6">My Courses</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sampleCourses.map(course => (
                 <CourseCard key={course.id} course={course} />
               ))}
-            </div>
+              
           </div>
         );
     }

@@ -46,58 +46,61 @@ import Pr from "./pages/admin/profile"
 // Import the new pages
 import CourseDemo from './pages/landing-page/course-demo/CourseDemo';
 import CourseEnrollment from './pages/landing-page/course-enrollment/CourseEnrollment';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/coursess" element={<Coursess />} />
-        <Route path="/pricing" element={<PricingPage />} />
-        <Route path="/contactus" element={<ContactForm />} />
-        <Route path="/aboutus" element={<AboutUs />} />
+    <ThemeProvider>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/coursess" element={<Coursess />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/contactus" element={<ContactForm />} />
+          <Route path="/aboutus" element={<AboutUs />} />
 
-        <Route path="/abo" element={<Std />} />   
-        <Route path="/aboa" element={<StudentAnoument />} />
-        <Route path="/abca" element={<Studentbuycourse />} />
-        <Route path="/abcd" element={<Doubts />} />
-        <Route path="/abas" element={<Assigment />} />
-        <Route path="/abca2" element={<Studentbuycourse2 />} />
-        <Route path="/abop" element={<Projile />} />
-        <Route path="/profile" element={<Pr />} />
-        <Route
-          path="/user-dashboard"
-          element={
-            <ProtectedRoute role="student">
-              <StudentRoutes />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/teacher-dashboard"
-          element={
-            <ProtectedRoute role="teacher">
-              <TeacherDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin-dashboard"
-          element={
-            <ProtectedRoute role="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="/courses" element={<Coursess />} />
-        <Route path="/course-demo/:courseId" element={<CourseDemo />} />
-        <Route path="/course-enrollment/:courseId" element={<CourseEnrollment />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </AuthProvider>
+          <Route path="/abo" element={<Std />} />   
+          <Route path="/aboa" element={<StudentAnoument />} />
+          <Route path="/abca" element={<Studentbuycourse />} />
+          <Route path="/abcd" element={<Doubts />} />
+          <Route path="/abas" element={<Assigment />} />
+          <Route path="/abca2" element={<Studentbuycourse2 />} />
+          <Route path="/abop" element={<Pr />} />
+          <Route path="/profile" element={<Projile />} />
+          <Route
+            path="/user-dashboard"
+            element={
+              <ProtectedRoute role="student">
+                <StudentRoutes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/teacher-dashboard"
+            element={
+              <ProtectedRoute role="teacher">
+                <TeacherDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute role="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/courses" element={<Coursess />} />
+          <Route path="/course-demo/:courseId" element={<CourseDemo />} />
+          <Route path="/course-enrollment/:courseId" element={<CourseEnrollment />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

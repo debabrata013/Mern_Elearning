@@ -8,6 +8,13 @@ import {
   XCircle,
   AlertTriangle,
   Clock,
+  AlertCircle,
+  FileText,
+  BarChart3,
+  Calendar,
+  Award,
+  Eye,
+  ArrowRight,
 } from "lucide-react";
 
 // Load initial data from localStorage or use defaults
@@ -71,61 +78,112 @@ const AssignmentCard = ({ item, type, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="bg-white shadow rounded-lg p-4 hover:shadow-xl transition-shadow duration-300 cursor-pointer relative"
+      className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 dark:border-gray-700"
     >
-      <div className="bg-white shadow-lg w-[250px] h-screen fixed top-0 left-0">
-    <Sidebar />
-  </div>
-      {type === "pending" && (
-        <div className="absolute top-2 right-2">
-          {daysRemaining < 0 ? (
-            <span className="bg-red-100 text-red-600 text-xs font-medium py-1 px-2 rounded-full">
-              Overdue
-            </span>
-          ) : daysRemaining <= 3 ? (
-            <span className="bg-yellow-100 text-yellow-600 text-xs font-medium py-1 px-2 rounded-full">
-              Due in {daysRemaining} day{daysRemaining !== 1 && "s"}
-            </span>
-          ) : null}
+      {/* Top Gradient Bar */}
+      <div className="h-2 bg-gradient-to-r from-[#5491CA] to-[#7670AC]" />
+
+      {/* Main Content */}
+      <div className="p-6">
+        {/* Status Badge */}
+        {type === "pending" && (
+          <div className="absolute top-4 right-4 z-10">
+            {daysRemaining < 0 ? (
+              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-red-50 text-red-600 border border-red-100 shadow-sm">
+                <AlertCircle className="w-3.5 h-3.5 mr-1" /> Overdue
+              </span>
+            ) : daysRemaining <= 3 ? (
+              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-600 border border-yellow-100 shadow-sm">
+                <Clock className="w-3.5 h-3.5 mr-1" /> {daysRemaining}d left
+              </span>
+            ) : (
+              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm">
+                <Calendar className="w-3.5 h-3.5 mr-1" /> {daysRemaining}d left
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Title and Description */}
+        <div className="mb-4">
+          <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-[#5491CA] transition-colors mb-2">
+            {item.title}
+          </h4>
+          <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2">
+            {item.description}
+          </p>
         </div>
-      )}
-      <h4 className="text-lg font-semibold mb-2">{item.title}</h4>
-      <p className="text-gray-600 text-sm mb-4">{item.description}</p>
-      <div className="flex flex-wrap gap-2 mb-4">
-        {item.tags.map((tag, index) => (
-          <span
-            key={index}
-            className="bg-blue-100 text-blue-600 text-xs font-medium py-1 px-2 rounded-full"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-      {type === "pending" ? (
-        <>
-          <p className="text-sm text-gray-500 mb-1">
-            Due: <span className="font-medium text-red-500">{item.dueDate}</span>
-          </p>
-          <p className="text-sm text-gray-500">
-            Status: <span className="font-medium text-yellow-600">{item.status}</span>
-          </p>
-          {item.timeLimit && (
-            <p className="text-sm text-gray-500 mt-2">
-              <Clock className="inline w-4 h-4 mr-1" />
-              Time Limit: {item.timeLimit} minutes
-            </p>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {item.tags.map((tag, index) => (
+            <span
+              key={index}
+              className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-[#5491CA]/10 text-[#5491CA] dark:bg-[#5491CA]/20 dark:text-[#6ba2d8]"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-gray-100 dark:bg-gray-700 my-4" />
+
+        {/* Footer Information */}
+        {type === "pending" ? (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400">Due Date</p>
+              <p className="text-sm font-medium text-[#5491CA] dark:text-[#6ba2d8] flex items-center gap-1.5">
+                <Calendar className="w-4 h-4" />
+                {new Date(item.dueDate).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric'
+                })}
+              </p>
+            </div>
+            {item.timeLimit && (
+              <div className="space-y-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Time Limit</p>
+                <p className="text-sm font-medium text-[#7670AC] dark:text-[#8f89c5] flex items-center gap-1.5">
+                  <Clock className="w-4 h-4" />
+                  {item.timeLimit} min
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400">Grade</p>
+              <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                <Award className="w-4 h-4" />
+                {item.grade}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400">Completed</p>
+              <p className="text-sm font-medium text-[#5491CA] dark:text-[#6ba2d8] flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4" />
+                {new Date(item.completedDate).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric'
+                })}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Action Button */}
+        <button className="w-full mt-4 px-4 py-2 rounded-lg bg-gradient-to-r from-[#5491CA] to-[#7670AC] text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+          {type === "pending" ? (
+            <>Start Assignment <ArrowRight className="w-4 h-4" /></>
+          ) : (
+            <>View Details <Eye className="w-4 h-4" /></>
           )}
-        </>
-      ) : (
-        <>
-          <p className="text-sm text-gray-500 mb-1">
-            Grade: <span className="font-medium text-green-500">{item.grade}</span>
-          </p>
-          <p className="text-sm text-gray-500">
-            Completed: <span className="font-medium">{item.completedDate}</span>
-          </p>
-        </>
-      )}
+        </button>
+      </div>
     </div>
   );
 };
@@ -136,7 +194,6 @@ const AssignmentDetail = ({ assignment, onBack, onSubmitAssignment }) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [timeLeft, setTimeLeft] = useState(assignment.timeLimit * 60 || null);
   const [submitted, setSubmitted] = useState(false);
-
   const [answers, setAnswers] = useState(() => {
     const saved = localStorage.getItem(`answers-${assignment.id}`);
     return saved ? JSON.parse(saved) : Object.fromEntries(
@@ -144,16 +201,14 @@ const AssignmentDetail = ({ assignment, onBack, onSubmitAssignment }) => {
     );
   });
 
+  // Timer effect
   useEffect(() => {
-    localStorage.setItem(`answers-${assignment.id}`, JSON.stringify(answers));
-  }, [answers, assignment.id]);
-
-  useEffect(() => {
-    if (!timeLeft || !isPending) return;
+    if (!timeLeft || !isPending || submitted) return;
 
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
+          clearInterval(timer);
           handleSubmit();
           return 0;
         }
@@ -162,7 +217,13 @@ const AssignmentDetail = ({ assignment, onBack, onSubmitAssignment }) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, [timeLeft, isPending, submitted]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
 
   const handleSelect = (qId, option) => {
     if (!submitted && isPending) {
@@ -194,147 +255,182 @@ const AssignmentDetail = ({ assignment, onBack, onSubmitAssignment }) => {
     }, 2000);
   };
 
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
   const currentQuestion = assignment.questions[currentQuestionIndex];
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="bg-white shadow-lg w-[250px] h-screen fixed top-0 left-0">
-    <Sidebar />
-  </div>
-      <div className="max-w-4xl mx-auto">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-blue-500 mb-6 hover:text-blue-600"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Back to Assignments
-        </button>
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Sidebar - Now visible and fixed */}
+      <div className="fixed left-0 top-0 h-screen w-[250px] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-30">
+        <Sidebar />
+      </div>
 
-        {timeLeft !== null && (
-          <div className="flex items-center gap-2 mb-6 p-3 bg-red-50 rounded-lg">
-            <Clock className="w-5 h-5 text-red-600" />
-            <span className="font-medium text-red-600">
-              Time Remaining: {formatTime(timeLeft)}
-            </span>
-          </div>
-        )}
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-2xl font-bold mb-4">{assignment.title}</h2>
-          <p className="text-gray-600 mb-6">{assignment.description}</p>
-
-          <div className="flex justify-between mb-6">
+      {/* Main Content Area */}
+      <div className="flex-1 ml-[250px]">
+        {/* Top Navigation Bar */}
+        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-20 px-6 py-4">
+          <div className="flex items-center justify-between max-w-6xl mx-auto">
             <button
-              onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
-              disabled={currentQuestionIndex === 0}
-              className="px-4 py-2 bg-gray-100 rounded-lg disabled:opacity-50 hover:bg-gray-200"
+              onClick={onBack}
+              className="flex items-center gap-2 text-gray-600 hover:text-[#5491CA] transition-colors"
             >
-              Previous
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Assignments</span>
             </button>
-            <span className="text-gray-600">
-              Question {currentQuestionIndex + 1} of {assignment.questions.length}
-            </span>
-            <button
-              onClick={() => setCurrentQuestionIndex(prev => 
-                Math.min(assignment.questions.length - 1, prev + 1)
-              )}
-              disabled={currentQuestionIndex === assignment.questions.length - 1}
-              className="px-4 py-2 bg-gray-100 rounded-lg disabled:opacity-50 hover:bg-gray-200"
-            >
-              Next
-            </button>
+
+            {timeLeft !== null && timeLeft > 0 && (
+              <div className={`
+                flex items-center gap-3 px-4 py-2 rounded-lg border
+                ${timeLeft < 300 
+                  ? 'bg-red-50 dark:bg-red-900/20 border-red-100 dark:border-red-800 text-red-600 dark:text-red-400' 
+                  : 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800 text-blue-600 dark:text-blue-400'}
+              `}>
+                <Clock className={`w-5 h-5 ${timeLeft < 300 ? 'animate-pulse' : ''}`} />
+                <span className="font-medium tabular-nums">
+                  Time Remaining: {formatTime(timeLeft)}
+                </span>
+              </div>
+            )}
           </div>
+        </div>
 
-          <div className="space-y-6">
-            <div key={currentQuestion.id} className="p-4 bg-gray-50 rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">
-                {currentQuestionIndex + 1}. {currentQuestion.question}
-              </h3>
-              <div className="grid grid-cols-1 gap-3">
-                {currentQuestion.options.map(option => {
-                  const isSelected = answers[currentQuestion.id] === option;
-                  const isCorrect = option === currentQuestion.correctAnswer;
-                  const showAnswers = submitted || !isPending;
-
-                  return (
-                    <label
-                      key={option}
-                      className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
-                        !showAnswers && "hover:border-blue-500"
-                      } ${
-                        showAnswers
-                          ? isCorrect
-                            ? "border-green-500 bg-green-50"
-                            : isSelected
-                            ? "border-red-500 bg-red-50"
-                            : "border-gray-300"
-                          : isSelected
-                          ? "border-blue-500 bg-blue-50"
-                          : "border-gray-300"
-                      }`}
+        {/* Question Content */}
+        <div className="p-6">
+          <div className="max-w-4xl mx-auto">
+            {/* Assignment Header */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8">
+              <div className="h-2 bg-gradient-to-r from-[#5491CA] to-[#7670AC]" />
+              <div className="p-6">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                  {assignment.title}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  {assignment.description}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {assignment.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 rounded-full text-sm font-medium bg-[#5491CA]/10 text-[#5491CA] dark:bg-[#5491CA]/20 dark:text-[#6ba2d8]"
                     >
-                      <input
-                        type="radio"
-                        name={currentQuestion.id}
-                        value={option}
-                        checked={isSelected}
-                        onChange={() => handleSelect(currentQuestion.id, option)}
-                        className="mr-3"
-                        disabled={submitted || !isPending}
-                      />
-                      <span className="flex-1">{option}</span>
-                      {showAnswers && isCorrect && (
-                        <CheckCircle className="w-5 h-5 text-green-500" />
-                      )}
-                      {showAnswers && isSelected && !isCorrect && (
-                        <XCircle className="w-5 h-5 text-red-500" />
-                      )}
-                    </label>
-                  );
-                })}
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          {isPending && !submitted && (
-            <div className="mt-8 flex justify-end">
+            <div className="flex justify-between mb-6">
               <button
-                onClick={() => setShowConfirm(true)}
-                className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
+                disabled={currentQuestionIndex === 0}
+                className="px-4 py-2 bg-gray-100 rounded-lg disabled:opacity-50 hover:bg-gray-200"
               >
-                Submit Assignment
+                Previous
+              </button>
+              <span className="text-gray-600">
+                Question {currentQuestionIndex + 1} of {assignment.questions.length}
+              </span>
+              <button
+                onClick={() => setCurrentQuestionIndex(prev => 
+                  Math.min(assignment.questions.length - 1, prev + 1)
+                )}
+                disabled={currentQuestionIndex === assignment.questions.length - 1}
+                className="px-4 py-2 bg-gray-100 rounded-lg disabled:opacity-50 hover:bg-gray-200"
+              >
+                Next
               </button>
             </div>
-          )}
+
+            <div className="space-y-6">
+              <div key={currentQuestion.id} className="p-4 bg-gray-50 rounded-lg">
+                <h3 className="text-lg font-semibold mb-4">
+                  {currentQuestionIndex + 1}. {currentQuestion.question}
+                </h3>
+                <div className="grid grid-cols-1 gap-3">
+                  {currentQuestion.options.map(option => {
+                    const isSelected = answers[currentQuestion.id] === option;
+                    const isCorrect = option === currentQuestion.correctAnswer;
+                    const showAnswers = submitted || !isPending;
+
+                    return (
+                      <label
+                        key={option}
+                        className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
+                          !showAnswers && "hover:border-blue-500"
+                        } ${
+                          showAnswers
+                            ? isCorrect
+                              ? "border-green-500 bg-green-50"
+                              : isSelected
+                              ? "border-red-500 bg-red-50"
+                              : "border-gray-300"
+                            : isSelected
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name={currentQuestion.id}
+                          value={option}
+                          checked={isSelected}
+                          onChange={() => handleSelect(currentQuestion.id, option)}
+                          className="mr-3"
+                          disabled={submitted || !isPending}
+                        />
+                        <span className="flex-1">{option}</span>
+                        {showAnswers && isCorrect && (
+                          <CheckCircle className="w-5 h-5 text-green-500" />
+                        )}
+                        {showAnswers && isSelected && !isCorrect && (
+                          <XCircle className="w-5 h-5 text-red-500" />
+                        )}
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {isPending && !submitted && (
+              <div className="mt-8 flex justify-end">
+                <button
+                  onClick={() => setShowConfirm(true)}
+                  className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  Submit Assignment
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
+      {/* Confirmation Modal */}
       {showConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
-            <div className="flex items-center gap-2 mb-4">
-              <AlertTriangle className="w-5 h-5 text-yellow-600" />
-              <h3 className="font-semibold">Confirm Submission</h3>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-xl">
+            <div className="flex items-center gap-3 mb-4">
+              <AlertTriangle className="w-6 h-6 text-yellow-500" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                Confirm Submission
+              </h3>
             </div>
-            <p className="mb-4">Are you sure you want to submit this assignment?</p>
-            <div className="flex gap-4 justify-end">
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Are you sure you want to submit this assignment? You won't be able to change your answers after submission.
+            </p>
+            <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowConfirm(false)}
-                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+                className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#5491CA] to-[#7670AC] text-white hover:opacity-90 transition-opacity"
               >
-                Confirm
+                Confirm Submission
               </button>
             </div>
           </div>
@@ -379,102 +475,150 @@ const AssignmentsAndQuizzes = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar - Fixed on the Left */}
-      <div className="bg-white shadow-lg w-[250px] h-screen   fixed top-0 left-0">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Sidebar */}
+      <div className="bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700">
         <Sidebar />
       </div>
-  
-      {/* Main Content - Scrollable */}
-      <div className="flex-1 ml-[250px] overflow-y-auto  bg-gray-50">
-        {/* Outer Container for All Content */}
-        <div className="w-full max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-10 border border-gray-300 min-h-screen flex flex-col">
-          {/* Header inside the box */}
-          <h1 className="text-3xl font-bold text-center mb-8 text-[#7670AC]">
-            Assignments & Quizzes
-          </h1>
-  
-          {/* Content Sections Container - takes remaining space */}
-          <div className="flex-1">
-            {/* Pending Assignments Section */}
-            <section className="mb-12">
-              <h2 className="text-2xl font-semibold flex items-center gap-2 text-[#5491CA]">
-                📌 Pending Assignments
-                <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm">
-                  {pending.length}
-                </span>
-              </h2>
-              {pending.length === 0 ? (
-                <p className="text-gray-600 mt-2">
-                  No pending assignments. Great job! 🎉
-                </p>
-              ) : (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                    {(showAllPending ? pending : pending.slice(0, 2)).map((item) => (
-                      <AssignmentCard
-                        key={item.id}
-                        item={item}
-                        type="pending"
-                        onClick={() => setSelectedAssignment(item)}
-                      />
-                    ))}
-                  </div>
-                  {pending.length > 2 && (
-                    <button
-                      onClick={() => setShowAllPending(!showAllPending)}
-                      className="mt-6 flex items-center gap-2 text-[#5491CA] hover:text-blue-700 mx-auto block"
-                    >
-                      {showAllPending ? "Show Less" : "Show More"}
-                      {showAllPending ? <ChevronUp /> : <ChevronDown />}
-                    </button>
-                  )}
-                </>
-              )}
-            </section>
-  
-            {/* Completed Assignments Section */}
-            <section>
-              <h2 className="text-2xl font-semibold flex items-center gap-2 text-green-700">
-                ✅ Completed Assignments
-                <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">
-                  {completed.length}
-                </span>
-              </h2>
-              {completed.length === 0 ? (
-                <p className="text-gray-600 mt-2">
-                  No completed assignments yet. Let's get started! 💪
-                </p>
-              ) : (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                    {(showAllCompleted ? completed : completed.slice(0, 2)).map((item) => (
-                      <AssignmentCard
-                        key={item.id}
-                        item={item}
-                        type="completed"
-                        onClick={() => setSelectedAssignment(item)}
-                      />
-                    ))}
-                  </div>
-                  {completed.length > 2 && (
-                    <button
-                      onClick={() => setShowAllCompleted(!showAllCompleted)}
-                      className="mt-6 flex items-center gap-2 text-[#5491CA] hover:text-blue-700 mx-auto block"
-                    >
-                      {showAllCompleted ? "Show Less" : "Show More"}
-                      {showAllCompleted ? <ChevronUp /> : <ChevronDown />}
-                    </button>
-                  )}
-                </>
-              )}
-            </section>
+
+      {/* Main Content */}
+      <div className="flex-1 ml-[280px] p-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
+            <h1 className="text-3xl font-bold text-center bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
+              Assignments & Quizzes
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 text-center mt-2">
+              Track your progress and manage your academic tasks
+            </p>
           </div>
+
+          {/* Stats Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {[
+              {
+                title: "Pending Tasks",
+                value: pending.length,
+                color: "from-yellow-500 to-orange-500",
+                icon: <Clock className="w-5 h-5" />
+              },
+              {
+                title: "Completed",
+                value: completed.length,
+                color: "from-green-500 to-emerald-500",
+                icon: <CheckCircle className="w-5 h-5" />
+              },
+              {
+                title: "Total Progress",
+                value: `${Math.round((completed.length / (pending.length + completed.length)) * 100)}%`,
+                color: "from-[#5491CA] to-[#7670AC]",
+                icon: <BarChart3 className="w-5 h-5" />
+              }
+            ].map((stat, index) => (
+              <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-md">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{stat.title}</p>
+                    <p className="text-2xl font-bold mt-1 bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
+                      {stat.value}
+                    </p>
+                  </div>
+                  <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.color} text-white`}>
+                    {stat.icon}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Pending Assignments */}
+          <section className="mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-semibold text-[#5491CA] flex items-center gap-2">
+                <FileText className="w-6 h-6" /> Pending Assignments
+              </h2>
+              {pending.length > 0 && (
+                <span className="px-3 py-1 rounded-full text-sm font-medium bg-red-50 text-red-600 border border-red-100">
+                  {pending.length} pending
+                </span>
+              )}
+            </div>
+
+            {pending.length === 0 ? (
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center border border-gray-200 dark:border-gray-700">
+                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
+                <p className="text-gray-600 dark:text-gray-400">No pending assignments. Great job! 🎉</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {(showAllPending ? pending : pending.slice(0, 2)).map((item) => (
+                  <AssignmentCard
+                    key={item.id}
+                    item={item}
+                    type="pending"
+                    onClick={() => setSelectedAssignment(item)}
+                  />
+                ))}
+              </div>
+            )}
+
+            {pending.length > 2 && (
+              <button
+                onClick={() => setShowAllPending(!showAllPending)}
+                className="mt-6 px-4 py-2 rounded-lg bg-gradient-to-r from-[#5491CA]/10 to-[#7670AC]/10 text-[#5491CA] hover:from-[#5491CA]/20 hover:to-[#7670AC]/20 transition-all duration-300 flex items-center gap-2 mx-auto"
+              >
+                {showAllPending ? "Show Less" : "Show More"}
+                {showAllPending ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
+            )}
+          </section>
+
+          {/* Completed Assignments - Similar structure to Pending section */}
+          <section>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-semibold text-green-700 flex items-center gap-2">
+                ✅ Completed Assignments
+              </h2>
+              {completed.length > 0 && (
+                <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-50 text-green-600 border border-green-100">
+                  {completed.length} completed
+                </span>
+              )}
+            </div>
+
+            {completed.length === 0 ? (
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center border border-gray-200 dark:border-gray-700">
+                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
+                <p className="text-gray-600 dark:text-gray-400">No completed assignments yet. Let's get started! 💪</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {(showAllCompleted ? completed : completed.slice(0, 2)).map((item) => (
+                  <AssignmentCard
+                    key={item.id}
+                    item={item}
+                    type="completed"
+                    onClick={() => setSelectedAssignment(item)}
+                  />
+                ))}
+              </div>
+            )}
+
+            {completed.length > 2 && (
+              <button
+                onClick={() => setShowAllCompleted(!showAllCompleted)}
+                className="mt-6 px-4 py-2 rounded-lg bg-gradient-to-r from-[#5491CA]/10 to-[#7670AC]/10 text-[#5491CA] hover:from-[#5491CA]/20 hover:to-[#7670AC]/20 transition-all duration-300 flex items-center gap-2 mx-auto"
+              >
+                {showAllCompleted ? "Show Less" : "Show More"}
+                {showAllCompleted ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
+            )}
+          </section>
         </div>
       </div>
     </div>
   );
-  
 };
 
 export default AssignmentsAndQuizzes;

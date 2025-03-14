@@ -15,7 +15,7 @@ const CardHeader = ({ className = '', children }) => (
 );
 
 const CardTitle = ({ className = '', children }) => (
-  <h2 className={`text-3xl font-bold tracking-tight text-gray-900 ${className}`}>
+  <h2 className={`text-3xl font-bold tracking-tight ${className}`}>
     {children}
   </h2>
 );
@@ -43,8 +43,8 @@ const Button = ({
   const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
   
   const variants = {
-    default: 'bg-gray-900 text-white hover:bg-gray-800 hover:scale-105',
-    outline: 'border border-gray-200 bg-white hover:bg-gray-100 hover:border-gray-300 text-gray-900',
+    default: 'bg-[#5491CA] text-white hover:bg-[#4a82b5] hover:scale-105',
+    outline: 'border border-gray-200 bg-white hover:bg-gray-50 hover:border-[#5491CA] text-[#5491CA]',
     ghost: 'hover:bg-gray-100 text-gray-900 hover:scale-105',
   };
   
@@ -66,8 +66,9 @@ const Button = ({
 // Enhanced Badge Component
 const Badge = ({ variant = 'default', className = '', children }) => {
   const variants = {
-    default: 'bg-gray-900 text-white',
-    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 transition-colors duration-200',
+    default: 'bg-[#5491CA] text-white',
+    secondary: 'bg-[#5491CA]/10 text-[#5491CA] hover:bg-[#5491CA]/20 transition-colors duration-200',
+    purple: 'bg-[#b1a9f1]/10 text-[#b1a9f1] hover:bg-[#b1a9f1]/20 transition-colors duration-200',
   };
 
   return (
@@ -89,11 +90,11 @@ const ScrollArea = ({ className = '', children }) => (
         border-radius: 4px;
       }
       .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #888;
+        background: #b1a9f1;
         border-radius: 4px;
       }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #666;
+        background: #5491CA;
       }
     `}</style>
     {children}
@@ -145,13 +146,15 @@ const NotificationContent = () => {
   };
 
   return (
-    <Card className="w-full max-w-5xl mx-auto">
-      <CardHeader className="bg-gradient-to-r from-gray-50 to-white border-bn w-full">
+    <Card className="w-full max-w-5xl mx-auto overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-[#5491CA]/10 to-[#b1a9f1]/10 border-b border-gray-100">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <Bell className="h-6 w-6 text-blue-600" />
+          <div className="p-2 bg-gradient-to-r from-[#5491CA]/20 to-[#b1a9f1]/20 rounded-lg">
+            <Bell className="h-6 w-6 text-[#5491CA]" />
           </div>
-          <CardTitle>Announcements</CardTitle>
+          <CardTitle className="bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-transparent bg-clip-text">
+            Announcements
+          </CardTitle>
         </div>
         <CardDescription>
           View the latest announcements from the admin below.
@@ -162,8 +165,10 @@ const NotificationContent = () => {
         <ScrollArea className="h-[600px] pr-4">
           {notifications.length === 0 ? (
             <div className="text-center py-16 text-gray-500">
-              <Info className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-              <p className="text-lg font-medium">No new announcements</p>
+              <div className="h-20 w-20 mx-auto mb-4 rounded-full bg-[#5491CA]/10 flex items-center justify-center">
+                <Info className="h-10 w-10 text-[#5491CA]" />
+              </div>
+              <p className="text-lg font-medium text-[#5491CA]">No new announcements</p>
               <p className="text-sm text-gray-400">Check back later for updates</p>
             </div>
           ) : (
@@ -171,20 +176,26 @@ const NotificationContent = () => {
               {notifications.map((notification) => (
                 <Card 
                   key={notification.id}
-                  className={`relative transition-all duration-200 hover:transform hover:translate-x-1  mt-2${
-                    notification.read ? 'bg-gray-50' : 'bg-white'
+                  className={`relative transition-all duration-300 hover:transform hover:translate-x-1 border-l-4 ${
+                    notification.read 
+                      ? 'border-l-gray-200 bg-gray-50' 
+                      : 'border-l-[#5491CA] bg-white shadow-md'
                   }`}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-start gap-3">
                         {notification.notificationType === 'link' ? (
-                          <LinkIcon className="h-6 w-6 mt-1 text-blue-500" />
+                          <div className="h-10 w-10 rounded-full bg-[#5491CA]/10 flex items-center justify-center">
+                            <LinkIcon className="h-5 w-5 text-[#5491CA]" />
+                          </div>
                         ) : (
-                          <Info className="h-6 w-6 mt-1 text-gray-500" />
+                          <div className="h-10 w-10 rounded-full bg-[#b1a9f1]/10 flex items-center justify-center">
+                            <Info className="h-5 w-5 text-[#b1a9f1]" />
+                          </div>
                         )}
                         <div>
-                          <h3 className="text-xl font-semibold text-gray-900 mb-1">
+                          <h3 className="text-xl font-semibold text-[#5491CA] mb-1">
                             {notification.title}
                           </h3>
                           <p className="text-sm text-gray-500">
@@ -198,7 +209,7 @@ const NotificationContent = () => {
                             variant="ghost" 
                             size="sm"
                             onClick={() => handleMarkRead(notification.id)}
-                            className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                            className="text-green-600 hover:text-green-700 hover:bg-green-50 rounded-full h-8 w-8 p-0"
                           >
                             <Check className="h-5 w-5" />
                           </Button>
@@ -207,19 +218,21 @@ const NotificationContent = () => {
                           variant="ghost" 
                           size="sm"
                           onClick={() => handleDismiss(notification.id)}
-                          className="text-gray-500 hover:text-red-600 hover:bg-red-50"
+                          className="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 p-0"
                         >
                           <X className="h-5 w-5" />
                         </Button>
                       </div>
                     </div>
 
-                    <p className="text-gray-700 text-lg mt-3 line-clamp-3 leading-relaxed">
+                    <p className="text-gray-700 text-lg mt-4 leading-relaxed pl-13 ml-0">
                       {notification.description}
                     </p>
 
                     <div className="flex items-center justify-between mt-6">
-                      <Badge variant="secondary" className="text-blue-600 bg-blue-50 hover:bg-blue-100">
+                      <Badge 
+                        variant={notification.notificationType === 'link' ? 'secondary' : 'purple'}
+                      >
                         Teacher
                       </Badge>
                       
@@ -227,7 +240,7 @@ const NotificationContent = () => {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:border-blue-300"
+                          className="flex items-center gap-2 text-[#5491CA] hover:text-[#4a82b5] hover:border-[#5491CA]"
                           onClick={() => window.open(notification.link, '_blank')}
                         >
                           View Details
