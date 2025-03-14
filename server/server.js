@@ -11,7 +11,7 @@ const complaintRoutes = require('./src/routes/complaintRoutes');
 const ProfileRouters = require('./src/routes/profileRoutes');
  // Import coupon model
 const { deleteExpiredCoupons } = require('./src/controllers/couponController'); // Import the deleteExpiredCoupons function
-const cartRoutes = require('./src/routes/cartRoutes'); // Import cart routes
+ // Import cart routes
 
 
 dotenv.config();
