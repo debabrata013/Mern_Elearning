@@ -108,6 +108,11 @@ default:0
     type: mongoose.Schema.Types.ObjectId, 
     ref: "CourseChat"
   }],
+
+  cart: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Course"  // Reference to the Course model
+  }],
 }, {
   timestamps: true,  // Automatically adds createdAt and updatedAt fields.
   toJSON: { virtuals: true },  // Include virtuals in JSON output.
