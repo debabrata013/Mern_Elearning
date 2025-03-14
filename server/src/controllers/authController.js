@@ -2,18 +2,6 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Signup
-// exports.signup = async (req, res) => {
-//     try {
-//         const user = new User(req.body);
-//         await user.save();
-//         res.status(201).send({ message: 'User created successfully' });
-//     } catch (error) {
-//         res.status(400).send(error);
-//     }
-// };
-
-// Login
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -34,8 +22,6 @@ exports.login = async (req, res) => {
                 resumeurl:user.resumeurl,
                 lindeninProfileUrl:user.lindeninProfileUrl,
                 githubprofileurl:user.githubprofileurl,
-                
-                
                 role: user.role,
             },
             process.env.JWT_SECRET,
