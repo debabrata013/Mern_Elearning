@@ -1,280 +1,365 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./noti.css";
 
 import axios from 'axios';
-const AdminDashboard = () => {
-  const [notifications, setNotifications] = useState([]);
-  const [isAddNotificationVisible, setAddNotificationVisible] = useState(false);
-  const [notificationFor, setNotificationFor] = useState(""); // 'student' or 'teacher'
-  const [searchQuery, setSearchQuery] = useState("");
-  const [editingNotification, setEditingNotification] = useState(null);
 
-  // Open Add Notification Page
-  const handleAddNotification = (type) => {
-    setNotificationFor(type);
-    setEditingNotification(null);
-    setAddNotificationVisible(true);
+
+
+
+
+
+
+const AddNotificationPage = () => {
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    link: "",
+    type: "text",
+    targetAudience: "student"
+  });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData(prevData => ({ 
+      ...prevData, 
+      [name]: value 
+    }));
+    setErrors(prevErrors => ({ 
+      ...prevErrors, 
+      [name]: "" 
+    }));
   };
 
-  // Handle Notification Submission
-  // const handleNotificationSubmit = (newNotification) => {
-  //   const currentDate = new Date().toLocaleDateString();
-  //   const currentTime = Date.now(); // Save timestamp
-  //   if (editingNotification !== null) {
-  //     setNotifications((prev) =>
-  //       prev.map((n, i) =>
-  //         i === editingNotification.index
-  //           ? {
-  //               ...newNotification,
-  //               date: editingNotification.date,
-  //               time: editingNotification.time,
-  //               for: editingNotification.for,
-  //             }
-  //           : n
-  //       )
-  //     );
-  //   } else {
-  //     setNotifications([
-  //       ...notifications,
-  //       { ...newNotification, date: currentDate, time: currentTime, for: notificationFor },
-  //     ]);
-  //   }
-  //   setAddNotificationVisible(false);
-  //   setEditingNotification(null);
-  // };
-  const handleNotificationSubmit = async (newNotification) => {
-    try {
-      const response = await axios.post("http://localhost:4400/announcements/", {
-        title: newNotification.title,
-        description: newNotification.description,
-        link: newNotification.link,
-        targetAudience: notificationFor, // 'student' or 'teacher'
-      });
-  
-      setNotifications([...notifications, response.data.announcement]); // Update state
-      setAddNotificationVisible(false);
-    } catch (error) {
-      console.error("Error creating announcement:", error);
-    }
-  };
-  // Delete Notification
-  const handleDeleteNotification = (index) => {
-    setNotifications(notifications.filter((_, i) => i !== index));
-  };
-
-  // Edit Notification
-  const handleEditNotification = (index) => {
-    const notificationToEdit = notifications[index];
-    setEditingNotification({ ...notificationToEdit, index });
-    setAddNotificationVisible(true);
-  };
-
-  // Search Filter
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  // Calculate elapsed time for each notification
-  const calculateElapsedTime = (timestamp) => {
-    const now = Date.now();
-    const elapsed = now - timestamp; // Time difference in milliseconds
-
-    const seconds = Math.floor(elapsed / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (days > 0) return `${days} day${days > 1 ? "s" : ""} ago`;
-    if (hours > 0) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    if (minutes > 0) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-    return "Just now";
-  };
-
-  // Periodically refresh elapsed time
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNotifications((prev) => [...prev]); // Trigger re-render
-    }, 60000); // Update every minute
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Filtered Notifications
-  const filteredNotifications = notifications.filter(
-    (notification) =>
-      notification.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      notification.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  return (
-    <div className="admin-dashboard">
-      {isAddNotificationVisible ? (
-        <AddNotificationPage
-          onSubmit={handleNotificationSubmit}
-          onCancel={() => setAddNotificationVisible(false)}
-          editingNotification={editingNotification}
-        />
-      ) : (
-        <div className="home-page">
-          <h1 className="headingi">Notifications </h1>
-
-          <div className="inner-body">
-          {notifications.length > 0 && (
-            <input
-              type="text"
-              placeholder="Search Notifications..."
-              value={searchQuery}
-              onChange={handleSearch}
-              className="search-bar"
-            />
-          )}
-          <button className="dropdown-button">
-            Add Notification
-            <div className="dropdown-content">
-              <button onClick={() => handleAddNotification("student")}>For Student</button>
-              <button onClick={() => handleAddNotification("teacher")}>For Teacher</button>
-            </div>
-          </button>
-          {notifications.length === 0 ? (
-            <p className="home-text">No notifications added.</p>
-          ) : (
-            <table>
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Description</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>For Whom</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredNotifications.map((notification, index) => (
-                  <tr key={index}>
-                    <td>{notification.title}</td>
-                    <td>
-                      {notification.link ? (
-                        <>
-                          {notification.description}
-                          <br />
-                          <a
-                            href={notification.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="join-button"
-                          >
-                            Join
-                          </a>
-                        </>
-                      ) : (
-                        notification.description
-                      )}
-                    </td>
-                    <td>{notification.date}</td>
-                    <td>{calculateElapsedTime(notification.time)}</td>
-                    <td>{notification.for}</td>
-                    <td className="action-cell">
-                      <button onClick={() => handleEditNotification(index)}>Edit</button>
-                      <button onClick={() => handleDeleteNotification(index)}>Delete</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-        </div>
-      )
-      }
-    </div>
-    
-  );
-};
-
-
-const AddNotificationPage = ({ onSubmit, onCancel, editingNotification }) => {
-  const [formData, setFormData] = useState(
-    editingNotification || {
+  const onCancel = () => {
+    setFormData({
       title: "",
       description: "",
       link: "",
-      image: null,
-      type: "none",
+      type: "text",
+      targetAudience: "student"
+    });
+    setErrors({});
+    setLoading(false);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    const validationErrors = {};
+
+
+
+
+    // Validation checks
+    if (!formData.title) validationErrors.title = "Title is required";
+    if (!formData.description) validationErrors.description = "Description is required";
+    if (!formData.type) validationErrors.type = "Notification type is required";
+    if (formData.type === "link" && !formData.link) validationErrors.link = "Link is required";
+
+    // Set validation errors
+    setErrors(validationErrors);
+
+
+
+    // If there are validation errors, stop submission
+    if (Object.keys(validationErrors).length > 0) {
+      setLoading(false);
+      return;
     }
-  );
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    try {
+      // Prepare data for submission
+      const submissionData = {
+        title: formData.title,
+        description: formData.description,
+        link: formData.link || "",
+        type: formData.type,
+        targetAudience: formData.targetAudience
+      };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData((prev) => ({ ...prev, image: URL.createObjectURL(file) }));
+      // Submit notification
+      const response = await axios.post("http://localhost:4400/announcements/", submissionData);
+      
+      // Reset form and show success
+      onCancel();
+      alert("Notification added successfully!");
+    } catch (error) {
+      console.error("Error submitting notification:", error);
+      setErrors({
+        general: error.response?.data?.message || "An error occurred while submitting the notification."
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSubmit = () => {
-    onSubmit(formData);
-  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="add-notification">
-      <h1>{editingNotification ? "Edit Notification" : "Add Notification"}</h1>
-      <input
-        type="text"
-        name="title"
-        placeholder="Title"
-        value={formData.title}
-        onChange={handleInputChange}
-      />
-      <textarea
-        name="description"
-        placeholder="Description"
-        value={formData.description}
-        onChange={handleInputChange}
-      ></textarea>
-      <div>
-        <label>
-          Notification Type
-          <select
-            name="type"
-            value={formData.type}
-            onChange={(e) => handleInputChange(e)}
-          >
-            <option value="none">None</option>
-            <option value="text">Text</option>
-            <option value="link">Link</option>
-          </select>
-        </label>
-        {formData.type === "text" && (
-          <input
-            type="text"
-            name="description"
-            placeholder="Text Notification"
-            value={formData.description}
-            onChange={handleInputChange}
-          />
-        )}
-        {formData.type === "link" && (
+      <h1>Add Notification</h1>
+      
+      {/* Title Input */}
+      <div className="form-group">
+        <label>Title</label>
+        <input
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={handleInputChange}
+          placeholder="Enter notification title"
+        />
+        {errors.title && <span className="error">{errors.title}</span>}
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      {/* Description Input */}
+      <div className="form-group">
+        <label>Description</label>
+        <textarea
+          name="description"
+          value={formData.description}
+          onChange={handleInputChange}
+          placeholder="Enter notification description"
+        />
+        {errors.description && <span className="error">{errors.description}</span>}
+      </div>
+
+      {/* Notification Type */}
+      <div className="form-group">
+        <label>Notification Type</label>
+        <select
+          name="type"
+          value={formData.type}
+          onChange={handleInputChange}
+        >
+          <option value="text">Text</option>
+          <option value="link">Link</option>
+        </select>
+        {errors.type && <span className="error">{errors.type}</span>}
+      </div>
+
+      {/* Link Input (Conditional) */}
+      {formData.type === "link" && (
+        <div className="form-group">
+          <label>Link</label>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           <input
             type="url"
             name="link"
-            placeholder="Link Notification"
+
             value={formData.link}
             onChange={handleInputChange}
+            placeholder="Enter notification link"
           />
-        )}
+          {errors.link && <span className="error">{errors.link}</span>}
+        </div>
+      )}
+
+      {/* Target Audience */}
+      <div className="form-group">
+        <label>Target Audience</label>
+        <select
+          name="targetAudience"
+          value={formData.targetAudience}
+          onChange={handleInputChange}
+        >
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+        </select>
       </div>
-      {formData.image && <img src={formData.image} alt="Preview" className="image-preview" />}
+
+      {/* General Error */}
+      {errors.general && <div className="error">{errors.general}</div>}
+
+      {/* Action Buttons */}
       <div className="buttons">
-        <button onClick={handleSubmit}>Submit</button>
-        <button onClick={onCancel}>Cancel</button>
+        <button 
+          onClick={handleSubmit} 
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Submit"}
+        </button>
+        <button onClick={onCancel} disabled={loading}>
+          Cancel
+        </button>
       </div>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default AddNotificationPage;

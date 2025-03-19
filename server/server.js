@@ -11,6 +11,7 @@ const complaintRoutes = require('./src/routes/complaintRoutes');
 const ProfileRouters = require('./src/routes/profileRoutes');
  // Import coupon model
 const { deleteExpiredCoupons } = require('./src/controllers/couponController'); // Import the deleteExpiredCoupons function
+ // Import cart routes
 
 
 dotenv.config();
@@ -49,6 +50,7 @@ const adminlandin=require("./src/routes/admin_Landing");
 const contactRoutes = require('./src/routes/contactRoutes');
 const MailRoutes =require("./src/routes/Email")
 const landingRoutes = require('./src/routes/landingRouters');
+const cartRoutes = require('./src/routes/cartRoutes');
 
 // Use routes
 app.use('/students', studentRoutes);
@@ -65,10 +67,9 @@ app.use('/quize',quize)
 app.use("/data",adminlandin)
 app.use("/landing",landingRoutes);
 app.use("/profile",ProfileRouters)
-
-
 app.use("/contactus/",contactRoutes)
 app.use("/mail/",MailRoutes);
+app.use('/cart', cartRoutes); // Add this line to use cart routes
 
 const deleteOldAnnouncements = async () => {
     try {

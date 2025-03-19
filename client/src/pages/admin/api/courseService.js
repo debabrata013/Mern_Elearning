@@ -11,7 +11,8 @@ const courseService = {
   // Get all courses
   getAllCourses: async () => {
     try {
-      const response = await axiosInstance.get('/courses');
+      const response = await axiosInstance.get('/courses/getallCourse');
+    
       return response.data;
     } catch (error) {
       console.error('Error fetching courses:', error);
