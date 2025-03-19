@@ -6,29 +6,41 @@ const Queries = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchQueries = async () => {
-      try {
-        const response = await axios.get("http://localhost:4400/contactus");
-        console.log("API Response:", response.data); // Debugging log
+  const fetchQueries = async () => {
+    try {
+      const response = await axios.get("http://localhost:4400/contactus");
+      console.log("API Response:", response.data); // Debugging log
 
-        // Ensure the response is an array
-        if (Array.isArray(response.data)) {
-          setQueries(response.data);
-        } else if (response.data && Array.isArray(response.data.data)) {
-          setQueries(response.data.data); // If API returns { data: [...] }
-        } else {
-          setQueries([]); // Fallback to empty array
-        }
-      } catch (err) {
-        console.error("Error fetching queries:", err);
-        setError("Failed to fetch queries. Please try again.");
-      } finally {
-        setLoading(false);
+      // Ensure the response is an array
+      if (Array.isArray(response.data)) {
+        setQueries(response.data);
+      } else if (response.data && Array.isArray(response.data.data)) {
+        setQueries(response.data.data); // If API returns { data: [...] }
+      } else {
+        setQueries([]); // Fallback to empty array
       }
-    };
+    } catch (err) {
+      console.error("Error fetching queries:", err);
+      setError("Failed to fetch queries. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchQueries();
   }, []);
+
+  const handleDelete = async (queryId) => {
+    try {
+      await axios.delete(`http://localhost:4400/contactus/${queryId}`);
+      // Refresh the queries list after successful deletion
+      fetchQueries();
+    } catch (err) {
+      console.error("Error deleting query:", err);
+      setError("Failed to delete query. Please try again.");
+    }
+  };
 
   return (
     <div className="queries-container pt-20 bg-white min-h-screen px-4">
@@ -52,6 +64,7 @@ const Queries = () => {
                 <th className="px-4 py-2">Phone</th>
                 <th className="px-4 py-2">Issue</th>
                 <th className="px-4 py-2">Message</th>
+                <th className="px-4 py-2">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -62,6 +75,14 @@ const Queries = () => {
                   <td className="px-4 py-2">{query.phoneNumber}</td>
                   <td className="px-4 py-2">{query.issueRelated}</td>
                   <td className="px-4 py-2">{query.message}</td>
+                  <td className="px-4 py-2">
+                    <button 
+                      onClick={() => handleDelete(query._id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
