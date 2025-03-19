@@ -42,6 +42,12 @@ const Queries = () => {
     }
   };
 
+  const handleReply = (query) => {
+    const subject = encodeURIComponent(`Re: ${query.issueRelated}`);
+    const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(query.contactEmail)}&su=${subject}`;
+    window.open(gmailComposeUrl, '_blank');
+  };
+
   return (
     <div className="queries-container pt-20 bg-white min-h-screen px-4">
       <h1 className="text-4xl font-extrabold text-[#5491CA] text-center mb-6">
@@ -75,12 +81,18 @@ const Queries = () => {
                   <td className="px-4 py-2">{query.phoneNumber}</td>
                   <td className="px-4 py-2">{query.issueRelated}</td>
                   <td className="px-4 py-2">{query.message}</td>
-                  <td className="px-4 py-2">
+                  <td className="px-4 py-2 space-y-2">
                     <button 
                       onClick={() => handleDelete(query._id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors"
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors block w-full"
                     >
                       Delete
+                    </button>
+                    <button 
+                      onClick={() => handleReply(query)}
+                      className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors block w-full"
+                    >
+                      Reply
                     </button>
                   </td>
                 </tr>
