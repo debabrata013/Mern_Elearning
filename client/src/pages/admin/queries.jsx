@@ -44,7 +44,23 @@ const Queries = () => {
 
   const handleReply = (query) => {
     const subject = encodeURIComponent(`Re: ${query.issueRelated}`);
-    const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(query.contactEmail)}&su=${subject}`;
+    const body = encodeURIComponent(`
+message recived:
+Name: ${query.name}
+Email: ${query.contactEmail}
+Phone: ${query.phoneNumber}
+Issue: ${query.issueRelated}
+
+Original Message:
+${query.message}
+---
+
+
+
+
+
+`);
+    const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(query.contactEmail)}&su=${subject}&body=${body}`;
     window.open(gmailComposeUrl, '_blank');
   };
 
