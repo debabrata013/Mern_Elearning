@@ -4,33 +4,11 @@ const bcrypt = require('bcryptjs');
 
 // Define an embedded Announcement schema
 const AnnouncementSchema = new mongoose.Schema({
-  title: { 
-    type: String, 
-    required: true, 
-    trim: true 
-  },
-  message: { 
-    type: String, 
-    required: true 
-  },
-  // Specify which roles should receive this announcement.
-  targetRoles: [{
-    type: String,
-    enum: ['student', 'teacher'],  // You can add 'admin' if needed.
-    required: true
-  }],
-  // The admin who sent the announcement.
-  sentBy: { 
+  announcementId: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: "User", 
-    required: true 
+    ref: "Announcement" 
   },
-  createdAt: { 
-    type: Date, 
-    default: Date.now 
-  },
-  // You can mark the announcement as read or not.
-  read: { 
+  isRead: { 
     type: Boolean, 
     default: false 
   }
