@@ -42,14 +42,20 @@ exports.login = async (req, res) => {
             { expiresIn: '120m' }
         );
 
+
         // Set access token in a cookie
         res.cookie('accessToken', accessToken, { httpOnly: true });
 
         // Send user data except password
         const { password: _, ...userData } = user.toObject();
 
+
         // Add all user data except password to the cookie
         res.cookie('userData', JSON.stringify(userData), { httpOnly: true });
+        console.log(userData);
+        console.log(accessToken);
+        console.log();
+        
 
         return res.send({ userData, accessToken, success: true, message: "Login successful" });
     } catch (error) {

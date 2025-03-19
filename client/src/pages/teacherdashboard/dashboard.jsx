@@ -1,7 +1,7 @@
     import React, { useState, useEffect, useRef } from 'react';
     import { useNavigate } from 'react-router-dom'; // Import useNavigate
     import { BarChart, Bar, Line, LineChart, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-    import { Bell, Settings, LogOut, Home, Users, BookOpen, ClipboardList, BarChart2, Layout, MessageSquare, Menu, Calendar, CheckCircle, ChevronRight, User, FileText, Award, HelpCircle, BookOpen as BookOpenIcon } from 'lucide-react';
+    import { Bell, Settings, LogOut, Home, Users, BookOpen, ClipboardList, BarChart2, Layout, MessageSquare, Menu, Calendar, CheckCircle, ChevronRight, User, FileText, Award, HelpCircle, BookOpen as BookOpenIcon, Plus, Check, Clock, Trash2, X } from 'lucide-react';
     import RecordsContent from "./record";
     import ClassesContent from './class';
     import QuizDashboard from "./quiz dashboard/quiz";
@@ -28,6 +28,9 @@
       const [teacherName, setTeacherName] = useState('Teacher');
       const [newStudents, setNewStudents] = useState(27);
       const [showWelcomeAnimation, setShowWelcomeAnimation] = useState(false);
+      const [tasks, setTasks] = useState([]);
+      const [newTask, setNewTask] = useState('');
+      const [showAddTask, setShowAddTask] = useState(false);
       
       useEffect(() => {
         // Get teacher name from session storage or use default
@@ -54,6 +57,36 @@
       
       const handleTakeAttendance = () => {
         navigate('/teacher/attendance');
+      };
+
+      const handleAddTask = (e) => {
+        e.preventDefault();
+        if (!newTask.trim()) return;
+        
+        const task = {
+          id: Date.now(),
+          text: newTask,
+          completed: false,
+          createdAt: new Date().toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+          })
+        };
+        
+        setTasks([task, ...tasks]);
+        setNewTask('');
+        setShowAddTask(false);
+      };
+
+      const toggleTask = (id) => {
+        setTasks(tasks.map(task => 
+          task.id === id ? { ...task, completed: !task.completed } : task
+        ));
+      };
+
+      const deleteTask = (id) => {
+        setTasks(tasks.filter(task => task.id !== id));
       };
 
       return (
@@ -146,59 +179,96 @@
               </ResponsiveContainer>
             </div>
 
-            {/* Recent Activities */}
+            {/* Todo Section - Replacing Recent Activities */}
             <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-[#5491CA]">Upcoming Activities</h3>
-                <button className="text-[#5491CA] text-sm hover:text-[#b1a9f1] transition-colors">View All</button>
+                <h3 className="text-lg font-semibold text-[#5491CA]">My Tasks</h3>
+                <button 
+                  onClick={() => setShowAddTask(true)}
+                  className="text-white text-sm bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] px-3 py-1.5 rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Task
+                </button>
               </div>
-              <div className="space-y-4">
-                {recentActivities.map((activity, index) => (
-                  <div 
-                    key={index} 
-                    className="flex gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-                  >
-                    <div className="bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white rounded-lg p-2 h-12 w-12 flex items-center justify-center shadow-sm">
-                      {activity.day}
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-800">{activity.title}</h4>
-                      {activity.subtitle && (
-                        <p className="text-sm text-gray-500">{activity.subtitle}</p>
-                      )}
-                      <p className="text-sm text-gray-500">{activity.time}</p>
-                    </div>
-                    <span className={`text-xs font-medium px-3 py-1 rounded-full flex items-center justify-cente ${activity.status === 'Due soon' ? 'bg-red-200 text-red-700' : 'bg-orange-200 text-orange-700'}`}>
-                       {activity.status}
-                    </span>
 
+              {/* Add Task Form */}
+              {showAddTask && (
+                <form onSubmit={handleAddTask} className="mb-4">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newTask}
+                      onChange={(e) => setNewTask(e.target.value)}
+                      placeholder="Enter your task..."
+                      className="flex-1 px-4 py-2 rounded-lg border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA]/20 focus:border-[#5491CA]"
+                      autoFocus
+                    />
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-[#5491CA] text-white rounded-lg hover:bg-[#4a82b6] transition-colors"
+                    >
+                      Add
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowAddTask(false)}
+                      className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
                   </div>
-                ))}
+                </form>
+              )}
+
+              {/* Tasks List */}
+              <div className="space-y-4">
+                {tasks.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <p>No tasks yet. Add your first task!</p>
+                  </div>
+                ) : (
+                  tasks.map((task) => (
+                    <div 
+                      key={task.id}
+                      className="flex gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                    >
+                      <button
+                        onClick={() => toggleTask(task.id)}
+                        className={`h-12 w-12 rounded-lg flex items-center justify-center shadow-sm transition-all
+                          ${task.completed 
+                            ? 'bg-green-500 text-white' 
+                            : 'bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white'}`}
+                      >
+                        {task.completed ? (
+                          <Check className="w-6 h-6" />
+                        ) : (
+                          <Clock className="w-6 h-6" />
+                        )}
+                      </button>
+                      
+                      <div className="flex-1">
+                        <h4 className={`font-medium ${task.completed ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                          {task.text}
+                        </h4>
+                        <p className="text-sm text-gray-500">Added {task.createdAt}</p>
+                      </div>
+
+                      <button
+                        onClick={() => deleteTask(task.id)}
+                        className="opacity-0 group-hover:opacity-100 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
 
           {/* Quick Actions */}
-          <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
-            <h3 className="text-lg font-semibold mb-4 text-[#5491CA]">Quick Actions</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { icon: <ClipboardList className="h-6 w-6" />, label: 'Take Attendance', color: '#5491CA' },
-                { icon: <MessageSquare className="h-6 w-6" />, label: 'Message Parents', color: '#b1a9f1' },
-                { icon: <BarChart2 className="h-6 w-6" />, label: 'Grade Assignments', color: '#7670AC' },
-                { icon: <Calendar className="h-6 w-6" />, label: 'Schedule Class', color: '#5491CA' },
-              ].map((action, index) => (
-                <button
-                  key={index}
-                  className="flex flex-col items-center justify-center p-4 rounded-lg border-2 border-gray-100 hover:border-[#5491CA] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-md"
-                  style={{ color: action.color }}
-                >
-                  {action.icon}
-                  <span className="mt-2 text-sm font-medium">{action.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+          
         </div>
       );
     };
@@ -355,12 +425,7 @@
             <header className="flex flex-col md:flex-row justify-between items-center mb-8">
               <div className="w-full md:flex-1 mb-4 md:mb-0">
                 <div className="relative">
-                  <input
-                    type="search"
-                    placeholder="Search Class, Documents, Activities..."
-                    className="w-full max-w-xl px-4 py-2 rounded-lg border border-gray-200 focus:border-[#5491CA] focus:ring-2 focus:ring-[#5491CA]/20 transition-all duration-300"
-                    aria-label="Search"
-                  />
+                  <p>Teacher Dashboard</p>
                 </div>
               </div>
 
@@ -397,50 +462,9 @@
                             setProfileDropdownOpen(false);
                           }}
                         />
-                        {/* <DropdownItem 
-                          icon={<BookOpenIcon className="h-4 w-4" />} 
-                          label="My Courses" 
-                          onClick={() => {
-                            navigate('/teacher/courses');
-                            setProfileDropdownOpen(false);
-                          }}
-                        /> */}
-                        {/* <DropdownItem 
-                          icon={<FileText className="h-4 w-4" />} 
-                          label="My Resources" 
-                          onClick={() => {
-                            navigate('/teacher/resources');
-                            setProfileDropdownOpen(false);
-                          }}
-                        /> */}
-                        {/* <DropdownItem 
-                          icon={<Award className="h-4 w-4" />} 
-                          label="Certifications" 
-                          onClick={() => {
-                            navigate('/teacher/certifications');
-                            setProfileDropdownOpen(false);
-                          }}
-                        /> */}
                       </div>
                       
-                      <div className="border-t border-gray-100 py-1">
-                        <DropdownItem 
-                          icon={<Settings className="h-4 w-4" />} 
-                          label="Settings" 
-                          onClick={() => {
-                            setCurrentSection('settings');
-                            setProfileDropdownOpen(false);
-                          }}
-                        />
-                        {/* <DropdownItem 
-                          icon={<HelpCircle className="h-4 w-4" />} 
-                          label="Help & Support" 
-                          onClick={() => {
-                            navigate('/teacher/support');
-                            setProfileDropdownOpen(false);
-                          }}
-                        /> */}
-                      </div>
+                      
                       
                       <div className="border-t border-gray-100 py-1">
                         <DropdownItem 

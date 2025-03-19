@@ -211,7 +211,7 @@ const StudentDashboard = () => {
 
             {/* Profile */}
             <Link
-              to="/abop"
+              to="/profile"
               className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
               <img
@@ -227,33 +227,10 @@ const StudentDashboard = () => {
           </div>
         </div>
 
-        {/* Updated Welcome Section */}
-        <div className="mb-8">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg border border-gray-100 dark:border-gray-700">
-            <div className="flex items-center gap-6">
-              <div className="relative">
-                <img
-                  src="https://ui-avatars.com/api/?name=John+Doe&size=128"
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full border-4 border-[#5491CA]"
-                />
-                <div className="absolute -bottom-2 -right-2 bg-green-500 p-1.5 rounded-full border-2 border-white dark:border-gray-800" />
-              </div>
-              <div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
-                  Welcome back, John! 👋
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400 mt-2 text-lg">
-                  You have <span className="font-semibold text-[#5491CA]">3 assignments</span> due this week and 
-                  <span className="font-semibold text-[#7670AC]"> 2 upcoming quizzes</span>. Stay focused!
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {[
             {
               title: "Course Progress",
@@ -273,12 +250,7 @@ const StudentDashboard = () => {
               icon: <Monitor />,
               color: "from-green-500 to-green-600"
             },
-            {
-              title: "Attendance Rate",
-              value: `${quickStats.attendanceRate}%`,
-              icon: <Calendar />,
-              color: "from-orange-500 to-orange-600"
-            }
+            
           ].map((stat, index) => (
             <div
               key={index}
@@ -301,22 +273,6 @@ const StudentDashboard = () => {
 
         {/* Main Content Tabs */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
-          <div className="flex gap-4 mb-6">
-            {['overview', 'courses', 'assignments', 'grades'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                  activeTab === tab
-                    ? 'bg-gradient-to-r from-[#5491CA] to-[#7670AC] text-white'
-                    : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            ))}
-          </div>
-
           {/* Tab Content */}
           <div className="space-y-6">
             {activeTab === 'overview' && (
@@ -379,85 +335,7 @@ const StudentDashboard = () => {
                 </div>
 
                 {/* Updated Recent Activity & Upcoming Events */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  {/* Recent Activity */}
-                  <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-                    <h3 className="text-lg font-semibold mb-6 text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                      <Clock className="h-5 w-5 text-[#5491CA]" />
-                      Recent Activity
-                    </h3>
-                    <div className="space-y-4">
-                      {recentActivities.map((activity) => (
-                        <div 
-                          key={activity.id}
-                          className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
-                        >
-                          <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 group-hover:bg-white dark:group-hover:bg-gray-600">
-                            {activity.icon}
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium text-gray-900 dark:text-gray-100">
-                              {activity.title}
-                            </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {activity.course} • {activity.time}
-                            </p>
-                          </div>
-                          {activity.status && (
-                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-600 dark:bg-green-500/10 dark:text-green-400">
-                              {activity.status}
-                            </span>
-                          )}
-                          {activity.score && (
-                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400">
-                              {activity.score}
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Upcoming Events */}
-                  <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-                    <h3 className="text-lg font-semibold mb-6 text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                      <Calendar className="h-5 w-5 text-[#7670AC]" />
-                      Upcoming Events
-                    </h3>
-                    <div className="space-y-4">
-                      {upcomingEvents.map((event) => (
-                        <div 
-                          key={event.id}
-                          className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
-                        >
-                          <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 group-hover:bg-white dark:group-hover:bg-gray-600">
-                            {event.icon}
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium text-gray-900 dark:text-gray-100">
-                              {event.title}
-                            </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {new Date(event.datetime).toLocaleDateString('en-US', {
-                                weekday: 'long',
-                                month: 'short',
-                                day: 'numeric',
-                                hour: 'numeric',
-                                minute: 'numeric'
-                              })}
-                              {event.duration && ` • ${event.duration}`}
-                            </p>
-                          </div>
-                          <button className="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#5491CA] text-white hover:bg-[#4677b6] transition-colors">
-                            {event.type === 'class' ? 'Join' : 
-                             event.type === 'deadline' ? 'Submit' : 
-                             event.type === 'quiz' ? 'Start' : 'View'}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                
               </>
             )}
             
@@ -465,25 +343,6 @@ const StudentDashboard = () => {
           </div>
         </div>
 
-        {/* Quick Access Tools */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {[
-            { title: 'Join Class', icon: <Monitor />, color: 'bg-blue-500' },
-            { title: 'Submit Assignment', icon: <FileText />, color: 'bg-purple-500' },
-            { title: 'View Resources', icon: <BookOpen />, color: 'bg-green-500' },
-            { title: 'Get Help', icon: <MessageSquare />, color: 'bg-orange-500' }
-          ].map((tool, index) => (
-            <button
-              key={index}
-              className="flex items-center gap-3 p-4 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all duration-300"
-            >
-              <div className={`p-2 rounded-lg ${tool.color}`}>
-                {React.cloneElement(tool.icon, { className: "h-5 w-5 text-white" })}
-              </div>
-              <span className="font-medium text-gray-900 dark:text-gray-100">{tool.title}</span>
-            </button>
-          ))}
-        </div>
       </main>
     </div>
   );

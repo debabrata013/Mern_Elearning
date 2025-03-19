@@ -1,808 +1,811 @@
-import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
-import { FaHome, FaBook, FaUserGraduate,FaBriefcase,FaEnvelopeOpenText, FaChalkboardTeacher, FaCertificate, FaBullhorn, FaExclamationCircle, FaTags, FaPlusCircle, FaEdit } from 'react-icons/fa';
+  import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
+  import { FaHome, FaBook, FaUserGraduate,FaBriefcase,FaEnvelopeOpenText, FaChalkboardTeacher, FaCertificate, FaBullhorn, FaExclamationCircle, FaTags, FaPlusCircle, FaEdit } from 'react-icons/fa';
 
-import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { PlusCircle, Book, Users, DollarSign, TrendingUp, Home, Layout, BookOpen, ClipboardList, Settings, LogOut, Menu,School, ChevronDown } from 'lucide-react';
+  import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+  import { PlusCircle, Book, Users, DollarSign, TrendingUp, Home, Layout, BookOpen, ClipboardList, Settings, LogOut, Menu,School, ChevronDown } from 'lucide-react';
 
-import CertificateContent from "./certificate/certificate";
-import AnnouncementContent from "./anouncement/anouncement";
-import CouponContent from "./coupon/coupon";
-import ComplainContent from "./tickets/ticket";
-import ClassesContent from './class'
-import JobsContent from './job';
-import { useAuth } from '../../context/auth';
-import ManageStudent from './ManageStudent';
-import ManageTeacher from './ManageTeacher';
-import Teacher from './Teacher';
-import Student from './Student';
-import Queries from './queries';
-import logo from "../../../../client/public/aigiri logo.png";
-import axios from 'axios';
-import ProfileContent from './profile/ProfileContent';
-import CourseEditPage from './courseEdit';
+  import CertificateContent from "./certificate/certificate";
+  import AnnouncementContent from "./anouncement/anouncement";
+  import CouponContent from "./coupon/coupon";
+  import ComplainContent from "./tickets/ticket";
+  import ClassesContent from './class'
+  import JobsContent from './job';
+  import { useAuth } from '../../context/auth';
+  import ManageStudent from './ManageStudent';
+  import ManageTeacher from './ManageTeacher';
+  import Teacher from './Teacher';
+  import Student from './Student';
+  import Queries from './queries';
+  import logo from "../../../../client/public/aigiri logo.png";
+  import axios from 'axios';
+  import ProfileContent from './profile/ProfileContent';
+  import CourseEditPage from './courseEdit';
 
 
-// import Profile from "./profile";
+  // import Profile from "./profile";
 
-// Sample data for charts
-const userActivityData = [
-  { name: 'Jan', users: 4000 },
-  { name: 'Feb', users: 3000 },
-  { name: 'Mar', users: 500 },
-  { name: 'Apr', users: 4500 },
-  { name: 'May', users: 6000 },
-  { name: 'Jun', users: 5500 }
-];
+  // Sample data for charts
+  const userActivityData = [
+    { name: 'Jan', users: 4000 },
+    { name: 'Feb', users: 3000 },
+    { name: 'Mar', users: 500 },
+    { name: 'Apr', users: 4500 },
+    { name: 'May', users: 6000 },
+    { name: 'Jun', users: 5500 }
+  ];
 
-const courseData = [
-  { name: 'Web Dev', students: 400 },
-  { name: 'Data Science', students: 300 },
-  { name: 'Mobile Dev', students: 250 },
-  { name: 'AI/ML', students: 200 }
-];
+  const courseData = [
+    { name: 'Web Dev', students: 400 },
+    { name: 'Data Science', students: 300 },
+    { name: 'Mobile Dev', students: 250 },
+    { name: 'AI/ML', students: 200 }
+  ];
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-// Content components for each section
-const HomeContent = () => {
-  const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
-  const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
-  const [specializedSubjects, setSpecializedSubjects] = useState(["JAVA", "DataScience", "Backend"]);
-  const [newSubject, setNewSubject] = useState("");
-  const [courseForm, setCourseForm] = useState({
-    title: '',
-    description: '',
-    price: '',
-    duration: '',
-    teacher: ''
-  });
+  // Content components for each section
+  const HomeContent = () => {
+    const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
+    const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
+    const [specializedSubjects, setSpecializedSubjects] = useState(["JAVA", "DataScience", "Backend"]);
+    const [newSubject, setNewSubject] = useState("");
+    const [courseForm, setCourseForm] = useState({
+      title: '',
+      description: '',
+      price: '',
+      duration: '',
+      teacher: ''
+    });
 
-  // the updated api call for the top data
-  const [revenue, setRevenue] = useState(null);
-  const [activeUsers, setActiveUsers] = useState(null);
-  const [totalCourses, setTotalCourses] = useState(null);
-  const [totalstudent, setTotalstudent] = useState(null);
-  const [totalteacher, setTotalTeacher] = useState(null);
-  // const [enrollmentRate, setEnrollmentRate] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+    // the updated api call for the top data
+    const [revenue, setRevenue] = useState(null);
+    const [activeUsers, setActiveUsers] = useState(null);
+    const [totalCourses, setTotalCourses] = useState(null);
+    const [totalstudent, setTotalstudent] = useState(null);
+    const [totalteacher, setTotalTeacher] = useState(null);
+    // const [enrollmentRate, setEnrollmentRate] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  // Fetch data from API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const student = await axios.get("http://localhost:4400/data/totalstudent");
-        const activeUsersResponse = await axios.get("http://localhost:4400/data/totaluser");
-        const totalCoursesResponse = await axios.get("http://localhost:4400/data/totalcourse");
-        // const enrollmentRateResponse = await axios.get("YOUR_ENROLLMENT_RATE_API_URL");
-        const totalteacher=await axios.get("http://localhost:4400/data/totalteacher")
+    // Fetch data from API
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const student = await axios.get("http://localhost:4400/data/totalstudent");
+          const activeUsersResponse = await axios.get("http://localhost:4400/data/totaluser");
+          const totalCoursesResponse = await axios.get("http://localhost:4400/data/totalcourse");
+          // const enrollmentRateResponse = await axios.get("YOUR_ENROLLMENT_RATE_API_URL");
+          const totalteacher=await axios.get("http://localhost:4400/data/totalteacher")
 
-        setRevenue(1200);
-        setTotalstudent(student.data);
-        setActiveUsers(activeUsersResponse.data);
-        setTotalCourses(totalCoursesResponse.data);
-        setTotalTeacher(totalteacher.data);
-        // setEnrollmentRate(12.5);
-      } catch (err) {
-        setError("Failed to load data");
-      } finally {
-        setLoading(false);
+          setRevenue(1200);
+          setTotalstudent(student.data);
+          setActiveUsers(activeUsersResponse.data);
+          setTotalCourses(totalCoursesResponse.data);
+          setTotalTeacher(totalteacher.data);
+          // setEnrollmentRate(12.5);
+        } catch (err) {
+          setError("Failed to load data");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }, []);
+
+    if (loading)
+      return (
+        <div className="flex items-center justify-center h-screen bg-white">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      );
+    
+    if (error) return <p>{error}</p>;
+
+
+    const handleAddSubject = () => {
+      if (newSubject && specializedSubjects.length < 10) {
+        setSpecializedSubjects([...specializedSubjects, newSubject]);
+        setNewSubject("");
       }
     };
 
-    fetchData();
-  }, []);
+    const handleCourseInputChange = (e) => {
+      setCourseForm({
+        ...courseForm,
+        [e.target.name]: e.target.value
+      });
+    };
+    const { user, isAuthenticated, logout, hasRole } = useAuth();
 
-  if (loading)
     return (
-      <div className="flex items-center justify-center h-screen bg-white">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  
-  if (error) return <p>{error}</p>;
-
-
-  const handleAddSubject = () => {
-    if (newSubject && specializedSubjects.length < 10) {
-      setSpecializedSubjects([...specializedSubjects, newSubject]);
-      setNewSubject("");
-    }
-  };
-
-  const handleCourseInputChange = (e) => {
-    setCourseForm({
-      ...courseForm,
-      [e.target.name]: e.target.value
-    });
-  };
-  const { user, isAuthenticated, logout, hasRole } = useAuth();
-
-  return (
-    <>
-      {/* Welcome Banner */}
-      <div className="min-h-screen bg-gray-100 flex flex-col">
-        {/* Main Content Section */}
-        <main className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Stats Overview Cards */}
-          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FF6B6B]">
-              <div className="bg-[#FF6B6B]/10 p-3 rounded-full">
-                <DollarSign className="text-[#FF6B6B]" />
-              </div>
-              <div>
-                <p className="text-gray-500">Revenue</p>
-                <p className="text-2xl font-bold">${revenue}</p>
-              </div>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#4ECDC4]">
-              <div className="bg-[#4ECDC4]/10 p-3 rounded-full">
-                <Users className="text-[#4ECDC4]" />
-              </div>
-              <div>
-                <p className="text-gray-500">Active Users</p>
-                <p className="text-2xl font-bold">{activeUsers}</p>
-              </div>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FFD166]">
-              <div className="bg-[#FFD166]/10 p-3 rounded-full">
-                <Book className="text-[#FFD166]" />
-              </div>
-              <div>
-                <p className="text-gray-500">Total Courses</p>
-                <p className="text-2xl font-bold">{totalCourses}</p>
-              </div>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#6A0572]">
-              <div className="bg-[#6A0572]/10 p-3 rounded-full">
-                <TrendingUp className="text-[#6A0572]" />
-              </div>
-              <div>
-                <p className="text-gray-500">Enrollment Rate</p>
-                <p className="text-2xl font-bold">+12.5%</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Charts Section */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow hidden lg:block">
-              <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">User Activity</h2>
-              <LineChart width={600} height={300} data={userActivityData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="name" stroke="#5491CA" />
-                <YAxis stroke="#5491CA" />
-                <Tooltip contentStyle={{ borderRadius: '8px' }} />
-                <Line 
-                  type="monotone" 
-                  dataKey="users" 
-                  stroke="#5491CA" 
-                  strokeWidth={3}
-                  dot={{ fill: '#5491CA', r: 6 }}
-                  activeDot={{ fill: '#b1a9f1', r: 8, strokeWidth: 0 }}
-                  animationDuration={2000} 
-                />
-              </LineChart>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow hidden lg:block">
-              <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Course Enrollment Distribution</h2>
-              <BarChart width={600} height={300} data={courseData}>
-                <XAxis dataKey="name" stroke="#5491CA" />
-                <YAxis stroke="#5491CA" />
-                <Tooltip contentStyle={{ borderRadius: '8px' }} />
-                <Bar dataKey="students" barSize={40} radius={[10, 10, 0, 0]}>
-                  {courseData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={['#FF6B6B', '#4ECDC4', '#FFD166', '#6A0572'][index % 4]} 
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </div>
-          </div>
-
-          {/* Right Sidebar */}
-          <div className="space-y-4">
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Course Categories</h2>
-              <PieChart width={300} height={300}>
-                <Pie
-                  data={courseData}
-                  cx={150}
-                  cy={150}
-                  innerRadius={60}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  paddingAngle={5}
-                  dataKey="students"
-                  animationDuration={2000}
-                >
-                  {courseData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={['#FF6B6B', '#4ECDC4', '#FFD166', '#6A0572'][index % 4]} 
-                    />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ borderRadius: '8px' }} />
-              </PieChart>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Recent Activities</h2>
-              <div className="space-y-4">
-                <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="bg-[#FF6B6B]/10 p-2 rounded-full">
-                    <Book size={16} className="text-[#FF6B6B]" />
-                  </div>
-                  <div>
-                    <p className="font-medium">New Course Added</p>
-                    <p className="text-sm text-gray-500">Web Development Bootcamp</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="bg-[#4ECDC4]/10 p-2 rounded-full">
-                    <Users size={16} className="text-[#4ECDC4]" />
-                  </div>
-                  <div>
-                    <p className="font-medium">New Teacher Joined</p>
-                    <p className="text-sm text-gray-500">Sarah Johnson</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* New Cards for Total Instructors and Total Students */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FFD166]">
-                <div className="bg-[#FFD166]/10 p-3 rounded-full">
-                  <FaChalkboardTeacher className="text-[#FFD166]" />
+      <>
+        {/* Welcome Banner */}
+        <div className="min-h-screen bg-gray-100 flex flex-col">
+          {/* Main Content Section */}
+          <main className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Stats Overview Cards */}
+            <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FF6B6B]">
+                <div className="bg-[#FF6B6B]/10 p-3 rounded-full">
+                  <DollarSign className="text-[#FF6B6B]" />
                 </div>
                 <div>
-                  <p className="text-gray-500">Total Instructors</p>
-                  <p className="text-2xl font-bold">{totalteacher}</p>
+                  <p className="text-gray-500">Revenue</p>
+                  <p className="text-2xl font-bold">${revenue}</p>
                 </div>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#4ECDC4]">
                 <div className="bg-[#4ECDC4]/10 p-3 rounded-full">
-                  <FaUserGraduate className="text-[#4ECDC4]" />
+                  <Users className="text-[#4ECDC4]" />
                 </div>
                 <div>
-                  <p className="text-gray-500">Total Students</p>
-                  <p className="text-2xl font-bold">{totalstudent}</p>
+                  <p className="text-gray-500">Active Users</p>
+                  <p className="text-2xl font-bold">{activeUsers}</p>
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FFD166]">
+                <div className="bg-[#FFD166]/10 p-3 rounded-full">
+                  <Book className="text-[#FFD166]" />
+                </div>
+                <div>
+                  <p className="text-gray-500">Total Courses</p>
+                  <p className="text-2xl font-bold">{totalCourses}</p>
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#6A0572]">
+                <div className="bg-[#6A0572]/10 p-3 rounded-full">
+                  <TrendingUp className="text-[#6A0572]" />
+                </div>
+                <div>
+                  <p className="text-gray-500">Enrollment Rate</p>
+                  <p className="text-2xl font-bold">+12.5%</p>
                 </div>
               </div>
             </div>
-          </div>
-        </main>
 
-        {/* Teacher Modal */}
-        {isTeacherModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
-              <h2 className="text-2xl font-bold mb-4 text-[#5491CA]">Create Teacher</h2>
-              <form>
-                <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">Username</label>
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 p-2 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
-                    placeholder="Enter username"
+            {/* Charts Section */}
+            <div className="lg:col-span-2 space-y-4">
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow hidden lg:block">
+                <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">User Activity</h2>
+                <LineChart width={600} height={300} data={userActivityData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="name" stroke="#5491CA" />
+                  <YAxis stroke="#5491CA" />
+                  <Tooltip contentStyle={{ borderRadius: '8px' }} />
+                  <Line 
+                    type="monotone" 
+                    dataKey="users" 
+                    stroke="#5491CA" 
+                    strokeWidth={3}
+                    dot={{ fill: '#5491CA', r: 6 }}
+                    activeDot={{ fill: '#b1a9f1', r: 8, strokeWidth: 0 }}
+                    animationDuration={2000} 
                   />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">Password</label>
-                  <input
-                    type="password"
-                    className="w-full border border-gray-300 p-2 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
-                    placeholder="Enter password"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">Full Name</label>
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 p-2 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
-                    placeholder="Enter full name"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">Specialized Subject</label>
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 p-2 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
-                    value={newSubject}
-                    onChange={(e) => setNewSubject(e.target.value)}
-                    placeholder="Enter subject"
-                  />
-                  <button
-                    type="button"
-                    className="mt-2 text-[#5491CA] hover:text-[#b1a9f1] transition-colors"
-                    onClick={handleAddSubject}
-                  >
-                    Add Subject
-                  </button>
-                </div>
-
-                <div className="flex gap-3 mb-4">
-                  <button
-                    type="button"
-                    className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors"
-                    onClick={() => setIsTeacherModalOpen(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    className="w-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white p-2 rounded-lg hover:shadow-lg transition-all"
-                    onClick={() => setIsTeacherModalOpen(false)}
-                  >
-                    Save
-                  </button>
-                </div>
-              </form>
+                </LineChart>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow hidden lg:block">
+                <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Course Enrollment Distribution</h2>
+                <BarChart width={600} height={300} data={courseData}>
+                  <XAxis dataKey="name" stroke="#5491CA" />
+                  <YAxis stroke="#5491CA" />
+                  <Tooltip contentStyle={{ borderRadius: '8px' }} />
+                  <Bar dataKey="students" barSize={40} radius={[10, 10, 0, 0]}>
+                    {courseData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={['#FF6B6B', '#4ECDC4', '#FFD166', '#6A0572'][index % 4]} 
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
-    </>
-  );
-};
 
-const Dashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState('home');
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const profileMenuRef = useRef(null);
-  const { user, logout } = useAuth();
-  
-  // Close profile menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
-        setProfileMenuOpen(false);
-      }
-    };
+            {/* Right Sidebar */}
+            <div className="space-y-4">
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Course Categories</h2>
+                <PieChart width={300} height={300}>
+                  <Pie
+                    data={courseData}
+                    cx={150}
+                    cy={150}
+                    innerRadius={60}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    paddingAngle={5}
+                    dataKey="students"
+                    animationDuration={2000}
+                  >
+                    {courseData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={['#FF6B6B', '#4ECDC4', '#FFD166', '#6A0572'][index % 4]} 
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ borderRadius: '8px' }} />
+                </PieChart>
+              </div>
 
-    if (profileMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Recent Activities</h2>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div className="bg-[#FF6B6B]/10 p-2 rounded-full">
+                      <Book size={16} className="text-[#FF6B6B]" />
+                    </div>
+                    <div>
+                      <p className="font-medium">New Course Added</p>
+                      <p className="text-sm text-gray-500">Web Development Bootcamp</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div className="bg-[#4ECDC4]/10 p-2 rounded-full">
+                      <Users size={16} className="text-[#4ECDC4]" />
+                    </div>
+                    <div>
+                      <p className="font-medium">New Teacher Joined</p>
+                      <p className="text-sm text-gray-500">Sarah Johnson</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [profileMenuOpen]);
+              {/* New Cards for Total Instructors and Total Students */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FFD166]">
+                  <div className="bg-[#FFD166]/10 p-3 rounded-full">
+                    <FaChalkboardTeacher className="text-[#FFD166]" />
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Total Instructors</p>
+                    <p className="text-2xl font-bold">{totalteacher}</p>
+                  </div>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#4ECDC4]">
+                  <div className="bg-[#4ECDC4]/10 p-3 rounded-full">
+                    <FaUserGraduate className="text-[#4ECDC4]" />
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Total Students</p>
+                    <p className="text-2xl font-bold">{totalstudent}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
 
-  const renderContent = () => {
-    switch (currentSection) {
-      case 'course-add':
-        return <ClassesContent />;
-      case 'course-edit':
-        return <CourseEditPage />;
-      case 'student-add':
-        return <Student/>;
-      case 'student-edit':
-        return <ManageStudent />;
-      case 'instructor-add':
-        return <Teacher />;
-      case 'instructor-edit':
-        return <ManageTeacher />;
-      case 'certificate':
-        return <CertificateContent />;
-      case 'announcement':
-        return <AnnouncementContent />;
-      case 'complain':
-        return <ComplainContent />;
-      case 'coupon':
-        return <CouponContent />;
-      case 'jobs':
-        return <JobsContent />;
-      case 'profile':
-        return <ProfileContent />;
-      case 'queries':
-        return <Queries/>;
-      default:
-        return <HomeContent />;
-    }
+          {/* Teacher Modal */}
+          {isTeacherModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
+                <h2 className="text-2xl font-bold mb-4 text-[#5491CA]">Create Teacher</h2>
+                <form>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 font-medium mb-2">Username</label>
+                    <input
+                      type="text"
+                      className="w-full border border-gray-300 p-2 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
+                      placeholder="Enter username"
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-gray-700 font-medium mb-2">Password</label>
+                    <input
+                      type="password"
+                      className="w-full border border-gray-300 p-2 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
+                      placeholder="Enter password"
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-gray-700 font-medium mb-2">Full Name</label>
+                    <input
+                      type="text"
+                      className="w-full border border-gray-300 p-2 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
+                      placeholder="Enter full name"
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-gray-700 font-medium mb-2">Specialized Subject</label>
+                    <input
+                      type="text"
+                      className="w-full border border-gray-300 p-2 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
+                      value={newSubject}
+                      onChange={(e) => setNewSubject(e.target.value)}
+                      placeholder="Enter subject"
+                    />
+                    <button
+                      type="button"
+                      className="mt-2 text-[#5491CA] hover:text-[#b1a9f1] transition-colors"
+                      onClick={handleAddSubject}
+                    >
+                      Add Subject
+                    </button>
+                  </div>
+
+                  <div className="flex gap-3 mb-4">
+                    <button
+                      type="button"
+                      className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors"
+                      onClick={() => setIsTeacherModalOpen(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="w-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white p-2 rounded-lg hover:shadow-lg transition-all"
+                      onClick={() => setIsTeacherModalOpen(false)}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      </>
+    );
   };
 
-  const handleLogout = () => {
-    // Clear all cookies
-    document.cookie.split(";").forEach((cookie) => {
-      document.cookie = cookie
-        .replace(/^ +/, "")
-        .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-    });
+  const Dashboard = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [currentSection, setCurrentSection] = useState('home');
+    const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+    const profileMenuRef = useRef(null);
+    const { user, logout } = useAuth();
     
-    logout();
-  };
-  
+    // Close profile menu when clicking outside
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+          setProfileMenuOpen(false);
+        }
+      };
 
-  return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar - Now white with blue text */}
-      <aside className={`fixed left-0 top-0 h-full w-64 bg-white text-[#5491CA] p-4 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform z-20 shadow-lg`}>
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-[#5491CA]">
-            <img src={logo} alt="" className='h-6 w-6' />
-            AIGIRI Admin
-          </h1>
-        </div>
-        
-        <nav className="space-y-2">
-          <NavItem 
-            icon={<FaHome className="text-[#5491CA]" />} 
-            label="Dashboard" 
-            active={currentSection === 'home'}
-            onClick={() => setCurrentSection('home')}
-          />
-          
-          <NavDropdown
-            icon={<FaBook className="text-[#5491CA]" />}
-            label="Manage Course"
-            active={currentSection.startsWith('course')}
-            items={[
-              { 
-                value: 'course-add',
-                label: 'Add Course',
-                icon: <FaPlusCircle className="w-4 h-4 text-[#5491CA]" />
-              },
-              {
-                value: 'course-edit',
-                label: 'Edit Course',
-                icon: <FaEdit className="w-4 h-4 text-[#5491CA]" />
-              }
-            ]}
-            onItemClick={(value) => setCurrentSection(value)}
-          />
+      if (profileMenuOpen) {
+        document.addEventListener('mousedown', handleClickOutside);
+      }
 
-          <NavDropdown
-            icon={<FaUserGraduate className="text-[#5491CA]" />}
-            label="Manage Student"
-            active={currentSection.startsWith('student')}
-            items={[
-              { 
-                value: 'student-add',
-                label: 'Add Student',
-                icon: <FaPlusCircle className="w-4 h-4 text-[#5491CA]" />
-              },
-              {
-                value: 'student-edit',
-                label: 'Edit Student',
-                icon: <FaEdit className="w-4 h-4 text-[#5491CA]" />
-              }
-            ]}
-            onItemClick={(value) => setCurrentSection(value)}
-          />
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [profileMenuOpen]);
 
-          <NavDropdown
-            icon={<FaChalkboardTeacher className="text-[#5491CA]" />}
-            label="Manage Instructor"
-            active={currentSection.startsWith('instructor')}
-            items={[
-              { 
-                value: 'instructor-add',
-                label: 'Add Instructor',
-                icon: <FaPlusCircle className="w-4 h-4 text-[#5491CA]" />
-              },
-              {
-                value: 'instructor-edit',
-                label: 'Edit Instructor',
-                icon: <FaEdit className="w-4 h-4 text-[#5491CA]" />
-              }
-            ]}
-            onItemClick={(value) => setCurrentSection(value)}
-          />
+    const renderContent = () => {
+      switch (currentSection) {
+        case 'course-add':
+          return <ClassesContent />;
+        case 'course-edit':
+          return <CourseEditPage />;
+        case 'student-add':
+          return <Student/>;
+        case 'student-edit':
+          return <ManageStudent />;
+        case 'instructor-add':
+          return <Teacher />;
+        case 'instructor-edit':
+          return <ManageTeacher />;
+        case 'certificate':
+          return <CertificateContent />;
+        case 'announcement':
+          return <AnnouncementContent />;
+        case 'complain':
+          return <ComplainContent />;
+        case 'coupon':
+          return <CouponContent />;
+        case 'jobs':
+          return <JobsContent />;
+        case 'profile':
+          return <ProfileContent />;
+        case 'queries':
+          return <Queries/>;
+        default:
+          return <HomeContent />;
+      }
+    };
 
-          <NavItem 
-            icon={<FaCertificate className="text-[#5491CA]" />} 
-            label="Certificate" 
-            active={currentSection === 'certificate'}
-            onClick={() => setCurrentSection('certificate')}
-          />
+    const handleLogout = () => {
+      // Clear all cookies
+      document.cookie.split(";").forEach((cookie) => {
+        document.cookie = cookie
+          .replace(/^ +/, "")
+          .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+      });
+      
+      logout();
+    };
+    
 
-          <NavItem 
-            icon={<FaBullhorn className="text-[#5491CA]" />} 
-            label="Announcement" 
-            active={currentSection === 'announcement'}
-            onClick={() => setCurrentSection('announcement')}
-          />
-
-          <NavItem 
-            icon={<FaExclamationCircle className="text-[#5491CA]" />} 
-            label="Complain" 
-            active={currentSection === 'complain'}
-            onClick={() => setCurrentSection('complain')}
-          />
-
-          <NavItem
-            icon={<FaTags className="text-[#5491CA]" />}
-            label="Coupon"
-            active={currentSection=='coupon'}
-            onClick={() => setCurrentSection('coupon')}
-          />
-
-          <NavItem 
-            icon={<FaBriefcase className="text-[#5491CA]" />} 
-            label="Jobs" 
-            active={currentSection === 'jobs'}
-            onClick={() => setCurrentSection('jobs')}
-          />
-          <NavItem 
-            icon={<FaEnvelopeOpenText className="text-[#5491CA]" />} 
-            label="queries" 
-            active={currentSection === 'queries'}
-            onClick={() => setCurrentSection('queries')}
-          />
-          {/* <NavItem 
-            icon={<Profile/>} 
-            label="Jobs" 
-            active={currentSection === 'profile'}
-            onClick={() => setCurrentSection('profile')}
-          /> */}
-        </nav>
-        
-        {/* <div className="absolute bottom-4 w-full pr-8">
-          <button className="flex items-center gap-2 text-red-600 hover:text-red-700 bg-white hover:bg-gray-100 border border-red-200 p-2 rounded-lg w-full transition-colors" onClick={handleLogout}>
-            <LogOut className="h-5 w-5" />
-            Sign Out
-          </button>
-        </div> */}
-      </aside>
-
-      {/* Main content */}
-      <main className="flex-1 md:ml-64 p-6">
-        {/* Mobile Menu Button */}
-        <div className="md:hidden mb-4 flex flex-row justify-between items-center w-full">
-          <h1 className="text-xl font-bold text-[#5491CA]">Admin Dashboard</h1>
-          <button
-            className="p-2"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            aria-label="Toggle sidebar"
-          >
-            <Menu className="h-6 w-6 text-[#5491CA]" />
-          </button>
-        </div>
-
-        {/* Header */}
-        <header className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <div className="w-full md:flex-1 mb-4 md:mb-0">
-            {currentSection === 'home' && (
-              <div className="relative">
-                <input
-                  type="search"
-                  placeholder="Search Class, Documents, Activities..."
-                  className="w-full max-w-xl px-4 py-2 rounded-lg border border-[#5491CA] focus:ring-[#5491CA] focus:border-[#5491CA]"
-                  aria-label="Search"
-                />
-              </div>
-            )}
+    return (
+      <div className="flex min-h-screen bg-gray-50">
+        {/* Sidebar - Now white with blue text */}
+        <aside className={`fixed left-0 top-0 h-full w-64 bg-white text-[#5491CA] p-4 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform z-20 shadow-lg`}>
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold flex items-center gap-2 text-[#5491CA]">
+              <img src={logo} alt="" className='h-6 w-6' />
+              AIGIRI Admin
+            </h1>
           </div>
-     
-          <div className="flex items-center gap-4 relative" ref={profileMenuRef}>
-            <button 
-              onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-              className="h-8 w-8 rounded-full bg-[#5491CA] flex items-center justify-center text-white font-bold hover:bg-[#4a82b6] transition-colors"
-              aria-label="User profile"
-            >
-              {user.userName?.charAt(0).toUpperCase() || "A"}
-            </button>
-            <div className="text-[#5491CA] font-medium">
-              <h2>{user.userName}</h2>
-            </div>
+          
+          <nav className="space-y-2">
+            <NavItem 
+              icon={<FaHome className="text-[#5491CA]" />} 
+              label="Dashboard" 
+              active={currentSection === 'home'}
+              onClick={() => setCurrentSection('home')}
+            />
             
-            {/* Profile Dropdown Menu */}
-            {profileMenuOpen && (
-              <div className="absolute right-0 top-10 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-2 animate-fadeIn">
-                <div className="px-4 py-2 border-b border-gray-100">
-                  <p className="font-medium text-[#5491CA]">{user.userName}</p>
-                  <p className="text-sm text-gray-500">{user.email || "admin@aigiri.com"}</p>
+            <NavDropdown
+              icon={<FaBook className="text-[#5491CA]" />}
+              label="Manage Course"
+              active={currentSection.startsWith('course')}
+              items={[
+                { 
+                  value: 'course-add',
+                  label: 'Add Course',
+                  icon: <FaPlusCircle className="w-4 h-4 text-[#5491CA]" />
+                },
+                {
+                  value: 'course-edit',
+                  label: 'Edit Course',
+                  icon: <FaEdit className="w-4 h-4 text-[#5491CA]" />
+                }
+              ]}
+              onItemClick={(value) => setCurrentSection(value)}
+            />
+
+            <NavDropdown
+              icon={<FaUserGraduate className="text-[#5491CA]" />}
+              label="Manage Student"
+              active={currentSection.startsWith('student')}
+              items={[
+                { 
+                  value: 'student-add',
+                  label: 'Add Student',
+                  icon: <FaPlusCircle className="w-4 h-4 text-[#5491CA]" />
+                },
+                {
+                  value: 'student-edit',
+                  label: 'Edit Student',
+                  icon: <FaEdit className="w-4 h-4 text-[#5491CA]" />
+                }
+              ]}
+              onItemClick={(value) => setCurrentSection(value)}
+            />
+
+            <NavDropdown
+              icon={<FaChalkboardTeacher className="text-[#5491CA]" />}
+              label="Manage Instructor"
+              active={currentSection.startsWith('instructor')}
+              items={[
+                { 
+                  value: 'instructor-add',
+                  label: 'Add Instructor',
+                  icon: <FaPlusCircle className="w-4 h-4 text-[#5491CA]" />
+                },
+                {
+                  value: 'instructor-edit',
+                  label: 'Edit Instructor',
+                  icon: <FaEdit className="w-4 h-4 text-[#5491CA]" />
+                }
+              ]}
+              onItemClick={(value) => setCurrentSection(value)}
+            />
+
+            <NavItem 
+              icon={<FaCertificate className="text-[#5491CA]" />} 
+              label="Certificate" 
+              active={currentSection === 'certificate'}
+              onClick={() => setCurrentSection('certificate')}
+            />
+
+            <NavItem 
+              icon={<FaBullhorn className="text-[#5491CA]" />} 
+              label="Announcement" 
+              active={currentSection === 'announcement'}
+              onClick={() => setCurrentSection('announcement')}
+            />
+
+            <NavItem 
+              icon={<FaExclamationCircle className="text-[#5491CA]" />} 
+              label="Complain" 
+              active={currentSection === 'complain'}
+              onClick={() => setCurrentSection('complain')}
+            />
+
+            <NavItem
+              icon={<FaTags className="text-[#5491CA]" />}
+              label="Coupon"
+              active={currentSection=='coupon'}
+              onClick={() => setCurrentSection('coupon')}
+            />
+
+            <NavItem 
+              icon={<FaBriefcase className="text-[#5491CA]" />} 
+              label="Jobs" 
+              active={currentSection === 'jobs'}
+              onClick={() => setCurrentSection('jobs')}
+            />
+            <NavItem 
+              icon={<FaEnvelopeOpenText className="text-[#5491CA]" />} 
+              label="queries" 
+              active={currentSection === 'queries'}
+              onClick={() => setCurrentSection('queries')}
+            />
+            {/* <NavItem 
+              icon={<Profile/>} 
+              label="Jobs" 
+              active={currentSection === 'profile'}
+              onClick={() => setCurrentSection('profile')}
+            /> */}
+          </nav>
+          
+          {/* <div className="absolute bottom-4 w-full pr-8">
+            <button className="flex items-center gap-2 text-red-600 hover:text-red-700 bg-white hover:bg-gray-100 border border-red-200 p-2 rounded-lg w-full transition-colors" onClick={handleLogout}>
+              <LogOut className="h-5 w-5" />
+              Sign Out
+            </button>
+          </div> */}
+        </aside>
+
+        {/* Main content */}
+        <main className="flex-1 md:ml-64 p-6">
+          {/* Mobile Menu Button */}
+          <div className="md:hidden mb-4 flex flex-row justify-between items-center w-full">
+            <h1 className="text-xl font-bold text-[#5491CA]">Admin Dashboard</h1>
+            <button
+              className="p-2"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Toggle sidebar"
+            >
+              <Menu className="h-6 w-6 text-[#5491CA]" />
+            </button>
+          </div>
+
+          {/* Header */}
+          <header className="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div className="w-full md:flex-1 mb-4 md:mb-0">
+              {currentSection === 'home' && (
+                <div className="relative">
+                  <input
+                    type="search"
+                    placeholder="Search Class, Documents, Activities..."
+                    className="w-full max-w-xl px-4 py-2 rounded-lg border border-[#5491CA] focus:ring-[#5491CA] focus:border-[#5491CA]"
+                    aria-label="Search"
+                  />
+                </div>
+              )}
+            </div>
+      
+            {/* Only show profile section if not on profile page */}
+            {currentSection !== 'profile' && (
+              <div className="flex items-center gap-4 relative" ref={profileMenuRef}>
+                <button 
+                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                  className="h-8 w-8 rounded-full bg-[#5491CA] flex items-center justify-center text-white font-bold hover:bg-[#4a82b6] transition-colors"
+                  aria-label="User profile"
+                >
+                  {user.userName?.charAt(0).toUpperCase() || "A"}
+                </button>
+                <div className="text-[#5491CA] font-medium">
+                  <h2>{user.userName}</h2>
                 </div>
                 
-                <button 
-                  className="w-full text-left px-4 py-2 hover:bg-[#b1a9f1]/20 transition-colors flex items-center gap-2 text-gray-700"
-                  onClick={() => {
-                    setCurrentSection('profile');
-                    setProfileMenuOpen(false);
-                  }}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#5491CA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  Edit Profile
-                </button>
-                
-                <button 
-                  className="w-full text-left px-4 py-2 hover:bg-[#b1a9f1]/20 transition-colors flex items-center gap-2 text-gray-700"
-                  onClick={() => {
-                    setCurrentSection('settings');
-                    setProfileMenuOpen(false);
-                  }}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#5491CA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Settings
-                </button>
-                
-                <div className="border-t border-gray-100 my-1"></div>
-                
-                <button 
-                  className="w-full text-left px-4 py-2 hover:bg-red-50 transition-colors flex items-center gap-2 text-red-600"
-                  onClick={() => {
-                    handleLogout();
-                    setProfileMenuOpen(false);
-                  }}
-                >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
-                </button>
+                {/* Profile Dropdown Menu */}
+                {profileMenuOpen && (
+                  <div className="absolute right-0 top-10 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-2 animate-fadeIn">
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="font-medium text-[#5491CA]">{user.userName}</p>
+                      <p className="text-sm text-gray-500">{user.email || "admin@aigiri.com"}</p>
+                    </div>
+                    
+                    <button 
+                      className="w-full text-left px-4 py-2 hover:bg-[#b1a9f1]/20 transition-colors flex items-center gap-2 text-gray-700"
+                      onClick={() => {
+                        setCurrentSection('profile');
+                        setProfileMenuOpen(false);
+                      }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#5491CA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      Edit Profile
+                    </button>
+                    
+                    <button 
+                      className="w-full text-left px-4 py-2 hover:bg-[#b1a9f1]/20 transition-colors flex items-center gap-2 text-gray-700"
+                      onClick={() => {
+                        setCurrentSection('settings');
+                        setProfileMenuOpen(false);
+                      }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#5491CA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Settings
+                    </button>
+                    
+                    <div className="border-t border-gray-100 my-1"></div>
+                    
+                    <button 
+                      className="w-full text-left px-4 py-2 hover:bg-red-50 transition-colors flex items-center gap-2 text-red-600"
+                      onClick={() => {
+                        handleLogout();
+                        setProfileMenuOpen(false);
+                      }}
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </button>
+                  </div>
+                )}
               </div>
             )}
-          </div>
-        </header>
+          </header>
 
-        {/* Dynamic Content */}
-        {renderContent()}
-      </main>
-    </div>
-  );
-};
+          {/* Dynamic Content */}
+          {renderContent()}
+        </main>
+      </div>
+    );
+  };
 
-// Helper Components
-const NavItem = ({ icon, label, active, onClick }) => (
-  <button
-    onClick={onClick}
-    className={`flex items-center gap-2 w-full p-2 rounded-lg transition-colors
-      ${active ? 'bg-[#b1a9f1] text-white' : 'text-[#5491CA] hover:bg-[#b1a9f1]/20'}`}
-    aria-current={active ? 'page' : undefined}
-  >
-    {icon}
-    <span>{label}</span>
-  </button>
-);
-
-const ProgressItem = ({ label, value, count }) => (
-  <div>
-    <div className="flex justify-between mb-1">
+  // Helper Components
+  const NavItem = ({ icon, label, active, onClick }) => (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 w-full p-2 rounded-lg transition-colors
+        ${active ? 'bg-[#b1a9f1] text-white' : 'text-[#5491CA] hover:bg-[#b1a9f1]/20'}`}
+      aria-current={active ? 'page' : undefined}
+    >
+      {icon}
       <span>{label}</span>
-      <span className="text-gray-500">{count} Registered</span>
-    </div>
-    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-      <div
-        className="h-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] rounded-full"
-        style={{ width: `${value}%` }}
-        role="progressbar"
-        aria-valuenow={value}
-        aria-valuemin="0"
-        aria-valuemax="100"
-      />
-    </div>
-  </div>
-);
+    </button>
+  );
 
-
-
-// Memoized dropdown item component
-const DropdownItem = memo(({ item, onClick }) => (
-  <button
-    onClick={onClick}
-    className="w-full text-left px-4 py-2 text-[#5491CA] hover:bg-[#b1a9f1]/20 transition-colors duration-200
-      flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
-  >
-    {item.icon}
-    {item.label}
-  </button>
-));
-
-DropdownItem.displayName = 'DropdownItem';
-
-// Optimized NavDropdown component
-const NavDropdown = ({ icon, label, items, active, onItemClick }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
-
-  // Handle click outside to close dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
-  // Handle escape key to close dropdown
-  useEffect(() => {
-    const handleEscape = (event) => {
-      if (event.key === 'Escape') {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, [isOpen]);
-
-  const handleItemClick = useCallback((value) => {
-    onItemClick(value);
-    setIsOpen(false);
-  }, [onItemClick]);
-
-  return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        aria-expanded={isOpen}
-        aria-haspopup="true"
-        className={`flex items-center justify-between w-full p-2 rounded-lg 
-          transition-colors duration-200
-          ${active ? 'bg-[#b1a9f1] text-white' : 'text-[#5491CA] hover:bg-[#b1a9f1]/20'}`}
-      >
-        <div className="flex items-center gap-2">
-          {icon}
-          <span>{label}</span>
-        </div>
-        <ChevronDown 
-          className={`h-4 w-4 transition-transform duration-200 
-            ${isOpen ? 'rotate-180' : ''}`}
+  const ProgressItem = ({ label, value, count }) => (
+    <div>
+      <div className="flex justify-between mb-1">
+        <span>{label}</span>
+        <span className="text-gray-500">{count} Registered</span>
+      </div>
+      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] rounded-full"
+          style={{ width: `${value}%` }}
+          role="progressbar"
+          aria-valuenow={value}
+          aria-valuemin="0"
+          aria-valuemax="100"
         />
-      </button>
-      
-      <div 
-        className={`
-          absolute left-full top-0 ml-2 w-48 
-          md:left-0 md:top-full md:mt-1 md:ml-0
-          ${isOpen ? 'block' : 'hidden'}
-          bg-white border border-gray-200 rounded-lg shadow-lg 
-          z-50
-          transform transition-all duration-200 ease-in-out
-          ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
-        `}
-        role="menu"
-        aria-orientation="vertical"
-        aria-labelledby="dropdown-button"
-      >
-        <div className="py-1">
-          {items.map((item, index) => (
-            <DropdownItem
-              key={item.value || index}
-              item={item}
-              onClick={() => handleItemClick(item.value)}
-            />
-          ))}
-        </div>
       </div>
     </div>
   );
-};
 
-// Add this CSS animation to your global styles or component
-const globalStyles = `
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-fadeIn {
-  animation: fadeIn 0.2s ease-out forwards;
-}
-`;
 
-export default Dashboard;
+
+  // Memoized dropdown item component
+  const DropdownItem = memo(({ item, onClick }) => (
+    <button
+      onClick={onClick}
+      className="w-full text-left px-4 py-2 text-[#5491CA] hover:bg-[#b1a9f1]/20 transition-colors duration-200
+        flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
+    >
+      {item.icon}
+      {item.label}
+    </button>
+  ));
+
+  DropdownItem.displayName = 'DropdownItem';
+
+  // Optimized NavDropdown component
+  const NavDropdown = ({ icon, label, items, active, onItemClick }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    // Handle click outside to close dropdown
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setIsOpen(false);
+        }
+      };
+
+      if (isOpen) {
+        document.addEventListener('mousedown', handleClickOutside);
+      }
+
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [isOpen]);
+
+    // Handle escape key to close dropdown
+    useEffect(() => {
+      const handleEscape = (event) => {
+        if (event.key === 'Escape') {
+          setIsOpen(false);
+        }
+      };
+
+      if (isOpen) {
+        document.addEventListener('keydown', handleEscape);
+      }
+
+      return () => {
+        document.removeEventListener('keydown', handleEscape);
+      };
+    }, [isOpen]);
+
+    const handleItemClick = useCallback((value) => {
+      onItemClick(value);
+      setIsOpen(false);
+    }, [onItemClick]);
+
+    return (
+      <div className="relative" ref={dropdownRef}>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+          className={`flex items-center justify-between w-full p-2 rounded-lg 
+            transition-colors duration-200
+            ${active ? 'bg-[#b1a9f1] text-white' : 'text-[#5491CA] hover:bg-[#b1a9f1]/20'}`}
+        >
+          <div className="flex items-center gap-2">
+            {icon}
+            <span>{label}</span>
+          </div>
+          <ChevronDown 
+            className={`h-4 w-4 transition-transform duration-200 
+              ${isOpen ? 'rotate-180' : ''}`}
+          />
+        </button>
+        
+        <div 
+          className={`
+            absolute left-full top-0 ml-2 w-48 
+            md:left-0 md:top-full md:mt-1 md:ml-0
+            ${isOpen ? 'block' : 'hidden'}
+            bg-white border border-gray-200 rounded-lg shadow-lg 
+            z-50
+            transform transition-all duration-200 ease-in-out
+            ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+          `}
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="dropdown-button"
+        >
+          <div className="py-1">
+            {items.map((item, index) => (
+              <DropdownItem
+                key={item.value || index}
+                item={item}
+                onClick={() => handleItemClick(item.value)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Add this CSS animation to your global styles or component
+  const globalStyles = `
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.2s ease-out forwards;
+  }
+  `;
+
+  export default Dashboard;
