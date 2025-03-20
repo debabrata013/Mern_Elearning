@@ -6,6 +6,8 @@ import {
   Shield, Bell, Key, Clock, FileText, Award,
   Camera, Edit3, Save, X, AlertTriangle, CheckCircle
 } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const ProfileContent = () => {
   const { user, updateUser } = useAuth();
@@ -15,6 +17,7 @@ const ProfileContent = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
   
   const [profileData, setProfileData] = useState({
     fullName: user?.fullName || '',
@@ -51,6 +54,7 @@ const ProfileContent = () => {
     confirmPassword: ''
   });
   const [passwordError, setPasswordError] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     // Fetch additional profile data if needed
@@ -58,6 +62,43 @@ const ProfileContent = () => {
       setPreviewImage(user.profileImage);
     }
   }, [user]);
+
+  useEffect(() => {
+    const fetchUserDataFromCookies = () => {
+      try {
+        // Get the access token from cookies
+        const cookies = document.cookie.split(';');
+        const accessTokenCookie = cookies.find(cookie => cookie.trim().startsWith('accessToken='));
+        
+        if (accessTokenCookie) {
+          const token = accessTokenCookie.split('=')[1];
+          const decodedToken = jwtDecode(token);
+          
+          // Set user data from token
+          setUserData(decodedToken);
+        }
+
+        // Get user data from userData cookie
+        const userDataCookie = cookies.find(cookie => cookie.trim().startsWith('userData='));
+        if (userDataCookie) {
+          try {
+            const parsedUserData = JSON.parse(decodeURIComponent(userDataCookie.split('=')[1]));
+            // Merge with token data if needed
+            setUserData(prev => ({
+              ...prev,
+              ...parsedUserData
+            }));
+          } catch (error) {
+            console.error('Error parsing userData cookie:', error);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data from cookies:', error);
+      }
+    };
+
+    fetchUserDataFromCookies();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -226,6 +267,10 @@ const ProfileContent = () => {
     }
   };
 
+  const goToAddAnnouncementPage = () => {
+    navigate("/admin/anouncement"); // Make sure this matches your route
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md">
       {/* Profile Header */}
@@ -351,26 +396,6 @@ const ProfileContent = () => {
               }`}
             >
               Security
-            </button>
-            <button
-              onClick={() => setActiveTab('notifications')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'notifications'
-                  ? 'border-[#5491CA] text-[#5491CA]'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Notifications
-            </button>
-            <button
-              onClick={() => setActiveTab('activity')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'activity'
-                  ? 'border-[#5491CA] text-[#5491CA]'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Activity
             </button>
           </nav>
         </div>
@@ -823,20 +848,6 @@ const ProfileContent = () => {
                 </button>
               </div>
             </form>
-          </div>
-        )}
-
-        {/* Notifications Tab */}
-        {activeTab === 'notifications' && (
-          <div>
-            {/* Notifications content */}
-          </div>
-        )}
-
-        {/* Activity Tab */}
-        {activeTab === 'activity' && (
-          <div>
-            {/* Activity content */}
           </div>
         )}
       </div>

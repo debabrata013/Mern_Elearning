@@ -20,7 +20,7 @@
   import axios from 'axios';
   import ProfileContent from './profile/ProfileContent';
   import CourseEditPage from './courseEdit';
-
+  import EditAnnouncement from '../admin/anouncement/viewannouncement';
 
   // import Profile from "./profile";
 
@@ -393,8 +393,10 @@
           return <ManageTeacher />;
         case 'certificate':
           return <CertificateContent />;
-        case 'announcement':
+        case 'announcement-add':
           return <AnnouncementContent />;
+        case 'announcement-edit':
+          return <EditAnnouncement />;
         case 'complain':
           return <ComplainContent />;
         case 'coupon':
@@ -497,19 +499,29 @@
               ]}
               onItemClick={(value) => setCurrentSection(value)}
             />
-
+            <NavDropdown 
+              icon={<FaBullhorn className="text-[#5491CA]" />} 
+              label="Announcement" 
+              active={currentSection.startsWith('announcement')}
+              items={[
+                {
+                  value: 'announcement-add',
+                  label: 'Add Announcement',
+                  icon: <FaPlusCircle className="w-4 h-4 text-[#5491CA]" />
+                },
+                {
+                  value: 'announcement-edit',
+                  label: 'View Announcement',
+                  icon: <FaEdit className="w-4 h-4 text-[#5491CA]" />
+                }
+              ]}
+              onItemClick={(value) => setCurrentSection(value)}
+            />
             <NavItem 
               icon={<FaCertificate className="text-[#5491CA]" />} 
               label="Certificate" 
               active={currentSection === 'certificate'}
               onClick={() => setCurrentSection('certificate')}
-            />
-
-            <NavItem 
-              icon={<FaBullhorn className="text-[#5491CA]" />} 
-              label="Announcement" 
-              active={currentSection === 'announcement'}
-              onClick={() => setCurrentSection('announcement')}
             />
 
             <NavItem 

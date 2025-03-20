@@ -3,12 +3,6 @@ import "./noti.css";
 
 import axios from 'axios';
 
-
-
-
-
-
-
 const AddNotificationPage = () => {
   const [formData, setFormData] = useState({
     title: "",
@@ -43,39 +37,6 @@ const AddNotificationPage = () => {
     setErrors({});
     setLoading(false);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   };
 
   const handleSubmit = async () => {
@@ -97,7 +58,7 @@ const AddNotificationPage = () => {
 
 
     // If there are validation errors, stop submission
-    if (Object.keys(validationErrors).length > 0) {
+    if (Object.keys(validationErrors).length > 0) {       
       setLoading(false);
       return;
     }
@@ -128,22 +89,6 @@ const AddNotificationPage = () => {
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <div className="add-notification">
       <h1>Add Notification</h1>
@@ -160,100 +105,7 @@ const AddNotificationPage = () => {
         />
         {errors.title && <span className="error">{errors.title}</span>}
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      {/* Description Input */}
+{/* Description Input */}
       <div className="form-group">
         <label>Description</label>
         <textarea
@@ -283,40 +135,6 @@ const AddNotificationPage = () => {
       {formData.type === "link" && (
         <div className="form-group">
           <label>Link</label>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           <input
             type="url"
