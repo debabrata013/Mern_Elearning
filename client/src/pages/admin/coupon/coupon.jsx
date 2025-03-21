@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import couponService from "../api/couponService";
+import couponService from "../api/couponService"; // Update the import path
 
 const HomePage = ({
   coupons,
@@ -129,10 +129,10 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
     try {
       if (couponToEdit) {
         // Update existing coupon
-        await couponService.updateCoupon(couponToEdit._id || couponToEdit.id, formData);
+        await couponService.updateCoupon(couponToEdit.couponCode, formData); // Use the service
       } else {
         // Add a new coupon
-        await couponService.createcoupon(formData);
+        await couponService.createCoupon(formData); // Use the service
       }
       alert("Coupon saved successfully!");
       onBack();
@@ -289,8 +289,7 @@ const CouponDashboard = () => {
 
   const fetchCoupons = async () => {
     try {
-      const response = await couponService.getAllcoupons();
-      console.log("API Response:", response);
+      const response = await couponService.getAllCoupons(); // Use the service
       setCoupons(response.coupons || []);
     } catch (error) {
       console.error("Error fetching coupons:", error);
@@ -298,29 +297,23 @@ const CouponDashboard = () => {
     }
   };
 
-  const filteredCoupons = coupons.filter((coupon) =>
-    coupon.title?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   const handleAddCoupon = () => {
     setCouponToEdit(null);
     setIsAdding(true);
   };
 
   const handleEditCoupon = (index) => {
-    setCouponToEdit(filteredCoupons[index]);
+    setCouponToEdit(coupons[index]);
     setIsAdding(true);
   };
 
   const handleDeleteCoupon = async (index) => {
-    if (!window.confirm("Are you sure you want to delete this coupon?")) {
-      return;
-    }
-    
-    const couponToDelete = filteredCoupons[index];
+    if (!window.confirm("Are you sure you want to delete this coupon?")) return;
+
+    const couponToDelete = coupons[index];
     try {
-      await couponService.deleteCoupon(couponToDelete._id || couponToDelete.id);
-      await fetchCoupons(); // Refresh the list after deletion
+      await couponService.deleteCoupon(couponToDelete.couponCode); // Use the service
+      fetchCoupons(); // Refresh the list
     } catch (error) {
       console.error("Error deleting coupon:", error);
       alert("Failed to delete coupon. Please try again.");
@@ -328,15 +321,12 @@ const CouponDashboard = () => {
   };
 
   const handleToggleStatus = async (index) => {
-    const coupon = filteredCoupons[index];
+    const coupon = coupons[index];
     const updatedStatus = !coupon.active;
-    
+
     try {
-      await couponService.updateCoupon(coupon._id || coupon.id, {
-        ...coupon,
-        active: updatedStatus
-      });
-      await fetchCoupons(); // Refresh the list after update
+      await couponService.updateCoupon(coupon.couponCode, { ...coupon, active: updatedStatus }); // Use the service
+      fetchCoupons(); // Refresh the list
     } catch (error) {
       console.error("Error toggling status:", error);
       alert("Failed to update coupon status. Please try again.");
@@ -348,12 +338,14 @@ const CouponDashboard = () => {
       couponToEdit={couponToEdit}
       onBack={() => {
         setIsAdding(false);
-        fetchCoupons(); // Refresh the list when returning from add/edit
+        fetchCoupons(); // Refresh the list
       }}
     />
   ) : (
     <HomePage
-      coupons={filteredCoupons || []}
+      coupons={coupons.filter((coupon) =>
+        coupon.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )}
       onAddCoupon={handleAddCoupon}
       onEditCoupon={handleEditCoupon}
       onDeleteCoupon={handleDeleteCoupon}
