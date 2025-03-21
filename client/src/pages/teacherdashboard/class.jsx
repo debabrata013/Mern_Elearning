@@ -59,7 +59,8 @@
       duration: '1',
       description: ''
     });
-
+    const user = JSON.parse(localStorage.getItem('user'));
+    const email = user.email;
     const handleStartClass = () => {
       // Handle starting the live class
       console.log('Starting live class:', classForm);
