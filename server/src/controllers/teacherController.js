@@ -120,3 +120,16 @@ exports.deleteTeacher = async (req, res) => {
         res.status(500).send(error);
     }
 };
+
+const Course = require('../models/Course');
+exports.getAllCourse = async (req, res) => {
+    try {
+        const email = req.body.email;
+        console.log(email);
+        const courses = await Course.find({ teacher: email }).populate();
+        console.log(courses);
+        res.send(courses);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
