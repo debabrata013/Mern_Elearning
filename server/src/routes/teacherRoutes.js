@@ -18,4 +18,6 @@ router.put('/:id', teacherController.updateTeacher);
 // Delete a teacher
 router.delete('/:id', teacherController.deleteTeacher);
 
+router.get('/getallCourse',teacherController.getAllCourse)
+
 module.exports = router;
