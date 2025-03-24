@@ -109,19 +109,39 @@ const ClassesContent = () => {
                               <p className="text-gray-600 mt-2">{chapter.description || "No syllabus available."}</p>
                               
                               <h6 className="text-md font-semibold mt-4">Lessons:</h6>
-                              <ul className="list-disc ml-6 text-gray-600">
+                              <ul className="list-none ml-6 text-gray-600">
                                   {chapter.lessons && chapter.lessons.length > 0 ? (
                                       chapter.lessons.map((lesson, lessonIndex) => (
-                                          <li key={lessonIndex}>{lesson.title}</li>
+                                          <li key={lessonIndex}>
+                                            <ul>
+                                                <li className="ml-6">{lesson.title}</li>
+                                                <li><Video/>
+                                                <span className="ml-2">{lesson.videoUrl}</span>
+                                        <span className="ml-2">{lesson.resourceUrl}</span></li>
+                                        <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
+                                  <FilePlus className="h-5 w-5" /> Upload Lecture
+                              </button>
+                              <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
+                                  <FilePlus className="h-5 w-5" /> Upload Resources
+                              </button>
+
+                                            </ul>
+                                            </li>
+
                                       ))
                                   ) : (
-                                      <li className="text-gray-500">No lessons available.</li>
+                                      <li className="text-gray-500"><Video/> No lessons available.</li>
                                   )}
                               </ul>
                               
                               <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
                                   <FilePlus className="h-5 w-5" /> Upload Lecture
                               </button>
+                              <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
+                                  <FilePlus className="h-5 w-5" /> Upload Resources
+                              </button>
+
+
                           </div>
                       ))
                   ) : (
