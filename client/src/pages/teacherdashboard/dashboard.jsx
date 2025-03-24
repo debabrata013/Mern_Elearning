@@ -277,7 +277,6 @@
       const navigate = useNavigate(); // Initialize useNavigate for redirect
       const [sidebarOpen, setSidebarOpen] = useState(false);
       const [currentSection, setCurrentSection] = useState('home');
-      const [currentDateTime, setCurrentDateTime] = useState(new Date());
       const [loading, setLoading] = useState(true); // To manage loading state
       const [userName, setUserName] = useState('');
       const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -289,10 +288,6 @@
         setUserName(userData.userName || 'Teacher');
         setLoading(false);
         
-        const interval = setInterval(() => {
-          setCurrentDateTime(new Date());
-        }, 1000);
-        
         // Close dropdown when clicking outside
         const handleClickOutside = (event) => {
           if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
@@ -303,17 +298,12 @@
         document.addEventListener('mousedown', handleClickOutside);
         
         return () => {
-          clearInterval(interval);
           document.removeEventListener('mousedown', handleClickOutside);
         };
       }, [navigate]);
 
-      const date = currentDateTime.toLocaleDateString(); // "MM/DD/YYYY"
-      const time = currentDateTime.toLocaleTimeString(); // "HH:MM:SS AM/PM"
 
       const renderContent = () => {
-        console.log("Current section:", currentSection);
-        
         switch (currentSection) {
           case 'classes':
             return <ClassesContent />;
@@ -430,11 +420,6 @@
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="text-gray-600 mr-2">
-                  <p className="text-sm font-medium">{date}</p>
-                  <p className="text-xs">{time}</p>
-                </div>
-                
                 {/* Profile Dropdown */}
                 <div className="relative" ref={profileDropdownRef}>
                   <button 
