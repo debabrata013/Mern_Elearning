@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./noti.css";
-
 import axios from 'axios';
 
 const AddNotificationPage = () => {
@@ -36,15 +35,15 @@ const AddNotificationPage = () => {
     });
     setErrors({});
     setLoading(false);
+<<<<<<< HEAD
 
+=======
+>>>>>>> a0d6e1cb0e0c1ba9facb49f9f70d02e7e94ca76f
   };
 
   const handleSubmit = async () => {
     setLoading(true);
     const validationErrors = {};
-
-
-
 
     // Validation checks
     if (!formData.title) validationErrors.title = "Title is required";
@@ -54,8 +53,6 @@ const AddNotificationPage = () => {
 
     // Set validation errors
     setErrors(validationErrors);
-
-
 
     // If there are validation errors, stop submission
     if (Object.keys(validationErrors).length > 0) {       
@@ -105,7 +102,12 @@ const AddNotificationPage = () => {
         />
         {errors.title && <span className="error">{errors.title}</span>}
       </div>
+<<<<<<< HEAD
 {/* Description Input */}
+=======
+
+      {/* Description Input */}
+>>>>>>> a0d6e1cb0e0c1ba9facb49f9f70d02e7e94ca76f
       <div className="form-group">
         <label>Description</label>
         <textarea
@@ -135,11 +137,13 @@ const AddNotificationPage = () => {
       {formData.type === "link" && (
         <div className="form-group">
           <label>Link</label>
+<<<<<<< HEAD
 
+=======
+>>>>>>> a0d6e1cb0e0c1ba9facb49f9f70d02e7e94ca76f
           <input
             type="url"
             name="link"
-
             value={formData.link}
             onChange={handleInputChange}
             placeholder="Enter notification link"

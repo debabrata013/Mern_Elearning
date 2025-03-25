@@ -120,3 +120,33 @@ exports.deleteTeacher = async (req, res) => {
         res.status(500).send(error);
     }
 };
+const Course = require('../models/Course');
+
+
+exports.getAllCourse = async (req, res) => {
+    try {
+        const { email } = req.query; // Get email from query params
+
+        if (!email) {
+            return res.status(400).json({ error: "Email is required" });
+        }
+
+        // Check if the teacher exists in the User model
+        const teacher = await User.findOne({ email });
+        if (!teacher) {
+            return res.status(404).json({ error: "Teacher not found" });
+        }
+
+        // Find courses by teacher's ObjectId if referenced
+        const courses = await Course.find({ teacher: email }).populate("teacher");
+
+        if (!courses.length) {
+            return res.status(404).json({ message: "No courses found for this teacher" });
+        }
+
+        res.status(200).json(courses);
+    } catch (error) {
+        console.error("Error fetching courses:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};

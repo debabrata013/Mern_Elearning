@@ -1,312 +1,178 @@
-  import React, { useState } from 'react';
-  import { Plus, ArrowLeft, Video, Users, Calendar, Clock, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus, ArrowLeft, Video, Users, Calendar, Clock, X ,BookOpen,FilePlus } from 'lucide-react';
+import axios from 'axios';
 
-  // Sample course data
-  const sampleCourses = [
-    {
-      id: 1,
-      title: "Mathematics 101",
-      description: "Introduction to Basic Mathematics",
-      image: "/api/placeholder/300/200",
-      studentCount: 32,
-      nextClass: "Today at 2:00 PM"
-    },
-    {
-      id: 2,
-      title: "Physics 201",
-      description: "Advanced Physics Concepts",
-      image: "/api/placeholder/300/200",
-      studentCount: 28,
-      nextClass: "Tomorrow at 10:00 AM"
-    },
-    {
-      id: 3,
-      title: "Chemistry 101",
-      description: "Basic Chemistry Principles",
-      image: "/api/placeholder/300/200",
-      studentCount: 35,
-      nextClass: "Wednesday at 1:00 PM"
-    }
-  ];
-
-  // Sample upcoming classes
-  const sampleClasses = [
-    {
-      id: 1,
-      title: "Introduction to Algebra",
-      date: "2024-11-11",
-      time: "14:00",
-      duration: "1 hour",
-      attendees: 28
-    },
-    {
-      id: 2,
-      title: "Linear Equations",
-      date: "2024-11-13",
-      time: "15:30",
-      duration: "1.5 hours",
-      attendees: 25
-    }
-  ];
-
-  const ClassesContent = () => {
+const ClassesContent = () => {
     const [view, setView] = useState('courses'); // courses, classes, startClass
     const [selectedCourse, setSelectedCourse] = useState(null);
-    const [classForm, setClassForm] = useState({
-      title: '',
-      date: '',
-      time: '',
-      duration: '1',
-      description: ''
-    });
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
+    const user = JSON.parse(localStorage.getItem('user'));
+    const email = user?.email; // Avoid errors if user is null
 
-    const handleStartClass = () => {
-      // Handle starting the live class
-      console.log('Starting live class:', classForm);
-      // Reset form and go back to classes view
-      setClassForm({
-        title: '',
-        date: '',
-        time: '',
-        duration: '1',
-        description: ''
-      });
-      setView('classes');
+    useEffect(() => {
+        if (!email) return; // ✅ Prevent fetching if email is missing
+
+        const fetchCourses = async () => {
+            try {
+                const response = await axios.get(`http://localhost:4400/teachers/get?email=${email}`);
+                setCourses(response.data);
+            } catch (err) {
+                console.error('Error fetching courses:', err);
+                setError('Failed to fetch courses');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCourses();
+    }, [email]);  // ✅ Fetch only when `email` changes
+
+    const formatDate = (dateString) => {
+        const options = { year: "numeric", month: "short", day: "numeric" };
+        return new Date(dateString).toLocaleDateString("en-US", options);
     };
 
-    // Course Card Component
-    const CourseCard = ({ course }) => (
-      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-        <div className="h-48 bg-gradient-to-r from-[#5491CA]/30 to-[#b1a9f1]/30 relative">
-          <img 
-            src={course.image} 
-            alt={course.title} 
-            className="w-full h-full object-cover mix-blend-overlay"
-          />
-        </div>
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2 text-[#5491CA]">{course.title}</h3>
-          <p className="text-gray-600 mb-2">{course.description}</p>
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-            <Users className="h-4 w-4 text-[#b1a9f1]" />
-            <span>{course.studentCount} students</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-[#5491CA] mb-3">
-            <Calendar className="h-4 w-4" />
-            <span>{course.nextClass}</span>
-          </div>
-          <button
-            onClick={() => {
-              setSelectedCourse(course);
-              setView('classes');
-            }}
-            className="w-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white py-2 rounded-lg hover:shadow-md transition-all"
-          >
-            View Classes
-          </button>
-        </div>
-      </div>
-    );
-
-    // Live Class Card Component
-    const LiveClassCard = ({ liveClass }) => (
-      <div className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <h4 className="font-semibold text-lg mb-1 text-[#5491CA]">{liveClass.title}</h4>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1 text-gray-600">
-                <Calendar className="h-4 w-4 text-[#b1a9f1]" />
-                <span>{new Date(liveClass.date).toLocaleDateString()}</span>
-              </div>
-              <div className="flex items-center gap-1 text-gray-600">
-                <Clock className="h-4 w-4 text-[#b1a9f1]" />
-                <span>{liveClass.time}</span>
-              </div>
+    const CourseCard = React.memo(({ course }) => (
+        <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <div className="h-48 bg-gradient-to-r from-[#5491CA]/30 to-[#b1a9f1]/30 relative">
+                <img 
+                    src={course.coverImage} 
+                    alt={course.title} 
+                    className="w-full h-full object-cover mix-blend-overlay"
+                />
             </div>
-          </div>
-          <span className="bg-gradient-to-r from-[#5491CA]/10 to-[#b1a9f1]/10 text-[#5491CA] px-3 py-1 rounded-full text-sm">
-            {liveClass.duration}
-          </span>
-        </div>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2 text-gray-600">
-            <Users className="h-4 w-4 text-[#b1a9f1]" />
-            <span>{liveClass.attendees} attendees</span>
-          </div>
-          <button className="bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white px-4 py-2 rounded-lg hover:shadow-md transition-all flex items-center gap-2">
-            <Video className="h-4 w-4" />
-            Join Class
-          </button>
-        </div>
-      </div>
-    );
-
-    // Render different views
-    const renderContent = () => {
-      switch (view) {
-        case 'classes':
-          return (
-            <div>
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setView('courses')}
-                    className="text-[#5491CA] hover:text-[#b1a9f1] flex items-center gap-1 transition-colors"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    Back to Courses
-                  </button>
-                  <h3 className="text-xl font-semibold bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-transparent bg-clip-text">
-                    {selectedCourse?.title} - Live Classes
-                  </h3>
+            <div className="p-4">
+                <h3 className="text-lg font-semibold mb-2 text-[#5491CA]">{course.title}</h3>
+                <p className="text-gray-600 mb-2">{course.description || "No description available."}</p>
+                <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
+                    <Users className="h-4 w-4 text-[#b1a9f1]" />
+                    <span>{course.maxStudents} students</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-[#5491CA] mb-2">
+                    <Calendar className="h-4 w-4" />
+                    <span>{formatDate(course.startDate)}</span>
+                </div>
+                <div className="text-sm font-semibold text-gray-700 mb-3">
+                    Price: {course.currency} {course.price}
                 </div>
                 <button
-                  onClick={() => setView('startClass')}
-                  className="bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white px-4 py-2 rounded-lg hover:shadow-md transition-all flex items-center gap-2"
+                    onClick={() => setSelectedCourse(course)}
+                    className="w-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white py-2 rounded-lg hover:shadow-md transition-all"
                 >
-                  <Video className="h-4 w-4" />
-                  Start New Class
+                    View Course
                 </button>
-              </div>
-              
-              <div className="grid gap-4">
-                {sampleClasses.map(liveClass => (
-                  <LiveClassCard key={liveClass.id} liveClass={liveClass} />
-                ))}
-              </div>
             </div>
-          );
-
-        case 'startClass':
-          return (
-            <div>
-              <div className="flex items-center gap-2 mb-6">
-                <button
-                  onClick={() => setView('classes')}
-                  className="text-[#5491CA] hover:text-[#b1a9f1] flex items-center gap-1 transition-colors"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Back to Classes
-                </button>
-                <h3 className="text-xl font-semibold bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-transparent bg-clip-text">
-                  Start New Live Class
-                </h3>
-              </div>
-
-              <form onSubmit={(e) => e.preventDefault()} className="bg-white p-6 rounded-lg shadow-sm">
-                <div className="grid gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
-                      Class Title
-                    </label>
-                    <input
-                      type="text"
-                      id="title"
-                      value={classForm.title}
-                      onChange={(e) => setClassForm(prev => ({ ...prev, title: e.target.value }))}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA]"
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="date">
-                        Date
-                      </label>
-                      <input
-                        type="date"
-                        id="date"
-                        value={classForm.date}
-                        onChange={(e) => setClassForm(prev => ({ ...prev, date: e.target.value }))}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA]"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="time">
-                        Time
-                      </label>
-                      <input
-                        type="time"
-                        id="time"
-                        value={classForm.time}
-                        onChange={(e) => setClassForm(prev => ({ ...prev, time: e.target.value }))}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA]"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="duration">
-                        Duration (hours)
-                      </label>
-                      <select
-                        id="duration"
-                        value={classForm.duration}
-                        onChange={(e) => setClassForm(prev => ({ ...prev, duration: e.target.value }))}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA]"
-                      >
-                        <option value="0.5">30 minutes</option>
-                        <option value="1">1 hour</option>
-                        <option value="1.5">1.5 hours</option>
-                        <option value="2">2 hours</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="description">
-                      Class Description
-                    </label>
-                    <textarea
-                      id="description"
-                      value={classForm.description}
-                      onChange={(e) => setClassForm(prev => ({ ...prev, description: e.target.value }))}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA]"
-                      rows={4}
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-4">
-                    <button
-                      onClick={handleStartClass}
-                      className="bg-gradient-to-r from-[#5491CA] to-[#7670AC] text-white py-2 rounded-lg hover:shadow-md transition-all flex items-center gap-2 justify-center"
-                    >
-                      <Video className="h-4 w-4" />
-                      Start Live Class Now
-                    </button>
-                    <button
-                      onClick={handleStartClass}
-                      className="bg-gradient-to-r from-[#b1a9f1] to-[#5491CA] text-white py-2 rounded-lg hover:shadow-md transition-all"
-                    >
-                      Schedule for Later
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          );
-
-        default:
-          return (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sampleCourses.map(course => (
-                  <CourseCard key={course.id} course={course} />
-                ))}
-                
-            </div>
-          );
-      }
-    };
+        </div>
+    ));
 
     return (
-      <div className="bg-gray-50 p-6 rounded-xl">
-        {renderContent()}
-      </div>
-    );
-  };
+        <div className="bg-gray-50 p-6 rounded-xl">
+            {selectedCourse ? (
+              <div className="bg-white p-6 rounded-lg shadow-md">
+              <button onClick={() => setSelectedCourse(null)} className="mb-4 text-[#5491CA] flex items-center">
+                  <ArrowLeft className="mr-2" /> Back to Courses
+              </button>
+              <h3 className="text-2xl font-bold mb-2">{selectedCourse.title}</h3>
+              <p className="text-gray-600 mb-4">{selectedCourse.description || "No description available."}</p>
+              
+              <div className="grid grid-cols-2 gap-4 text-sm text-gray-700 mb-4">
+                  <div className="flex items-center gap-2">
+                      <Calendar className="h-5 w-5 text-[#5491CA]" />
+                      <span>Start Date: {formatDate(selectedCourse.startDate)}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                      <Calendar className="h-5 w-5 text-[#5491CA]" />
+                      <span>End Date: {formatDate(selectedCourse.endDate)}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                      <Users className="h-5 w-5 text-[#5491CA]" />
+                      <span>Max Students: {selectedCourse.maxStudents}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-[#5491CA]" />
+                      <span>Duration: {selectedCourse.duration} weeks</span>
+                  </div>
+              </div>
+              
+              <h4 className="text-xl font-bold mt-6 mb-2">Chapters</h4>
+              <div className="space-y-4">
+                  {selectedCourse.chapters && selectedCourse.chapters.length > 0 ? (
+                      selectedCourse.chapters.map((chapter, index) => (
+                          <div key={index} className="p-4 border rounded-lg shadow-sm">
+                              <h5 className="text-lg font-semibold flex items-center gap-2">
+                                  <BookOpen className="h-5 w-5 text-[#5491CA]" />
+                                  {chapter.title}
+                              </h5>
+                              <p className="text-gray-600 mt-2">{chapter.description || "No syllabus available."}</p>
+                              
+                              <h6 className="text-md font-semibold mt-4">Lessons:</h6>
+                              <ul className="list-none ml-6 text-gray-600">
+                                  {chapter.lessons && chapter.lessons.length > 0 ? (
+                                      chapter.lessons.map((lesson, lessonIndex) => (
+                                          <li key={lessonIndex}>
+                                            <ul>
+                                                <li className="ml-6">{lesson.title}</li>
+                                                <li><Video/>
+                                                <span className="ml-2">{lesson.videoUrl}</span>
+                                        <span className="ml-2">{lesson.resourceUrl}</span></li>
+                                        <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
+                                  <FilePlus className="h-5 w-5" /> Upload Lecture
+                              </button>
+                              <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
+                                  <FilePlus className="h-5 w-5" /> Upload Resources
+                              </button>
 
-  export default ClassesContent;
+                                            </ul>
+                                            </li>
+
+                                      ))
+                                  ) : (
+                                      <li className="text-gray-500"><Video/> No lessons available.</li>
+                                  )}
+                              </ul>
+                              
+                              <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
+                                  <FilePlus className="h-5 w-5" /> Upload Lecture
+                              </button>
+                              <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
+                                  <FilePlus className="h-5 w-5" /> Upload Resources
+                              </button>
+
+
+                          </div>
+                      ))
+                  ) : (
+                      <p className="text-gray-500">No chapters available.</p>
+                  )}
+              </div>
+              
+              <button className="bg-[#5491CA] text-white px-4 py-2 rounded-lg hover:shadow-md transition-all mt-6">
+                  Schedule Class
+              </button>
+          </div>
+            ) : (
+                <div>
+                    <h3 className="text-2xl font-bold mb-4">Courses</h3>
+                    {loading ? (
+                        <p className="text-gray-500 text-center">Loading courses...</p>
+                    ) : error ? (
+                        <p className="text-red-500 text-center">{error}</p>
+                    ) : courses.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {courses.map(course => (
+                                <CourseCard key={course._id || course.courseCode} course={course} />
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-gray-500 text-center">No courses available.</p>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ClassesContent;
