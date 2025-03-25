@@ -51,6 +51,7 @@ const contactRoutes = require('./src/routes/contactRoutes');
 const MailRoutes =require("./src/routes/Email")
 const landingRoutes = require('./src/routes/landingRouters');
 const cartRoutes = require('./src/routes/cartRoutes');
+const TodoRoutes = require('./src/routes/TodoRouters');
 
 // Use routes
 app.use('/students', studentRoutes);
@@ -70,22 +71,9 @@ app.use("/profile",ProfileRouters)
 app.use("/contactus/",contactRoutes)
 app.use("/mail/",MailRoutes);
 app.use('/cart', cartRoutes); // Add this line to use cart routes
+app.use('/todos', TodoRoutes);
 
-const deleteOldAnnouncements = async () => {
-    try {
-      const sixDaysAgo = new Date();
-      sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
-  
-      // Delete all announcements older than 6 days
-      const result = await Announcement.deleteMany({ createdAt: { $lt: sixDaysAgo } });
-      console.log(`${result.deletedCount} announcements older than 6 days deleted.`);
-    } catch (err) {
-      console.error('Error deleting old announcements:', err);
-    }
-  };
-  
-  schedule.scheduleJob('0 0 * * *', deleteOldAnnouncements); 
-  schedule.scheduleJob('0 0 * * *', deleteExpiredCoupons);
+
   
 
 // Start the server
