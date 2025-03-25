@@ -35,10 +35,6 @@ const AddNotificationPage = () => {
     });
     setErrors({});
     setLoading(false);
-<<<<<<< HEAD
-
-=======
->>>>>>> a0d6e1cb0e0c1ba9facb49f9f70d02e7e94ca76f
   };
 
   const handleSubmit = async () => {
@@ -102,12 +98,7 @@ const AddNotificationPage = () => {
         />
         {errors.title && <span className="error">{errors.title}</span>}
       </div>
-<<<<<<< HEAD
 {/* Description Input */}
-=======
-
-      {/* Description Input */}
->>>>>>> a0d6e1cb0e0c1ba9facb49f9f70d02e7e94ca76f
       <div className="form-group">
         <label>Description</label>
         <textarea
@@ -137,10 +128,6 @@ const AddNotificationPage = () => {
       {formData.type === "link" && (
         <div className="form-group">
           <label>Link</label>
-<<<<<<< HEAD
-
-=======
->>>>>>> a0d6e1cb0e0c1ba9facb49f9f70d02e7e94ca76f
           <input
             type="url"
             name="link"
