@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import VideoPlayer from "@/components/video-player";
+import VideoPlayer from "@/components/student-view/studentComponent/ui/videoplayer";
 // import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
 import {

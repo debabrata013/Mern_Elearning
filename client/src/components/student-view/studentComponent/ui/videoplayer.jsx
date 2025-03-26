@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
-import { Slider } from "../ui/slider";
-import { Button } from "../ui/button";
+import { Slider } from "../../../ui/slider";
+import { Button } from "../../../ui/button";
 import {
   Maximize,
   Minimize,

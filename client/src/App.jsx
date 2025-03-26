@@ -39,6 +39,7 @@ import Studentbuycourse2 from "./components/student-view/coursebuy"
 import Doubts from "./components/student-view/Doubts"
 import Assigment from "./components/student-view/Assigment"
 import Pr from "./pages/admin/profile"
+import Enroll from "./components/student-view/studentComponent/enroll"
 
 // import StudentRoutes from "./components/student-view/StudentRoutes";
 // import student from './components/student-view/AppLayout'
@@ -47,6 +48,7 @@ import Pr from "./pages/admin/profile"
 import CourseDemo from './pages/landing-page/course-demo/CourseDemo';
 import CourseEnrollment from './pages/landing-page/course-enrollment/CourseEnrollment';
 import { ThemeProvider } from './context/ThemeContext';
+import CartPage from './components/student-view/studentComponent/CartPage';
 
 function App() {
   return (
@@ -98,6 +100,8 @@ function App() {
           <Route path="/courses" element={<Coursess />} />
           <Route path="/course-demo/:courseId" element={<CourseDemo />} />
           <Route path="/course-enrollment/:courseId" element={<CourseEnrollment />} />
+          <Route path="/enroll" element={<Enroll />} />
+          <Route path="/cart" element={<CartPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthProvider>

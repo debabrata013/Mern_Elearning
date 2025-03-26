@@ -7,13 +7,14 @@ import Assignment from "./studentComponent/Assignment";
 import Notice from "./studentComponent/Notice";
 import Profile from "./studentComponent/Profile";
 import CourseDetailPage from "./studentComponent/CourseDetailsPage";
+import CoursePage from "./coursebuy";
 import { Route, Routes } from "react-router-dom";
 
 function StudentRoutes() {
   return (
     <AppLayout>
       <Routes>
-        <Route path="/" element={<MyCourses />} />
+        <Route path="/mycourses" element={<CoursePage />} />
         <Route path="/coursedetails" element={<CourseDetailPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/doubts" element={<Doubts />} />

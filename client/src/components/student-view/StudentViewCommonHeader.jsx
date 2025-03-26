@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Sidebar from './studentComponent/Sidebar';
 import { 
   GraduationCap, 
   BookOpen, 
   Bell, 
+  Book,
   User,
   ShoppingCart,
   Search,
@@ -24,6 +25,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
   BarChart, Bar 
 } from "recharts";
+import { FaUser, FaSignOutAlt } from 'react-icons/fa';
 
 
 const progressData = [
@@ -153,6 +155,30 @@ const StudentDashboard = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleProfileClick = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    // Add your logout logic here
+    console.log('Logging out...');
+  };
 
   // Mock data for quick stats
   const quickStats = {
@@ -212,7 +238,7 @@ const StudentDashboard = () => {
               )}
 
             <button 
-                onClick={() => setShowCart(!showCart)}
+                onClick={() => navigate('/cart')}
                 className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
               >
                 <ShoppingCart className="h-6 w-6 text-gray-600 dark:text-gray-300" />
@@ -225,20 +251,52 @@ const StudentDashboard = () => {
             </div>
 
             {/* Profile */}
-            <Link
-              to="/profile"
-              className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            >
-              <img
-                src="https://ui-avatars.com/api/?name=John+Doe"
-                alt="Profile"
-                className="h-10 w-10 rounded-full border-2 border-[#5491CA]"
-              />
-              <div className="text-left">
-                <p className="font-semibold text-gray-900 dark:text-gray-100">John Doe</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Student</p>
-              </div>
-            </Link>
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={handleProfileClick}
+                className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <img
+                  src="https://ui-avatars.com/api/?name=John+Doe"
+                  alt="Profile"
+                  className="h-10 w-10 rounded-full border-2 border-[#5491CA]"
+                />
+                <div className="text-left">
+                  <p className="font-semibold text-gray-900 dark:text-gray-100">John Doe</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Student</p>
+                </div>
+              </button>
+
+              {/* Dropdown Menu */}
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-fadeIn">
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <FaUser className="text-[#5491CA]" />
+                    <span className="text-gray-700 dark:text-gray-200">My Profile</span>
+                  </Link>
+                  <Link
+                    to="/mycourses"
+                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <Book className="text-[#5491CA]" />
+                    <span className="text-gray-700 dark:text-gray-200">My Courses</span>
+                  </Link>
+                  
+                  <hr className="my-2 border-gray-200 dark:border-gray-700" />
+                  
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-red-500"
+                  >
+                    <FaSignOutAlt />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

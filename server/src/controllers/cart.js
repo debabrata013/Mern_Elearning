@@ -4,8 +4,8 @@ const Course = require('../models/Course'); // Import the Course model
 // Function to add a course to the user's cart
 const addToCart = async (req, res) => {
     try {
-        const userId = req.user.id; // Assuming user ID is available in req.user
-        const { courseId } = req.body; // Get course ID from request body
+       // Assuming user ID is available in req.user
+        const { courseId, userId } = req.body; // Get course ID from request body
 
         // Validate course ID
         const course = await Course.findById(courseId);
