@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
-
+import axiosInstance from "../../api/axiosInstance";
 function ForgotPasswordPage() {
   const [step, setStep] = useState(1); // 1: Email, 2: OTP
   const [email, setEmail] = useState('');
@@ -11,28 +11,54 @@ function ForgotPasswordPage() {
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [loging,setLoging] = useState(false);
 
   const handleSendOtp = (e) => {
     e.preventDefault();
+    setLoging(true);
     setIsSubmitting(true);
-    setTimeout(() => {
-      setMessage('OTP sent successfully. Please check your email.');
-      setIsSubmitting(false);
+    axiosInstance.post('/auth/forget-password', { email })
+    .then((res) => {
       setStep(2);
-    }, 1500);
+      setMessage(res.data.message);
+      setIsSubmitting(false);
+      setLoging(false);
+    })
+    .catch((err) => {
+      setIsError(true);
+      setMessage(err.response?.data.error|| 'An error occurred. Please try again.');
+      setIsSubmitting(false);
+      setLoging(false);
+    });
   };
 
   const handleVerifyOtp = (e) => {
     e.preventDefault();
+    setLoging(true);
     setIsSubmitting(true);
-    setTimeout(() => {
-      setMessage('OTP verified. You can now reset your password.');
+    axiosInstance.post('/auth/check-otp', { email, otp, newPassword })
+    .then((res) => {
+      setStep(2);
+      setMessage(res.data.message);
       setIsSubmitting(false);
-    }, 1500);
+      setLoging(false);
+    })
+    .catch((err) => {
+      setIsError(true);
+      setMessage(err.response?.data.error|| 'An error occurred. Please try again.');
+      setIsSubmitting(false);
+      setLoging(false);
+    });
   };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-50">
+      {loging && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+        </div>
+      )}
       <Card className="w-full max-w-md p-6 shadow-lg">
         <CardContent>
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
