@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
-const StudentCourses = require("./StudentCourses");  // Import the StudentCourses schema
+const Course = require('./Course');
 const bcrypt = require('bcryptjs');
 
+// Define an embedded Announcement schema
 // Define an embedded Announcement schema
 const AnnouncementSchema = new mongoose.Schema({
   announcementId: { 
@@ -13,6 +14,32 @@ const AnnouncementSchema = new mongoose.Schema({
     default: false 
   }
 }, { _id: false });
+
+// Define an embedded To-Do schema
+const TodoSchema = new mongoose.Schema({
+  
+  todo: {
+    type: String,
+    trim: true,
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'completed'],
+    default: 'pending',
+  },
+  priority: {
+    type: String,
+    enum: ['low', 'medium', 'high'],
+    default: 'medium',
+  },
+  dueDate: {
+    type: Date,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  }
+});
 
 const UserSchema = new mongoose.Schema({
   email: {  
@@ -32,10 +59,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: null, 
   },
-otpCount:{
-  type:Number,
-default:0
-},
+  otpCount: {
+    type: Number,
+    default: 0
+  },
   profileImage: {
     type: String,
     default: "https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg" 
@@ -45,13 +72,13 @@ default:0
     enum: ['student', 'teacher', 'admin'],
     default: 'student',
   },
-  // Embedded announcements array.
+
+  // Embedded announcements array
   announcements: [AnnouncementSchema],
 
-  // Role-specific fields for teachers.
+  // Role-specific fields for teachers
   description: {
     type: String,
-    
   },
   subjectKnowledge: [{
     type: String,
@@ -64,24 +91,24 @@ default:0
   mobile: {
     type: Number
   },
-  // Student-specific fields.
+
+  // Student-specific fields
   purchasedCourses: [{
     type: mongoose.Schema.Types.ObjectId, 
-    ref: "StudentCourses",
+    ref: "Course",
     required: function() { return this.role === 'student'; },
   }],
-  resumeurl:{
-    type:String
+  resumeurl: {
+    type: String
   },
-  lindeninProfileUrl:{
-    type:String
+  lindeninProfileUrl: {
+    type: String
   },
-  githubprofileurl:{
-    type:String
+  githubprofileurl: {
+    type: String
+  },
 
-  },
-
-  // Relationship with CourseChat.
+  // Relationship with CourseChat
   courseChats: [{
     type: mongoose.Schema.Types.ObjectId, 
     ref: "CourseChat"
@@ -91,13 +118,17 @@ default:0
     type: mongoose.Schema.Types.ObjectId,
     ref: "Course"  // Reference to the Course model
   }],
+
+  // To-Do List for each user
+  todos: [TodoSchema] // Each user has their own list of todos
+
 }, {
-  timestamps: true,  // Automatically adds createdAt and updatedAt fields.
-  toJSON: { virtuals: true },  // Include virtuals in JSON output.
-  toObject: { virtuals: true },  // Include virtuals in object output.
+  timestamps: true,  
+  toJSON: { virtuals: true },  
+  toObject: { virtuals: true },  
 });
 
-// Hash the password before saving the user document.
+// Hash the password before saving the user document
 UserSchema.pre('save', async function (next) {
     if (this.isModified('password')) {
         this.password = await bcrypt.hash(this.password, 8);
@@ -105,7 +136,7 @@ UserSchema.pre('save', async function (next) {
     next();
 });
 
-// Method to compare provided password with stored hashed password.
+// Method to compare provided password with stored hashed password
 UserSchema.methods.comparePassword = async function (candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 };

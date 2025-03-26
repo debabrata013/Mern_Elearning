@@ -1,13 +1,93 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, ArrowLeft, Video, Users, Calendar, Clock, X ,BookOpen,FilePlus } from 'lucide-react';
 import axios from 'axios';
-
+import { Button } from '@/components/ui/button';
+const styles = {
+    container: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      padding: "15px",
+      backgroundColor: "#f9f9f9",
+      borderRadius: "8px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      width: "100%",
+      
+      margin: "auto",
+      flexWrap: "wrap",
+    },
+    label: {
+      fontSize: "14px",
+      fontWeight: "bold",
+      whiteSpace: "nowrap",
+    },
+    input: {
+      flex: "1",
+      padding: "10px",
+      borderRadius: "5px",
+      border: "1px solid #ccc",
+      minWidth: "150px",
+    },
+    button: {
+      padding: "10px 15px",
+      backgroundColor: "#007bff",
+      color: "white",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      transition: "background 0.3s ease",
+    },
+    buttonHover: {
+      backgroundColor: "#0056b3",
+    },
+  };
 const ClassesContent = () => {
     const [view, setView] = useState('courses'); // courses, classes, startClass
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [classDetails, setClassDetails] = useState({
+        link: '',
+        time: '',
+        chapter: '',
+        courses:'',
+    });
+    const [videoFile, setVideoFile] = useState(null);
+  const [resourceFile, setResourceFile] = useState(null);const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("video/")) {
+      setVideoFile(file);
+    } else {
+      alert("Please upload a valid video file.");
+      e.target.value = ""; // Reset input
+    }
+  };
+
+  const handleResourceChange = (e) => {
+    const file = e.target.files[0];
+    if (
+      file &&
+      (file.type.startsWith("image/") ||
+        file.type === "application/pdf" ||
+        file.type.includes("presentation"))
+    ) {
+      setResourceFile(file);
+    } else {
+      alert("Only images, PDFs, or PPT files are allowed.");
+      e.target.value = "";
+    }
+  };
+
+  const handleUpload = () => {
+   
+    console.log("Uploading:" );
+    setVideoFile(null)
+    setResourceFile(null)
+  };
+
+
     
     const user = JSON.parse(localStorage.getItem('user'));
     const email = user?.email; // Avoid errors if user is null
@@ -33,6 +113,9 @@ const ClassesContent = () => {
     const formatDate = (dateString) => {
         const options = { year: "numeric", month: "short", day: "numeric" };
         return new Date(dateString).toLocaleDateString("en-US", options);
+    };    const handleScheduleClass = () => {
+        console.log("Scheduled Class Details:", classDetails);
+        setShowModal(false);
     };
 
     const CourseCard = React.memo(({ course }) => (
@@ -133,25 +216,62 @@ const ClassesContent = () => {
                                       <li className="text-gray-500"><Video/> No lessons available.</li>
                                   )}
                               </ul>
-                              
-                              <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
-                                  <FilePlus className="h-5 w-5" /> Upload Lecture
-                              </button>
-                              <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
-                                  <FilePlus className="h-5 w-5" /> Upload Resources
-                              </button>
+                              <div style={styles.container}>
+      <label style={styles.label}>
+        Upload Video:
+        <input type="file" accept="video/*" onChange={handleVideoChange} style={styles.input} />
+      </label>
 
+      <label style={styles.label}>
+        Upload Resource:
+        <input
+          type="file"
+          accept="image/*,application/pdf,.ppt,.pptx"
+          onChange={handleResourceChange}
+          style={styles.input}
+        />
+      </label>
 
-                          </div>
+      <button onClick={handleUpload} style={styles.button}>
+        Upload
+      </button>
+    </div>
+                              </div>
                       ))
                   ) : (
                       <p className="text-gray-500">No chapters available.</p>
                   )}
               </div>
               
-              <button className="bg-[#5491CA] text-white px-4 py-2 rounded-lg hover:shadow-md transition-all mt-6">
+              <button className="bg-[#5491CA] text-white px-4 py-2 rounded-lg hover:shadow-md transition-all mt-6" onClick={() => setShowModal(true)}>
                   Schedule Class
               </button>
+              {showModal && (
+                classDetails.courses=selectedCourse.title,
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h3 className="text-xl font-bold mb-4">Schedule Class</h3>
+                        <label className="block text-sm font-medium">Joining Link</label>
+                        <input type="text" className="w-full border rounded-lg p-2 mb-2" 
+                            value={classDetails.link} onChange={(e) => setClassDetails({ ...classDetails, link: e.target.value })} />
+                        
+                        <label className="block text-sm font-medium">Meeting Start Time</label>
+                        <input type="datetime-local" className="w-full border rounded-lg p-2 mb-2" 
+                            value={classDetails.time} onChange={(e) => setClassDetails({ ...classDetails, time: e.target.value })} />
+                        
+                        <label className="block text-sm font-medium">Chapter Name</label>
+                        <input type="text" className="w-full border rounded-lg p-2 mb-2" 
+                            value={classDetails.chapter} onChange={(e) => setClassDetails({ ...classDetails, chapter: e.target.value })} />
+
+                        
+                        <div className="flex justify-between mt-4">
+                            <button onClick={() => setShowModal(false)} className="text-red-500">Cancel</button>
+                            <button onClick={handleScheduleClass} className="bg-[#5491CA] text-white px-4 py-2 rounded-lg">Send</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
           </div>
             ) : (
                 <div>
@@ -170,7 +290,10 @@ const ClassesContent = () => {
                         <p className="text-gray-500 text-center">No courses available.</p>
                     )}
                 </div>
-            )}
+            )
+            
+            }
+            
         </div>
     );
 };
