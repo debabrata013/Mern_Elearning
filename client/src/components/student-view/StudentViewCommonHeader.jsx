@@ -6,6 +6,7 @@ import {
   BookOpen, 
   Bell, 
   User,
+  ShoppingCart,
   Search,
   Clock,
   Medal,
@@ -150,6 +151,8 @@ const CustomTooltip = ({ active, payload, label }) => {
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
 
   // Mock data for quick stats
   const quickStats = {
@@ -207,6 +210,18 @@ const StudentDashboard = () => {
                   {/* Add your notifications list here */}
                 </div>
               )}
+
+            <button 
+                onClick={() => setShowCart(!showCart)}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
+              >
+                <ShoppingCart className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                {cartCount > 0 && (
+                  <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
             </div>
 
             {/* Profile */}

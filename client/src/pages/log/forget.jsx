@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Loader2 } from 'lucide-react';
 
 function ForgotPasswordPage() {
   const [step, setStep] = useState(1); // 1: Email, 2: OTP
@@ -11,115 +15,77 @@ function ForgotPasswordPage() {
   const handleSendOtp = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Here you would send the OTP to the user's email.
     setTimeout(() => {
       setMessage('OTP sent successfully. Please check your email.');
       setIsSubmitting(false);
-      setStep(2); // Move to OTP verification step
-    }, 1500); // Simulate API call
+      setStep(2);
+    }, 1500);
   };
 
   const handleVerifyOtp = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Here you would verify the OTP entered by the user.
     setTimeout(() => {
       setMessage('OTP verified. You can now reset your password.');
       setIsSubmitting(false);
-      // You can reset the password now.
-    }, 1500); // Simulate OTP verification API call
+    }, 1500);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4"
-style={{
-      backgroundImage: "url('https://i.pinimg.com/736x/18/f2/8a/18f28a899a0d384e14f8e8099a86d96a.jpg')",
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-    }}>
-      <div className="max-w-lg w-full bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
-          Forgot Your Password?
-        </h2>
+    <div className="flex justify-center items-center h-screen bg-gray-50">
+      <Card className="w-full max-w-md p-6 shadow-lg">
+        <CardContent>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
+            {step === 1 ? 'Reset Your Password' : 'Verify OTP'}
+          </h2>
 
-        {message && (
-          <div className="mb-6 text-center text-green-600">
-            <p>{message}</p>
-          </div>
-        )}
+          {message && <p className="text-center text-green-600 mb-4">{message}</p>}
 
-        {step === 1 && (
-          <form onSubmit={handleSendOtp}>
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
-              <input
-                id="email"
+          {step === 1 && (
+            <form onSubmit={handleSendOtp} className="space-y-4">
+              <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="mt-2 w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
-            </div>
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? <Loader2 className="animate-spin" /> : 'Send OTP'}
+              </Button>
+            </form>
+          )}
 
-            <button
-              type="submit"
-              className={`w-full py-3 px-4 bg-orange-500 text-white font-semibold rounded-md focus:outline-none hover:bg-blue-700 transition-colors ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Sending OTP...' : 'Send OTP'}
-            </button>
-          </form>
-        )}
-
-        {step === 2 && (
-          <form onSubmit={handleVerifyOtp}>
-            <div className="mb-4">
-              <label htmlFor="otp" className="block text-sm font-medium text-gray-700">Enter OTP</label>
-              <input
-                id="otp"
+          {step === 2 && (
+            <form onSubmit={handleVerifyOtp} className="space-y-4">
+              <Input
                 type="text"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                placeholder="Enter the OTP sent to your email"
-                className="mt-2 w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter OTP"
                 required
               />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">New Password</label>
-              <input
-                id="newPassword"
+              <Input
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter your new password"
-                className="mt-2 w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter new password"
                 required
               />
-            </div>
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? <Loader2 className="animate-spin" /> : 'Verify OTP & Reset'}
+              </Button>
+            </form>
+          )}
 
-            <button
-              type="submit"
-              className={`w-full py-3 px-4 bg-orange-500 text-white font-semibold rounded-md focus:outline-none hover:bg-blue-700 transition-colors ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Verifying OTP...' : 'Verify OTP and Reset Password'}
-            </button>
-          </form>
-        )}
-
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-center mt-4">
             Remember your password?{' '}
             <a href="/login" className="text-blue-600 hover:underline">
               Login here
             </a>
           </p>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

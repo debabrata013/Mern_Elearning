@@ -23,7 +23,7 @@ import ContactForm from "./pages/landing-page/contact-us/contactus";
 import TeacherDashboard from "./pages/teacherdashboard/dashboard";
 import AboutUs from "./pages/landing-page/about-us/aboutus";
 import Login from "./pages/log/login";
-// import  ForgetPage from "./pages/log/forget";
+import  ForgetPage from "./pages/log/forget";
 // import PopularCourses from "./pages/landing-page/popular_courses/courses";
 import Coursess from "./pages/landing-page/Courses/courses-page";
 import { AuthProvider } from "./context/auth";
@@ -54,6 +54,7 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/forget" element={<ForgetPage/>}/>
           <Route path="/" element={<LandingPage />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/coursess" element={<Coursess />} />

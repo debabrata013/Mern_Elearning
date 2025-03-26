@@ -21,18 +21,15 @@ function AuthPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // Toggle between login and signup
   const handleSwitchAuthMode = () => setIsLogin(!isLogin);
 
-  // GitHub login function (Placeholder)
   const handleGitHubLogin = () => {
     console.log("GitHub login clicked");
   };
 
-  // Handle form submission (login or register)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
+    setError("");
 
     if (!email || !password || (!isLogin && !userName)) {
       setError("Please fill all required fields.");
@@ -45,10 +42,6 @@ function AuthPage() {
     }
 
     const userData = { email, password };
-    console.log(userData);
-    
-    // if (!isLogin) userData.userName = userName;
-
     setLoading(true);
 
     try {
@@ -58,8 +51,6 @@ function AuthPage() {
       } else {
         response = await axiosInstance.post("/auth/register", userData);
       }
-
-      console.log(response.data);
 
       if (response.data.success) {
         sessionStorage.setItem("accessToken", JSON.stringify(response.data.accessToken));
@@ -78,8 +69,6 @@ function AuthPage() {
           default:
             navigate("/");
         }
-
-        alert(isLogin ? "Login successful!" : "Registration successful!");
       }
     } catch (error) {
       console.error("Authentication error", error);
@@ -92,54 +81,29 @@ function AuthPage() {
   return (
     <div className="auth-page-container">
       <header className="auth-header">
-      <img src={logo} alt="AIGIRI Logo" className="auth-logo" onClick={() => navigate("/")} style={{ cursor: "pointer" }} />
-      <h1 className="auth-name" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>AIGIRI</h1>
-    </header>
+        <img src={logo} alt="AIGIRI Logo" className="auth-logo" onClick={() => navigate("/")} style={{ cursor: "pointer" }} />
+        <h1 className="auth-name" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>AIGIRI</h1>
+      </header>
 
-      {/* Left Side - Login/Signup Box */}
       <div className="auth-container">
         <div className="auth-box">
-          <h2 className="auth-title">
-            {isLogin ? "Login to Your Account" : "Create an Account"}
-          </h2>
+          <h2 className="auth-title">{isLogin ? "Login to Your Account" : "Create an Account"}</h2>
 
           <form onSubmit={handleSubmit} autoComplete="on">
             {!isLogin && (
               <div className="input-group">
-                <input
-                  id="name"
-                  type="text"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                  required
-                />
+                <input id="name" type="text" value={userName} onChange={(e) => setUserName(e.target.value)} required />
                 <label htmlFor="name">Full Name</label>
               </div>
             )}
 
             <div className="input-group">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-              />
+              <input id="email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
               <label htmlFor="email">Email</label>
             </div>
 
             <div className="input-group password-group">
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="current-password" 
-              />
+              <input id="password" name="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
               <label htmlFor="password">Password</label>
               <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -148,25 +112,14 @@ function AuthPage() {
 
             {!isLogin && (
               <div className="input-group">
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
+                <input id="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
                 <label htmlFor="confirmPassword">Confirm Password</label>
               </div>
             )}
 
             {isLogin && (
               <div className="remember-me">
-                <input
-                  type="checkbox"
-                  id="rememberMe"
-                  checked={rememberMe}
-                  onChange={() => setRememberMe(!rememberMe)}
-                />
+                <input type="checkbox" id="rememberMe" checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />
                 <label htmlFor="rememberMe">Remember Me</label>
               </div>
             )}
@@ -189,26 +142,17 @@ function AuthPage() {
           <div className="switch-auth">
             {isLogin ? (
               <span>
-                Don't have an account?{" "}
-                <button onClick={handleSwitchAuthMode}>Create one</button>
+                Don't have an account? <button onClick={handleSwitchAuthMode}>Create one</button>
               </span>
             ) : (
               <span>
-                Already have an account?{" "}
-                <button onClick={handleSwitchAuthMode}>Login here</button>
+                Already have an account? <button onClick={handleSwitchAuthMode}>Login here</button>
               </span>
             )}
-
-            {isLogin && (
-              <div className="forgot-password">
-                <a href="/forgot-password">Forgot Password?</a>
-              </div>
-            )}
+            {isLogin && <div className="forgot-password"><a href="/forget">Forgot Password?</a></div>}
           </div>
         </div>
       </div>
-
-      {/* Right-Side Image Section */}
       <div className="image-section">
         <img src={img} alt="Auth Illustration" />
       </div>
