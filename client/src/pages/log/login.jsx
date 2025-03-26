@@ -41,7 +41,7 @@ function AuthPage() {
       return;
     }
 
-    const userData = { email, password };
+    const userData = { email, password, userName };
     setLoading(true);
 
     try {
@@ -49,12 +49,13 @@ function AuthPage() {
       if (isLogin) {
         response = await axiosInstance.post("/auth/login", userData);
       } else {
-        response = await axiosInstance.post("/auth/register", userData);
+        response = await axiosInstance.post("/auth/signup", userData);
       }
 
       if (response.data.success) {
         sessionStorage.setItem("accessToken", JSON.stringify(response.data.accessToken));
         login(response.data.userData);
+        console.log(response.data.userData);
 
         switch (response.data.userData.role) {
           case "student":
@@ -72,7 +73,7 @@ function AuthPage() {
       }
     } catch (error) {
       console.error("Authentication error", error);
-      setError(error.response?.data?.message || "An error occurred. Please try again.");
+      setError(error.response?.data?.error || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -114,13 +115,6 @@ function AuthPage() {
               <div className="input-group">
                 <input id="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
                 <label htmlFor="confirmPassword">Confirm Password</label>
-              </div>
-            )}
-
-            {isLogin && (
-              <div className="remember-me">
-                <input type="checkbox" id="rememberMe" checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />
-                <label htmlFor="rememberMe">Remember Me</label>
               </div>
             )}
 
