@@ -74,7 +74,7 @@ function App() {
             path="/user-dashboard"
             element={
               <ProtectedRoute role="student">
-                <StudentRoutes />
+                <Std />
               </ProtectedRoute>
             }
           />
