@@ -11,7 +11,7 @@ const CourseCard = ({ course }) => {
   };
 
   const handleEnrollNow = () => {
-    navigate(`/course-enrollment/${course._id}`, { state: { course } });
+    navigate(`/enroll/${course._id}`, { state: { course } });
   };
 
   const handleDownloadCurriculum = () => {

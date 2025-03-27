@@ -118,14 +118,14 @@ const CoursePage = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-red-50 to-gray-100 p-6">
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-[#7670AC]/10 to-[#5491CA]/10 p-6">
         <div className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden transform transition-all duration-500 hover:scale-105">
           <div className="p-8">
             <div className="flex flex-col items-center">
               {/* Animated error icon */}
               <div className="relative w-24 h-24 mb-6">
-                <div className="absolute inset-0 bg-red-100 rounded-full animate-ping opacity-75"></div>
-                <div className="relative flex items-center justify-center w-full h-full bg-red-500 rounded-full animate-pulse">
+                <div className="absolute inset-0 bg-[#7670AC]/20 rounded-full animate-ping opacity-75"></div>
+                <div className="relative flex items-center justify-center w-full h-full bg-gradient-to-r from-[#7670AC] to-[#5491CA] rounded-full animate-pulse">
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -134,20 +134,18 @@ const CoursePage = () => {
                 </div>
               </div>
               
-              {/* Error message with typing animation */}
-              <h2 className="text-2xl font-bold text-gray-800 mb-2 overflow-hidden whitespace-nowrap animate-pulse">
+              <h2 className="text-2xl font-bold text-[#5491CA] mb-2 overflow-hidden whitespace-nowrap animate-pulse">
                 Oops! Something went wrong
               </h2>
               
               <div className="text-center">
-                <p className="text-red-600 font-medium mb-6 overflow-hidden">
+                <p className="text-[#7670AC] font-medium mb-6 overflow-hidden">
                   {error.message || 'Unknown error occurred while loading courses'}
                 </p>
                 
-                {/* Animated button */}
                 <button 
                   onClick={() => window.location.reload()} 
-                  className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-medium rounded-lg shadow-md hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transform transition-all duration-300 hover:-translate-y-1"
+                  className="px-6 py-3 bg-gradient-to-r from-[#7670AC] to-[#5491CA] text-white font-medium rounded-lg shadow-md hover:from-[#7670AC]/80 hover:to-[#5491CA]/80 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:ring-opacity-50 transform transition-all duration-300 hover:-translate-y-1"
                 >
                   <div className="flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -161,16 +159,16 @@ const CoursePage = () => {
           </div>
           
           {/* Animated border */}
-          <div className="h-1 bg-gradient-to-r from-red-300 via-red-500 to-red-600 animate-pulse"></div>
+          <div className="h-1 bg-gradient-to-r from-[#7670AC] via-[#5491CA] to-[#7670AC] animate-pulse"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex mx-10 my-10 min-h-screen ">
       {/* Fixed Sidebar */}
-      <div className="bg-white dark:bg-gray-800 shadow-xl w-[250px] h-screen fixed top-0 left-0 transition-transform duration-300 ease-in-out">
+      <div className="bg-white dark:bg-gray-800 shadow-xl w-[250px] h-screen fixed top-0 left-0 transition-transform duration-300 ease-in-out border-r border-[#5491CA]/10">
         <Sidebar />
       </div>
       
@@ -182,12 +180,9 @@ const CoursePage = () => {
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-              Explore <span className="text-blue-600 dark:text-blue-400">Courses</span>
+            <h1 className="text-3xl font-bold text-[#7670AC] dark:text-white">
+              Explore <span className="text-[#5491CA] dark:text-[#7670AC]">Courses</span>
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">
-              Browse through our comprehensive course catalog
-            </p>
           </div>
 
           {/* Search and Filter Section */}
@@ -196,14 +191,14 @@ const CoursePage = () => {
               <input
                 type="text"
                 placeholder="Search courses..."
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="w-full px-4 py-2 rounded-lg border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/100 dark:text-white placeholder-[#7670AC]/100"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <div className="flex gap-4">
               <select
-                className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="px-4 py-2 rounded-lg border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
               >
@@ -213,7 +208,7 @@ const CoursePage = () => {
                 <option value="Advanced">Advanced</option>
               </select>
               <select 
-                className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="px-4 py-2 rounded-lg border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white"
                 aria-label="Sort courses"
               >
                 <option>Sort by Popularity</option>
@@ -223,7 +218,7 @@ const CoursePage = () => {
             </div>
           </div>
 
-          <hr className="border-t border-gray-200 dark:border-gray-700 mb-8" />
+          <hr className="border-t border-[#5491CA]/10 dark:border-[#7670AC]/20 mb-8" />
 
           {/* Courses Grid */}
           {filteredCourses.length > 0 ? (
@@ -238,14 +233,14 @@ const CoursePage = () => {
           ) : (
             <div className="flex flex-col items-center justify-center py-16">
               <div className="relative w-24 h-24 mb-6">
-                <div className="absolute inset-0 bg-gray-200 dark:bg-gray-600 rounded-full animate-ping opacity-75"></div>
-                <div className="relative flex items-center justify-center w-full h-full bg-gray-300 dark:bg-gray-500 rounded-full">
+                <div className="absolute inset-0 bg-[#5491CA]/20 dark:bg-[#7670AC]/20 rounded-full animate-ping opacity-75"></div>
+                <div className="relative flex items-center justify-center w-full h-full bg-gradient-to-r from-[#7670AC] to-[#5491CA] rounded-full">
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
               </div>
-              <h3 className="text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">No courses found</h3>
+              <h3 className="text-xl font-medium text-[#5491CA] dark:text-[#7670AC] mb-2">No courses found</h3>
               <p className="text-gray-500 dark:text-gray-400 text-center max-w-md">
                 {searchQuery 
                   ? `No courses match your search for "${searchQuery}"` 
@@ -258,7 +253,7 @@ const CoursePage = () => {
           {filteredCourses.length > 0 && (
             <div className="flex justify-center gap-2">
               <button
-                className="px-4 py-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 disabled:opacity-50"
+                className="px-4 py-2 rounded-md bg-gray-100 text-gray-700 hover:bg-[#5491CA]/10 dark:bg-gray-700 dark:text-white dark:hover:bg-[#7670AC]/30 disabled:opacity-50"
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
               >
@@ -270,8 +265,8 @@ const CoursePage = () => {
                   key={pageIndex}
                   className={`px-4 py-2 rounded-md ${
                     currentPage === pageIndex + 1 
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                      ? "bg-gradient-to-r from-[#7670AC] to-[#5491CA] text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-[#5491CA]/10 dark:bg-gray-700 dark:text-white dark:hover:bg-[#7670AC]/30"
                   }`}
                   onClick={() => setCurrentPage(pageIndex + 1)}
                 >
@@ -280,7 +275,7 @@ const CoursePage = () => {
               ))}
               
               <button
-                className="px-4 py-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 disabled:opacity-50"
+                className="px-4 py-2 rounded-md bg-gray-100 text-gray-700 hover:bg-[#5491CA]/10 dark:bg-gray-700 dark:text-white dark:hover:bg-[#7670AC]/30 disabled:opacity-50"
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
               >

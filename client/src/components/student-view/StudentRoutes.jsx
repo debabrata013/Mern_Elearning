@@ -8,12 +8,14 @@ import Notice from "./studentComponent/Notice";
 import Profile from "./studentComponent/Profile";
 import CourseDetailPage from "./studentComponent/CourseDetailsPage";
 import CoursePage from "./coursebuy";
+import Enroll from "./studentComponent/enroll";
 import { Route, Routes } from "react-router-dom";
 
 function StudentRoutes() {
   return (
     <AppLayout>
       <Routes>
+        <Route path="/enroll" element={<Enroll />} />
         <Route path="/mycourses" element={<CoursePage />} />
         <Route path="/coursedetails" element={<CourseDetailPage />} />
         <Route path="/profile" element={<Profile />} />
