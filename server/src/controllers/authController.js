@@ -189,13 +189,13 @@ exports.signup = async (req, res) => {
             return res.status(409).send({ error: 'User already exists' });
         }
 
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 8);
+        
+        
 
         // Create a new user
         const newUser = new User({
             email,
-            password: hashedPassword,
+            password,
             userName,
             otp: null, // Initialize OTP to null
             role: 'student',
