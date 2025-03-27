@@ -13,20 +13,26 @@
     Book, 
     Clock, 
     Save, 
-  ArrowLeft
+    ArrowLeft, 
+    FileText,  // Resume
+    Github,    // GitHub
+    Linkedin   // LinkedIn
   } from 'lucide-react';
 
 const ProfilePage = ({ onBack }) => {
+  const user= JSON.parse(localStorage.getItem('user'));
     const [userData, setUserData] = useState({
-      userName: 'John Doe',
-      email: 'john.doe@example.com',
-      phone: '+1 (555) 123-4567',
-      address: '123 Education St, Teaching City',
-      description: 'Experienced mathematics teacher with a passion for making complex concepts simple.',
-      specialization: 'Mathematics',
-      experience: '5 years',
-      education: 'M.Ed in Education, University of Teaching',
-      certifications: ['Teaching License', 'Advanced Mathematics Certification']
+      userName: user?.userName,
+      email: user?.email,
+      phone: user?.mobile,
+      address: user?.address,
+      profileImage: user?.profileImage,
+      description: user?.description,
+      specialization: user?.subjectKnowledge,
+      resumeurl:user?.resumeurl ,
+      lindeninProfileUrl:user?.lindeninProfileUrl,
+      githubprofileurl:user?.githubprofileurl
+
     });
 
     const [selectedImage, setSelectedImage] = useState(null);
@@ -59,17 +65,13 @@ const ProfilePage = ({ onBack }) => {
               <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row items-center gap-6">
               <div className="relative w-32 h-32 rounded-full overflow-hidden bg-gradient-to-br from-[#5491CA] to-[#7670AC]">
-                    {selectedImage ? (
+                  
                       <img 
-                        src={URL.createObjectURL(selectedImage)} 
+                        src={userData.profileImage} 
                         alt="Profile Preview" 
                         className="w-full h-full object-cover"
                       />
-                    ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <User className="w-16 h-16 text-white/90" />
-                  </div>
-                )}
+                  
                   </div>
                   
               <div className="flex-1 space-y-4">
@@ -161,17 +163,38 @@ const ProfilePage = ({ onBack }) => {
                     className="border-[#5491CA]/20 focus:border-[#5491CA] focus:ring-[#5491CA]/20"
                     />
                   </div>
-                  
-                <div className="space-y-2">
+                  <div className="space-y-2">
                   <Label className="text-[#5491CA] flex items-center gap-2">
-                      <Clock className="w-4 h-4" /> Experience
-                    </Label>
-                    <Input
-                      value={userData.experience}
-                      onChange={e => setUserData({...userData, experience: e.target.value})}
+                        <FileText className="w-4 h-4" /> Resume URL
+                      </Label>
+                      <Input
+                        value={userData.resumeurl}
+                        onChange={e => setUserData({...userData, resumeurl: e.target.value})}
                     className="border-[#5491CA]/20 focus:border-[#5491CA] focus:ring-[#5491CA]/20"
-                    />
+                      />
                   </div>
+                  <div className="space-y-2">
+                  <Label className="text-[#5491CA] flex items-center gap-2">
+                        <Github className="w-4 h-4" /> GitHub URL
+                      </Label>
+                      <Input
+                        value={userData.githubprofileurl}
+                        onChange={e => setUserData({...userData, githubprofileurl: e.target.value})}
+                    className="border-[#5491CA]/20 focus:border-[#5491CA] focus:ring-[#5491CA]/20"
+                      />
+                  </div>
+                  <div className="space-y-2">
+                  <Label className="text-[#5491CA] flex items-center gap-2">
+                        <Linkedin className="w-4 h-4" /> LinkedIn URL
+                      </Label>
+                      <Input
+                        value={userData.lindeninProfileUrl}
+                        onChange={e => setUserData({...userData, lindeninProfileUrl: e.target.value})}
+                    className="border-[#5491CA]/20 focus:border-[#5491CA] focus:ring-[#5491CA]/20"
+                      />
+                  </div>
+                  
+            
                   </div>
                   
               <div className="space-y-2">
