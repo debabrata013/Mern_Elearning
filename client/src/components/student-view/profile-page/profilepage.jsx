@@ -9,72 +9,21 @@ import {
 const StudentProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const user= JSON.parse(localStorage.getItem('user'));
   const [profile, setProfile] = useState({
-    firstName: '',
-    email: '',
-    phone: '',
-    university: '',
-    branch: '',
-    semester: '',
-    rollNumber: '',
-    enrollmentNumber: '',
-    github: '',
-    linkedin: '',
-    resumeLink: null,
-    profileImageUrl: null
+   userName: user.userName,
+    email: user.email,
+    phone: user.mobile,
+    university: user.university,
+    branch: user.branch,
+    semester: user.semester,
+    rollNumber: user.rollNumber,
+  
+    github: user.githubprofileurl,
+    linkedin: user.lindeninProfileUrl,
+    resumeLink: user.resumeurl,
+    profileImageUrl: user.profileImage
   });
-
-  // Fetch user data from cookies when component mounts
-  useEffect(() => {
-    const fetchUserData = () => {
-      try {
-        // Get the access token from cookies
-        const cookies = document.cookie.split(';');
-        const accessTokenCookie = cookies.find(cookie => cookie.trim().startsWith('accessToken='));
-        
-        if (accessTokenCookie) {
-          const token = accessTokenCookie.split('=')[1];
-          const decodedToken = jwtDecode(token);
-
-          // Update profile state with decoded token data
-          setProfile({
-            firstName: decodedToken.userName || '',
-            email: decodedToken.email || '',
-            profileImageUrl: decodedToken.profileImage || null,
-            github: decodedToken.githubprofileurl || '',
-            linkedin: decodedToken.lindeninProfileUrl || '',
-            resumeLink: decodedToken.resumeurl || null,
-            phone: '',  // Add these fields if they're available in your token
-            university: '',
-            branch: '',
-            semester: '',
-            rollNumber: '',
-            enrollmentNumber: ''
-          });
-        }
-
-        // Also check for userData cookie which might contain additional information
-        const userDataCookie = cookies.find(cookie => cookie.trim().startsWith('userData='));
-        if (userDataCookie) {
-          const userData = JSON.parse(decodeURIComponent(userDataCookie.split('=')[1]));
-          setProfile(prev => ({
-            ...prev,
-            ...userData,
-            firstName: userData.userName || prev.firstName,
-            profileImageUrl: userData.profileImage || prev.profileImageUrl,
-            github: userData.githubprofileurl || prev.github,
-            linkedin: userData.lindeninProfileUrl || prev.linkedin,
-            resumeLink: userData.resumeurl || prev.resumeLink
-          }));
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProfile(prev => ({ ...prev, [name]: value }));
@@ -229,10 +178,10 @@ const StudentProfile = () => {
                   <InfoField
                     icon={<User className="h-5 w-5 text-[#5491CA]" />}
                     label="User name"
-                    value={profile.firstName}
+                    value={profile.userName}
                     isEditing={isEditing}
                     onChange={handleChange}
-                    name="firstName"
+                    name="userName"
                   />
                 </div>
               </div>

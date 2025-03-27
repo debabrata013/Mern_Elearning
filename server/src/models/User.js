@@ -67,6 +67,22 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  university: {
+    type: String,
+    },
+    branch:{
+      type:String
+    },
+    Semester:{
+      type:String
+    },
+    rollNumber:{
+      type:String
+    },
+    enrollmentNumber:{
+      type:String
+    },
+
   profileImage: {
     type: String,
     default: "https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg" 

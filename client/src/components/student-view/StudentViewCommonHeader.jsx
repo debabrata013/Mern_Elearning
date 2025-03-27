@@ -159,6 +159,7 @@ const StudentDashboard = () => {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
+  const user= JSON.parse(localStorage.getItem('user'));
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -257,12 +258,12 @@ const StudentDashboard = () => {
                 className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
                 <img
-                  src="https://ui-avatars.com/api/?name=John+Doe"
+                  src={user.profileImage}
                   alt="Profile"
                   className="h-10 w-10 rounded-full border-2 border-[#5491CA]"
                 />
                 <div className="text-left">
-                  <p className="font-semibold text-gray-900 dark:text-gray-100">John Doe</p>
+                  <p className="font-semibold text-gray-900 dark:text-gray-100">{user.userName}</p>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Student</p>
                 </div>
               </button>
