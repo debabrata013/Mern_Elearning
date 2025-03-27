@@ -19,30 +19,20 @@ const ProfileContent = () => {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
   
+  const userm= JSON.parse(localStorage.getItem('user'))
   const [profileData, setProfileData] = useState({
-    fullName: user?.fullName || '',
-    email: user?.email || '',
-    phone: user?.phone || '',
-    role: user?.role || 'Admin',
-    bio: user?.bio || '',
-    address: user?.address || '',
-    city: user?.city || '',
-    country: user?.country || '',
-    postalCode: user?.postalCode || '',
-    dateOfBirth: user?.dateOfBirth || '',
-    website: user?.website || '',
-    twitter: user?.twitter || '',
-    linkedin: user?.linkedin || '',
-    github: user?.github || '',
-    skills: user?.skills || ['Administration', 'Management', 'Analytics'],
-    languages: user?.languages || ['English'],
-    notifications: {
-      email: true,
-      push: true,
-      sms: false,
-      newsletter: true
-    },
-    profileImage: user?.profileImage || null
+    fullName: userm?.userName || '',
+    email: userm?.email || '',
+    phone: userm?.mobile || '',
+    role: userm?.role || 'Admin',
+    bio: userm?.description || '',
+    address: userm?.address || '',
+    city: userm?.city || '',
+    linkedin: userm?.linkedin || '',
+    github: userm?.github || '',
+    skills: userm?.skills || ['Administration', 'Management', 'Analytics'],
+    languages: userm?.languages || ['English'],
+    profileImage: userm?.profileImage || null
   });
 
   const [previewImage, setPreviewImage] = useState(null);
