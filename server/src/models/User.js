@@ -83,6 +83,29 @@ const UserSchema = new mongoose.Schema({
       type:String
     },
 
+    address:{
+      type:String
+
+    },
+    city:{
+      type:String
+    },
+    country:{
+      type:String
+    },
+    pincode:{
+      type:String
+      },
+    Skills:{
+      type:[String]
+      },
+      Languages:{
+        type:[String]
+      },
+      Dob:{
+        type:String
+      },
+     
   profileImage: {
     type: String,
     default: "https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg" 
