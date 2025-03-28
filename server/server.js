@@ -52,6 +52,7 @@ const MailRoutes =require("./src/routes/Email")
 const landingRoutes = require('./src/routes/landingRouters');
 const cartRoutes = require('./src/routes/cartRoutes');
 const TodoRoutes = require('./src/routes/TodoRouters');
+const UserRoutes = require('./src/routes/userRoutes');
 
 // Use routes
 app.use('/students', studentRoutes);
@@ -72,7 +73,7 @@ app.use("/contactus/",contactRoutes)
 app.use("/mail/",MailRoutes);
 app.use('/cart', cartRoutes); // Add this line to use cart routes
 app.use('/todos', TodoRoutes);
-
+app.use("/profile",UserRoutes)
 
   
 
