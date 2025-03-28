@@ -2,27 +2,31 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../studentComponent/Sidebar';
 import { jwtDecode } from "jwt-decode";
 import {
-  User, Edit2, Mail, Phone, BookOpen, Building, 
+  User, Edit2, Mail, Phone, BookOpen, Building, Pen, 
   Github, Linkedin, GraduationCap, FileText, Hash
 } from 'lucide-react';
+import axiosInstance from '@/api/axiosInstance';
 
 const StudentProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const user= JSON.parse(localStorage.getItem('user'));
+  console.log(user);
   const [profile, setProfile] = useState({
+    id: user.id,
    userName: user.userName,
     email: user.email,
-    phone: user.mobile,
+    mobile: user.mobile,
     university: user.university,
     branch: user.branch,
-    semester: user.semester,
+    Semester: user.Semester,
     rollNumber: user.rollNumber,
+    description: user.description,
   
-    github: user.githubprofileurl,
-    linkedin: user.lindeninProfileUrl,
-    resumeLink: user.resumeurl,
-    profileImageUrl: user.profileImage
+    githubprofileurl: user.githubprofileurl,
+    lindeninProfileUrl: user.lindeninProfileUrl,
+    resumeurl: user.resumeurl,
+    profileImage: user.profileImage
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,29 +36,13 @@ const StudentProfile = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      // Here you would send the updated profile data to your backend
-      // Include the profileImage file if it exists
-      const formData = new FormData();
-      Object.keys(profile).forEach(key => {
-        formData.append(key, profile[key]);
-      });
-      if (profileImage) {
-        formData.append('profileImage', profileImage);
-      }
 
-      // Make API call to update profile
-      // const response = await fetch('/api/profile/update', {
-      //   method: 'PUT',
-      //   body: formData,
-      //   credentials: 'include' // to include cookies
-      // });
+      const response= await axiosInstance.put("/u/student",profile)
+     
+console.log(response);
+setIsEditing(false);
 
-      // if (response.ok) {
-      //   const updatedData = await response.json();
-      //   setProfile(updatedData);
-      // }
-
-      setIsEditing(false);
+    
     } catch (error) {
       console.error('Error updating profile:', error);
     }
@@ -120,9 +108,9 @@ const StudentProfile = () => {
                 <div className="flex items-center gap-4">
                   <div className="relative group">
                     <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-white">
-                      {profile.profileImageUrl ? (
+                      {user.profileImage ? (
                         <img 
-                          src={profile.profileImageUrl} 
+                          src={user.profileImage} 
                           alt="Profile" 
                           className="w-full h-full object-cover"
                         />
@@ -202,10 +190,10 @@ const StudentProfile = () => {
                   <InfoField
                     icon={<Phone className="h-5 w-5 text-[#5491CA]" />}
                     label="Phone Number"
-                    value={profile.phone}
+                    value={profile.mobile}
                     isEditing={isEditing}
                     onChange={handleChange}
-                    name="phone"
+                    name="mobile"
                     type="tel"
                   />
                 </div>
@@ -234,7 +222,7 @@ const StudentProfile = () => {
                   <InfoField
                     icon={<GraduationCap className="h-5 w-5 text-[#7670AC]" />}
                     label="Semester"
-                    value={profile.semester}
+                    value={profile.Semester}
                     isEditing={isEditing}
                     onChange={handleChange}
                     name="semester"
@@ -255,6 +243,14 @@ const StudentProfile = () => {
                     onChange={handleChange}
                     name="enrollmentNumber"
                   />
+                  <InfoField
+                  icon={<Pen className="h-5 w-5 text-[#7670AC]" />}
+                  label="Description"
+                  value={profile.description }
+                  isEditing={isEditing}
+                  onChange={handleChange}
+                  name="description"
+                  />
                 </div>
               </div>
 
@@ -264,50 +260,31 @@ const StudentProfile = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <InfoField
                     icon={<Github className="h-5 w-5 text-[#5491CA]" />}
-                    label="GitHub Profile"
-                    value={profile.github}
+                    label="GitHub Profile URL"
+                    value={profile.githubprofileurl}
                     isEditing={isEditing}
                     onChange={handleChange}
-                    name="github"
+                    name="githubprofileurl"
                     type="url"
                   />
                   <InfoField
                     icon={<Linkedin className="h-5 w-5 text-[#5491CA]" />}
                     label="LinkedIn Profile"
-                    value={profile.linkedin}
+                    value={profile.lindeninProfileUrl}
                     isEditing={isEditing}
                     onChange={handleChange}
-                    name="linkedin"
+                    name="lindeninProfileUrl"
                     type="url"
                   />
                   <div className="md:col-span-2">
-                    <label className="text-sm font-medium text-gray-700 flex items-center gap-2 mb-2">
-                      <FileText className="h-5 w-5 text-[#7670AC]" />
-                      Resume
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="file"
-                        accept=".pdf,.doc,.docx"
-                        onChange={handleResumeChange}
-                        className="w-full text-sm text-gray-500 
-                          file:mr-4 file:py-2.5 file:px-4 file:rounded-lg 
-                          file:border-0 file:text-sm file:font-medium
-                          file:bg-gradient-to-r file:from-[#5491CA] file:to-[#7670AC] 
-                          file:text-white hover:file:opacity-90"
-                      />
-                    ) : profile.resumeLink ? (
-                      <a 
-                        href={profile.resumeLink} 
-                        target="_blank" 
-                        rel="noreferrer" 
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#5491CA] to-[#7670AC] text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
-                      >
-                        View Resume
-                      </a>
-                    ) : (
-                      <p className="text-gray-500 text-sm">No resume uploaded</p>
-                    )}
+                  <InfoField
+                    icon={<FileText className="h-5 w-5 text-[#7670AC]" />}
+                    label="Resume"
+                    value={profile.resumeurl}
+                    isEditing={isEditing}
+                    onChange={handleChange}
+                    name="resumeurl"
+                  />
                   </div>
                 </div>
               </div>
