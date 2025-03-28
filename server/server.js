@@ -73,7 +73,7 @@ app.use("/contactus/",contactRoutes)
 app.use("/mail/",MailRoutes);
 app.use('/cart', cartRoutes); // Add this line to use cart routes
 app.use('/todos', TodoRoutes);
-app.use("/profile",UserRoutes)
+app.use("/u",UserRoutes)
 
   
 

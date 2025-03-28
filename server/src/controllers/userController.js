@@ -2,14 +2,13 @@ const User = require("../models/User");
 
 exports.updateuserProfileadmin = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { userName, email, description, address, city, country, pincode, lindeninProfileUrl, githubprofileurl, Skills, Languages, Dob, mobile } = req.body;
-
+    const { id,userName, email,mobile, description, address, city, country, pincode, lindeninProfileUrl, githubprofileurl, Skills, Languages, Dob } = req.body;
     const user = await User.findById(id);
+    
     if (!user) {
+
       return res.status(404).json({ message: "User not found" });
     }
-
     user.userName = userName;
     user.email = email;
     user.description = description;
@@ -33,8 +32,8 @@ exports.updateuserProfileadmin = async (req, res) => {
 
 exports.updateuserProfile = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { userName, email, description, mobile, university, branch, Semester, rollNumber, enrollmentNumber, lindeninProfileUrl, githubprofileurl, resumeurl, Skills, Languages, Dob } = req.body;
+   
+    const {id, userName, email, description, mobile, university, branch, Semester, rollNumber, enrollmentNumber, lindeninProfileUrl, githubprofileurl, resumeurl} = req.body;
 
     const user = await User.findById(id);
     if (!user) {
@@ -53,9 +52,7 @@ exports.updateuserProfile = async (req, res) => {
     user.lindeninProfileUrl = lindeninProfileUrl;
     user.githubprofileurl = githubprofileurl;
     user.resumeurl = resumeurl;
-    user.Skills = Skills;
-    user.Languages = Languages;
-    user.Dob = Dob;
+    
 
     await user.save();
     res.status(200).json({ message: "User profile updated successfully" });

@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 
-router.post('/admin', userController.updateuserProfileadmin);
-router.post('/teacher', userController.updateTeacherProfile);
-router.post('/student', userController.updateuserProfile);
+router.put('/admin', userController.updateuserProfileadmin);
+// router.post('/teacher/:id', userController.updateTeacherProfile);
+router.put('/student', userController.updateuserProfile);
 
 module.exports = router;

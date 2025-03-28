@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../../context/auth';
-import axios from 'axios';
+import axiosInstance from '../../../api/axiosInstance';
 import { 
-  User, Mail, Phone, MapPin, Calendar, Globe, 
+  User, Mail,Phone, MapPin, Calendar, Globe, 
   Shield, Bell, Key, Clock, FileText, Award,
   Camera, Edit3, Save, X, AlertTriangle, CheckCircle
 } from 'lucide-react';
@@ -21,18 +21,20 @@ const ProfileContent = () => {
   
   const userm= JSON.parse(localStorage.getItem('user'))
   const [profileData, setProfileData] = useState({
-    fullName: userm?.userName || '',
+    id:userm._id,
+    userName: userm?.userName || '',
     email: userm?.email || '',
-    phone: userm?.mobile || '',
+   mobile: userm?.mobile || '',
+    Dob:userm?.dob||'',
     role: userm?.role || 'Admin',
-    bio: userm?.description || '',
+    description: userm?.description || '',
     address: userm?.address || '',
     city: userm?.city || '',
-    linkedin: userm?.linkedin || '',
-    github: userm?.github || '',
+     lindeninProfileUrl: userm?. lindeninProfileUrl || '',
+   githubprofileurl: userm?.githubprofileurl || '',
     skills: userm?.skills || ['Administration', 'Management', 'Analytics'],
-    languages: userm?.languages || ['English'],
-    profileImage: userm?.profileImage || null
+    Languages: userm?.Languages || ['English'],
+   profileImage: userm?.profileImage || null
   });
 
   const [previewImage, setPreviewImage] = useState(null);
@@ -53,42 +55,7 @@ const ProfileContent = () => {
     }
   }, [user]);
 
-  useEffect(() => {
-    const fetchUserDataFromCookies = () => {
-      try {
-        // Get the access token from cookies
-        const cookies = document.cookie.split(';');
-        const accessTokenCookie = cookies.find(cookie => cookie.trim().startsWith('accessToken='));
-        
-        if (accessTokenCookie) {
-          const token = accessTokenCookie.split('=')[1];
-          const decodedToken = jwtDecode(token);
-          
-          // Set user data from token
-          setUserData(decodedToken);
-        }
 
-        // Get user data from userData cookie
-        const userDataCookie = cookies.find(cookie => cookie.trim().startsWith('userData='));
-        if (userDataCookie) {
-          try {
-            const parsedUserData = JSON.parse(decodeURIComponent(userDataCookie.split('=')[1]));
-            // Merge with token data if needed
-            setUserData(prev => ({
-              ...prev,
-              ...parsedUserData
-            }));
-          } catch (error) {
-            console.error('Error parsing userData cookie:', error);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching user data from cookies:', error);
-      }
-    };
-
-    fetchUserDataFromCookies();
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -98,16 +65,7 @@ const ProfileContent = () => {
     });
   };
 
-  const handleNotificationChange = (e) => {
-    const { name, checked } = e.target;
-    setProfileData({
-      ...profileData,
-      notifications: {
-        ...profileData.notifications,
-        [name]: checked
-      }
-    });
-  };
+
 
   const handleProfileImageClick = () => {
     fileInputRef.current.click();
@@ -121,7 +79,7 @@ const ProfileContent = () => {
         setPreviewImage(reader.result);
         setProfileData({
           ...profileData,
-          profileImage: file
+         profileImage: file
         });
       };
       reader.readAsDataURL(file);
@@ -146,10 +104,10 @@ const ProfileContent = () => {
   };
 
   const addLanguage = () => {
-    if (newLanguage && !profileData.languages.includes(newLanguage)) {
+    if (newLanguage && !profileData.Languages.includes(newLanguage)) {
       setProfileData({
         ...profileData,
-        languages: [...profileData.languages, newLanguage]
+        Languages: [...profileData.Languages, newLanguage]
       });
       setNewLanguage('');
     }
@@ -158,7 +116,7 @@ const ProfileContent = () => {
   const removeLanguage = (languageToRemove) => {
     setProfileData({
       ...profileData,
-      languages: profileData.languages.filter(language => language !== languageToRemove)
+      Languages: profileData.Languages.filter(language => language !== languageToRemove)
     });
   };
 
@@ -179,35 +137,21 @@ const ProfileContent = () => {
       // Create a FormData object to handle file uploads
       const formData = new FormData();
       Object.keys(profileData).forEach(key => {
-        if (key === 'skills' || key === 'languages' || key === 'notifications') {
+        if (key === 'skills' || key === 'Languages' ) {
           formData.append(key, JSON.stringify(profileData[key]));
         } else {
           formData.append(key, profileData[key]);
         }
       });
       
-      // Example API call - replace with your actual endpoint
-      // const response = await axios.put('http://localhost:4400/api/admin/profile', formData, {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data'
-      //   }
-      // });
-      
-      // Simulate API call for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Update user in auth context (if implemented)
-      if (typeof updateUser === 'function') {
-        updateUser({
-          ...user,
-          ...profileData,
-          profileImage: previewImage
-        });
+      const response = await axiosInstance.put(`/u/admin/`, profileData);
+      console.log(response);
+      if (response.data.success) {
+        setLoading(false);
+        setSuccess(true);
+        setIsEditing(false);
+        setTimeout(() => setSuccess(false), 3000);
       }
-      
-      setSuccess(true);
-      setIsEditing(false);
-      setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update profile');
     } finally {
@@ -257,9 +201,7 @@ const ProfileContent = () => {
     }
   };
 
-  const goToAddAnnouncementPage = () => {
-    navigate("/admin/anouncement"); // Make sure this matches your route
-  };
+ 
 
   return (
     <div className="bg-white rounded-lg shadow-md">
@@ -280,7 +222,7 @@ const ProfileContent = () => {
                 />
               ) : (
                 <div className="w-full h-full bg-[#5491CA]/10 flex items-center justify-center text-4xl font-bold text-[#5491CA]">
-                  {profileData.fullName.charAt(0) || user?.userName?.charAt(0) || 'A'}
+                  {profileData.userName.charAt(0) || user?.userName?.charAt(0) || 'A'}
                 </div>
               )}
               
@@ -300,7 +242,7 @@ const ProfileContent = () => {
           </div>
           
           <div className="text-center md:text-left">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">{profileData.fullName || user?.userName}</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">{profileData.userName || user?.userName}</h1>
             <p className="text-[#5491CA] font-medium">{profileData.role}</p>
             <p className="text-gray-500 text-sm mt-1">
               {profileData.city && profileData.country ? `${profileData.city}, ${profileData.country}` : 'Location not set'}
@@ -409,14 +351,14 @@ const ProfileContent = () => {
                     {isEditing ? (
                       <input
                         type="text"
-                        name="fullName"
-                        value={profileData.fullName}
+                        name="userName"
+                        value={profileData.userName}
                         onChange={handleInputChange}
                         className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
                         required
                       />
                     ) : (
-                      <p className="pl-10 p-2 bg-gray-50 rounded-lg">{profileData.fullName || 'Not set'}</p>
+                      <p className="pl-10 p-2 bg-gray-50 rounded-lg">{profileData.userName || 'Not set'}</p>
                     )}
                   </div>
                 </div>
@@ -446,7 +388,7 @@ const ProfileContent = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone Number
+                   mobile Number
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -455,13 +397,13 @@ const ProfileContent = () => {
                     {isEditing ? (
                       <input
                         type="tel"
-                        name="phone"
-                        value={profileData.phone}
+                        name="mobile"
+                        value={profileData.mobile}
                         onChange={handleInputChange}
                         className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
                       />
                     ) : (
-                      <p className="pl-10 p-2 bg-gray-50 rounded-lg">{profileData.phone || 'Not set'}</p>
+                      <p className="pl-10 p-2 bg-gray-50 rounded-lg">{profileData.mobile || 'Not set'}</p>
                     )}
                   </div>
                 </div>
@@ -583,8 +525,8 @@ const ProfileContent = () => {
                 </label>
                 {isEditing ? (
                   <textarea
-                    name="bio"
-                    value={profileData.bio}
+                    name="description"    
+                    value={profileData.description}
                     onChange={handleInputChange}
                     rows="4"
                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
@@ -592,7 +534,7 @@ const ProfileContent = () => {
                   ></textarea>
                 ) : (
                   <p className="p-2 bg-gray-50 rounded-lg min-h-[100px]">
-                    {profileData.bio || 'No bio information provided.'}
+                    {profileData.description || 'No bio information provided.'}
                   </p>
                 )}
               </div>
@@ -600,7 +542,7 @@ const ProfileContent = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Website
+                   github
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -610,16 +552,16 @@ const ProfileContent = () => {
                       <input
                         type="url"
                         name="website"
-                        value={profileData.website}
+                        value={profileData.githubprofileurl}
                         onChange={handleInputChange}
                         className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
                         placeholder="https://example.com"
                       />
                     ) : (
                       <p className="pl-10 p-2 bg-gray-50 rounded-lg">
-                        {profileData.website ? (
-                          <a href={profileData.website} target="_blank" rel="noopener noreferrer" className="text-[#5491CA] hover:underline">
-                            {profileData.website}
+                        {profileData.githubprofileurl ? (
+                          <a href={profileData.githubprofileurl} target="_blank" rel="noopener noreferrer" className="text-[#5491CA] hover:underline">
+                            {profileData.githubprofileurl}
                           </a>
                         ) : (
                           'Not set'
@@ -631,7 +573,7 @@ const ProfileContent = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    LinkedIn
+                     lindenin
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -642,17 +584,17 @@ const ProfileContent = () => {
                     {isEditing ? (
                       <input
                         type="text"
-                        name="linkedin"
-                        value={profileData.linkedin}
+                        name=" lindeninProfileUrl"
+                        value={profileData. lindeninProfileUrl}
                         onChange={handleInputChange}
                         className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
-                        placeholder="https://linkedin.com/in/username"
+                        placeholder="https:// lindeninProfileUrl.com/in/username"
                       />
                     ) : (
                       <p className="pl-10 p-2 bg-gray-50 rounded-lg">
-                        {profileData.linkedin ? (
-                          <a href={profileData.linkedin} target="_blank" rel="noopener noreferrer" className="text-[#5491CA] hover:underline">
-                            {profileData.linkedin}
+                        {profileData. lindeninProfileUrl ? (
+                          <a href={profileData. lindeninProfileUrl} target="_blank" rel="noopener noreferrer" className="text-[#5491CA] hover:underline">
+                            {profileData. lindeninProfileUrl}
                           </a>
                         ) : (
                           'Not set'
@@ -708,7 +650,7 @@ const ProfileContent = () => {
                   Languages
                 </label>
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {profileData.languages.map((language, index) => (
+                  {profileData.Languages.map((language, index) => (
                     <div key={index} className="bg-[#b1a9f1]/10 text-[#b1a9f1] px-3 py-1 rounded-full text-sm flex items-center">
                       {language}
                       {isEditing && (
