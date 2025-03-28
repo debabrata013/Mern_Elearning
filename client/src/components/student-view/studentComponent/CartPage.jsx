@@ -8,6 +8,7 @@ const CartPage = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     fetchCartItems();
   }, []);
@@ -15,18 +16,15 @@ const CartPage = () => {
   const fetchCartItems = async () => {
     try {
       setLoading(true);
-      const user = JSON.parse(localStorage.getItem("user"));
+      
   
-      if (!user || !user._id) {
-        setCartItems([]);
-        return;
-      }
+     
   
       // First get the user's cart with course IDs
-      const cartResponse = await axiosInstance.get(`/cart/${user._id}`);
+     
       
       // Then fetch the full course details for each course in the cart
-      const coursePromises = cartResponse.data.cart.map(courseId => 
+      const coursePromises = user.cart.map(courseId => 
         axiosInstance.get(`/courses/${courseId}`)
       );
       
@@ -122,14 +120,16 @@ const CartPage = () => {
                 <div className="w-full bg-[#5491CA] rounded-xl overflow-hidden text-center text-white shadow-lg hover:-translate-y-2 transition-all duration-300 hover:shadow-xl">
                   <div className="p-6">
                     <img 
-                      src={course.coverImage || course.thumbnail} 
-                      alt={`${course.title} Logo`} 
+                      src={course.coverImage ? course.coverImage : 'https://via.placeholder.com/150'} 
+                      alt={`${course.
+                        title} Logo`} 
                       className="h-[85px] object-contain mx-auto"
                     />
                   </div>
                   
                   <div className="bg-white text-black p-4 rounded-xl h-[160px]">
-                    <h3 className="text-xl font-bold">{course.title}</h3>
+                    <h3 className="text-xl font-bold">{course.
+title}</h3>
                     <p className="text-sm mt-3 line-clamp-3">{course.description}</p>
                   </div>
                 </div>

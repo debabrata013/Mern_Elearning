@@ -26,6 +26,7 @@ import {
   BarChart, Bar 
 } from "recharts";
 import { FaUser, FaSignOutAlt } from 'react-icons/fa';
+import { AuthProvider } from '@/context/auth';
 
 
 const progressData = [
@@ -178,6 +179,12 @@ const StudentDashboard = () => {
 
   const handleLogout = () => {
     // Add your logout logic here
+    AuthProvider.logout();
+  
+    // Optionally, you can clear user data from local storage
+    localStorage.removeItem('user');
+    navigate('/login');
+    
     console.log('Logging out...');
   };
 
