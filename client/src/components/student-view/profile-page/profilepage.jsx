@@ -23,6 +23,8 @@ const StudentProfile = () => {
     rollNumber: user.rollNumber,
     description: user.description,
   
+enrollmentNumber:user.
+enrollmentNumber,
     githubprofileurl: user.githubprofileurl,
     lindeninProfileUrl: user.lindeninProfileUrl,
     resumeurl: user.resumeurl,
@@ -225,7 +227,7 @@ setIsEditing(false);
                     value={profile.Semester}
                     isEditing={isEditing}
                     onChange={handleChange}
-                    name="semester"
+                    name="Semester"
                   />
                   <InfoField
                     icon={<Hash className="h-5 w-5 text-[#7670AC]" />}

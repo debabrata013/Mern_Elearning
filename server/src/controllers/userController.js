@@ -63,16 +63,17 @@ exports.updateuserProfile = async (req, res) => {
 
 exports.updateTeacherProfile = async (req, res) => {
     try {
-        const { id } = req.params;
+        
         const { 
+          id,
             userName, 
             description, 
-            subjectKnowledge, 
-            resumeurl, 
+            specialization, 
+            resumeurl, address,
             githubprofileurl, 
             lindeninProfileUrl, 
-            Skills, 
-            mobile,
+        
+            phone,
         
         } = req.body;
 
@@ -88,12 +89,13 @@ exports.updateTeacherProfile = async (req, res) => {
 
         user.userName = userName;
         user.description = description;
-        user.subjectKnowledge = subjectKnowledge;
+        user.subjectKnowledge = specialization;
+        user.address=address;
         user.resumeurl = resumeurl;
         user.githubprofileurl = githubprofileurl;
         user.lindeninProfileUrl = lindeninProfileUrl;
-        user.Skills = Skills;
-        user.mobile = mobile;
+  
+        user.mobile = phone,
        
 
         await user.save();

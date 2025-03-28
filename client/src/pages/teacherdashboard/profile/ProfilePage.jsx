@@ -18,10 +18,12 @@
     Github,    // GitHub
     Linkedin   // LinkedIn
   } from 'lucide-react';
+import axiosInstance from '@/api/axiosInstance';
 
 const ProfilePage = ({ onBack }) => {
   const user= JSON.parse(localStorage.getItem('user'));
     const [userData, setUserData] = useState({
+      id:user._id,
       userName: user?.userName,
       email: user?.email,
       phone: user?.mobile,
@@ -37,11 +39,21 @@ const ProfilePage = ({ onBack }) => {
 
     const [selectedImage, setSelectedImage] = useState(null);
 
-    const handleProfileSubmit = (e) => {
+    const handleProfileSubmit = async(e) => {
       e.preventDefault();
-      console.log('Profile updated:', userData);
-      // Show success message
-      alert('Profile updated successfully!');
+      try {
+        const response= await axiosInstance.put("/u/teacher",userData);
+        if(response.status==200){
+          alert("Profile updated");
+        }
+        
+      } catch (error) {
+        console.log(error);
+        
+        alert("server error")
+        
+      }
+     
     };
 
     return (
