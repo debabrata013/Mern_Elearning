@@ -59,6 +59,15 @@ router.delete(
   '/deleteLectureVideo',
   courseController.deleteLectureVideo
 );
+/**
+ * @route   GET /courses/:courseId
+ * @desc    Get a course by id
+ */
+router.get('/:courseId', courseController.getCourseById);
+/**
+ * @route   GET /courses/:courseId/lectures
+ * @desc    Get all lectures for a specific course by courseId
+ */
 
 /**
  * @route   DELETE /courses/:courseId

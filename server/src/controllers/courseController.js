@@ -466,3 +466,22 @@ exports.updateCourse = async (req, res) => {
     });
   }
 };
+
+exports.getCourseById = async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ success: false, message: "Course not found" });
+    }
+    res.status(200).json({ success: true, course });
+  }
+  catch (error) {
+    console.error("Error fetching course:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message,
+      stack: error.stack 
+    });
+  }
+}
