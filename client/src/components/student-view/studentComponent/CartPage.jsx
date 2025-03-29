@@ -24,9 +24,10 @@ const CartPage = () => {
      
       
       // Then fetch the full course details for each course in the cart
-      const coursePromises = user.cart.map(courseId => 
+      const coursePromises =  await user.cart.map(courseId => 
         axiosInstance.get(`/courses/${courseId}`)
       );
+      
       
       const courseResponses = await Promise.all(coursePromises);
       const courses = courseResponses.map(response => response.data);
@@ -57,7 +58,7 @@ const CartPage = () => {
       if (response.status === 200) {
         // Refresh cart items after successful removal
         fetchCartItems();
-        alert("Course removed from cart successfully!");
+        alert(response.data.message);
       }
     } catch (error) {
       console.error("Error removing item from cart:", error);
@@ -121,8 +122,7 @@ const CartPage = () => {
                   <div className="p-6">
                     <img 
                       src={course.coverImage ? course.coverImage : 'https://via.placeholder.com/150'} 
-                      alt={`${course.
-                        title} Logo`} 
+                      alt={`${course. title} Logo`} 
                       className="h-[85px] object-contain mx-auto"
                     />
                   </div>
