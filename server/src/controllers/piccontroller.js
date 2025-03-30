@@ -1,24 +1,23 @@
-const User =require("../models/User")
-const putObject = require("../utils/putobject")
-
+const User = require("../models/User");
+const { putObject } = require("../utils/putobject");
 
 const profilepic = async (req, res) => {
     try {
-        const { userId,image } = req.body;
-        const file = image; // Assuming you're using multer for file uploads
+        const { userId } = req.body;
+        const file = req.files?.profileImage?.[0]; // Extract file from multer's storage
 
         if (!file) {
             return res.status(400).json({ error: "No image file provided" });
         }
 
-        // Upload image to S3
+        // Generate file name and upload to S3
         const fileName = `profile-pictures/${userId}-${Date.now()}-${file.originalname}`;
-        const fileUrl = await putObject(file, fileName);
+        const fileUrl = await putObject(file, fileName); // Now returns the file URL
 
         // Update user's profile picture in MongoDB
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            { profileImage: fileUrl },
+            { profileImage: fileUrl }, // Store the URL instead of an object
             { new: true }
         );
 
@@ -33,4 +32,4 @@ const profilepic = async (req, res) => {
     }
 };
 
-module.exports = profilepic;
+module.exports = { profilepic };
