@@ -29,10 +29,14 @@ const CartPage = () => {
       );
       
       
+      console.log(coursePromises);
+      
       const courseResponses = await Promise.all(coursePromises);
       const courses = courseResponses.map(response => response.data);
       
       setCartItems(courses);
+     
+      
     } catch (error) {
       console.error("Error fetching cart items:", error);
       setCartItems([]);
@@ -83,6 +87,8 @@ const CartPage = () => {
       alert('Failed to navigate to enrollment page. Please try again.');
     }
   };
+  console.log(cartItems);
+  
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -121,28 +127,27 @@ const CartPage = () => {
                 <div className="w-full bg-[#5491CA] rounded-xl overflow-hidden text-center text-white shadow-lg hover:-translate-y-2 transition-all duration-300 hover:shadow-xl">
                   <div className="p-6">
                     <img 
-                      src={course.coverImage ? course.coverImage : 'https://via.placeholder.com/150'} 
-                      alt={`${course. title} Logo`} 
+                      src={course.course.coverImage ? course.coverImage : 'https://via.placeholder.com/150'} 
+                      alt={`${course.course. title} Logo`} 
                       className="h-[85px] object-contain mx-auto"
                     />
                   </div>
                   
                   <div className="bg-white text-black p-4 rounded-xl h-[160px]">
-                    <h3 className="text-xl font-bold">{course.
-title}</h3>
-                    <p className="text-sm mt-3 line-clamp-3">{course.description}</p>
+                    <h3 className="text-xl font-bold">{course.course.title}</h3>
+                    <p className="text-sm mt-3 line-clamp-3">{course.course.description}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-1 w-full mt-2">
                   <button 
-                    onClick={() => removeFromCart(course._id)}
+                    onClick={() => removeFromCart(course.course._id)}
                     className="px-4 py-3 rounded-lg border-2 border-[#5491CA] text-[#5491CA] hover:bg-[#5491CA] hover:text-white transition-colors shadow-md text-sm font-medium"
                   >
                     Remove from Cart
                   </button>
                   <button 
-                    onClick={() => handlePurchase(course._id)}
+                    onClick={() => handlePurchase(course.course._id)}
                     className="px-4 py-3 rounded-lg bg-[#5491CA] text-white hover:bg-[#7670AC] transition-colors shadow-md text-sm font-medium"
                   >
                     Purchase Course
