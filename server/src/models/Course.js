@@ -23,7 +23,7 @@ const professionalCourseSchema = new Schema({
   title: { type: String, required: true, trim: true },
   coverImage: { type: String, required: true },
   introVideo: { type: String },
-  courseCode: { type: String, required: true, unique: true, uppercase: true },
+  courseCode: { type: String, required: true,  uppercase: true },
   category: { 
     type: String, 
     enum: ['Programming', 'Design', 'Business', 'Data Science', 'Marketing'], 
@@ -62,13 +62,7 @@ const professionalCourseSchema = new Schema({
   currency: { type: String, default: 'INR' },
   discount: { type: Number, default: 0 },
   
-  // Reviews and ratings
-  reviews: [{
-    student: { type: Schema.Types.ObjectId, ref: 'User', unique: true },
-    comment: { type: String },
-    rating: { type: Number, min: 0, max: 5 },
-    createdAt: { type: Date, default: Date.now }
-  }],
+
   
   tags: [{ type: String }]
 }, {

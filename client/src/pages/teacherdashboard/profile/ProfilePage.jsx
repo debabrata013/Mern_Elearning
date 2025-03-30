@@ -38,25 +38,58 @@ const ProfilePage = ({ onBack }) => {
     });
 
     const [selectedImage, setSelectedImage] = useState(null);
-    const handelChangeProifle= async(e)=>{
+    // const handelChangeProifle= async(e)=>{
+    //   try {
+    //     const response = await axiosInstance.post("/pic/upload/", { userId: user._id, image: selectedImage });
+    
+    //     if (response.data) {
+    //       // Remove old user data from localStorage
+    //       localStorage.removeItem("user");
+    
+    //       // Store updated user data in localStorage
+    //       localStorage.setItem("user", JSON.stringify(response.data.user));
+    //       alert(response.data.message)
+    //       window.location.reload();
+    //     }
+    //   } catch (error) {
+    //     console.error("Error updating profile:", error);
+    //   }
+      
+      
+    // }
+    const handelChangeProifle = async (e) => {
       try {
-        const response = await axiosInstance.post("/pic/upload/", { userId: user._id, image: selectedImage });
+        if (!selectedImage) {
+          alert("Please select an image.");
+          return;
+        }
+    
+        const formData = new FormData();
+        formData.append("userId", user._id);
+        formData.append("profileImage", selectedImage);
+    
+        const response = await axiosInstance.post("/pic/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
     
         if (response.data) {
-          // Remove old user data from localStorage
+          // Update local storage with new user data
           localStorage.removeItem("user");
+          localStorage.setItem("user", JSON.stringify(response.data.user));
     
-          // Store updated user data in localStorage
-          localStorage.setItem("user", JSON.stringify(response.data));
-          alert("profile updated")
+          // Optionally, update the UI without reloading the page
+         // Assuming you have a state management hook
+    
+          alert(response.data.message);
+        
           window.location.reload();
         }
       } catch (error) {
         console.error("Error updating profile:", error);
+        alert("Failed to update profile picture. Please try again.");
       }
-      
-      
-    }
+    };
+    
 
     const handleProfileSubmit = async(e) => {
       e.preventDefault();

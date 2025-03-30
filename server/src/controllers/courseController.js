@@ -175,7 +175,7 @@ exports.createCourse = async (req, res) => {
       duration,
       chapters: parsedChapters || [],
       teacher,    // teacher field maps to instructor (_id expected)
-      
+   
       maxStudents,
       enrollmentDeadline,
       price,
