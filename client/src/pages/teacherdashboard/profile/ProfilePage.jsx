@@ -40,7 +40,7 @@ const ProfilePage = ({ onBack }) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const handelChangeProifle= async(e)=>{
       try {
-        const response = await axiosInstance.post("/profile/", { userId: user._id, image: selectedImage });
+        const response = await axiosInstance.post("/pic/upload/", { userId: user._id, image: selectedImage });
     
         if (response.data) {
           // Remove old user data from localStorage

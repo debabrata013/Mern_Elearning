@@ -4,7 +4,7 @@ const { s3Client } = require("./s3-credential"); // Import the S3 client
 exports.putObject = async (file, fileName) => {
     try {
         const params = {
-            Bucket: process.env.AWS_S3_BUCKET_NAME, // S3 Bucket name
+            Bucket: process.env.S3_BUCKET_NAME, // S3 Bucket name
             Key: fileName, // File name in the bucket
             Body: file.buffer, // File content
             ContentType: file.mimetype, // File MIME type
