@@ -38,6 +38,25 @@ const ProfilePage = ({ onBack }) => {
     });
 
     const [selectedImage, setSelectedImage] = useState(null);
+    const handelChangeProifle= async(e)=>{
+      try {
+        const response = await axiosInstance.post("/profile/", { userId: user._id, image: selectedImage });
+    
+        if (response.data) {
+          // Remove old user data from localStorage
+          localStorage.removeItem("user");
+    
+          // Store updated user data in localStorage
+          localStorage.setItem("user", JSON.stringify(response.data));
+          alert("profile updated")
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error("Error updating profile:", error);
+      }
+      
+      
+    }
 
     const handleProfileSubmit = async(e) => {
       e.preventDefault();
@@ -105,8 +124,13 @@ const ProfilePage = ({ onBack }) => {
                     className="bg-[#5491CA] hover:bg-[#4a82b6] text-white"
                       >
                         <Camera className="w-4 h-4 mr-2" />
-                    Change Photo
+                    upload Photo
                     </Button>
+                    <Button type="button" onClick={handelChangeProifle}
+                    className="bg-[#5491CA] hover:bg-[#4a82b6] text-white ml-5">
+                      Change photo
+                    </Button>
+
                 </div>
               </div>
                 </div>
