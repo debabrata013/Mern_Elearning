@@ -1,5 +1,5 @@
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
-const { s3Client } = require("./s3-credential"); // Import the S3 client
+const { s3Client } = require("./s3-credential");
 
 exports.putObject = async (file, fileName) => {
     try {
@@ -7,15 +7,16 @@ exports.putObject = async (file, fileName) => {
             Bucket: process.env.S3_BUCKET_NAME, // S3 Bucket name
             Key: fileName, // File name in the bucket
             Body: file.buffer, // File content
-            ContentType: file.mimetype, // File MIME type
-            ACL: "public-read" // Optional: Set file as publicly readable
+            ContentType: file.mimetype, // Use the file's MIME type dynamically
         };
 
         const command = new PutObjectCommand(params);
-        const response = await s3Client.send(command);
+        await s3Client.send(command);
 
-        console.log("File uploaded successfully:", response);
-        return response;
+        // Generate the file's URL (assuming public access is enabled)
+        const fileUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+        
+        return fileUrl;
     } catch (error) {
         console.error("Error uploading file to S3:", error);
         throw error;
