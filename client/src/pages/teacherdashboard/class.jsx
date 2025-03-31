@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, ArrowLeft, Video, Users, Calendar, Clock, X ,BookOpen,FilePlus } from 'lucide-react';
+import { Plus, ArrowLeft, Video, Users, Calendar, Clock, X ,BookOpen,FilePlus, Loader } from 'lucide-react';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import axiosInstance from '@/api/axiosInstance';
@@ -55,6 +55,7 @@ const ClassesContent = () => {
         chapter: '',
         courses:'',
     });
+ 
     const [videoFile, setVideoFile] = useState(null);
   const [resourceFile, setResourceFile] = useState(null);const handleVideoChange = (e) => {
     const file = e.target.files[0];
@@ -83,10 +84,7 @@ const ClassesContent = () => {
 
   const handleUploadLecture = async (chapterId) => {
    try {
-    if (!videoFile) {
-        alert("Please select a video file.");
-        return;
-      }
+   
      const formData = new FormData();
      formData.append("video", videoFile);
      formData.append("chapterId", chapterId);
@@ -105,10 +103,7 @@ const ClassesContent = () => {
   };
   const handleUploadResource =async (chapterId) => {
     try {
-     if (!videoFile) {
-         alert("Please select a video file.");
-         return;
-       }
+     
       const formData = new FormData();
       formData.append("video", videoFile);
       formData.append("chapterId", chapterId);
@@ -191,6 +186,8 @@ const ClassesContent = () => {
 
     return (
         <div className="bg-gray-50 p-6 rounded-xl">
+        
+
             {selectedCourse ? (
               <div className="bg-white p-6 rounded-lg shadow-md">
               <button onClick={() => setSelectedCourse(null)} className="mb-4 text-[#5491CA] flex items-center">
