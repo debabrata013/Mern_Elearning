@@ -1,22 +1,18 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const lessonSchema = new Schema({
-  _id: { type: Schema.Types.ObjectId, auto: true },
-  title: { type: String, trim: true },
-  content: { type: String},
-  videoUrl: { type: String },
-  resourceUrl: { type: String },
-  duration: { type: Number }
-}, { timestamps: true });
+
 
 
 // Define the Chapter subdocument schema
 const chapterSchema = new Schema({
   _id: { type: Schema.Types.ObjectId, auto: true },
   title: { type: String, required: true, trim: true },
+  resourceUrl: [{  _id: { type: Schema.Types.ObjectId, auto: true }, type: String }],
   description: { type: String, required: true },
-  lessons: [lessonSchema] // Each chapter can have multiple lessons
+  lessons: [{id: { type: Schema.Types.ObjectId, auto: true },
+ 
+    videoUrl: { type: String }}] // Each chapter can have multiple lessons
 }, { timestamps: true });
 
 // Define the main Professional Course schema
