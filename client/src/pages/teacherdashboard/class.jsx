@@ -85,41 +85,47 @@ const ClassesContent = () => {
  
   const handleUploadLecture = async (chapterId) => {
     try {
-      const formData = new FormData();
-      formData.append("video", videoFile);
-      formData.append("chapterId", chapterId);
-      formData.append("courseId", selectedCourse._id);
-  
-      const response = await axiosInstance.post("/lechcher/videos", formData);
-      if (response.status === 200) {
-        alert("Lecture uploaded successfully!");
-        setVideoFile(null);
-      } else {
-        alert("Failed to upload lecture. Please try again.");
-      }
+        if (!videoFile) {
+            alert("Please select a video file first");
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append("video", videoFile);
+        formData.append("chapterId", chapterId);
+        formData.append("courseId", selectedCourse._id);
+
+        const response = await axiosInstance.post("/lechcher/videos", formData);
+        if (response.status === 200) {
+            alert("Lecture uploaded successfully!");
+            setVideoFile(null);
+        }
     } catch (error) {
-      console.error("Error uploading lecture:", error);
-      alert("Failed to upload lecture. Please try again.");
+        console.error("Error uploading lecture:", error);
+        alert(`Failed to upload lecture: ${error.response?.data?.message || error.message}`);
     }
   };
   
   const handleUploadResource = async (chapterId) => {
     try {
-      const formData = new FormData();
-      formData.append("resource", resourceFile);
-      formData.append("chapterId", chapterId);
-      formData.append("courseId", selectedCourse._id);
-  
-      const response = await axiosInstance.post("/lechcher/resource", formData);
-      if (response.status === 200) {
-        alert("Resource uploaded successfully!");
-        setResourceFile(null);
-      } else {
-        alert("Failed to upload resource. Please try again.");
-      }
+        if (!resourceFile) {
+            alert("Please select a resource file first");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("resource", resourceFile);
+        formData.append("chapterId", chapterId);
+        formData.append("courseId", selectedCourse._id);
+
+        const response = await axiosInstance.post("/lechcher/resource", formData);
+        if (response.status === 200) {
+            alert("Resource uploaded successfully!");
+            setResourceFile(null);
+        }
     } catch (error) {
-      console.error("Error uploading resource:", error);
-      alert("Failed to upload resource. Please try again.");
+        console.error("Error uploading resource:", error);
+        alert(`Failed to upload resource: ${error.response?.data?.message || error.message}`);
     }
   };
   const handleDeleteLecture = async (lectureId) => {
@@ -266,7 +272,7 @@ const ClassesContent = () => {
                                                 <li><Video/>
                                                 <span className="ml-2">{lesson.videoUrl}</span>
                                         <span className="ml-2">{lesson.resourceUrl}</span></li>
-                                        <button onClick={() => handleUploadLecture(lesson)} className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
+                                        <button onClick={() => handleUploadLecture(chapter._id)} className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
                                   <FilePlus className="h-5 w-5" /> Upload Lecture
                               </button>
                               <button onClick={() => handleUploadResource(lesson)} className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
@@ -287,7 +293,7 @@ const ClassesContent = () => {
         Select Video:
         <input type="file" accept="video/*" onChange={handleVideoChange} style={styles.input} />
       </label>
-      <button onClick={handleUploadLecture(chapter._id)} style={styles.button}>
+      <button onClick={() => handleUploadLecture(chapter._id)} style={styles.button}>
         Upload Lecture 
       </button>
      </div>
@@ -300,7 +306,7 @@ const ClassesContent = () => {
           onChange={handleResourceChange}
           style={styles.input}
         /> </label>
-        <button onClick={handleUploadResource(chapter._id)} style={styles.button}>
+        <button onClick={() => handleUploadResource(chapter._id)} style={styles.button}>
         Upload Resource
       </button>
      
