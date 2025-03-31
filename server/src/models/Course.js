@@ -3,8 +3,8 @@ const { Schema } = mongoose;
 
 const lessonSchema = new Schema({
   _id: { type: Schema.Types.ObjectId, auto: true },
-  title: { type: String, required: true, trim: true },
-  content: { type: String, required: true },
+  title: { type: String, trim: true },
+  content: { type: String},
   videoUrl: { type: String },
   resourceUrl: { type: String },
   duration: { type: Number }
@@ -13,10 +13,11 @@ const lessonSchema = new Schema({
 
 // Define the Chapter subdocument schema
 const chapterSchema = new Schema({
+  _id: { type: Schema.Types.ObjectId, auto: true },
   title: { type: String, required: true, trim: true },
   description: { type: String, required: true },
   lessons: [lessonSchema] // Each chapter can have multiple lessons
-}, { _id: false, timestamps: true });
+}, { timestamps: true });
 
 // Define the main Professional Course schema
 const professionalCourseSchema = new Schema({
