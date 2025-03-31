@@ -82,44 +82,74 @@ const ClassesContent = () => {
     }
   };
 
+ 
   const handleUploadLecture = async (chapterId) => {
-   try {
-   
-     const formData = new FormData();
-     formData.append("video", videoFile);
-     formData.append("chapterId", chapterId);
-     formData.append("courseId", selectedCourse._id);
-
-     
-      const response=  await axiosInstance.post("/courses/uploadLecture",formData)
-      setVideoFile(null)
-     
-    
-   } catch (error) {
-    console.error("Error uploading lecture:", error);
-    alert("Failed to upload lecture. Please try again.");
-   }
-   
-  };
-  const handleUploadResource =async (chapterId) => {
     try {
-     
       const formData = new FormData();
       formData.append("video", videoFile);
       formData.append("chapterId", chapterId);
       formData.append("courseId", selectedCourse._id);
- 
-      
-       const response=  await axiosInstance.post("/courses/uploadLecture",formData)
-       setVideoFile(null)
-      
-     
+  
+      const response = await axiosInstance.post("/lechcher/videos", formData);
+      if (response.status === 200) {
+        alert("Lecture uploaded successfully!");
+        setVideoFile(null);
+      } else {
+        alert("Failed to upload lecture. Please try again.");
+      }
     } catch (error) {
-     console.error("Error uploading lecture:", error);
-     alert("Failed to upload lecture. Please try again.");
+      console.error("Error uploading lecture:", error);
+      alert("Failed to upload lecture. Please try again.");
     }
-    
-   };
+  };
+  
+  const handleUploadResource = async (chapterId) => {
+    try {
+      const formData = new FormData();
+      formData.append("resource", resourceFile);
+      formData.append("chapterId", chapterId);
+      formData.append("courseId", selectedCourse._id);
+  
+      const response = await axiosInstance.post("/lechcher/resource", formData);
+      if (response.status === 200) {
+        alert("Resource uploaded successfully!");
+        setResourceFile(null);
+      } else {
+        alert("Failed to upload resource. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error uploading resource:", error);
+      alert("Failed to upload resource. Please try again.");
+    }
+  };
+  const handleDeleteLecture = async (lectureId) => {
+    try {
+      const response = await axiosInstance.delete(`/lechcher/videos/${lectureId}`);
+      if (response.status === 200) {
+        alert("Lecture deleted successfully!");
+        // Optionally, refresh the list of lectures here
+      } else {
+        alert("Failed to delete lecture. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting lecture:", error);
+      alert("Failed to delete lecture. Please try again.");
+    }
+  };
+  const handleDeleteResources = async (lectureId) => {
+    try {
+      const response = await axiosInstance.delete(`/lechcher/resource/${lectureId}`);
+      if (response.status === 200) {
+        alert("file deleted successfully!");
+        // Optionally, refresh the list of lectures here
+      } else {
+        alert("Failed to delete file. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting lecture:", error);
+      alert("Failed to delete lecture. Please try again.");
+    }
+  };
 
     
     const user = JSON.parse(localStorage.getItem('user'));
