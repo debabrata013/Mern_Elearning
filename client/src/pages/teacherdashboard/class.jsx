@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, ArrowLeft, Video, Users, Calendar, Clock, X ,BookOpen,FilePlus } from 'lucide-react';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
+import axiosInstance from '@/api/axiosInstance';
 const styles = {
     container: {
       display: "flex",
@@ -80,13 +81,50 @@ const ClassesContent = () => {
     }
   };
 
-  const handleUpload = () => {
-   
-    console.log("Uploading:" );
-    setVideoFile(null)
-    setResourceFile(null)
-  };
+  const handleUploadLecture = async (chapterId) => {
+   try {
+    if (!videoFile) {
+        alert("Please select a video file.");
+        return;
+      }
+     const formData = new FormData();
+     formData.append("video", videoFile);
+     formData.append("chapterId", chapterId);
+     formData.append("courseId", selectedCourse._id);
 
+     
+      const response=  await axiosInstance.post("/courses/uploadLecture",formData)
+      setVideoFile(null)
+     
+    
+   } catch (error) {
+    console.error("Error uploading lecture:", error);
+    alert("Failed to upload lecture. Please try again.");
+   }
+   
+  };
+  const handleUploadResource =async (chapterId) => {
+    try {
+     if (!videoFile) {
+         alert("Please select a video file.");
+         return;
+       }
+      const formData = new FormData();
+      formData.append("video", videoFile);
+      formData.append("chapterId", chapterId);
+      formData.append("courseId", selectedCourse._id);
+ 
+      
+       const response=  await axiosInstance.post("/courses/uploadLecture",formData)
+       setVideoFile(null)
+      
+     
+    } catch (error) {
+     console.error("Error uploading lecture:", error);
+     alert("Failed to upload lecture. Please try again.");
+    }
+    
+   };
 
     
     const user = JSON.parse(localStorage.getItem('user'));
@@ -201,10 +239,10 @@ const ClassesContent = () => {
                                                 <li><Video/>
                                                 <span className="ml-2">{lesson.videoUrl}</span>
                                         <span className="ml-2">{lesson.resourceUrl}</span></li>
-                                        <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
+                                        <button onClick={() => handleUploadLecture(lesson)} className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
                                   <FilePlus className="h-5 w-5" /> Upload Lecture
                               </button>
-                              <button className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
+                              <button onClick={() => handleUploadResource(lesson)} className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
                                   <FilePlus className="h-5 w-5" /> Upload Resources
                               </button>
 
@@ -217,24 +255,31 @@ const ClassesContent = () => {
                                   )}
                               </ul>
                               <div style={styles.container}>
+                                <div className="container">
       <label style={styles.label}>
-        Upload Video:
+        Select Video:
         <input type="file" accept="video/*" onChange={handleVideoChange} style={styles.input} />
       </label>
-
+      <button onClick={handleUploadLecture(chapter._id)} style={styles.button}>
+        Upload Lecture 
+      </button>
+     </div>
+     <div className="container">
       <label style={styles.label}>
-        Upload Resource:
+        Select Resource:
         <input
           type="file"
           accept="image/*,application/pdf,.ppt,.pptx"
           onChange={handleResourceChange}
           style={styles.input}
-        />
-      </label>
-
-      <button onClick={handleUpload} style={styles.button}>
-        Upload
+        /> </label>
+        <button onClick={handleUploadResource(chapter._id)} style={styles.button}>
+        Upload Resource
       </button>
+     
+     </div>
+
+      
     </div>
                               </div>
                       ))
