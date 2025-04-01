@@ -169,7 +169,7 @@ const JobsContent = () => {
         <div>
           <h2 className="text-xl font-bold text-[#5491CA] ">
             <Briefcase className="mr-2 h-5 w-5" />
-            Job Management
+            Job Arena  
           </h2>
           <p className="text-gray-500 text-sm"> Hear are the jobs posting on which you can apply . Happy learning !</p>
         </div>
