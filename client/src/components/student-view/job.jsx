@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, X, Briefcase, BadgeIndianRupee, Clock, Calendar, Link, Image, Award, FileText  } from 'lucide-react';
 // import jobService from '/api/jobService';
 import jobService from '../../pages/admin/api/jobService';
-
+import Sidebar from './studentComponent/Sidebar';
 import { format } from 'date-fns';
 const JobsContent = () => {
   const [showJobForm, setShowJobForm] = useState(false);
@@ -86,6 +86,8 @@ const JobsContent = () => {
 
   // Job card with 4:5 ratio
   const renderJobCard = (job) => (
+ 
+    <div  >
     <div key={job._id} className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 w-full overflow-hidden" style={{ aspectRatio: '3/5' }}>
       <div className="relative h-full flex flex-col">
         {/* Image container with overlay gradient */}
@@ -153,12 +155,17 @@ const JobsContent = () => {
         </div>
       </div>
     </div>
+    </div>
   );
 
   return (
-    <div className="bg-gray-50 p-4 md:p-6 rounded-xl">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header with title and add button */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <div className="bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700">
+        <Sidebar />
+      </div>
+      <div>
+      <div className="flex-1 ml-[280px] p-8">
         <div>
           <h2 className="text-xl font-bold text-[#5491CA] ">
             <Briefcase className="mr-2 h-5 w-5" />
@@ -166,6 +173,7 @@ const JobsContent = () => {
           </h2>
           <p className="text-gray-500 text-sm"> Hear are the jobs posting on which you can apply . Happy learning !</p>
         </div>
+        
         </div>
          
           {/* Loading Spinner - Only show when not in form mode */}
@@ -178,27 +186,29 @@ const JobsContent = () => {
 
           {/* Display Jobs as Cards - Only show when not in form mode */}
           {!loading && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4  ml-96">
               {jobs.length === 0 ? (
                 <div className="col-span-full text-center py-8">
                   <Briefcase className="h-12 w-12 mx-auto text-gray-300 mb-3" />
                   <p className="text-gray-500">No jobs available </p>
-                  <button
-                    onClick={() => setShowJobForm(true)}
-                    className="mt-3 bg-[#5491CA] text-white px-3 py-1.5 rounded-lg hover:bg-[#4a82b6] transition-colors inline-flex items-center gap-1.5 text-sm"
-                  >
-                    <Plus className="h-3.5 w-3.5" />
-                    Add Your First Job
-                  </button>
+                  
                 </div>
               ) : (
-                jobs.map(renderJobCard)
+               
+                    jobs.map(renderJobCard)
+              
+ 
+
+
+
+
               )}
             </div>
           )}
        
     </div>
   
+  </div>
   );
 };
 
