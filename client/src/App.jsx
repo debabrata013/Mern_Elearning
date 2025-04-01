@@ -49,6 +49,7 @@ import CourseDemo from './pages/landing-page/course-demo/CourseDemo';
 import CourseEnrollment from './pages/landing-page/course-enrollment/CourseEnrollment';
 import { ThemeProvider } from './context/ThemeContext';
 import CartPage from './components/student-view/studentComponent/CartPage';
+import Job from './components/student-view/job';
 
 function App() {
   return (
@@ -63,7 +64,7 @@ function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/contactus" element={<ContactForm />} />
           <Route path="/aboutus" element={<AboutUs />} />
-
+           <Route path="/jobs" element={<Job/>}/>
           <Route path="/abo" element={<Std />} />   
           <Route path="/aboa" element={<StudentAnoument />} />
           <Route path="/abca" element={<Studentbuycourse />} />
@@ -78,6 +79,7 @@ function App() {
             element={
               <ProtectedRoute role="student">
                 <Std />
+              
               </ProtectedRoute>
             }
           />
