@@ -50,15 +50,25 @@ exports.createAnnouncement = async (req, res) => {
 };
 exports.getUserAnnouncements = async (req, res) => {
   try {
-    const userId = req.user.id; // Assuming you have authentication middleware
+    // collect the id from url
 
-    const user = await User.findById(userId).populate("announcements.announcementId");
+    const u= req.params.id // Get user ID from request parameters
+
+
+    console.log(u);
+    
+    const user = await User.findById(u);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+// user.announcements  gievs the list of announcements id and your task is to find the all the anuncement 
+    // Populate the announcements field with the actual announcement data
+    const announcements = await Announcement.find({
+      _id: { $in: user.announcements.map(announcement => announcement.announcementId) }
+    });
 
-    return res.status(200).json({ announcements: user.announcements });
+    return res.status(200).json({ announcements: announcements });
 
   } catch (error) {
     console.error("Error fetching announcements:", error);
@@ -67,13 +77,23 @@ exports.getUserAnnouncements = async (req, res) => {
 };
 exports.deleteUserAnnouncement = async (req, res) => {
   try {
-    const userId = req.user.id; // Get user from authentication
-    const { announcementId } = req.params; // Get announcement ID from request
+    console.log("Deleting announcement for user...");
+    const userId = req.params.id; // Get user ID from request parameters
+    const announcementId =req.params.i ; // Get announcement ID from request body
+    console.log("User ID:", userId);
+    console.log("Announcement ID:", announcementId);
+    if (!announcementId) {
+      return res.status(400).json({ error: "Announcement ID is required." });
+    }
+
+  
 
     // Remove the announcement only from the specific user's list
-    const updateResult = await User.findByIdAndUpdate(userId, {
-      $pull: { announcements: { announcementId } }
-    });
+    const updateResult = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { announcements: { announcementId } } },
+      { new: true }
+    );
 
     if (!updateResult) {
       return res.status(404).json({ error: "User or announcement not found" });
@@ -83,10 +103,9 @@ exports.deleteUserAnnouncement = async (req, res) => {
 
   } catch (error) {
     console.error("Error deleting announcement:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error", details: error.message });
   }
 };
-
 
 // exports.createAnnouncement = async (req, res) => {
 //   try {
