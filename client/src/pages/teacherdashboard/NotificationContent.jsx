@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState  , useEffect} from 'react';
 import { Bell, Link as LinkIcon, Check, X, ChevronRight, Info } from 'lucide-react';
+import axiosInstance from '@/api/axiosInstance';
+
 
 // Card Components
 const Card = ({ className = '', children, ...props }) => (
@@ -102,27 +104,18 @@ const ScrollArea = ({ className = '', children }) => (
 );
 
 const NotificationContent = () => {
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: "Parent-Teacher Conference Schedule",
-      description: "The annual parent-teacher conferences are scheduled for next week. Please review the assigned time slots and prepare accordingly. Click the link below to access the schedule.",
-      notificationType: "link",
-      link: "https://example.com/schedule",
-      targetAudience: ["teacher"],
-      createdAt: "2025-01-22T09:00:00",
-      read: false,
-    },
-    {
-      id: 2,
-      title: "Professional Development Day",
-      description: "Reminder: This Friday is our professional development day. We will be focusing on new teaching methodologies and classroom management techniques.",
-      notificationType: "text",
-      targetAudience: ["teacher"],
-      createdAt: "2025-01-21T14:30:00",
-      read: true,
-    }
-  ]);
+  const user= JSON.parse(localStorage.getItem('user'));
+
+
+  //  const response = axiosInstance.get("/announcements/",{u:user._id});
+  //  title
+  //  description
+  //  notificationType
+
+  //  createdAt
+
+  // const [notifications, setNotifications] = useState(response.data.announcements);
+  const [notifications, setNotifications] = useState([]);
 
   const formatDate = (dateString) => {
     const options = { 
@@ -135,16 +128,47 @@ const NotificationContent = () => {
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        // const response = await axiosInstance.get(`/announcements/${user._id}`);
+        const response = await axiosInstance.get(`/announcements/678a4c88c42aea3963fa4162`);
+       
+        console.log("response"+response.data);
+        setNotifications(response.data.announcements);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+    fetchNotifications();
+  }, []);
   const handleMarkRead = (id) => {
+     try {
+      axiosInstance.put(`/announcements/678a4c88c42aea3963fa4162/${ id }`);
+      } catch (error) {
+        console.error("Error marking notification as read:", error);
+      }
+   
+
     setNotifications(notifications.map(notif => 
       notif.id === id ? { ...notif, read: true } : notif
     ));
   };
 
-  const handleDismiss = (id) => {
-    setNotifications(notifications.filter(notif => notif.id !== id));
+    const handleDismiss = (id) => {
+    try {
+      // Call the API to delete the notification
+      axiosInstance.delete(`/announcements/${user._id}`, { data: { announcementId: id } });
+  
+      // Update the notification state to remove the dismissed notification
+      setNotifications(notifications.filter(notif => notif.id !== id));
+    } catch (error) {
+      console.error("Error dismissing notification:", error);
+    }
   };
 
+  console.log(notifications);
+  
   return (
     <Card className="w-full max-w-5xl mx-auto overflow-hidden">
       <CardHeader className="bg-gradient-to-r from-[#5491CA]/10 to-[#b1a9f1]/10 border-b border-gray-100">
