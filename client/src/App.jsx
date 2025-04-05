@@ -50,6 +50,8 @@ import CourseEnrollment from './pages/landing-page/course-enrollment/CourseEnrol
 import { ThemeProvider } from './context/ThemeContext';
 import CartPage from './components/student-view/studentComponent/CartPage';
 import Job from './components/student-view/job';
+import Tc from "./pages/T&C"
+import Privacy from "./pages/policy"
 
 function App() {
   return (
@@ -74,6 +76,8 @@ function App() {
           <Route path="/abop" element={<Pr />} />
           <Route path="/profile" element={<Projile />} />
           <Route path="/enroll/:courseId" element={<Enroll />} />
+          <Route path="/terms" element={<Tc/>} />
+          <Route path="/privacy" element={<Privacy/>} />
           <Route
             path="/user-dashboard"
             element={
