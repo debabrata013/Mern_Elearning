@@ -534,13 +534,7 @@ const PrivacyPolicy = () => {
         </button>
       </div>
 
-      <div className="mt-8 bg-gray-50 p-4 rounded">
-        <h3 className="font-semibold mb-2">Have Questions?</h3>
-        <p>
-          If you have any questions about our Privacy Policy, please contact our Privacy Officer at{' '}
-          <a href="mailto:privacy@aigiri.com" className="text-blue-600">privacy@aigiri.com</a>.
-        </p>
-      </div>
+      
 
       <footer className="mt-12 text-center text-gray-600 text-sm">
         <p>© {new Date().getFullYear()} AIGIRI Inc. All rights reserved.</p>
