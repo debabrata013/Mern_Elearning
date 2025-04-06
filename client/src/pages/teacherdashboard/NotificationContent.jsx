@@ -131,8 +131,8 @@ const NotificationContent = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        // const response = await axiosInstance.get(`/announcements/${user._id}`);
-        const response = await axiosInstance.get(`/announcements/678a4c88c42aea3963fa4162`);
+        const response = await axiosInstance.get(`/announcements/${user._id}`);
+        // const response = await axiosInstance.get(`/announcements/678a4c88c42aea3963fa4162`);
        
         console.log("response"+response.data);
         setNotifications(response.data.announcements);
