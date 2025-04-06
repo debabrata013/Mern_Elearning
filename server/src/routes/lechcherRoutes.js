@@ -1,25 +1,24 @@
-// create the routes for all the controller lechervideoController.js 
-
 const express = require('express');
 const router = express.Router();
-const lechervideoController = require('../controllers/lechervideoController');
+const upload = require('../middlewares/upload');
+const {
+  
+  uploadResource,
+  deleteVideo,
+  deleteResource,
+  uploadVideo
+} = require('../controllers/lechervideoController');
 
-// // Route to get all videos
-// router.get('/videos', lechervideoController.getAllVideos);
+// Upload video
+router.post('video/:courseId/:chapterId', upload.single('video'), uploadVideo);
 
-// // Route to get a specific video by ID
-// router.get('/videos/:id', lechervideoController.getVideoById);
+// Upload resource
+router.post('resource/:courseId/:chapterId', upload.single('resource'), uploadResource);
 
-// Route to create a new video
-router.post('/videos', lechervideoController.uploadLessonVideo);
-router.post('/resource', lechervideoController.uploadResource);
+// Delete video
+router.delete('video/:courseId/:chapterId/:lessonId', deleteVideo);
 
-// Route to update a video by ID
-// router.put('/videos/:id', lechervideoController.updateVideo);
-
-// Route to delete a video by ID
-router.delete('/videos/:id', lechervideoController.deleteLessonVideo);
-router.delete('/resource/:id', lechervideoController.deleteResource);
+// Delete resource
+router.delete('resource/:courseId/:chapterId/:resourceId', deleteResource);
 
 module.exports = router;
-
