@@ -1,27 +1,66 @@
 const Course = require('../models/Course');
-const s3 = require('../config/s3');
+
 
 // Upload video
+// exports.uploadVideo = async (req, res) => {
+//   const { courseId, chapterId } = req.params;
+// console.log("Hello dosto");
+
+// res.status(200).json({message:'HEllo dosto'})
+//   try {
+//     const course = await Course.findById(courseId);
+//     if (!course) return res.status(404).json({ message: 'Course not found' });
+
+//     const chapter = course.chapters.id(chapterId);
+//     if (!chapter) return res.status(404).json({ message: 'Chapter not found' });
+
+//     const videoUrl = req.file.location;
+//     chapter.lessons.push({ videoUrl });
+//     await course.save();
+
+//     res.status(200).json({ message: 'Video uploaded successfully', videoUrl });
+//   } catch (err) {
+//     res.status(500).json({ message: 'Error uploading video', error: err.message });
+//   }
+// };
+
+const { Upload } = require('@aws-sdk/lib-storage');
+const s3 = require('../config/s3');
+
 exports.uploadVideo = async (req, res) => {
   const { courseId, chapterId } = req.params;
-console.log("Hello dosto");
 
   try {
+    const upload = new Upload({
+      client: s3,
+      params: {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: `videos/${Date.now()}-${req.file.originalname}`, // Unique filename
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+      },
+    });
+
+    const result = await upload.done();
+    console.log('Upload successful:', result);
+
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: 'Course not found' });
 
     const chapter = course.chapters.id(chapterId);
     if (!chapter) return res.status(404).json({ message: 'Chapter not found' });
 
-    const videoUrl = req.file.location;
+    const videoUrl = result.Location;
     chapter.lessons.push({ videoUrl });
     await course.save();
 
     res.status(200).json({ message: 'Video uploaded successfully', videoUrl });
   } catch (err) {
+    console.error('Error uploading video:', err);
     res.status(500).json({ message: 'Error uploading video', error: err.message });
   }
 };
+
 
 // Upload resource
 exports.uploadResource = async (req, res) => {
