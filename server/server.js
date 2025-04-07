@@ -54,7 +54,7 @@ const cartRoutes = require('./src/routes/cartRoutes');
 const TodoRoutes = require('./src/routes/TodoRouters');
 const UserRoutes = require('./src/routes/userRoutes');
 const picRouters = require('./src/routes/picrouter');
-const Lecherrouters= require('./src/routes/lechcherRoutes')
+const LRouter = require("./src/routes/lechcherRoutes")
 
 // Use routes
 app.use('/students', studentRoutes);
@@ -77,7 +77,7 @@ app.use('/cart', cartRoutes); // Add this line to use cart routes
 app.use('/todos', TodoRoutes);
 app.use("/u",UserRoutes)
 app.use('/pic', picRouters);
-app.use('/lechcher', Lecherrouters);
+app.use("/lac",LRouter)
   
 
 app.listen(PORT, () => {
