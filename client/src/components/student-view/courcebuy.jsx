@@ -2,11 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 import CourseCard from "./courseComponent/coursecard";
 import { getAllCourses } from "../../pages/landing-page/api/landingServices";
 import Sidebar from './studentComponent/Sidebar';
+import { Menu, Search, Filter, X } from "lucide-react";
 
 const CoursePage = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
 
   const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -42,6 +45,19 @@ const CoursePage = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsSidebarOpen(!mobile);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const filteredCourses = courses.filter((course) => {
@@ -166,125 +182,157 @@ const CoursePage = () => {
   }
 
   return (
-    <div className="flex mx-10 my-10 min-h-screen ">
-      {/* Fixed Sidebar */}
-      <div className="bg-white dark:bg-gray-800 shadow-xl w-[250px] h-screen fixed top-0 left-0 transition-transform duration-300 ease-in-out border-r border-[#5491CA]/10">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Sidebar */}
+      <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
+        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
+      }`}>
         <Sidebar />
       </div>
       
-      {/* Main Content Area */}
-      <main 
-        ref={sectionRef} 
-        className="ml-[250px] flex-1 p-8 overflow-y-auto"
-      >
-        <div className="max-w-7xl mx-auto">
-          {/* Header Section */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-[#7670AC] dark:text-white">
-              Explore <span className="text-[#5491CA] dark:text-[#7670AC]">Courses</span>
-            </h1>
-          </div>
-
-          {/* Search and Filter Section */}
-          <div className="flex flex-col md:flex-row gap-4 mb-8">
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="Search courses..."
-                className="w-full px-4 py-2 rounded-lg border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/100 dark:text-white placeholder-[#7670AC]/100"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+      {/* Main Content */}
+      <div className={`flex-1 transition-all duration-300 ${
+        isMobile ? 'ml-0' : 'ml-[280px]'
+      }`}>
+        <main 
+          ref={sectionRef} 
+          className="p-4 md:p-8 overflow-y-auto"
+        >
+          <div className="max-w-7xl mx-auto">
+            {/* Header Section */}
+            <div className="mb-6 md:mb-8">
+              <div className="flex items-center gap-4 mb-4 md:mb-0">
+                {isMobile && (
+                  <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                  </button>
+                )}
+                <h1 className="text-2xl md:text-3xl font-bold text-[#7670AC] dark:text-white">
+                  Explore <span className="text-[#5491CA] dark:text-[#7670AC]">Courses</span>
+                </h1>
+              </div>
             </div>
-            <div className="flex gap-4">
-              <select
-                className="px-4 py-2 rounded-lg border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-              >
-                <option value="All">All Courses</option>
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-              </select>
-              <select 
-                className="px-4 py-2 rounded-lg border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white"
-                aria-label="Sort courses"
-              >
-                <option>Sort by Popularity</option>
-                <option>Sort by Newest</option>
-                <option>Sort by Rating</option>
-              </select>
-            </div>
-          </div>
 
-          <hr className="border-t border-[#5491CA]/10 dark:border-[#7670AC]/20 mb-8" />
-
-          {/* Courses Grid */}
-          {filteredCourses.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {currentCourses.map((course, index) => (
-                <CourseCard 
-                  key={course._id || `course-${index}`} 
-                  course={course} 
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-16">
-              <div className="relative w-24 h-24 mb-6">
-                <div className="absolute inset-0 bg-[#5491CA]/20 dark:bg-[#7670AC]/20 rounded-full animate-ping opacity-75"></div>
-                <div className="relative flex items-center justify-center w-full h-full bg-gradient-to-r from-[#7670AC] to-[#5491CA] rounded-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+            {/* Search and Filter Section */}
+            <div className="flex flex-col gap-4 mb-6 md:mb-8">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search courses..."
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white placeholder-[#7670AC]/50"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
                 </div>
               </div>
-              <h3 className="text-xl font-medium text-[#5491CA] dark:text-[#7670AC] mb-2">No courses found</h3>
-              <p className="text-gray-500 dark:text-gray-400 text-center max-w-md">
-                {searchQuery 
-                  ? `No courses match your search for "${searchQuery}"` 
-                  : "There are currently no courses available in this category"}
-              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <select
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white appearance-none"
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                  >
+                    <option value="All">All Courses</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                  </select>
+                </div>
+                <div className="relative flex-1">
+                  <select 
+                    className="w-full pl-4 pr-4 py-2.5 rounded-xl border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white appearance-none"
+                    aria-label="Sort courses"
+                  >
+                    <option>Sort by Popularity</option>
+                    <option>Sort by Newest</option>
+                    <option>Sort by Rating</option>
+                  </select>
+                </div>
+              </div>
             </div>
-          )}
 
-          {/* Pagination */}
-          {filteredCourses.length > 0 && (
-            <div className="flex justify-center gap-2">
-              <button
-                className="px-4 py-2 rounded-md bg-gray-100 text-gray-700 hover:bg-[#5491CA]/10 dark:bg-gray-700 dark:text-white dark:hover:bg-[#7670AC]/30 disabled:opacity-50"
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              
-              {[...Array(totalPages)].map((_, pageIndex) => (
+            <hr className="border-t border-[#5491CA]/10 dark:border-[#7670AC]/20 mb-6 md:mb-8" />
+
+            {/* Courses Grid */}
+            {filteredCourses.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
+                {currentCourses.map((course, index) => (
+                  <CourseCard 
+                    key={course._id || `course-${index}`} 
+                    course={course} 
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 md:py-16">
+                <div className="relative w-24 md:w-32 h-24 md:h-32 mb-6">
+                  <div className="absolute inset-0 bg-[#5491CA]/20 dark:bg-[#7670AC]/20 rounded-full animate-ping opacity-75"></div>
+                  <div className="relative flex items-center justify-center w-full h-full bg-gradient-to-r from-[#7670AC] to-[#5491CA] rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-12 md:w-16 h-12 md:h-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <h3 className="text-xl md:text-2xl font-medium text-[#5491CA] dark:text-[#7670AC] mb-3">No courses found</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-center max-w-md text-sm md:text-base">
+                  {searchQuery 
+                    ? `No courses match your search for "${searchQuery}"` 
+                    : "There are currently no courses available in this category"}
+                </p>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {filteredCourses.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-2">
                 <button
-                  key={pageIndex}
-                  className={`px-4 py-2 rounded-md ${
-                    currentPage === pageIndex + 1 
-                      ? "bg-gradient-to-r from-[#7670AC] to-[#5491CA] text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-[#5491CA]/10 dark:bg-gray-700 dark:text-white dark:hover:bg-[#7670AC]/30"
-                  }`}
-                  onClick={() => setCurrentPage(pageIndex + 1)}
+                  className="px-4 md:px-5 py-2.5 rounded-xl bg-gray-100 text-gray-700 hover:bg-[#5491CA]/10 dark:bg-gray-700 dark:text-white dark:hover:bg-[#7670AC]/30 disabled:opacity-50 text-sm md:text-base transition-colors duration-200"
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
                 >
-                  {pageIndex + 1}
+                  Previous
                 </button>
-              ))}
-              
-              <button
-                className="px-4 py-2 rounded-md bg-gray-100 text-gray-700 hover:bg-[#5491CA]/10 dark:bg-gray-700 dark:text-white dark:hover:bg-[#7670AC]/30 disabled:opacity-50"
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
-          )}
-        </div>
-      </main>
+                
+                {[...Array(totalPages)].map((_, pageIndex) => (
+                  <button
+                    key={pageIndex}
+                    className={`px-4 md:px-5 py-2.5 rounded-xl text-sm md:text-base transition-colors duration-200 ${
+                      currentPage === pageIndex + 1 
+                        ? "bg-gradient-to-r from-[#7670AC] to-[#5491CA] text-white shadow-lg"
+                        : "bg-gray-100 text-gray-700 hover:bg-[#5491CA]/10 dark:bg-gray-700 dark:text-white dark:hover:bg-[#7670AC]/30"
+                    }`}
+                    onClick={() => setCurrentPage(pageIndex + 1)}
+                  >
+                    {pageIndex + 1}
+                  </button>
+                ))}
+                
+                <button
+                  className="px-4 md:px-5 py-2.5 rounded-xl bg-gray-100 text-gray-700 hover:bg-[#5491CA]/10 dark:bg-gray-700 dark:text-white dark:hover:bg-[#7670AC]/30 disabled:opacity-50 text-sm md:text-base transition-colors duration-200"
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
+        </main>
+      </div>
+
+      {/* Mobile Overlay */}
+      {isMobile && isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 };

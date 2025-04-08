@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import logo from '../../../../../client/public/AIGIRI.png';
+import logo from '../../../../../client/public/aigiri logo.png';
 import { 
   BookOpen, 
   Calendar, 
@@ -45,10 +45,13 @@ const Sidebar = () => {
   return (
     <div className="h-screen w-64 bg-white shadow-lg flex flex-col p-4">
       {/* Logo */}
-      <div className="flex items-center gap-3 mb-8">
-        <img src={logo} alt="AIGIRI Logo" className="h-8 w-8" />
-        <span className="text-xl font-bold text-[#7670AC]">AIGIRI</span>
-      </div>
+      <div className="flex items-center mb-4">
+  <img className="h-11 w-auto" src={logo} alt="logo" />
+  <span className="text-3xl font-bold tracking-wide text-[#7670AC] relative top-[5px] font-poppins">
+    IGIRI
+  </span>
+</div>
+
 
       {/* Navigation Links */}
       <nav className="flex flex-col gap-4">

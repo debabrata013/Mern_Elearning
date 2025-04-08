@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, X, Briefcase, BadgeIndianRupee, Clock, Calendar, Link, Image, Award, FileText  } from 'lucide-react';
+import { Plus, X, Briefcase, BadgeIndianRupee, Clock, Calendar, Link, Image, Award, FileText, Menu } from 'lucide-react';
 // import jobService from '/api/jobService';
 import jobService from '../../pages/admin/api/jobService';
 import Sidebar from './studentComponent/Sidebar';
@@ -8,6 +8,8 @@ const JobsContent = () => {
   const [showJobForm, setShowJobForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [jobs, setJobs] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
   const [formData, setFormData] = useState({
     jobTitle: '',
     jobDescription: '',
@@ -36,6 +38,19 @@ const JobsContent = () => {
   useEffect(() => {
     fetchJobs();
   }, [fetchJobs]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsSidebarOpen(!mobile);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -160,23 +175,39 @@ const JobsContent = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header with title and add button */}
-      <div className="bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700">
+      {/* Sidebar */}
+      <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
+        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
+      }`}>
         <Sidebar />
       </div>
-      <div>
-      <div className="flex-1 ml-[280px] p-8">
-        <div>
-          <h2 className="text-xl font-bold text-[#5491CA] ">
-            <Briefcase className="mr-2 h-5 w-5" />
-            Job Arena  
-          </h2>
-          <p className="text-gray-500 text-sm"> Hear are the jobs posting on which you can apply . Happy learning !</p>
-        </div>
-        
-        </div>
-         
-          {/* Loading Spinner - Only show when not in form mode */}
+
+      {/* Main Content */}
+      <div className={`flex-1 transition-all duration-300 ${
+        isMobile ? 'ml-0' : 'ml-[280px]'
+      }`}>
+        <div className="p-4 md:p-8">
+          {/* Header with menu button */}
+          <div className="flex items-center gap-4 mb-6">
+            {isMobile && (
+              <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+              </button>
+            )}
+            
+            <div>
+              <h2 className="text-xl font-bold text-[#5491CA] flex items-center">
+                <Briefcase className="mr-2 h-5 w-5" />
+                Job Arena  
+              </h2>
+              <p className="text-gray-500 text-sm">Here are the jobs posting on which you can apply. Happy learning!</p>
+            </div>
+          </div>
+          
+          {/* Loading Spinner */}
           {loading && (
             <div className="text-center my-8">
               <div className="inline-block w-10 h-10 border-3 border-[#5491CA] border-t-transparent rounded-full animate-spin"></div>
@@ -184,31 +215,30 @@ const JobsContent = () => {
             </div>
           )}
 
-          {/* Display Jobs as Cards - Only show when not in form mode */}
+          {/* Jobs Grid */}
           {!loading && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4  ml-96">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {jobs.length === 0 ? (
                 <div className="col-span-full text-center py-8">
                   <Briefcase className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-                  <p className="text-gray-500">No jobs available </p>
-                  
+                  <p className="text-gray-500">No jobs available</p>
                 </div>
               ) : (
-               
-                    jobs.map(renderJobCard)
-              
- 
-
-
-
-
+                jobs.map(renderJobCard)
               )}
             </div>
           )}
-       
+        </div>
+      </div>
+
+      {/* Mobile Overlay */}
+      {isMobile && isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
     </div>
-  
-  </div>
   );
 };
 

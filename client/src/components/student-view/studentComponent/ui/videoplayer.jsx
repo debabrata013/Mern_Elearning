@@ -99,7 +99,7 @@ const VideoPlayer = ({ videoUrl, thumbnailUrl, title, className }) => {
         poster={thumbnailUrl}
         onClick={togglePlay}
       >
-        <source src={videoUrl} type="video/mp4" />
+        <source src="https://edu-tec.s3.ap-south-1.amazonaws.com/videos/1744051301976-Will+There+be+Delay+in+India%27s+OTP+Delivery+from+December+1%EF%BC%9F+%EF%BD%9C+Vantage+with+Palki+Sharma.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 

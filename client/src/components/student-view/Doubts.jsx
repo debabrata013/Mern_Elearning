@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Sidebar from './studentComponent/Sidebar';
 import {
@@ -14,6 +14,7 @@ import {
   BarChart2,
   X,
   Send,
+  Menu
 } from "lucide-react";
 
 // Component for Priority Badge with dynamic color
@@ -323,6 +324,21 @@ const Doubts = () => {
   const [selectedDoubt, setSelectedDoubt] = useState(null);
   const [modalType, setModalType] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsSidebarOpen(!mobile);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Determine how many doubts to display based on the showAll toggle.
   const displayedPendingDoubts = showAllPending
@@ -353,26 +369,40 @@ const Doubts = () => {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Sidebar */}
-      <div className="bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700">
+      <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
+        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
+      }`}>
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 ml-[280px] p-8">
-        <div className="max-w-7xl mx-auto">
+      <div className={`flex-1 transition-all duration-300 ${
+        isMobile ? 'ml-0' : 'ml-[280px]'
+      }`}>
+        <div className="p-4 md:p-8">
           {/* Header */}
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
-                My Doubts & Questions
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 mt-1">
-                Track and manage your academic queries
-              </p>
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
+            <div className="flex items-center gap-4">
+              {isMobile && (
+                <button
+                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                </button>
+              )}
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
+                  My Doubts & Questions
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 mt-1">
+                  Track and manage your academic queries
+                </p>
+              </div>
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#5491CA] to-[#7670AC] text-white rounded-xl hover:opacity-90 transition-opacity shadow-md hover:shadow-lg"
+              className="flex items-center gap-2 px-4 md:px-6 py-2.5 bg-gradient-to-r from-[#5491CA] to-[#7670AC] text-white rounded-xl hover:opacity-90 transition-opacity shadow-md hover:shadow-lg w-full md:w-auto justify-center"
             >
               <PlusCircle className="w-5 h-5" />
               Ask a Question
@@ -380,7 +410,7 @@ const Doubts = () => {
           </div>
 
           {/* Stats Overview */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
             {[
               {
                 label: "Pending Questions",
@@ -430,12 +460,12 @@ const Doubts = () => {
               <div className="p-2 rounded-lg bg-yellow-50 dark:bg-yellow-500/10">
                 <AlertCircle className="w-6 h-6 text-yellow-600 dark:text-yellow-500" />
               </div>
-              <h3 className="text-2xl font-semibold bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
+              <h3 className="text-xl md:text-2xl font-semibold bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
                 Pending Questions
               </h3>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
               {displayedPendingDoubts.map((doubt) => (
                 <div
                   key={doubt.id}
@@ -493,10 +523,12 @@ const Doubts = () => {
           <section>
             <div className="flex items-center gap-2 mb-6">
               <CheckCircle className="text-green-500" />
-              <h3 className="text-2xl font-semibold text-gray-800">Resolved Doubts</h3>
+              <h3 className="text-xl md:text-2xl font-semibold text-gray-800 dark:text-gray-200">
+                Resolved Doubts
+              </h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {displayedResolvedDoubts.map((doubt) => (
                 <div
                   key={doubt.id}
@@ -574,6 +606,14 @@ const Doubts = () => {
           )}
         </div>
       </div>
+
+      {/* Mobile Overlay */}
+      {isMobile && isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 };

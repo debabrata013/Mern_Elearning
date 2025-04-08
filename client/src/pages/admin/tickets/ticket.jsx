@@ -61,8 +61,8 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="admin-dashboard p-4 bg-white rounded-lg border border-gray-200 shadow-md">
-      <h1 className="text-2xl font-bold text-[#5491CA] mb-6">
+    <div className="admin-dashboard p-4 md:p-6 bg-white rounded-lg border border-gray-200 shadow-md">
+      <h1 className="text-xl md:text-2xl font-bold text-[#5491CA] mb-4 md:mb-6">
         {viewTicket
           ? isEditMode
             ? "Edit Ticket"
@@ -79,7 +79,7 @@ const AdminDashboard = () => {
             placeholder="Search tickets..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full md:w-1/2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5491CA]/50"
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5491CA]/50"
           />
           <button
             onClick={() => setShowAnsweredPage(!showAnsweredPage)}
@@ -91,11 +91,11 @@ const AdminDashboard = () => {
       )}
 
       {viewTicket ? (
-        <div className="view-ticket-box bg-white shadow-md rounded-md p-6 max-w-lg mx-auto border border-gray-200">
-          <h2 className="text-xl font-semibold text-[#5491CA] mb-4">
+        <div className="view-ticket-box bg-white shadow-md rounded-md p-4 md:p-6 max-w-lg mx-auto border border-gray-200">
+          <h2 className="text-lg md:text-xl font-semibold text-[#5491CA] mb-4">
             {isEditMode ? "Edit Ticket" : "View Ticket"}
           </h2>
-          <div className="ticket-details mb-4 space-y-2">
+          <div className="ticket-details mb-4 space-y-2 text-sm md:text-base">
             <p>
               <strong className="text-gray-700">Name:</strong> {viewTicket.name}
             </p>
@@ -131,16 +131,16 @@ const AdminDashboard = () => {
               <option value="Pending">Pending</option>
             </select>
           )}
-          <div className="flex gap-3">
+          <div className="flex flex-col md:flex-row gap-3">
             <button
               onClick={() => setViewTicket(null)}
-              className="flex-1 bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition-colors"
+              className="w-full md:flex-1 bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={isEditMode ? handleUpdateTicket : handleSaveTicket}
-              className="flex-1 bg-[#5491CA] text-white py-2 rounded-md hover:bg-[#4a82b6] transition-colors"
+              className="w-full md:flex-1 bg-[#5491CA] text-white py-2 rounded-md hover:bg-[#4a82b6] transition-colors"
             >
               {isEditMode ? "Update Ticket" : "Save Ticket"}
             </button>
@@ -151,112 +151,116 @@ const AdminDashboard = () => {
           {showAnsweredPage ? (
             <div>
               {answeredTickets.length === 0 ? (
-                <div className="text-center text-gray-600 text-lg p-8 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="text-center text-gray-600 text-base md:text-lg p-6 md:p-8 bg-gray-50 rounded-lg border border-gray-200">
                   No answered tickets available.
                 </div>
               ) : (
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-[#5491CA] text-white">
-                      <th className="py-2 px-4 text-left">Name</th>
-                      <th className="py-2 px-4 text-left">Email</th>
-                      <th className="py-2 px-4 text-left">Phone no</th>
-                      <th className="py-2 px-4 text-left">Issue Related</th>
-                      <th className="py-2 px-4 text-left">Status</th>
-                      <th className="py-2 px-4 text-left">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {answeredTickets.map((ticket, index) => (
-                      <tr key={index} className="border-b hover:bg-gray-50">
-                        <td className="py-2 px-4">{ticket.name}</td>
-                        <td className="py-2 px-4">{ticket.email}</td>
-                        <td className="py-2 px-4">{ticket.phone}</td>
-                        <td className="py-2 px-4">{ticket.subject}</td>
-                        <td className="py-2 px-4">
-                          <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
-                            {ticket.status}
-                          </span>
-                        </td>
-                        <td className="py-2 px-4 flex space-x-2">
-                          <button
-                            onClick={() => handleViewTicket(ticket, false)}
-                            className="text-[#5491CA] p-1.5 hover:bg-[#5491CA]/10 rounded-full transition-colors"
-                            title="View Ticket"
-                          >
-                            <FaEye />
-                          </button>
-                          <button
-                            onClick={() => handleViewTicket(ticket, true)}
-                            className="text-[#b1a9f1] p-1.5 hover:bg-[#b1a9f1]/10 rounded-full transition-colors"
-                            title="Edit Ticket"
-                          >
-                            <FaPen />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteTicket(ticket)}
-                            className="text-red-500 p-1.5 hover:bg-red-50 rounded-full transition-colors"
-                            title="Delete Ticket"
-                          >
-                            <FaTrash />
-                          </button>
-                        </td>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-[#5491CA] text-white">
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base">Name</th>
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base hidden md:table-cell">Email</th>
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base hidden md:table-cell">Phone</th>
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base">Issue</th>
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base">Status</th>
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {answeredTickets.map((ticket, index) => (
+                        <tr key={index} className="border-b hover:bg-gray-50">
+                          <td className="py-2 px-2 md:px-4 text-sm md:text-base">{ticket.name}</td>
+                          <td className="py-2 px-2 md:px-4 text-sm md:text-base hidden md:table-cell">{ticket.email}</td>
+                          <td className="py-2 px-2 md:px-4 text-sm md:text-base hidden md:table-cell">{ticket.phone}</td>
+                          <td className="py-2 px-2 md:px-4 text-sm md:text-base">{ticket.subject}</td>
+                          <td className="py-2 px-2 md:px-4">
+                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                              {ticket.status}
+                            </span>
+                          </td>
+                          <td className="py-2 px-2 md:px-4 flex space-x-2">
+                            <button
+                              onClick={() => handleViewTicket(ticket, false)}
+                              className="text-[#5491CA] p-1.5 hover:bg-[#5491CA]/10 rounded-full transition-colors"
+                              title="View Ticket"
+                            >
+                              <FaEye className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleViewTicket(ticket, true)}
+                              className="text-[#b1a9f1] p-1.5 hover:bg-[#b1a9f1]/10 rounded-full transition-colors"
+                              title="Edit Ticket"
+                            >
+                              <FaPen className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteTicket(ticket)}
+                              className="text-red-500 p-1.5 hover:bg-red-50 rounded-full transition-colors"
+                              title="Delete Ticket"
+                            >
+                              <FaTrash className="w-4 h-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           ) : (
             <div>
               {unansweredTickets.length === 0 ? (
-                <div className="text-center text-gray-600 text-lg p-8 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="text-center text-gray-600 text-base md:text-lg p-6 md:p-8 bg-gray-50 rounded-lg border border-gray-200">
                   No unanswered tickets available.
                 </div>
               ) : (
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-[#5491CA] text-white">
-                      <th className="py-2 px-4 text-left">Name</th>
-                      <th className="py-2 px-4 text-left">Email</th>
-                      <th className="py-2 px-4 text-left">Phone no</th>
-                      <th className="py-2 px-4 text-left">Issue Related</th>
-                      <th className="py-2 px-4 text-left">Status</th>
-                      <th className="py-2 px-4 text-left">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {unansweredTickets.map((ticket, index) => (
-                      <tr key={index} className="border-b hover:bg-gray-50">
-                        <td className="py-2 px-4">{ticket.name}</td>
-                        <td className="py-2 px-4">{ticket.email}</td>
-                        <td className="py-2 px-4">{ticket.phone}</td>
-                        <td className="py-2 px-4">{ticket.subject}</td>
-                        <td className="py-2 px-4">
-                          <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
-                            {ticket.status}
-                          </span>
-                        </td>
-                        <td className="py-2 px-4 flex space-x-2">
-                          <button
-                            onClick={() => handleViewTicket(ticket)}
-                            className="text-[#5491CA] p-1.5 hover:bg-[#5491CA]/10 rounded-full transition-colors"
-                            title="View Ticket"
-                          >
-                            <FaEye />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteTicket(ticket)}
-                            className="text-red-500 p-1.5 hover:bg-red-50 rounded-full transition-colors"
-                            title="Delete Ticket"
-                          >
-                            <FaTrash />
-                          </button>
-                        </td>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-[#5491CA] text-white">
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base">Name</th>
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base hidden md:table-cell">Email</th>
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base hidden md:table-cell">Phone</th>
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base">Issue</th>
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base">Status</th>
+                        <th className="py-2 px-2 md:px-4 text-left text-sm md:text-base">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {unansweredTickets.map((ticket, index) => (
+                        <tr key={index} className="border-b hover:bg-gray-50">
+                          <td className="py-2 px-2 md:px-4 text-sm md:text-base">{ticket.name}</td>
+                          <td className="py-2 px-2 md:px-4 text-sm md:text-base hidden md:table-cell">{ticket.email}</td>
+                          <td className="py-2 px-2 md:px-4 text-sm md:text-base hidden md:table-cell">{ticket.phone}</td>
+                          <td className="py-2 px-2 md:px-4 text-sm md:text-base">{ticket.subject}</td>
+                          <td className="py-2 px-2 md:px-4">
+                            <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
+                              {ticket.status}
+                            </span>
+                          </td>
+                          <td className="py-2 px-2 md:px-4 flex space-x-2">
+                            <button
+                              onClick={() => handleViewTicket(ticket)}
+                              className="text-[#5491CA] p-1.5 hover:bg-[#5491CA]/10 rounded-full transition-colors"
+                              title="View Ticket"
+                            >
+                              <FaEye className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteTicket(ticket)}
+                              className="text-red-500 p-1.5 hover:bg-red-50 rounded-full transition-colors"
+                              title="Delete Ticket"
+                            >
+                              <FaTrash className="w-4 h-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           )}

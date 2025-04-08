@@ -14,12 +14,13 @@ const HeroSection = () => {
   const location = useLocation();
 
   // API State Variables
-  const [revenue, setRevenue] = useState(1200);
-  const [activeUsers, setActiveUsers] = useState(null);
-  const [totalCourses, setTotalCourses] = useState(null);
-  const [totalStudents, setTotalStudents] = useState(null);
-  const [totalTeachers, setTotalTeachers] = useState(null);
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [totalStudents, setTotalStudents] = useState(0);
+  const [activeUsers, setActiveUsers] = useState(0);
+  const [totalCourses, setTotalCourses] = useState(0);
+  const [totalTeachers, setTotalTeachers] = useState(0);
+  
   // Fetch data from API
   useEffect(() => {
     const fetchData = async () => {

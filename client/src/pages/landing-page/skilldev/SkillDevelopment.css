@@ -133,8 +133,17 @@
     }
   
     .who-can-join{
-      padding-top: none;
+      padding-top: 0;
       font-size: 10px;
+    }
+    .who-can-join h2{
+      margin-left: 10px;
+    }
+    .who-can-join h3{
+      margin-left: 10px;
+    }
+    .bich-me{
+      color:#5491CA
     }
     .section{
       font-size: 35px;

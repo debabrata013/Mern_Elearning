@@ -30,7 +30,7 @@ import { AuthProvider } from "./context/auth";
 import ProtectedRoute from "./context/ProtectedRoute";
 import Unauthorized from "./pages/Unauthorized";
 import StudentRoutes from "./components/student-view/StudentRoutes";
-
+import DemoVideoPlayer from "./components/student-view/studentComponent/ui/videoplayer";
 import Std from "./components/student-view/StudentViewCommonHeader";
 import Projile from "./components/student-view/profile-page/profilepage"
 import StudentAnoument from "./components/student-view/AnnouncementPage"
@@ -78,6 +78,7 @@ function App() {
           <Route path="/enroll/:courseId" element={<Enroll />} />
           <Route path="/terms" element={<Tc/>} />
           <Route path="/privacy" element={<Privacy/>} />
+          <Route path="/videop" element={<DemoVideoPlayer/>} />
           <Route
             path="/user-dashboard"
             element={
