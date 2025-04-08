@@ -52,6 +52,7 @@ import CartPage from './components/student-view/studentComponent/CartPage';
 import Job from './components/student-view/job';
 import Tc from "./pages/T&C"
 import Privacy from "./pages/policy"
+import Noti from "./components/student-view/Notification"
 
 function App() {
   return (
@@ -78,6 +79,7 @@ function App() {
           <Route path="/enroll/:courseId" element={<Enroll />} />
           <Route path="/terms" element={<Tc/>} />
           <Route path="/privacy" element={<Privacy/>} />
+          <Route path="/notifications" element={<Noti/>}/>
           <Route
             path="/user-dashboard"
             element={
