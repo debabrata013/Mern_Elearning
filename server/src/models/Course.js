@@ -7,12 +7,18 @@ const { Schema } = mongoose;
 // Define the Chapter subdocument schema
 const chapterSchema = new Schema({
   _id: { type: Schema.Types.ObjectId, auto: true },
-  title: { type: String, required: true, trim: true },
-  resourceUrl: [{  _id: { type: Schema.Types.ObjectId, auto: true }, type: String }],
+  title: { type: String, trim: true },
+  
   description: { type: String, required: true },
-  lessons: [{id: { type: Schema.Types.ObjectId, auto: true },
- 
-    videoUrl: { type: String }}] // Each chapter can have multiple lessons
+  resourceUrl: [{
+    _id: { type: Schema.Types.ObjectId, auto: true },
+    url: { type: String, required: true },
+    type: { type: String, required: true, trim: true }
+  }],
+    lessons: [{
+      id: { type: Schema.Types.ObjectId, auto: true },
+      videoUrl: { type: String, required: true }
+    }]
 }, { timestamps: true });
 
 // Define the main Professional Course schema
