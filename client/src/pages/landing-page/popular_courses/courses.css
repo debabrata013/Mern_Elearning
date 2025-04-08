@@ -33,13 +33,13 @@
   animation: fade-in-bottom 1s ease-out forwards;
 }
 
-.section-title {
-  font-size: 50px;
+.section-titlam {
+  font-size: 40px;
   font-weight: bold;
   color: #7670AC;
 }
 
-.section-title span {
+.section-titl span {
   color: #5491CA;
 }
 
@@ -164,5 +164,20 @@
 @media (max-width: 768px) {
   .courses-grid {
     grid-template-columns: repeat(1, 1fr);
+  }
+  .popular-courses{
+    padding: 10px 40px 20px 40px;
+  }
+  .course-container {
+    width: 250px;
+  }
+  .section-titlam {
+    font-size: 34px;
+    font-weight: bold;
+    color: #7670AC;
+  }
+  
+  .section-titl span {
+    color: #5491CA;
   }
 }

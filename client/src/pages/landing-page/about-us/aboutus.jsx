@@ -1,6 +1,8 @@
 import React from "react";
 import Footer from "../footer/footer";
 import Nav from "../nav-bar/nav";
+import { Link } from 'react-router-dom';
+
 
 const AboutUs = () => {
   return (
@@ -22,9 +24,9 @@ const AboutUs = () => {
             with high-quality, accessible education that adapts to your needs.&rdquo;
           </p>
 
-          <button className="mt-4 md:mt-6 bg-[#5491CA] text-white font-semibold py-2 md:py-3 px-4 md:px-6 rounded-lg shadow-md hover:bg-[#7670AC] transition-transform transform hover:scale-105">
+          <Link to="/coursess" className="mt-4 md:mt-6 bg-[#5491CA] text-white font-semibold py-2 md:py-3 px-4 md:px-6 rounded-lg shadow-md hover:bg-[#7670AC] transition-transform transform hover:scale-105">
             Explore Courses
-          </button>
+          </Link>
         </section>
 
         {/* Mission & Vision */}
@@ -108,9 +110,12 @@ const AboutUs = () => {
           <p className="text-sm md:text-lg max-w-3xl mx-auto mt-4 text-gray-700">
             Join thousands of learners and explore our high-quality courses.
           </p>
-          <button className="mt-4 mb-16 md:mt-6 bg-[#5491CA] text-white font-semibold py-2 md:py-3 px-4 md:px-6 rounded-lg hover:bg-[#7670AC] transition-transform transform hover:scale-105">
+          <Link
+            to="/login"
+            className="mt-4 mb-16 md:mt-6 inline-block bg-[#5491CA] text-white font-semibold py-2 md:py-3 px-4 md:px-6 rounded-lg hover:bg-[#7670AC] transition-transform transform hover:scale-105"
+          >
             Get Started
-          </button>
+          </Link>
         </section>  
       </div>
 

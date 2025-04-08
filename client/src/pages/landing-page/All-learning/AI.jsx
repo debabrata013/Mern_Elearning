@@ -25,7 +25,6 @@ const AboutPage = () => {
     <div className="min-h-screen flex items-center justify-center px-4 py-10 sm:p-6 bg-white relative">
       {/* Background Effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#7670AC] to-[#5491CA] opacity-20 blur-3xl"></div>
-      
       <div className="max-w-6xl w-full p-6 sm:p-12 bg-white rounded-2xl shadow-xl border-2 border-[#7670AC] relative z-10 overflow-hidden">
         {/* Floating Glow */}
         <div className="absolute -top-10 -left-10 w-20 h-20 sm:w-40 sm:h-40 bg-[#7670AC] opacity-30 blur-3xl rounded-full"></div>

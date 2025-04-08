@@ -34,7 +34,7 @@ const SkillDevelopment = () => {
     <div className="skill-development" ref={skillRef}>
       <div className="who-can-join">
         <h3 className="section-subtitle fade-in">WHO CAN JOIN</h3>
-        <h2 className="section fade-in">Skill Development<br />Schemes For All</h2>
+        <h2 className="section fade-in">Skill Development <span className='bich-me'> Schemes For All</span> </h2>
 
         <div className="join-content fade-in">
           <div className="join-categories">

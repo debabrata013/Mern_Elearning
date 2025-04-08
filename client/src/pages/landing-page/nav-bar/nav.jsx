@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
-import logo from '../../../../../client/public/AIGIRI.png';
+import logo from '../../../../../client/public/aigiri logo.png';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,7 +15,13 @@ export default function Navbar() {
   return (
     <nav className="w-full fixed top-0 z-50 shadow-lg bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
-        <img className="h-10 w-auto" src={logo} alt="logo" />
+      <div className="flex items-center">
+        <img className="h-11 w-auto" src={logo} alt="logo" />
+        <span className="text-4xl font-bold tracking-wide text-[#7670AC] relative top-[1px] font-poppins">
+          IGIRI
+        </span>
+      </div>
+
         {/* <Link to="/" className="text-2xl font-bold text-[#7670AC]">AIGIRI</Link> */}
         
         {/* Desktop Navigation */}

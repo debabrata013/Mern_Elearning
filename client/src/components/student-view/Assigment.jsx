@@ -15,6 +15,9 @@ import {
   Award,
   Eye,
   ArrowRight,
+  Menu,
+  Search,
+  Filter
 } from "lucide-react";
 
 // Load initial data from localStorage or use defaults
@@ -78,7 +81,7 @@ const AssignmentCard = ({ item, type, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 dark:border-gray-700"
+      className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 dark:border-gray-700 hover:border-[#5491CA]/50 dark:hover:border-[#7670AC]/50"
     >
       {/* Top Gradient Bar */}
       <div className="h-2 bg-gradient-to-r from-[#5491CA] to-[#7670AC]" />
@@ -119,7 +122,7 @@ const AssignmentCard = ({ item, type, onClick }) => {
           {item.tags.map((tag, index) => (
             <span
               key={index}
-              className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-[#5491CA]/10 text-[#5491CA] dark:bg-[#5491CA]/20 dark:text-[#6ba2d8]"
+              className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-[#5491CA]/10 text-[#5491CA] dark:bg-[#5491CA]/20 dark:text-[#6ba2d8] hover:bg-[#5491CA]/20 dark:hover:bg-[#5491CA]/30 transition-colors"
             >
               {tag}
             </span>
@@ -176,7 +179,7 @@ const AssignmentCard = ({ item, type, onClick }) => {
         )}
 
         {/* Action Button */}
-        <button className="w-full mt-4 px-4 py-2 rounded-lg bg-gradient-to-r from-[#5491CA] to-[#7670AC] text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+        <button className="w-full mt-4 px-4 py-2 rounded-lg bg-gradient-to-r from-[#5491CA] to-[#7670AC] text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2 hover:from-[#5491CA]/90 hover:to-[#7670AC]/90 transform hover:-translate-y-0.5">
           {type === "pending" ? (
             <>Start Assignment <ArrowRight className="w-4 h-4" /></>
           ) : (
@@ -200,6 +203,21 @@ const AssignmentDetail = ({ assignment, onBack, onSubmitAssignment }) => {
       assignment.questions.map(q => [q.id, ""])
     );
   });
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsSidebarOpen(!mobile);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Timer effect
   useEffect(() => {
@@ -259,34 +277,48 @@ const AssignmentDetail = ({ assignment, onBack, onSubmitAssignment }) => {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar - Now visible and fixed */}
-      <div className="fixed left-0 top-0 h-screen w-[250px] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-30">
+      {/* Sidebar */}
+      <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
+        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
+      }`}>
         <Sidebar />
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 ml-[250px]">
+      {/* Main Content */}
+      <div className={`flex-1 transition-all duration-300 ${
+        isMobile ? 'ml-0' : 'ml-[280px]'
+      }`}>
         {/* Top Navigation Bar */}
-        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-20 px-6 py-4">
+        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-20 px-4 md:px-6 py-4">
           <div className="flex items-center justify-between max-w-6xl mx-auto">
-            <button
-              onClick={onBack}
-              className="flex items-center gap-2 text-gray-600 hover:text-[#5491CA] transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Back to Assignments</span>
-            </button>
+            <div className="flex items-center gap-4">
+              {isMobile && (
+                <button
+                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                </button>
+              )}
+              <button
+                onClick={onBack}
+                className="flex items-center gap-2 text-gray-600 hover:text-[#5491CA] transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span>Back to Assignments</span>
+              </button>
+            </div>
 
             {timeLeft !== null && timeLeft > 0 && (
               <div className={`
-                flex items-center gap-3 px-4 py-2 rounded-lg border
+                flex items-center gap-3 px-3 md:px-4 py-2 rounded-lg border text-sm md:text-base
                 ${timeLeft < 300 
                   ? 'bg-red-50 dark:bg-red-900/20 border-red-100 dark:border-red-800 text-red-600 dark:text-red-400' 
                   : 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800 text-blue-600 dark:text-blue-400'}
               `}>
-                <Clock className={`w-5 h-5 ${timeLeft < 300 ? 'animate-pulse' : ''}`} />
+                <Clock className={`w-4 md:w-5 h-4 md:h-5 ${timeLeft < 300 ? 'animate-pulse' : ''}`} />
                 <span className="font-medium tabular-nums">
-                  Time Remaining: {formatTime(timeLeft)}
+                  {formatTime(timeLeft)}
                 </span>
               </div>
             )}
@@ -294,7 +326,7 @@ const AssignmentDetail = ({ assignment, onBack, onSubmitAssignment }) => {
         </div>
 
         {/* Question Content */}
-        <div className="p-6">
+        <div className="p-4 md:p-6">
           <div className="max-w-4xl mx-auto">
             {/* Assignment Header */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8">
@@ -436,6 +468,14 @@ const AssignmentDetail = ({ assignment, onBack, onSubmitAssignment }) => {
           </div>
         </div>
       )}
+
+      {/* Mobile Overlay */}
+      {isMobile && isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 };
@@ -450,6 +490,8 @@ const AssignmentsAndQuizzes = () => {
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [showAllPending, setShowAllPending] = useState(false);
   const [showAllCompleted, setShowAllCompleted] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
 
   useEffect(() => {
     localStorage.setItem("pendingAssignments", JSON.stringify(pending));
@@ -458,6 +500,19 @@ const AssignmentsAndQuizzes = () => {
   useEffect(() => {
     localStorage.setItem("completedAssignments", JSON.stringify(completed));
   }, [completed]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsSidebarOpen(!mobile);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleSubmitAssignment = (newAssignment) => {
     setCompleted(prev => [newAssignment, ...prev]);
@@ -477,146 +532,195 @@ const AssignmentsAndQuizzes = () => {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Sidebar */}
-      <div className="bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700">
+      <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
+        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
+      }`}>
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 ml-[280px] p-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
-            <h1 className="text-3xl font-bold text-center bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
-              Assignments & Quizzes
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-center mt-2">
-              Track your progress and manage your academic tasks
-            </p>
-          </div>
-
-          {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {[
-              {
-                title: "Pending Tasks",
-                value: pending.length,
-                color: "from-yellow-500 to-orange-500",
-                icon: <Clock className="w-5 h-5" />
-              },
-              {
-                title: "Completed",
-                value: completed.length,
-                color: "from-green-500 to-emerald-500",
-                icon: <CheckCircle className="w-5 h-5" />
-              },
-              {
-                title: "Total Progress",
-                value: `${Math.round((completed.length / (pending.length + completed.length)) * 100)}%`,
-                color: "from-[#5491CA] to-[#7670AC]",
-                icon: <BarChart3 className="w-5 h-5" />
-              }
-            ].map((stat, index) => (
-              <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-md">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{stat.title}</p>
-                    <p className="text-2xl font-bold mt-1 bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
-                      {stat.value}
-                    </p>
-                  </div>
-                  <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.color} text-white`}>
-                    {stat.icon}
-                  </div>
+      <div className={`flex-1 transition-all duration-300 ${
+        isMobile ? 'ml-0' : 'ml-[280px]'
+      }`}>
+        <div className="p-4 md:p-8">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
+              <div className="flex items-center gap-4 mb-4 md:mb-0">
+                {isMobile && (
+                  <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                  </button>
+                )}
+                <div className="flex-1">
+                  <h1 className="text-2xl md:text-3xl font-bold text-center bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
+                    Assignments & Quizzes
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-400 text-center mt-2">
+                    Track your progress and manage your academic tasks
+                  </p>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Search and Filter Section */}
+            <div className="flex flex-col md:flex-row gap-4 mb-8">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search assignments..."
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white placeholder-[#7670AC]/50"
+                />
+              </div>
+              <div className="relative flex-1">
+                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <select
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white appearance-none"
+                >
+                  <option>All Assignments</option>
+                  <option>Pending</option>
+                  <option>Completed</option>
+                  <option>Overdue</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Stats Overview */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-8">
+              {[
+                {
+                  title: "Pending Tasks",
+                  value: pending.length,
+                  color: "from-yellow-500 to-orange-500",
+                  icon: <Clock className="w-5 h-5" />
+                },
+                {
+                  title: "Completed",
+                  value: completed.length,
+                  color: "from-green-500 to-emerald-500",
+                  icon: <CheckCircle className="w-5 h-5" />
+                },
+                {
+                  title: "Total Progress",
+                  value: `${Math.round((completed.length / (pending.length + completed.length)) * 100)}%`,
+                  color: "from-[#5491CA] to-[#7670AC]",
+                  icon: <BarChart3 className="w-5 h-5" />
+                }
+              ].map((stat, index) => (
+                <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{stat.title}</p>
+                      <p className="text-2xl font-bold mt-1 bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
+                        {stat.value}
+                      </p>
+                    </div>
+                    <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.color} text-white shadow-md`}>
+                      {stat.icon}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Pending Assignments */}
+            <section className="mb-8 md:mb-12">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                <h2 className="text-xl md:text-2xl font-semibold text-[#5491CA] flex items-center gap-2">
+                  <FileText className="w-5 md:w-6 h-5 md:h-6" /> Pending Assignments
+                </h2>
+                {pending.length > 0 && (
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-red-50 text-red-600 border border-red-100 w-fit">
+                    {pending.length} pending
+                  </span>
+                )}
+              </div>
+
+              {pending.length === 0 ? (
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center border border-gray-200 dark:border-gray-700 shadow-md">
+                  <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
+                  <p className="text-gray-600 dark:text-gray-400">No pending assignments. Great job! 🎉</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {(showAllPending ? pending : pending.slice(0, 2)).map((item) => (
+                    <AssignmentCard
+                      key={item.id}
+                      item={item}
+                      type="pending"
+                      onClick={() => setSelectedAssignment(item)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {pending.length > 2 && (
+                <button
+                  onClick={() => setShowAllPending(!showAllPending)}
+                  className="mt-6 px-4 py-2 rounded-lg bg-gradient-to-r from-[#5491CA]/10 to-[#7670AC]/10 text-[#5491CA] hover:from-[#5491CA]/20 hover:to-[#7670AC]/20 transition-all duration-300 flex items-center gap-2 mx-auto"
+                >
+                  {showAllPending ? "Show Less" : "Show More"}
+                  {showAllPending ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+              )}
+            </section>
+
+            {/* Completed Assignments */}
+            <section>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                <h2 className="text-xl md:text-2xl font-semibold text-green-700 flex items-center gap-2">
+                  <CheckCircle className="w-5 md:w-6 h-5 md:h-6" /> Completed Assignments
+                </h2>
+                {completed.length > 0 && (
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-50 text-green-600 border border-green-100 w-fit">
+                    {completed.length} completed
+                  </span>
+                )}
+              </div>
+
+              {completed.length === 0 ? (
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center border border-gray-200 dark:border-gray-700 shadow-md">
+                  <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
+                  <p className="text-gray-600 dark:text-gray-400">No completed assignments yet. Let's get started! 💪</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {(showAllCompleted ? completed : completed.slice(0, 2)).map((item) => (
+                    <AssignmentCard
+                      key={item.id}
+                      item={item}
+                      type="completed"
+                      onClick={() => setSelectedAssignment(item)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {completed.length > 2 && (
+                <button
+                  onClick={() => setShowAllCompleted(!showAllCompleted)}
+                  className="mt-6 px-4 py-2 rounded-lg bg-gradient-to-r from-[#5491CA]/10 to-[#7670AC]/10 text-[#5491CA] hover:from-[#5491CA]/20 hover:to-[#7670AC]/20 transition-all duration-300 flex items-center gap-2 mx-auto"
+                >
+                  {showAllCompleted ? "Show Less" : "Show More"}
+                  {showAllCompleted ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+              )}
+            </section>
           </div>
-
-          {/* Pending Assignments */}
-          <section className="mb-12">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold text-[#5491CA] flex items-center gap-2">
-                <FileText className="w-6 h-6" /> Pending Assignments
-              </h2>
-              {pending.length > 0 && (
-                <span className="px-3 py-1 rounded-full text-sm font-medium bg-red-50 text-red-600 border border-red-100">
-                  {pending.length} pending
-                </span>
-              )}
-            </div>
-
-            {pending.length === 0 ? (
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center border border-gray-200 dark:border-gray-700">
-                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                <p className="text-gray-600 dark:text-gray-400">No pending assignments. Great job! 🎉</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {(showAllPending ? pending : pending.slice(0, 2)).map((item) => (
-                  <AssignmentCard
-                    key={item.id}
-                    item={item}
-                    type="pending"
-                    onClick={() => setSelectedAssignment(item)}
-                  />
-                ))}
-              </div>
-            )}
-
-            {pending.length > 2 && (
-              <button
-                onClick={() => setShowAllPending(!showAllPending)}
-                className="mt-6 px-4 py-2 rounded-lg bg-gradient-to-r from-[#5491CA]/10 to-[#7670AC]/10 text-[#5491CA] hover:from-[#5491CA]/20 hover:to-[#7670AC]/20 transition-all duration-300 flex items-center gap-2 mx-auto"
-              >
-                {showAllPending ? "Show Less" : "Show More"}
-                {showAllPending ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
-            )}
-          </section>
-
-          {/* Completed Assignments - Similar structure to Pending section */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold text-green-700 flex items-center gap-2">
-                ✅ Completed Assignments
-              </h2>
-              {completed.length > 0 && (
-                <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-50 text-green-600 border border-green-100">
-                  {completed.length} completed
-                </span>
-              )}
-            </div>
-
-            {completed.length === 0 ? (
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center border border-gray-200 dark:border-gray-700">
-                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                <p className="text-gray-600 dark:text-gray-400">No completed assignments yet. Let's get started! 💪</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {(showAllCompleted ? completed : completed.slice(0, 2)).map((item) => (
-                  <AssignmentCard
-                    key={item.id}
-                    item={item}
-                    type="completed"
-                    onClick={() => setSelectedAssignment(item)}
-                  />
-                ))}
-              </div>
-            )}
-
-            {completed.length > 2 && (
-              <button
-                onClick={() => setShowAllCompleted(!showAllCompleted)}
-                className="mt-6 px-4 py-2 rounded-lg bg-gradient-to-r from-[#5491CA]/10 to-[#7670AC]/10 text-[#5491CA] hover:from-[#5491CA]/20 hover:to-[#7670AC]/20 transition-all duration-300 flex items-center gap-2 mx-auto"
-              >
-                {showAllCompleted ? "Show Less" : "Show More"}
-                {showAllCompleted ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
-            )}
-          </section>
         </div>
       </div>
+
+      {/* Mobile Overlay */}
+      {isMobile && isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 };

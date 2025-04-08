@@ -1,13 +1,13 @@
     import React, { useState, useEffect, useRef } from 'react';
     import { useNavigate } from 'react-router-dom'; // Import useNavigate
     import { BarChart, Bar, Line, LineChart, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-    import { Bell, Settings, LogOut, Home, Users, BookOpen, ClipboardList, BarChart2, Layout, MessageSquare, Menu, Calendar, CheckCircle, ChevronRight, User, FileText, Award, HelpCircle, BookOpen as BookOpenIcon, Plus, Check, Clock, Trash2, X } from 'lucide-react';
+    import { Bell, Settings, LogOut, Home, Users, BookOpen, ClipboardList, BarChart2, Layout, MessageSquare, Menu, Calendar, CheckCircle, ChevronRight, User, FileText, Award, HelpCircle, BookOpen as BookOpenIcon, Plus, Check, Clock, Trash2, X, ChevronDown } from 'lucide-react';
     import RecordsContent from "./record";
     import ClassesContent from './class';
     import QuizDashboard from "./quiz dashboard/quiz";
     import SettingsContent from './setting';
     import ProfilePage from './profile/ProfilePage';
-    import logo from '../../../public/AIGIRI.png';
+    import logo from '../../../public/aigiri logo.png';
     import NotificationContent from './NotificationContent';
 
     const studentStats = [
@@ -192,33 +192,57 @@
                 </button>
               </div>
 
-              {/* Add Task Form */}
+              {/* Add Task Form Modal */}
               {showAddTask && (
-                <form onSubmit={handleAddTask} className="mb-4">
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={newTask}
-                      onChange={(e) => setNewTask(e.target.value)}
-                      placeholder="Enter your task..."
-                      className="flex-1 px-4 py-2 rounded-lg border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA]/20 focus:border-[#5491CA]"
-                      autoFocus
-                    />
-                    <button
-                      type="submit"
-                      className="px-4 py-2 bg-[#5491CA] text-white rounded-lg hover:bg-[#4a82b6] transition-colors"
-                    >
-                      Add
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowAddTask(false)}
-                      className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                  <div className="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 p-6 animate-fadeIn">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-[#5491CA]">Add New Task</h3>
+                      <button
+                        onClick={() => setShowAddTask(false)}
+                        className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                    
+                    <form onSubmit={handleAddTask}>
+                      <div className="space-y-4">
+                        <div>
+                          <label htmlFor="task" className="block text-sm font-medium text-gray-700 mb-1">
+                            Task Description
+                          </label>
+                          <input
+                            id="task"
+                            type="text"
+                            value={newTask}
+                            onChange={(e) => setNewTask(e.target.value)}
+                            placeholder="Enter your task..."
+                            className="w-full px-4 py-2 rounded-lg border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA]/20 focus:border-[#5491CA]"
+                            autoFocus
+                          />
+                        </div>
+                        
+                        <div className="flex justify-end gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setShowAddTask(false)}
+                            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            className="px-4 py-2 bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
+                          >
+                            <Plus className="w-4 h-4" />
+                            Add Task
+                          </button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
-                </form>
+                </div>
               )}
 
               {/* Tasks List */}
@@ -274,13 +298,18 @@
     };
 
     const Dashboard = () => {
-      const navigate = useNavigate(); // Initialize useNavigate for redirect
+      const navigate = useNavigate();
       const [sidebarOpen, setSidebarOpen] = useState(false);
       const [currentSection, setCurrentSection] = useState('home');
-      const [loading, setLoading] = useState(true); // To manage loading state
+      const [loading, setLoading] = useState(true);
       const [userName, setUserName] = useState('');
       const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
       const profileDropdownRef = useRef(null);
+
+      // Close sidebar when navigating to a new section
+      useEffect(() => {
+        setSidebarOpen(false);
+      }, [currentSection]);
 
       useEffect(() => {
         // Get user data and update time
@@ -301,7 +330,6 @@
           document.removeEventListener('mousedown', handleClickOutside);
         };
       }, [navigate]);
-
 
       const renderContent = () => {
         switch (currentSection) {
@@ -343,10 +371,13 @@
         <div className="flex min-h-screen bg-gray-50">
           {/* Sidebar with white background */}
           <aside className={`fixed left-0 top-0 h-full w-64 bg-white text-gray-700 p-4 shadow-lg transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform z-20`}>
-            <div className="flex items-center gap-3 mb-8 p-2">
-              <img src={logo} alt="AIGIRI Logo" className="h-8 w-8" />
-              <span className="text-xl font-bold bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-transparent bg-clip-text">AIGIRI</span>
-            </div>
+          <div className="flex items-center mb-4">
+  <img className="h-11 w-auto" src={logo} alt="logo" />
+  <span className="text-3xl font-bold tracking-wide text-[#7670AC] relative top-[5px] font-poppins">
+    IGIRI
+  </span>
+</div>
+
 
             <nav className="space-y-2">
               <NavItem 
@@ -415,7 +446,7 @@
             <header className="flex flex-col md:flex-row justify-between items-center mb-8">
               <div className="w-full md:flex-1 mb-4 md:mb-0">
                 <div className="relative">
-                  <p>Teacher Dashboard</p>
+                  <p className="text-xl font-semibold text-[#5491CA]">Teacher Dashboard</p>
                 </div>
               </div>
 
@@ -424,15 +455,22 @@
                 <div className="relative" ref={profileDropdownRef}>
                   <button 
                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                    className="h-10 w-10 rounded-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] flex items-center justify-center text-white font-bold hover:shadow-md transition-all duration-300"
+                    className="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
                     aria-label="Profile menu"
                   >
-                    {userName.charAt(0).toUpperCase()}
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] flex items-center justify-center text-white font-bold">
+                      {userName.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="hidden md:block">
+                      <p className="text-sm font-medium text-gray-800">{userName}</p>
+                      <p className="text-xs text-gray-500">Teacher</p>
+                    </div>
+                    <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180' : ''}`} />
                   </button>
                   
                   {/* Dropdown Menu */}
                   {profileDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100 animate-fadeIn">
+                    <div className="absolute left-1/2 -translate-x-1/2 top-20 w-64 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100 animate-fadeIn">
                       <div className="px-4 py-3 border-b border-gray-100">
                         <p className="text-sm font-semibold text-gray-800">{userName}</p>
                         <p className="text-xs text-gray-500">Teacher</p>
@@ -447,9 +485,15 @@
                             setProfileDropdownOpen(false);
                           }}
                         />
+                        <DropdownItem 
+                          icon={<Settings className="h-4 w-4" />} 
+                          label="Settings" 
+                          onClick={() => {
+                            setCurrentSection('settings');
+                            setProfileDropdownOpen(false);
+                          }}
+                        />
                       </div>
-                      
-                      
                       
                       <div className="border-t border-gray-100 py-1">
                         <DropdownItem 
@@ -492,7 +536,7 @@
     const DropdownItem = ({ icon, label, onClick, className = '' }) => (
       <button
         onClick={onClick}
-        className={`flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors ${className}`}
+        className={`flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors ${className}`}
       >
         <span className="text-gray-500">{icon}</span>
         <span>{label}</span>

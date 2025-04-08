@@ -21,7 +21,8 @@ import {
   Award,
   Monitor,
   FileText,
-  Users
+  Users,
+  Menu
 } from 'lucide-react';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
@@ -159,12 +160,32 @@ const StudentDashboard = () => {
   const [showCart, setShowCart] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
+<<<<<<< HEAD
 
 
   const user= JSON.parse(localStorage.getItem('user'));
+=======
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsSidebarOpen(!mobile);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+>>>>>>> d1dc06df7ec0f0d199243237fe59a1a27b8be2f7
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -209,12 +230,15 @@ const StudentDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      {/* Fixed Sidebar */}
-      <div className="bg-white dark:bg-gray-800 shadow-xl w-[250px] h-screen fixed top-0 left-0 transition-transform duration-300 ease-in-out">
+      {/* Sidebar */}
+      <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 transition-transform duration-300 ease-in-out z-40 ${
+        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
+      }`}>
         <Sidebar />
       </div>
 
       {/* Main Content */}
+<<<<<<< HEAD
       <main className="ml-64 flex-1 overflow-y-auto px-8 py-10">
         {/* Top Bar with Search and Quick Actions */}
         <div className="flex items-center justify-between mb-8">
@@ -247,9 +271,61 @@ const StudentDashboard = () => {
                 <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                   {/* Add your notifications list here */}
                 </div>
+=======
+      <main className={`flex-1 overflow-y-auto transition-all duration-300 ${
+        isMobile ? 'ml-0' : 'ml-[280px]'
+      }`}>
+        <div className="p-4 md:p-8">
+          {/* Top Bar with Search and Quick Actions */}
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 md:mb-8">
+            <div className="flex items-center gap-4 w-full md:w-auto">
+              {/* Mobile Menu Button */}
+              {isMobile && (
+                <button
+                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                </button>
+>>>>>>> d1dc06df7ec0f0d199243237fe59a1a27b8be2f7
               )}
+              
+              {/* Search Bar */}
+              <div className="flex-1 max-w-2xl">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="search"
+                    placeholder="Search courses, assignments, or resources..."
+                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:border-[#5491CA] focus:ring-2 focus:ring-[#5491CA]/20 transition-all dark:bg-gray-800 dark:border-gray-700"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-end">
+              {/* Notifications */}
+              <div className="relative">
+                <button 
+                  onClick={() => setShowNotifications(!showNotifications)}
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
+                >
+                  <Bell className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                  <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+                    3
+                  </span>
+                </button>
+                
+                {/* Notifications Dropdown */}
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                    {/* Add your notifications list here */}
+                  </div>
+                )}
+              </div>
 
-            <button 
+              {/* Cart */}
+              <button 
                 onClick={() => navigate('/cart')}
                 className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
               >
@@ -260,175 +336,174 @@ const StudentDashboard = () => {
                   </span>
                 )}
               </button>
+
+              {/* Profile */}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={handleProfileClick}
+                  className="flex items-center gap-3 px-3 md:px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <img
+                    src={user.profileImage}
+                    alt="Profile"
+                    className="h-8 w-8 md:h-10 md:w-10 rounded-full border-2 border-[#5491CA]"
+                  />
+                  <div className="text-left hidden md:block">
+                    <p className="font-semibold text-gray-900 dark:text-gray-100">{user.userName}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Student</p>
+                  </div>
+                </button>
+
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-fadeIn">
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <FaUser className="text-[#5491CA]" />
+                      <span className="text-gray-700 dark:text-gray-200">My Profile</span>
+                    </Link>
+                    <Link
+                      to="/mycourses"
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <Book className="text-[#5491CA]" />
+                      <span className="text-gray-700 dark:text-gray-200">My Courses</span>
+                    </Link>
+                    
+                    <hr className="my-2 border-gray-200 dark:border-gray-700" />
+                    
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-red-500"
+                    >
+                      <FaSignOutAlt />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
+          </div>
 
-            {/* Profile */}
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={handleProfileClick}
-                className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          {/* Quick Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
+            {[
+              {
+                title: "Course Progress",
+                value: `${quickStats.coursesProgress}%`,
+                icon: <BookOpen />,
+                color: "from-blue-500 to-blue-600"
+              },
+              {
+                title: "Assignments Due",
+                value: quickStats.assignmentsDue,
+                icon: <FileText />,
+                color: "from-purple-500 to-purple-600"
+              },
+              {
+                title: "Upcoming Quizzes",
+                value: quickStats.upcomingQuizzes,
+                icon: <Monitor />,
+                color: "from-green-500 to-green-600"
+              },
+            ].map((stat, index) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-800 rounded-xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700"
               >
-                <img
-                  src={user.profileImage}
-                  alt="Profile"
-                  className="h-10 w-10 rounded-full border-2 border-[#5491CA]"
-                />
-                <div className="text-left">
-                  <p className="font-semibold text-gray-900 dark:text-gray-100">{user.userName}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Student</p>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{stat.title}</p>
+                    <p className="text-xl md:text-2xl font-bold mt-1 bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
+                      {stat.value}
+                    </p>
+                  </div>
+                  <div className={`p-2 md:p-3 rounded-xl bg-gradient-to-r ${stat.color}`}>
+                    {React.cloneElement(stat.icon, { className: "h-5 w-5 md:h-6 md:w-6 text-white" })}
+                  </div>
                 </div>
-              </button>
+              </div>
+            ))}
+          </div>
 
-              {/* Dropdown Menu */}
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-fadeIn">
-                  <Link
-                    to="/profile"
-                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <FaUser className="text-[#5491CA]" />
-                    <span className="text-gray-700 dark:text-gray-200">My Profile</span>
-                  </Link>
-                  <Link
-                    to="/mycourses"
-                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <Book className="text-[#5491CA]" />
-                    <span className="text-gray-700 dark:text-gray-200">My Courses</span>
-                  </Link>
-                  
-                  <hr className="my-2 border-gray-200 dark:border-gray-700" />
-                  
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-red-500"
-                  >
-                    <FaSignOutAlt />
-                    <span>Logout</span>
-                  </button>
-                </div>
+          {/* Main Content Tabs */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 mb-6 md:mb-8">
+            {/* Tab Content */}
+            <div className="space-y-6">
+              {activeTab === 'overview' && (
+                <>
+                  {/* Learning Progress */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 md:p-6">
+                      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                        Learning Progress
+                      </h3>
+                      <div className="h-64">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <LineChart data={progressData}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                            <XAxis dataKey="name" stroke="#6b7280" />
+                            <YAxis stroke="#6b7280" />
+                            <Tooltip content={<CustomTooltip />} />
+                            <Line
+                              type="monotone"
+                              dataKey="progress"
+                              stroke="#5491CA"
+                              strokeWidth={3}
+                              dot={{ r: 4, strokeWidth: 2, fill: "#fff" }}
+                              activeDot={{ r: 6 }}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+
+                    {/* Achievements */}
+                    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 md:p-6">
+                      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                        Achievements
+                      </h3>
+                      <div className="space-y-4">
+                        {achievements.map((achievement) => (
+                          <div key={achievement.id} className="flex items-center gap-4">
+                            <div className="p-2 md:p-3 bg-white dark:bg-gray-800 rounded-lg shadow">
+                              {achievement.icon}
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-gray-900 dark:text-gray-100">
+                                {achievement.title}
+                              </p>
+                              <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full mt-2">
+                                <div
+                                  className="h-full bg-gradient-to-r from-[#5491CA] to-[#7670AC] rounded-full"
+                                  style={{ width: `${achievement.progress}%` }}
+                                />
+                              </div>
+                            </div>
+                            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                              {achievement.progress}%
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
         </div>
-
-        
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {[
-            {
-              title: "Course Progress",
-              value: `${quickStats.coursesProgress}%`,
-              icon: <BookOpen />,
-              color: "from-blue-500 to-blue-600"
-            },
-            {
-              title: "Assignments Due",
-              value: quickStats.assignmentsDue,
-              icon: <FileText />,
-              color: "from-purple-500 to-purple-600"
-            },
-            {
-              title: "Upcoming Quizzes",
-              value: quickStats.upcomingQuizzes,
-              icon: <Monitor />,
-              color: "from-green-500 to-green-600"
-            },
-            
-          ].map((stat, index) => (
-            <div
-              key={index}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{stat.title}</p>
-                  <p className="text-2xl font-bold mt-1 bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
-                    {stat.value}
-                  </p>
-                </div>
-                <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.color}`}>
-                  {React.cloneElement(stat.icon, { className: "h-6 w-6 text-white" })}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Main Content Tabs */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
-          {/* Tab Content */}
-          <div className="space-y-6">
-            {activeTab === 'overview' && (
-              <>
-                {/* Learning Progress */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
-                    <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                      Learning Progress
-                    </h3>
-                    <div className="h-64">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={progressData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                          <XAxis dataKey="name" stroke="#6b7280" />
-                          <YAxis stroke="#6b7280" />
-                          <Tooltip content={<CustomTooltip />} />
-                          <Line
-                            type="monotone"
-                            dataKey="progress"
-                            stroke="#5491CA"
-                            strokeWidth={3}
-                            dot={{ r: 4, strokeWidth: 2, fill: "#fff" }}
-                            activeDot={{ r: 6 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-
-                  {/* Achievements */}
-                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
-                    <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                      Achievements
-                    </h3>
-                    <div className="space-y-4">
-                      {achievements.map((achievement) => (
-                        <div key={achievement.id} className="flex items-center gap-4">
-                          <div className="p-3 bg-white dark:bg-gray-800 rounded-lg shadow">
-                            {achievement.icon}
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium text-gray-900 dark:text-gray-100">
-                              {achievement.title}
-                            </p>
-                            <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full mt-2">
-                              <div
-                                className="h-full bg-gradient-to-r from-[#5491CA] to-[#7670AC] rounded-full"
-                                style={{ width: `${achievement.progress}%` }}
-                              />
-                            </div>
-                          </div>
-                          <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                            {achievement.progress}%
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Updated Recent Activity & Upcoming Events */}
-                
-              </>
-            )}
-            
-            {/* Add other tab contents */}
-          </div>
-        </div>
-
       </main>
+
+      {/* Mobile Overlay */}
+      {isMobile && isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 };

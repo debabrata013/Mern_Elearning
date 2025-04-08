@@ -360,6 +360,11 @@
     const profileMenuRef = useRef(null);
     const { user, logout } = useAuth();
     
+    // Close sidebar when navigating to a new section
+    useEffect(() => {
+      setSidebarOpen(false);
+    }, [currentSection]);
+
     // Close profile menu when clicking outside
     useEffect(() => {
       const handleClickOutside = (event) => {
@@ -428,12 +433,13 @@
       <div className="flex min-h-screen bg-gray-50">
         {/* Sidebar - Now white with blue text */}
         <aside className={`fixed left-0 top-0 h-full w-64 bg-white text-[#5491CA] p-4 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform z-20 shadow-lg`}>
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold flex items-center gap-2 text-[#5491CA]">
-              <img src={logo} alt="" className='h-6 w-6' />
-              AIGIRI Admin
-            </h1>
-          </div>
+        <div className="flex items-center mb-4">
+  <img className="h-11 w-auto" src={logo} alt="logo" />
+  <span className="text-3xl font-bold tracking-wide text-[#7670AC] relative top-[5px] font-poppins">
+    IGIRI
+  </span>
+</div>
+
           
           <nav className="space-y-2">
             <NavItem 
@@ -783,8 +789,7 @@
         
         <div 
           className={`
-            absolute left-full top-0 ml-2 w-48 
-            md:left-0 md:top-full md:mt-1 md:ml-0
+            absolute left-0 w-full mt-1
             ${isOpen ? 'block' : 'hidden'}
             bg-white border border-gray-200 rounded-lg shadow-lg 
             z-50

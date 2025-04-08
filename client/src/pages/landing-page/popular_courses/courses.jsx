@@ -111,7 +111,7 @@ const Courses = () => {
 
   return (
     <section ref={sectionRef} className="popular-courses">
-      <h2 className="section-titlam">Popular <span>Courses</span></h2>
+      <h2 className="section-titlam">Popular <span className='bich-me'>Courses</span></h2>
       <div className="courses-grid">
         {courses.map(course => (
           <div key={course._id} className="course-container">
