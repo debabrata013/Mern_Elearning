@@ -12,7 +12,7 @@ const {
 // 1. Route to create a new announcement
 router.post('/', createAnnouncement);
 router.get('/:id',getUserAnnouncements);
-router.delete('/:id/:i', deleteUserAnnouncement);
+router.delete('/:id/:announcementId', deleteUserAnnouncement);
 // router.put('/:id', ubdateAnnouncement);
 
 
