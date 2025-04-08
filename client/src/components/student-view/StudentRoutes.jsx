@@ -9,6 +9,7 @@ import Profile from "./studentComponent/Profile";
 import CourseDetailPage from "./studentComponent/CourseDetailsPage";
 import CoursePage from "./coursebuy";
 import Enroll from "./studentComponent/enroll";
+import NoticesSection from "./Notification";
 import { Route, Routes } from "react-router-dom";
 
 function StudentRoutes() {
@@ -23,7 +24,7 @@ function StudentRoutes() {
         <Route path="/projects" element={<Project />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/assignments" element={<Assignment />} />
-        <Route path="/notice" element={<Notice />} />
+        <Route path="/notice" element={<NoticesSection  />} />
       </Routes>
     </AppLayout>
   );

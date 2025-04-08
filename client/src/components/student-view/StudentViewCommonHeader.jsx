@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Sidebar from './studentComponent/Sidebar';
+
+
 import { 
   GraduationCap, 
   BookOpen, 
@@ -160,6 +162,8 @@ const StudentDashboard = () => {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
+
+
   const user= JSON.parse(localStorage.getItem('user'));
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -229,7 +233,7 @@ const StudentDashboard = () => {
             {/* Notifications */}
             <div className="relative">
               <button 
-                onClick={() => setShowNotifications(!showNotifications)}
+                onClick={() => navigate('/notifications') }
                 className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
               >
                 <Bell className="h-6 w-6 text-gray-600 dark:text-gray-300" />
