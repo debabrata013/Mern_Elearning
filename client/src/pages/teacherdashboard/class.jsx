@@ -158,34 +158,39 @@ const handleUploadResource = async (chapterId) => {
       setUploading(false);
   }
 };
-  const handleDeleteLecture = async (lectureId) => {
-    try {
-      const response = await axiosInstance.delete(`/lechcher/videos/${lectureId}`);
-      if (response.status === 200) {
-        alert("Lecture deleted successfully!");
-        // Optionally, refresh the list of lectures here
-      } else {
-        alert("Failed to delete lecture. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error deleting lecture:", error);
-      alert("Failed to delete lecture. Please try again.");
+const handleDeleteLecture = async (courseId, chapterId, lessonId) => {
+    if (window.confirm("Do you really want to delete this video?")) {
+        try {
+            const response = await axiosInstance.delete(`/lac/video/${courseId}/${chapterId}/${lessonId}`);
+            if (response.status === 200) {
+                alert("Video deleted successfully!");
+
+                location.reload();
+            }
+        } catch (error) {
+            console.error("Error deleting video:", error);
+            alert(`Failed to delete video: ${error.response?.data?.message || error.message}`);
+        }
     }
-  };
-  const handleDeleteResources = async (lectureId) => {
-    try {
-      const response = await axiosInstance.delete(`/lechcher/resource/${lectureId}`);
-      if (response.status === 200) {
-        alert("file deleted successfully!");
-        // Optionally, refresh the list of lectures here
-      } else {
-        alert("Failed to delete file. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error deleting lecture:", error);
-      alert("Failed to delete lecture. Please try again.");
+};
+
+const handleDeleteResource = async (courseId, chapterId, resourceId) => {
+    if (window.confirm("Do you really want to delete this resource?")) {
+        try {
+            const response = await axiosInstance.delete(`/lac/resource/${courseId}/${chapterId}/${resourceId}`);
+            if (response.status === 200) {
+                alert("Resource deleted successfully!");
+
+                location.reload();
+                
+            }
+        } catch (error) {
+            console.error("Error deleting resource:", error);
+            alert(`Failed to delete resource: ${error.response?.data?.message || error.message}`);
+        }
     }
-  };
+};
+
 
     
     const user = JSON.parse(localStorage.getItem('user'));
@@ -300,12 +305,20 @@ const handleUploadResource = async (chapterId) => {
                                           <li key={lessonIndex} className="mb-2">
                                               <div className="flex flex-col gap-2">
                                                   {lesson.videoUrl && (
-                                                      <div
-                                                          onClick={() => handleClick(lesson.videoUrl)}
-                                                          className="cursor-pointer flex items-center p-2 hover:bg-gray-100 rounded"
-                                                      >
-                                                          <Video className="h-5 w-5 text-[#5491CA]" />
-                                                          <span className="ml-2">Video Lecture</span>
+                                                      <div className="flex items-center justify-between p-2 hover:bg-gray-100 rounded">
+                                                          <div
+                                                              onClick={() => handleClick(lesson.videoUrl)}
+                                                              className="cursor-pointer flex items-center flex-1"
+                                                          >
+                                                              <Video className="h-5 w-5 text-[#5491CA]" />
+                                                              <span className="ml-2">Video Lecture</span>
+                                                          </div>
+                                                          <button
+                                                              onClick={() => handleDeleteLecture(selectedCourse._id, chapter._id, lesson._id)}
+                                                              className="text-red-500 hover:text-red-700 p-1"
+                                                          >
+                                                              <X className="h-5 w-5" />
+                                                          </button>
                                                       </div>
                                                   )}
                                     
@@ -334,16 +347,20 @@ const handleUploadResource = async (chapterId) => {
                                   
                                     chapter.resourceUrl.map((resource, index) => (
                                         <li key={resource.id || index} className="mb-2">
-                                          <div className="flex flex-col gap-2">
-                                            {resource.url && (
-                                              <div
-                                                onClick={() => handleClick(resource.url)}
-                                                className="cursor-pointer flex items-center p-2 hover:bg-gray-100 rounded"
-                                              >
-                                                <File className="h-5 w-5 text-[#5491CA]" />
-                                                <span className="ml-2">{resource.type || 'Resource'}</span>
-                                              </div>
-                                            )}
+                                          <div className="flex items-center justify-between p-2 hover:bg-gray-100 rounded">
+                                            <div
+                                              onClick={() => handleClick(resource.url)}
+                                              className="cursor-pointer flex items-center flex-1"
+                                            >
+                                              <File className="h-5 w-5 text-[#5491CA]" />
+                                              <span className="ml-2">{resource.type || 'Resource'}</span>
+                                            </div>
+                                            <button
+                                              onClick={() => handleDeleteResource(selectedCourse._id, chapter._id, resource._id)}
+                                              className="text-red-500 hover:text-red-700 p-1"
+                                            >
+                                              <X className="h-5 w-5" />
+                                            </button>
                                           </div>
                                         </li>
                                       ))
