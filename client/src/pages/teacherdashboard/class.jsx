@@ -202,7 +202,11 @@ const handleDeleteResource = async (courseId, chapterId, resourceId) => {
         const fetchCourses = async () => {
             try {
                 const response = await axios.get(`http://localhost:4400/teachers/get?email=${email}`);
-                setCourses(response.data);
+                const today = new Date();
+                const filteredCourses = response.data.filter(course => new Date(course.endDate) >today);
+                
+                setCourses(filteredCourses);
+                
             } catch (err) {
                 console.error('Error fetching courses:', err);
                 setError('Failed to fetch courses');
