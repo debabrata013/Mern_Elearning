@@ -79,14 +79,14 @@ exports.deleteUserAnnouncement = async (req, res) => {
   try {
     console.log("Deleting announcement for user...");
     const userId = req.params.id; // Get user ID from request parameters
-    const announcementId =req.params.i ; // Get announcement ID from request body
+    const announcementId = req.params.announcementId; // Changed from req.params.i to req.params.announcementId
+    
     console.log("User ID:", userId);
     console.log("Announcement ID:", announcementId);
+    
     if (!announcementId) {
       return res.status(400).json({ error: "Announcement ID is required." });
     }
-
-  
 
     // Remove the announcement only from the specific user's list
     const updateResult = await User.findByIdAndUpdate(

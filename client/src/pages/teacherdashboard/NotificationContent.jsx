@@ -142,24 +142,12 @@ const NotificationContent = () => {
     };
     fetchNotifications();
   }, []);
-  const handleMarkRead = (id) => {
-     try {
-      axiosInstance.put(`/announcements/678a4c88c42aea3963fa4162/${ id }`);
-      } catch (error) {
-        console.error("Error marking notification as read:", error);
-      }
-   
-
-    setNotifications(notifications.map(notif => 
-      notif.id === id ? { ...notif, read: true } : notif
-    ));
-  };
-
+  
     const handleDismiss = (id) => {
     try {
       // Call the API to delete the notification
-      axiosInstance.delete(`/announcements/${user._id}`, { data: { announcementId: id } });
-  
+      axiosInstance.delete(`/announcements/${user._id}/${id}`);
+      alert("Notification deleted successfully ")
       // Update the notification state to remove the dismissed notification
       setNotifications(notifications.filter(notif => notif.id !== id));
     } catch (error) {
@@ -197,7 +185,11 @@ const NotificationContent = () => {
             </div>
           ) : (
             <div className="space-y-6 mt-6">
+              
+         
+           
               {notifications.map((notification) => (
+                
                 <Card 
                   key={notification.id}
                   className={`relative transition-all duration-300 hover:transform hover:translate-x-1 border-l-4 ${
@@ -206,6 +198,7 @@ const NotificationContent = () => {
                       : 'border-l-[#5491CA] bg-white shadow-md'
                   }`}
                 >
+                 {/* {console.log(JSON.stringify(notification._id))} */}
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-start gap-3">
@@ -228,20 +221,12 @@ const NotificationContent = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        {!notification.read && (
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => handleMarkRead(notification.id)}
-                            className="text-green-600 hover:text-green-700 hover:bg-green-50 rounded-full h-8 w-8 p-0"
-                          >
-                            <Check className="h-5 w-5" />
-                          </Button>
-                        )}
+                        
+
                         <Button 
                           variant="ghost" 
                           size="sm"
-                          onClick={() => handleDismiss(notification.id)}
+                          onClick={() => handleDismiss(notification._id)}
                           className="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 p-0"
                         >
                           <X className="h-5 w-5" />
