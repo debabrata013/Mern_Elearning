@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, ArrowLeft, Video, Users, Calendar, Clock, X ,BookOpen,FilePlus, Loader } from 'lucide-react';
+import { Plus, ArrowLeft, Video, Users, Calendar, Clock, X ,BookOpen,FilePlus, Loader , File } from 'lucide-react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import axiosInstance from '@/api/axiosInstance';
 const styles = {
@@ -43,10 +44,12 @@ const styles = {
     },
   };
 const ClassesContent = () => {
+    const navigate = useNavigate();
     const [view, setView] = useState('courses'); // courses, classes, startClass
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [uploading, setUploading] = useState(false); // Add loading state for uploads
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [classDetails, setClassDetails] = useState({
@@ -56,6 +59,7 @@ const ClassesContent = () => {
         courses:'',
     });
  
+
     const [videoFile, setVideoFile] = useState(null);
   const [resourceFile, setResourceFile] = useState(null);const handleVideoChange = (e) => {
     const file = e.target.files[0];
@@ -82,7 +86,13 @@ const ClassesContent = () => {
     }
   };
 
- 
+
+  const handleClick = (url) => {
+    if (url) {
+        window.open(url, '_blank');
+    }
+  };
+
   const handleUploadLecture = async (chapterId) => {
     try {
         if (!videoFile) {
@@ -90,44 +100,64 @@ const ClassesContent = () => {
             return;
         }
         
+        setUploading(true);
         const formData = new FormData();
         formData.append("video", videoFile);
-        formData.append("chapterId", chapterId);
-        formData.append("courseId", selectedCourse._id);
 
-        const response = await axiosInstance.post("/lechcher/videos", formData);
+        const response = await axiosInstance.post(`/lac/video/${selectedCourse._id}/${chapterId}`, formData);
+
         if (response.status === 200) {
             alert("Lecture uploaded successfully!");
             setVideoFile(null);
+            // Fetch updated course data
+            const updatedResponse = await axios.get(`http://localhost:4400/teachers/get?email=${email}`);
+            setCourses(updatedResponse.data);
+            // Find and update the selected course
+            const updatedCourse = updatedResponse.data.find(course => course._id === selectedCourse._id);
+            if (updatedCourse) {
+                setSelectedCourse(updatedCourse);
+            }
         }
     } catch (error) {
         console.error("Error uploading lecture:", error);
         alert(`Failed to upload lecture: ${error.response?.data?.message || error.message}`);
+    } finally {
+        setUploading(false);
     }
-  };
+};
   
-  const handleUploadResource = async (chapterId) => {
-    try {
-        if (!resourceFile) {
-            alert("Please select a resource file first");
-            return;
-        }
+const handleUploadResource = async (chapterId) => {
+  try {
+      if (!resourceFile) {
+          alert("Please select a resource file first");
+          return;
+      }
 
-        const formData = new FormData();
-        formData.append("resource", resourceFile);
-        formData.append("chapterId", chapterId);
-        formData.append("courseId", selectedCourse._id);
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("resource", resourceFile);
 
-        const response = await axiosInstance.post("/lechcher/resource", formData);
-        if (response.status === 200) {
-            alert("Resource uploaded successfully!");
-            setResourceFile(null);
-        }
-    } catch (error) {
-        console.error("Error uploading resource:", error);
-        alert(`Failed to upload resource: ${error.response?.data?.message || error.message}`);
-    }
-  };
+      const response = await axiosInstance.post(`/lac/resource/${selectedCourse._id}/${chapterId}`, formData);
+
+      if (response.status === 200) {
+          alert("Resource uploaded successfully!");
+          setResourceFile(null);
+          // Fetch updated course data
+          const updatedResponse = await axios.get(`http://localhost:4400/teachers/get?email=${email}`);
+          setCourses(updatedResponse.data);
+          // Find and update the selected course
+          const updatedCourse = updatedResponse.data.find(course => course._id === selectedCourse._id);
+          if (updatedCourse) {
+              setSelectedCourse(updatedCourse);
+          }
+      }
+  } catch (error) {
+      console.error("Error uploading resource:", error);
+      alert(`Failed to upload resource: ${error.response?.data?.message || error.message}`);
+  } finally {
+      setUploading(false);
+  }
+};
   const handleDeleteLecture = async (lectureId) => {
     try {
       const response = await axiosInstance.delete(`/lechcher/videos/${lectureId}`);
@@ -262,39 +292,84 @@ const ClassesContent = () => {
                               </h5>
                               <p className="text-gray-600 mt-2">{chapter.description || "No syllabus available."}</p>
                               
+                             
                               <h6 className="text-md font-semibold mt-4">Lessons:</h6>
                               <ul className="list-none ml-6 text-gray-600">
                                   {chapter.lessons && chapter.lessons.length > 0 ? (
                                       chapter.lessons.map((lesson, lessonIndex) => (
-                                          <li key={lessonIndex}>
-                                            <ul>
-                                                <li className="ml-6">{lesson.title}</li>
-                                                <li><Video/>
-                                                <span className="ml-2">{lesson.videoUrl}</span>
-                                        <span className="ml-2">{lesson.resourceUrl}</span></li>
-                                        <button onClick={() => handleUploadLecture(chapter._id)} className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
-                                  <FilePlus className="h-5 w-5" /> Upload Lecture
-                              </button>
-                              <button onClick={() => handleUploadResource(lesson)} className="mt-4 flex items-center gap-2 text-[#5491CA] hover:underline">
-                                  <FilePlus className="h-5 w-5" /> Upload Resources
-                              </button>
+                                          <li key={lessonIndex} className="mb-2">
+                                              <div className="flex flex-col gap-2">
+                                                  {lesson.videoUrl && (
+                                                      <div
+                                                          onClick={() => handleClick(lesson.videoUrl)}
+                                                          className="cursor-pointer flex items-center p-2 hover:bg-gray-100 rounded"
+                                                      >
+                                                          <Video className="h-5 w-5 text-[#5491CA]" />
+                                                          <span className="ml-2">Video Lecture</span>
+                                                      </div>
+                                                  )}
+                                    
+                                    
+            
+                                                
+                                              </div>
 
-                                            </ul>
-                                            </li>
-
+                                           
+                                          </li>
                                       ))
+
+                                    
+
+
+                                      
                                   ) : (
-                                      <li className="text-gray-500"><Video/> No lessons available.</li>
+                                      <li className="text-gray-500">
+                                          <Video className="inline-block mr-2" /> No lessons available.
+                                      </li>
                                   )}
                               </ul>
+                              <h6> Resources :</h6>
+                              <ul className="list-none ml-6 text-gray-600">
+                                  {chapter.resourceUrl && chapter.resourceUrl.length > 0 ? (
+                                  
+                                    chapter.resourceUrl.map((resource, index) => (
+                                        <li key={resource.id || index} className="mb-2">
+                                          <div className="flex flex-col gap-2">
+                                            {resource.url && (
+                                              <div
+                                                onClick={() => handleClick(resource.url)}
+                                                className="cursor-pointer flex items-center p-2 hover:bg-gray-100 rounded"
+                                              >
+                                                <File className="h-5 w-5 text-[#5491CA]" />
+                                                <span className="ml-2">{resource.type || 'Resource'}</span>
+                                              </div>
+                                            )}
+                                          </div>
+                                        </li>
+                                      ))
+
+                                    
+
+
+                                      
+                                  ) : (
+                                      <li className="text-gray-500">
+                                          <File className="inline-block mr-2" /> No resources available.
+                                      </li>
+                                  )}
+                              </ul>
+
+
+
                               <div style={styles.container}>
+                              
                                 <div className="container">
       <label style={styles.label}>
         Select Video:
-        <input type="file" accept="video/*" onChange={handleVideoChange} style={styles.input} />
+        <input type="file" accept="video/*" onChange={handleVideoChange} style={styles.input} disabled={uploading} />
       </label>
-      <button onClick={() => handleUploadLecture(chapter._id)} style={styles.button}>
-        Upload Lecture 
+      <button onClick={() => handleUploadLecture(chapter._id)} style={styles.button} disabled={uploading}>
+        {uploading ? <Loader className="animate-spin" /> : "Upload Lecture"}
       </button>
      </div>
      <div className="container">
@@ -305,9 +380,10 @@ const ClassesContent = () => {
           accept="image/*,application/pdf,.ppt,.pptx"
           onChange={handleResourceChange}
           style={styles.input}
+          disabled={uploading}
         /> </label>
-        <button onClick={() => handleUploadResource(chapter._id)} style={styles.button}>
-        Upload Resource
+        <button onClick={() => handleUploadResource(chapter._id)} style={styles.button} disabled={uploading}>
+        {uploading ? <Loader className="animate-spin" /> : "Upload Resource"}
       </button>
      
      </div>
