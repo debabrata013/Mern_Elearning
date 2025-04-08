@@ -108,32 +108,45 @@ exports.deleteVideo = async (req, res) => {
 
   try {
     const course = await Course.findById(courseId);
+  
+    
     if (!course) return res.status(404).json({ message: 'Course not found' });
 
+
+    
     const chapter = course.chapters.id(chapterId);
     if (!chapter) return res.status(404).json({ message: 'Chapter not found' });
 
+
     const lesson = chapter.lessons.id(lessonId);
     if (!lesson) return res.status(404).json({ message: 'Lesson not found' });
-
+ 
     // Validate and extract S3 key
     const urlParts = lesson.videoUrl.split('.amazonaws.com/');
+    console.log("URL Parts:", urlParts);
     if (urlParts.length < 2) {
       return res.status(400).json({ message: 'Invalid S3 URL format' });
     }
 
-    const key = urlParts[1];
 
-    // Delete from S3
-    await s3.deleteObject({
-      Bucket: process.env.S3_BUCKET_NAME,
-      Key: key,
-    }).promise();
+
+    const key = urlParts[1];
+console.log("deletion suru hoga ");
+
+    // // Delete from S3
+    // await s3.deleteObject({
+    //   Bucket: process.env.S3_BUCKET_NAME,
+    //   Key: key,
+    // }).promise();
+    await s3.send(new DeleteObjectCommand({ Bucket:process.env.S3_BUCKET_NAME,Key: key }));
+ 
+    console.log("delete ho gaya cloud se ");
 
     // Remove the lesson from lessons array
     chapter.lessons.pull(lessonId); // cleaner than lesson.remove()
     await course.save();
 
+    console.log("Lesson deleted from course:");
     res.status(200).json({ message: 'Video deleted successfully' });
 
   } catch (err) {
