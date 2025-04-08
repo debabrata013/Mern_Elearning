@@ -16,10 +16,10 @@ router.post('/video/:courseId/:chapterId',upload.single('video'), uploadVideo);
 // // Upload resource
 router.post('/resource/:courseId/:chapterId', upload.single('resource'), uploadResource);
 
-// // Delete video
-router.delete('video/:courseId/:chapterId/:lessonId', deleteVideo);
+// Delete video (by lesson ID)
+router.delete('/video/:courseId/:chapterId/:lessonId', deleteVideo);
 
-// // Delete resource
-router.delete('resource/:courseId/:chapterId/:resourceId', deleteResource);
+// Delete resource (by resource ID)
+router.delete('/resource/:courseId/:chapterId/:resourceId', deleteResource);
 
 module.exports = router;
