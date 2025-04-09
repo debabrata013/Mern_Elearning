@@ -79,11 +79,8 @@ function App() {
           <Route path="/enroll/:courseId" element={<Enroll />} />
           <Route path="/terms" element={<Tc/>} />
           <Route path="/privacy" element={<Privacy/>} />
-<<<<<<< HEAD
           <Route path="/notifications" element={<Noti/>}/>
-=======
           <Route path="/videop" element={<DemoVideoPlayer/>} />
->>>>>>> d1dc06df7ec0f0d199243237fe59a1a27b8be2f7
           <Route
             path="/user-dashboard"
             element={
