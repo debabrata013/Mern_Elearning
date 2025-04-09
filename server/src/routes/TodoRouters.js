@@ -57,11 +57,19 @@ router.delete('/delete/:userId/:todoId', async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
+    // Ensure proper comparison by converting both to strings
+    const initialTodoCount = user.todos.length;
     user.todos = user.todos.filter(todo => todo._id.toString() !== todoId);
+
+    if (user.todos.length === initialTodoCount) {
+      return res.status(404).json({ error: 'Todo not found' });
+    }
+
     await user.save();
 
     res.status(200).json({ message: 'Todo deleted successfully', todos: user.todos });
   } catch (err) {
+    console.error('Error deleting todo:', err);
     res.status(500).json({ error: 'Failed to delete todo' });
   }
 });

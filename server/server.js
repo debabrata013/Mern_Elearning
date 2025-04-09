@@ -89,7 +89,7 @@ app.use("/profile", ProfileRouters);
 app.use("/contactus/", contactRoutes);
 app.use("/mail/", MailRoutes);
 app.use('/cart', cartRoutes);
-app.use('/todos', TodoRoutes);
+// app.use('/todos', TodoRoutes);
 app.use("/u", UserRoutes);
 app.use('/pic', picRouters);
 app.use("/lac", LRouter);
