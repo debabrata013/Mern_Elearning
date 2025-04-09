@@ -17,7 +17,11 @@ import {
   ArrowRight,
   Menu,
   Search,
-  Filter
+  Filter,
+  Bookmark,
+  BookOpen,
+  Star,
+  Play
 } from "lucide-react";
 
 // Load initial data from localStorage or use defaults
@@ -480,6 +484,340 @@ const AssignmentDetail = ({ assignment, onBack, onSubmitAssignment }) => {
   );
 };
 
+// Mock data for courses
+const coursesData = [
+  {
+    id: 1,
+    title: "React Fundamentals",
+    instructor: "John Smith",
+    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3",
+    rating: 4.8,
+    progress: 65,
+    lessons: 12,
+    assignments: 4,
+    quizzes: 3,
+    tags: ["Frontend", "JavaScript", "React"],
+    description: "Learn the fundamentals of React including components, state, props, and hooks.",
+  },
+  {
+    id: 2,
+    title: "JavaScript Advanced Concepts",
+    instructor: "Emily Chen",
+    image: "https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?ixlib=rb-4.0.3",
+    rating: 4.7,
+    progress: 48,
+    lessons: 15,
+    assignments: 6,
+    quizzes: 4,
+    tags: ["JavaScript", "Advanced", "ES6+"],
+    description: "Deep dive into advanced JavaScript concepts, closures, prototypes, and more.",
+  },
+  {
+    id: 3,
+    title: "CSS Animations & Transitions",
+    instructor: "Michael Rodriguez",
+    image: "https://images.unsplash.com/photo-1621839673705-6617adf9e890?ixlib=rb-4.0.3",
+    rating: 4.5,
+    progress: 80,
+    lessons: 8,
+    assignments: 3,
+    quizzes: 2,
+    tags: ["CSS", "Animations", "Frontend"],
+    description: "Create stunning web animations and transitions using modern CSS techniques.",
+  },
+  {
+    id: 4,
+    title: "Node.js Backend Development",
+    instructor: "Jessica Williams",
+    image: "https://images.unsplash.com/photo-1590608897129-79da98d15969?ixlib=rb-4.0.3",
+    rating: 4.9,
+    progress: 32,
+    lessons: 18,
+    assignments: 5,
+    quizzes: 4,
+    tags: ["Backend", "Node.js", "Express"],
+    description: "Build scalable backend APIs and services using Node.js and Express.",
+  },
+  {
+    id: 5,
+    title: "UI/UX Design Principles",
+    instructor: "David Kim",
+    image: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?ixlib=rb-4.0.3",
+    rating: 4.6,
+    progress: 55,
+    lessons: 10,
+    assignments: 7,
+    quizzes: 2,
+    tags: ["Design", "UI", "UX"],
+    description: "Master the principles of great user interface and experience design.",
+  },
+  {
+    id: 6,
+    title: "Python Data Science",
+    instructor: "Sophia Martinez",
+    image: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?ixlib=rb-4.0.3",
+    rating: 4.8,
+    progress: 20,
+    lessons: 20,
+    assignments: 8,
+    quizzes: 5,
+    tags: ["Python", "Data Science", "Machine Learning"],
+    description: "Learn data analysis and visualization techniques with Python.",
+  }
+];
+
+// Course Card Component
+const CourseCard = ({ course, onClick }) => {
+  return (
+    <div 
+      onClick={onClick}
+      className="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-[#5491CA]/30 cursor-pointer"
+    >
+      {/* Course Image */}
+      <div className="relative h-48 overflow-hidden">
+        <img 
+          src={course.image} 
+          alt={course.title} 
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+        <div className="absolute bottom-4 left-4 right-4">
+          <div className="flex gap-1.5 mb-2">
+            {course.tags.map((tag, idx) => (
+              <span 
+                key={idx} 
+                className="px-2 py-1 bg-black/40 backdrop-blur-sm text-white text-xs rounded-full"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      {/* Course Content */}
+      <div className="p-5">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-[#5491CA] transition-colors line-clamp-2">
+            {course.title}
+          </h3>
+          <div className="flex items-center text-yellow-500">
+            <Star className="w-4 h-4 fill-current" />
+            <span className="ml-1 text-sm">{course.rating}</span>
+          </div>
+        </div>
+        
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+          {course.description}
+        </p>
+        
+        {/* Course Details */}
+        <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <span className="flex items-center gap-1">
+            <BookOpen className="w-4 h-4" />
+            {course.lessons} lessons
+          </span>
+          <span className="flex items-center gap-1">
+            <FileText className="w-4 h-4" />
+            {course.assignments} assignments
+          </span>
+          <span className="flex items-center gap-1">
+            <AlertCircle className="w-4 h-4" />
+            {course.quizzes} quizzes
+          </span>
+        </div>
+        
+        {/* Progress Bar */}
+        <div className="mb-4">
+          <div className="flex justify-between text-xs mb-1">
+            <span className="font-medium text-[#5491CA]">Progress</span>
+            <span className="font-medium text-[#5491CA]">{course.progress}%</span>
+          </div>
+          <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-[#5491CA] to-[#7670AC] rounded-full" 
+              style={{ width: `${course.progress}%` }}
+            ></div>
+          </div>
+        </div>
+        
+        {/* Instructor */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#5491CA] to-[#7670AC] flex items-center justify-center text-white font-medium text-xs">
+              {course.instructor.split(' ').map(n => n[0]).join('')}
+            </div>
+            <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+              {course.instructor}
+            </span>
+          </div>
+          <button className="p-2 text-[#5491CA] hover:bg-[#5491CA]/10 rounded-full transition-colors">
+            <Bookmark className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// HomePage Component
+const HomePage = ({ onSelectCourse }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTag, setSelectedTag] = useState('All');
+  const [courses, setCourses] = useState(coursesData);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsSidebarOpen(!mobile);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    filterCourses(e.target.value, selectedTag);
+  };
+
+  const handleTagSelect = (tag) => {
+    setSelectedTag(tag);
+    filterCourses(searchTerm, tag);
+  };
+
+  const filterCourses = (term, tag) => {
+    let filtered = coursesData;
+    
+    if (term) {
+      filtered = filtered.filter(course => 
+        course.title.toLowerCase().includes(term.toLowerCase()) ||
+        course.description.toLowerCase().includes(term.toLowerCase()) ||
+        course.instructor.toLowerCase().includes(term.toLowerCase())
+      );
+    }
+    
+    if (tag && tag !== 'All') {
+      filtered = filtered.filter(course => 
+        course.tags.some(t => t.toLowerCase() === tag.toLowerCase())
+      );
+    }
+    
+    setCourses(filtered);
+  };
+
+  // Get unique tags
+  const allTags = ['All', ...new Set(coursesData.flatMap(course => course.tags))];
+
+  return (
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Sidebar */}
+      <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
+        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
+      }`}>
+        <Sidebar />
+      </div>
+
+      {/* Main Content */}
+      <div className={`flex-1 transition-all duration-300 ${
+        isMobile ? 'ml-0' : 'ml-[280px]'
+      }`}>
+        <div className="p-4 md:p-8">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+              <div className="flex items-center gap-4">
+                {isMobile && (
+                  <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                  </button>
+                )}
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
+                    My Learning Dashboard
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-400 mt-1">
+                    Continue your learning journey with these courses
+                  </p>
+                </div>
+              </div>
+              
+              <div className="relative w-full md:w-auto">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="search"
+                  placeholder="Search courses..."
+                  value={searchTerm}
+                  onChange={handleSearch}
+                  className="w-full md:w-60 pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:border-[#5491CA] focus:ring-2 focus:ring-[#5491CA]/20 transition-all dark:bg-gray-800 dark:border-gray-700"
+                />
+              </div>
+            </div>
+            
+            {/* Stats Overview */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              {[
+                { title: "In Progress", value: "4 Courses", icon: <Clock className="w-5 h-5" />, color: "from-[#5491CA] to-[#7670AC]" },
+                { title: "Completed", value: "7 Courses", icon: <CheckCircle className="w-5 h-5" />, color: "from-green-500 to-emerald-500" },
+                { title: "Certificates", value: "3 Earned", icon: <Award className="w-5 h-5" />, color: "from-yellow-500 to-amber-500" },
+                { title: "Total Hours", value: "48 Hours", icon: <BarChart3 className="w-5 h-5" />, color: "from-purple-500 to-indigo-500" }
+              ].map((stat, index) => (
+                <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md border border-gray-100 dark:border-gray-700">
+                  <div className="flex items-center gap-4">
+                    <div className={`p-2.5 rounded-lg bg-gradient-to-r ${stat.color} text-white`}>
+                      {stat.icon}
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{stat.title}</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{stat.value}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Course Grid */}
+            {courses.length === 0 ? (
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center shadow-md border border-gray-100 dark:border-gray-700">
+                <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No courses found</h3>
+                <p className="text-gray-600 dark:text-gray-400">Try adjusting your search or filter criteria</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {courses.map(course => (
+                  <CourseCard
+                    key={course.id}
+                    course={course}
+                    onClick={() => onSelectCourse(course.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Overlay */}
+      {isMobile && isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+    </div>
+  );
+};
+
+// Main Component (Updated to include the HomePage as the entry point)
 const AssignmentsAndQuizzes = () => {
   const [pending, setPending] = useState(() =>
     loadInitialData("pendingAssignments", initialPending)
@@ -492,6 +830,8 @@ const AssignmentsAndQuizzes = () => {
   const [showAllCompleted, setShowAllCompleted] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'assignments', 'detail'
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
 
   useEffect(() => {
     localStorage.setItem("pendingAssignments", JSON.stringify(pending));
@@ -519,16 +859,35 @@ const AssignmentsAndQuizzes = () => {
     setPending(prev => prev.filter(a => a.id !== newAssignment.id));
   };
 
-  if (selectedAssignment) {
+  const handleSelectCourse = (courseId) => {
+    setSelectedCourseId(courseId);
+    setCurrentView('assignments');
+  };
+
+  const handleBackToHome = () => {
+    setCurrentView('home');
+    setSelectedCourseId(null);
+  };
+
+  // Render the appropriate view
+  if (currentView === 'detail' && selectedAssignment) {
     return (
       <AssignmentDetail
         assignment={selectedAssignment}
-        onBack={() => setSelectedAssignment(null)}
+        onBack={() => {
+          setSelectedAssignment(null);
+          setCurrentView('assignments');
+        }}
         onSubmitAssignment={handleSubmitAssignment}
       />
     );
   }
 
+  if (currentView === 'home') {
+    return <HomePage onSelectCourse={handleSelectCourse} />;
+  }
+
+  // The assignments view (previously the main view)
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Sidebar */}
@@ -555,9 +914,16 @@ const AssignmentsAndQuizzes = () => {
                     <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
                   </button>
                 )}
+                <button
+                  onClick={handleBackToHome}
+                  className="flex items-center gap-2 text-[#5491CA] hover:text-[#5491CA]/80 transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                  <span>Back to Courses</span>
+                </button>
                 <div className="flex-1">
                   <h1 className="text-2xl md:text-3xl font-bold text-center bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
-                    Assignments & Quizzes
+                    {coursesData.find(c => c.id === selectedCourseId)?.title || "Course"} - Assignments & Quizzes
                   </h1>
                   <p className="text-gray-600 dark:text-gray-400 text-center mt-2">
                     Track your progress and manage your academic tasks
