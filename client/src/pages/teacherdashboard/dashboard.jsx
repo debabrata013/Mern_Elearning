@@ -9,6 +9,8 @@
     import ProfilePage from './profile/ProfilePage';
     import logo from '../../../public/aigiri logo.png';
     import NotificationContent from './NotificationContent';
+    import axiosInstance from '@/api/axiosInstance';
+    import moment from 'moment';
 
     const studentStats = [
       { class: 'Class A', value: 30, avgPoint: 25, attendance: 95 },
@@ -17,6 +19,8 @@
       { class: 'Class D', value: 20, avgPoint: 40, attendance: 85 },
       { class: 'Class E', value: 60, avgPoint: 50, attendance: 90 },
     ];
+
+    
 
     const recentActivities = [
       { day: '21', title: 'Mathematics Test', time: '10:00 AM', status: 'Due soon', subtitle: 'Class A - Algebra' },
@@ -29,64 +33,88 @@
       const [newStudents, setNewStudents] = useState(27);
       const [showWelcomeAnimation, setShowWelcomeAnimation] = useState(false);
       const [tasks, setTasks] = useState([]);
-      const [newTask, setNewTask] = useState('');
-      const [showAddTask, setShowAddTask] = useState(false);
-      
+  const [newTask, setNewTask] = useState('');
+  const [showAddTask, setShowAddTask] = useState(false);
+  const userData = JSON.parse(localStorage.getItem("user")) 
+  let pandingtask=tasks.length;
       useEffect(() => {
+      
+        
         // Get teacher name from session storage or use default
-        const userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+        
         if (userData.userName) {
           setTeacherName(userData.userName);
         }
-        
-        // Trigger welcome card animation
+  
         setShowWelcomeAnimation(true);
+        const fetchTasks = async () => {
+          try {
+            const response = await axiosInstance.get(`/api/todos/pending/${userData._id}`); // Replace with your API endpoint
         
-        // Simulate fetching new students count
-        const timer = setTimeout(() => {
-          // This would be an API call in a real app
-          setNewStudents(Math.floor(Math.random() * 30) + 10);
-        }, 1500);
-        
-        return () => clearTimeout(timer);
+            setTasks(response.data);
+           
+
+          } catch (error) {
+            console.error('Error fetching tasks:', error);
+          }
+        };
+    
+        fetchTasks();
+       
+       
+       
+       
+      
       }, []);
       
-      const handleViewNewStudents = () => {
-        navigate('/teacher/students', { state: { filter: 'new' } });
-      };
+      // const handleViewNewStudents = () => {
+      //   navigate('/teacher/students', { state: { filter: 'new' } });
+      // };
       
-      const handleTakeAttendance = () => {
-        navigate('/teacher/attendance');
-      };
+      // const handleTakeAttendance = () => {
+      //   navigate('/teacher/attendance');
+      // };
 
-      const handleAddTask = (e) => {
+      const handleAddTask = async (e) => {
         e.preventDefault();
-        if (!newTask.trim()) return;
-        
-        const task = {
-          id: Date.now(),
-          text: newTask,
-          completed: false,
-          createdAt: new Date().toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: 'numeric',
-            hour12: true
-          })
+    if (!newTask.trim()) return;
+
+    try {
+      const response = await axiosInstance.post('/api/todos/create', { todo: newTask , userId: userData._id});
+      setTasks(response.data.todos);
+      setNewTask('');
+      setShowAddTask(false);
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
         };
         
-        setTasks([task, ...tasks]);
-        setNewTask('');
-        setShowAddTask(false);
-      };
 
-      const toggleTask = (id) => {
-        setTasks(tasks.map(task => 
-          task.id === id ? { ...task, completed: !task.completed } : task
-        ));
-      };
-
-      const deleteTask = (id) => {
-        setTasks(tasks.filter(task => task.id !== id));
+      
+      // const toggleTask = async (id) => {
+      //   try {
+      //     const task = tasks.find((task) => task.id === id);
+      //     const updatedTask = { ...task, completed: !task.completed };
+      //     await axios.put(`/api/todos/${id}`, updatedTask);
+      //     setTasks(tasks.map((task) => (task.id === id ? updatedTask : task)));
+      //   } catch (error) {
+      //     console.error('Error toggling task:', error);
+      //   }
+      // };
+    
+      // Delete a task
+      const deleteTask = async (id) => {
+        try {
+           const res=await axiosInstance.delete(`/api/todos/delete/${userData._id}/${id}`); 
+            if(res.status===200){
+              console.log(res.data.message);
+              
+              setTasks(res.data.todos);
+            }
+          
+        } catch (error) {
+          console.error('Error deleting task:', error);
+        }
       };
 
       return (
@@ -104,15 +132,12 @@
                 Head Teacher if you want them excluded from your domain.
               </p>
               <div className="flex flex-wrap gap-4 animate-fadeIn animation-delay-300">
-                <button 
-                  onClick={handleViewNewStudents}
-                  className="bg-white text-[#5491CA] px-4 py-2 rounded-lg font-medium hover:bg-opacity-90 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 flex items-center gap-2"
-                >
+               
                   View New Students
                   <ChevronRight className="h-4 w-4" />
-                </button>
+                
                 <button 
-                  onClick={handleTakeAttendance}
+                  
                   className="bg-[#7670AC] text-white px-4 py-2 rounded-lg font-medium hover:bg-opacity-90 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 flex items-center gap-2"
                 >
                   Take Attendance
@@ -137,7 +162,7 @@
               { title: 'Total Students', value: '210', icon: <Users className="h-6 w-6" />, change: '+27 this month', color: '#5491CA' },
               { title: 'Average Attendance', value: '92%', icon: <CheckCircle className="h-6 w-6" />, change: '+5% increase', color: '#b1a9f1' },
               { title: 'Classes Today', value: '5', icon: <BookOpen className="h-6 w-6" />, change: '2 remaining', color: '#7670AC' },
-              { title: 'Pending Tasks', value: '8', icon: <ClipboardList className="h-6 w-6" />, change: '3 urgent', color: '#5491CA' },
+              { title: 'Pending Tasks', value: pandingtask, icon: <ClipboardList className="h-6 w-6" />,  color: '#5491CA' },
             ].map((stat, index) => (
               <div 
                 key={index} 
@@ -246,48 +271,48 @@
               )}
 
               {/* Tasks List */}
-              <div className="space-y-4">
-                {tasks.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <p>No tasks yet. Add your first task!</p>
-                  </div>
-                ) : (
-                  tasks.map((task) => (
-                    <div 
-                      key={task.id}
-                      className="flex gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
-                    >
-                      <button
-                        onClick={() => toggleTask(task.id)}
-                        className={`h-12 w-12 rounded-lg flex items-center justify-center shadow-sm transition-all
-                          ${task.completed 
-                            ? 'bg-green-500 text-white' 
-                            : 'bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white'}`}
-                      >
-                        {task.completed ? (
-                          <Check className="w-6 h-6" />
-                        ) : (
-                          <Clock className="w-6 h-6" />
-                        )}
-                      </button>
-                      
-                      <div className="flex-1">
-                        <h4 className={`font-medium ${task.completed ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
-                          {task.text}
-                        </h4>
-                        <p className="text-sm text-gray-500">Added {task.createdAt}</p>
-                      </div>
-
-                      <button
-                        onClick={() => deleteTask(task.id)}
-                        className="opacity-0 group-hover:opacity-100 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-all"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))
-                )}
-              </div>
+              {/* Tasks List */}
+<div className="space-y-4" key={tasks.length}>
+  {tasks.length === 0 ? (
+    <div className="text-center py-8 text-gray-500">
+      <p>No tasks yet. Add your first task!</p>
+    </div>
+  ) : (
+    tasks.map((task, index) => (
+      <div 
+        key={task.id || task._id || index} // Ensure a unique key
+        className="flex gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+      >
+        <button
+          onClick={() => toggleTask(task.id)}
+          className={`h-12 w-12 rounded-lg flex items-center justify-center shadow-sm transition-all
+            ${task.completed 
+              ? 'bg-green-500 text-white' 
+              : 'bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-white'}`}
+        >
+          
+            <Clock className="w-6 h-6" />
+        </button>
+        <div className="flex-1">
+          <h4 className={`font-medium ${task.completed ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+            {task.todo}
+          </h4>
+      
+   
+      
+          
+          <p className="text-sm text-gray-500">{moment(`${task.createdAt}`).format("MMMM Do YYYY, h:mm:ss A")}</p>
+        </div>
+        <button
+          onClick={() => deleteTask(task._id)}
+          className="opacity-0 group-hover:opacity-100 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-all"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
+    ))
+  )}
+</div>
             </div>
           </div>
 
@@ -485,14 +510,7 @@
                             setProfileDropdownOpen(false);
                           }}
                         />
-                        <DropdownItem 
-                          icon={<Settings className="h-4 w-4" />} 
-                          label="Settings" 
-                          onClick={() => {
-                            setCurrentSection('settings');
-                            setProfileDropdownOpen(false);
-                          }}
-                        />
+                      
                       </div>
                       
                       <div className="border-t border-gray-100 py-1">
