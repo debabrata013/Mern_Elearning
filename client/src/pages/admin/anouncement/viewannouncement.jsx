@@ -18,7 +18,8 @@ const AnnouncementView = () => {
     try {
       setLoading(true);
       const response = await axios.get("http://localhost:4400/announcements/");
-      setAnnouncements(response.data);
+      // Access the announcements array from response.data.announcements
+      setAnnouncements(response.data.announcements);
       setError(null);
     } catch (err) {
       console.error("Error fetching announcements:", err);
@@ -40,7 +41,8 @@ const AnnouncementView = () => {
     if (window.confirm("Are you sure you want to delete this announcement?")) {
       try {
         await axios.delete(`http://localhost:4400/announcements/${id}`);
-        fetchAnnouncements(); // Refresh the announcements list
+        // After successful deletion, refresh the announcements list
+        fetchAnnouncements();
       } catch (err) {
         console.error("Error deleting announcement:", err);
         setError("Failed to delete announcement.");
@@ -50,16 +52,15 @@ const AnnouncementView = () => {
 
   // Filter announcements based on search term and filter type
   const filteredAnnouncements = announcements.filter(announcement => {
-    if (filterType !== "all" && announcement.targetAudience !== filterType) {
-      return false;
-    }
-    if (searchTerm) {
-      return (
-        announcement.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        announcement.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    return true;
+    const matchesSearch = 
+      announcement.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      announcement.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesFilter = 
+      filterType === "all" || 
+      announcement.targetAudience.includes(filterType);
+
+    return matchesSearch && matchesFilter;
   });
 
   return (
@@ -94,8 +95,6 @@ const AnnouncementView = () => {
             Retry
           </button>
         </div>
-      ) : filteredAnnouncements.length === 0 ? (
-        <div className="home-text">No announcements found.</div>
       ) : (
         <table>
           <thead>
@@ -110,22 +109,24 @@ const AnnouncementView = () => {
           </thead>
           <tbody>
             {filteredAnnouncements.map((announcement) => (
-              <tr key={announcement._id || announcement.id}>
+              <tr key={announcement._id}>
                 <td>{announcement.title}</td>
                 <td>{announcement.description.length > 100 ? `${announcement.description.substring(0, 100)}...` : announcement.description}</td>
-                <td style={{ textTransform: "capitalize" }}>{announcement.targetAudience}</td>
-                <td>{announcement.type}</td>
-                <td>{new Date(announcement.createdAt || Date.now()).toLocaleDateString()}</td>
+                <td style={{ textTransform: "capitalize" }}>{announcement.targetAudience.join(", ")}</td>
+                <td>{announcement.notificationType}</td>
+                <td>{new Date(announcement.createdAt).toLocaleDateString()}</td>
                 <td className="action-cell">
-                  {announcement.type === "link" && announcement.link && (
+                  {announcement.notificationType === "link" && announcement.link && (
                     <a href={announcement.link} target="_blank" rel="noopener noreferrer" className="join-button" style={{ marginRight: "5px", textDecoration: "none" }}>
                       <FaEye className="mr-1" /> View
                     </a>
                   )}
-                  <button className="action-btn edit-btn" style={{ marginRight: "5px", backgroundColor: "#5491CA" }}>
-                    <FaEdit className="mr-1" /> Edit
-                  </button>
-                  <button className="action-btn delete-btn" style={{ backgroundColor: "#FF6B6B" }} onClick={() => handleDelete(announcement._id || announcement.id)}>
+                 
+                  <button 
+                    className="action-btn delete-btn" 
+                    style={{ backgroundColor: "#FF6B6B" }} 
+                    onClick={() => handleDelete(announcement._id)}
+                  >
                     <FaTrash className="mr-1" /> Delete
                   </button>
                 </td>
