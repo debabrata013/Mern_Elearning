@@ -5,14 +5,18 @@ const router = express.Router();
 const {
   createAnnouncement,
   getUserAnnouncements,
-  deleteUserAnnouncement
+  deleteUserAnnouncement,
+  getallAnnouncement,
+  deleteAnnoucement
 
 } = require('../controllers/announcementController');
 
 // 1. Route to create a new announcement
 router.post('/', createAnnouncement);
 router.get('/:id',getUserAnnouncements);
+router.get("/",getallAnnouncement);
 router.delete('/:id/:announcementId', deleteUserAnnouncement);
+router.delete("/:id",deleteAnnoucement)
 // router.put('/:id', ubdateAnnouncement);
 
 
