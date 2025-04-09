@@ -106,7 +106,55 @@ exports.deleteUserAnnouncement = async (req, res) => {
     return res.status(500).json({ error: "Internal server error", details: error.message });
   }
 };
+exports.deleteAnnoucement= async(req,res)=>{
+  try {
+    const announcementId = req.params.id;
 
+    // Delete the announcement from the Announcement collection
+    const deletedAnnouncement = await Announcement.findByIdAndDelete(announcementId);
+
+    if (!deletedAnnouncement) {
+      return res.status(404).json({ error: "Announcement not found" });
+    }
+
+    // Remove this announcement reference from all users
+    await User.updateMany(
+      { "announcements.announcementId": announcementId },
+      { $pull: { announcements: { announcementId: announcementId } } }
+    );
+
+    // Get all remaining announcements
+    const remainingAnnouncements = await Announcement.find();
+
+    return res.status(200).json({
+      message: "Announcement deleted successfully",
+      announcements: remainingAnnouncements
+    });
+
+  } catch (error) {
+    console.error("Error deleting announcement:", error);
+    return res.status(500).json({ error: "Internal server error", details: error.message });
+  }
+}
+
+exports.getallAnnouncement = async (req, res) => {
+  try {
+    // Get all announcements from the database
+    const announcements = await Announcement.find().sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      announcements
+    });
+
+  } catch (error) {
+    console.error("Error fetching announcements:", error);
+    return res.status(500).json({ 
+      error: "Internal server error", 
+      details: error.message 
+    });
+  }
+}
 // exports.createAnnouncement = async (req, res) => {
 //   try {
 //     const { title, description, link, type, targetAudience } = req.body;

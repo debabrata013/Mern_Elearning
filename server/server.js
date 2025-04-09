@@ -62,6 +62,12 @@ const TodoRoutes = require('./src/routes/TodoRouters');
 const UserRoutes = require('./src/routes/userRoutes');
 const picRouters = require('./src/routes/picrouter');
 const LRouter = require("./src/routes/lechcherRoutes");
+const todoRoutes = require('./src/routes/TodoRouters');
+const StudentAssigementRouter = require("./src/routes/studentAssignments")
+const TeacherAssigementRouter = require("./src/routes/teacherAssignments")
+
+
+
 
 // 🧠 Doubt Chat Sockets
 require('./src/sockets/doubtSocket')(io); // <-- pass io to socket handler
@@ -91,9 +97,17 @@ app.use("/lac", LRouter);
 // 🆕 Doubt clearance feature routes
 app.use('/api/doubts', doubtRoutes);
 app.use('/api/messages', messageRoutes);
-
+app.use('/api/todos', todoRoutes);
+app.use("/api/teacher/assignments", TeacherAssigementRouter);
+app.use("/api/student/assignments",StudentAssigementRouter);
 // Start server with Socket.io support
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+
+// ✅ Get Pending To-Dos (GET /api/todos/pending/YOUR_USER_ID)
+// ✅ Get Pending Count (GET /api/todos/pending-count/YOUR_USER_ID)
+// ✅ Delete To-Do (DELETE /api/todos/delete/YOUR_USER_ID/TODO_ID)
+// ✅ Create To-Do (POST /api/todos/create)
