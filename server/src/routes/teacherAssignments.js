@@ -25,12 +25,32 @@ router.post("/create", async (req, res) => {
 // 📌 Get all assignments by teacher (Teacher ID from req.body)
 router.get("/", async (req, res) => {
   try {
-    const assignments = await Assignment.find({ teacher: req.body.userid }).populate("course");
+    let userId = req.query.userid || req.body.userid; // handles both query and body
+    console.log("UserID:", userId);
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const assignments = await Assignment.find({ teacher: userId }).populate("course");
     res.json(assignments);
   } catch (err) {
     res.status(500).json({ message: "Error fetching assignments", error: err.message });
   }
 });
+// router.get("/", async (req, res) => {
+//   try {
+//     console.log(req.query.userid); // ✅ This will log properly
+//       // let a=req.query.userid;
+//       // if(a == undefined)
+//       //   a=req.body.userid
+//     const assignments = await Assignment.find({ teacher:req.query.userid }).populate("course");
+//     res.json(assignments);
+//   } catch (err) {
+//     res.status(500).json({ message: "Error fetching assignments", error: err.message });
+//   }
+// });
+
 
 // 📌 Get stats of a specific assignment
 router.get("/:id/stats", async (req, res) => {
