@@ -178,7 +178,7 @@ const ManageTeacher = () => {
                 <div className="flex items-center mb-3 ">
                   <img
                     className="h-10 w-10 rounded-full border-2 border-[#b1a9f1]"
-                    src={teacher.teacherProfileImage || 'https://via.placeholder.com/40'}
+                    src={teacher.teacherProfileImage }
                     alt={teacher.teacherName}
                   />
                   <div className="ml-3">
@@ -191,7 +191,7 @@ const ManageTeacher = () => {
                     <span className="font-medium text-[#5491CA]">Subjects:</span> {teacher.subjectKnowledge.join(', ')}
                   </div>
                   <div className="text-sm">
-                    <span className="font-medium text-[#5491CA]">Salary:</span> ${teacher.salary}
+                    <span className="font-medium text-[#5491CA]">Salary:</span> ₹{teacher.salary}
                   </div>
                   <div className="flex justify-end space-x-3 mt-3">
                     <button onClick={() => setEditingTeacher(teacher)} className="text-[#5491CA] hover:text-[#4a82b6] transition-colors duration-300">
@@ -227,7 +227,7 @@ const ManageTeacher = () => {
                         <div className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
                           <img
                             className="h-full w-full rounded-full border-2 border-[#b1a9f1]"
-                            src={teacher.teacherProfileImage || 'https://via.placeholder.com/40'}
+                            src={teacher.profileImage || 'https://via.placeholder.com/40'}
                             alt={teacher.teacherName}
                           />
                         </div>
@@ -244,7 +244,7 @@ const ManageTeacher = () => {
                       <div className="text-sm text-gray-900">{teacher.subjectKnowledge.join(', ')}</div>
                     </td>
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">${teacher.salary}</div>
+                      <div className="text-sm text-gray-900">₹{teacher.salary}</div>
                     </td>
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-3">
