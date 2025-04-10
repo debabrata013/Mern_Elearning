@@ -40,6 +40,7 @@ import Doubts from "./components/student-view/Doubts"
 import Assigment from "./components/student-view/Assigment"
 import Pr from "./pages/admin/profile"
 import Enroll from './components/student-view/studentComponent/enroll';
+import CreateQuizAssignmentForm from "./pages/teacherdashboard/quiz dashboard/createQuize";
 
 // import StudentRoutes from "./components/student-view/StudentRoutes";
 // import student from './components/student-view/AppLayout'
@@ -54,6 +55,7 @@ import Tc from "./pages/T&C"
 import Privacy from "./pages/policy"
 import Noti from "./components/student-view/Notification"
 
+import TeacherAssignmentList from "./pages/teacherdashboard/quiz dashboard/TeacherAssignmentList";
 function App() {
   return (
     <ThemeProvider>
@@ -81,6 +83,10 @@ function App() {
           <Route path="/privacy" element={<Privacy/>} />
           <Route path="/notifications" element={<Noti/>}/>
           <Route path="/videop" element={<DemoVideoPlayer/>} />
+
+          <Route path="/teacher/assignments/:courseId" element={<TeacherAssignmentList />} />
+          <Route path="/teacher/assignments/:courseId/create" element={<CreateQuizAssignmentForm />} />
+
           <Route
             path="/user-dashboard"
             element={
