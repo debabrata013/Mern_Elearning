@@ -18,15 +18,17 @@ const TeacherAssignmentList = () => {
     const fetchAssignments = async () => {
       try {
         setLoading(true);
-        const res = await axiosInstance.get(`api/teacher/assignments`, {
+        console.log(user._id);
+        
+        const res = await axiosInstance.get(`/api/teacher/assignments`, {
             params: {
-              userid: user._id
+              userid: user._id,
             }
           }
         );
-        console.log("Assignments response:", res.data);
+        console.log("Assignments response:", res);
         
-        setAssignments(res.data.assignments || []);
+        setAssignments(res.data || []);
         setCourseTitle(res.data.course?.title || "Course");
       } catch (err) {
         console.error("Failed to fetch assignments", err);
@@ -44,39 +46,51 @@ const TeacherAssignmentList = () => {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-[#5491CA]">{courseTitle} - Assignments</h2>
-        <button
-          onClick={handleCreate}
-          className="flex items-center gap-2 bg-[#5491CA] text-white px-4 py-2 rounded-lg hover:bg-[#3e6ca8] transition-all"
-        >
-          <Plus size={20} /> Create Assignment
-        </button>
-      </div>
+  <div className="flex justify-between items-center mb-8">
+    <h2 className="text-3xl font-extrabold text-[#2D6AB1] tracking-tight">
+      {courseTitle} - <span className="text-gray-700">Assignments</span>
+    </h2>
+    <button
+      onClick={handleCreate}
+      className="flex items-center gap-2 bg-gradient-to-r from-[#5491CA] to-[#3e6ca8] text-white px-5 py-2.5 rounded-xl hover:scale-105 transition-transform duration-300 shadow-md"
+    >
+      <Plus size={20} />
+      Create Assignment
+    </button>
+  </div>
 
-      {loading ? (
-        <p className="text-gray-500 text-center">Loading assignments...</p>
-      ) : assignments.length === 0 ? (
-        <p className="text-gray-500 text-center">No assignments found.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {assignments.map((assignment) => (
-            <div
-              key={assignment._id}
-              className="bg-white rounded-xl p-4 shadow hover:shadow-md border hover:border-blue-400 transition"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <FileText className="text-[#5491CA]" />
-                <h3 className="text-lg font-semibold text-[#5491CA]">{assignment.title}</h3>
-              </div>
-              <p className="text-sm text-gray-600 mb-1">Due: {moment(assignment.deadline).format("MMM DD, YYYY")}</p>
-              <p className="text-sm text-gray-700 mb-2">{assignment.description}</p>
-              <div className="text-xs text-gray-500">Total Marks: {assignment.totalMarks}</div>
-            </div>
-          ))}
+  {loading ? (
+    <p className="text-gray-500 text-center animate-pulse text-lg">Loading assignments...</p>
+  ) : assignments.length === 0 ? (
+    <div className="text-center text-gray-400 text-lg italic mt-12">No assignments found.</div>
+  ) : (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {assignments.map((assignment) => (
+        <div
+          key={assignment._id}
+          className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl border border-transparent hover:border-blue-300 transition-all duration-300 group"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <FileText className="text-[#5491CA] group-hover:scale-110 transition-transform duration-300" />
+            <h3 className="text-xl font-semibold text-[#2D6AB1] group-hover:underline">
+              {assignment.title}
+            </h3>
+          </div>
+          <p className="text-sm text-gray-500 mb-2">
+            <span className="font-medium text-gray-600">Deadline:</span>{" "}
+            {moment(assignment.deadline).format("MMM DD, YYYY")}
+          </p>
+          <p className="text-sm text-gray-700 mb-3">{assignment.description}</p>
+          <div className="text-sm text-gray-500 font-medium">
+            Total Questions:{" "}
+            <span className="text-gray-700">{assignment.questions.length}</span>
+          </div>
         </div>
-      )}
+      ))}
     </div>
+  )}
+</div>
+
   );
 };
 
