@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from './studentComponent/Sidebar';
 import { getAllCourses } from "../../pages/landing-page/api/landingServices";
-import CourseCard from "./course-card-after-buy/coursecard";
 import {
   ChevronDown,
   ChevronUp,
@@ -486,159 +486,146 @@ const AssignmentDetail = ({ assignment, onBack, onSubmitAssignment }) => {
   );
 };
 
-// Mock data for courses
-const coursesData = [
-  {
-    id: 1,
-    title: "React Fundamentals",
-    instructor: "John Smith",
-    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3",
-    rating: 4.8,
-    progress: 65,
-    lessons: 12,
-    assignments: 4,
-    quizzes: 3,
-    tags: ["Frontend", "JavaScript", "React"],
-    description: "Learn the fundamentals of React including components, state, props, and hooks.",
-  },
-  {
-    id: 2,
-    title: "JavaScript Advanced Concepts",
-    instructor: "Emily Chen",
-    image: "https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?ixlib=rb-4.0.3",
-    rating: 4.7,
-    progress: 48,
-    lessons: 15,
-    assignments: 6,
-    quizzes: 4,
-    tags: ["JavaScript", "Advanced", "ES6+"],
-    description: "Deep dive into advanced JavaScript concepts, closures, prototypes, and more.",
-  },
-  {
-    id: 3,
-    title: "CSS Animations & Transitions",
-    instructor: "Michael Rodriguez",
-    image: "https://images.unsplash.com/photo-1621839673705-6617adf9e890?ixlib=rb-4.0.3",
-    rating: 4.5,
-    progress: 80,
-    lessons: 8,
-    assignments: 3,
-    quizzes: 2,
-    tags: ["CSS", "Animations", "Frontend"],
-    description: "Create stunning web animations and transitions using modern CSS techniques.",
-  },
-  {
-    id: 4,
-    title: "Node.js Backend Development",
-    instructor: "Jessica Williams",
-    image: "https://images.unsplash.com/photo-1590608897129-79da98d15969?ixlib=rb-4.0.3",
-    rating: 4.9,
-    progress: 32,
-    lessons: 18,
-    assignments: 5,
-    quizzes: 4,
-    tags: ["Backend", "Node.js", "Express"],
-    description: "Build scalable backend APIs and services using Node.js and Express.",
-  },
-  {
-    id: 5,
-    title: "UI/UX Design Principles",
-    instructor: "David Kim",
-    image: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?ixlib=rb-4.0.3",
-    rating: 4.6,
-    progress: 55,
-    lessons: 10,
-    assignments: 7,
-    quizzes: 2,
-    tags: ["Design", "UI", "UX"],
-    description: "Master the principles of great user interface and experience design.",
-  },
-  {
-    id: 6,
-    title: "Python Data Science",
-    instructor: "Sophia Martinez",
-    image: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?ixlib=rb-4.0.3",
-    rating: 4.8,
-    progress: 20,
-    lessons: 20,
-    assignments: 8,
-    quizzes: 5,
-    tags: ["Python", "Data Science", "Machine Learning"],
-    description: "Learn data analysis and visualization techniques with Python.",
-  }
-];
 
+
+// Course Card Component
+const CourseCard = ({ course, onClick }) => { 
+  return (
+    <div
+      className="flex flex-col items-center w-[260px] h-[320px] cursor-pointer transition-transform hover:-translate-y-1 duration-300"
+      onClick={onClick}
+    >
+      <div className="bg-[#5491CA] text-white rounded-2xl overflow-hidden w-full shadow-lg hover:shadow-2xl">
+        <div className="p-5 bg-[#5491CA] flex justify-center items-center h-[100px]">
+          <img
+            src={course.coverImage}
+            alt={`${course.title} Logo`}
+            className="max-h-[60px] object-contain"
+          />
+        </div>
+  
+        <div className="bg-white text-black px-4 py-3 h-[200px] rounded-t-2xl flex flex-col justify-between">
+          <div>
+            <h3 className="text-md font-semibold text-center">{course.title}</h3>
+            <p className="text-sm mt-2 leading-snug text-center line-clamp-4">
+              {course.description}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+  
+};
 
 // HomePage Component
-const HomePage = () => {
+const HomePage = ({ onSelectCourse }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
   const [myCourses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
 
   useEffect(() => {
-     const fetchCourses = async () => {
-       try {
-         const data = await getAllCourses();
-         setCourses(data);
-         setLoading(false);
-       } catch (err) {
-         console.error("Error fetching courses:", err);
-         setError(err);
-         setLoading(false);
-       }
-     };
-     fetchCourses();
-   }, []);
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsSidebarOpen(!mobile);
+    };
+    const fetchCourses = async () => {
+        try {
+          const data = await getAllCourses();
+          setCourses(data);
+          setLoading(false);
+        } catch (err) {
+          console.error("Error fetching courses:", err);
+          setError(err);
+          setLoading(false);
+        }
+      };
+      fetchCourses();
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar */}
-      <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
+    {/* Sidebar */}
+    <div
+      className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
         isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
-      }`}>
-        <Sidebar />
-      </div>
-
-      {/* Main Content */}
-      <div className="ml-[280px] w-full px-6 py-10">
-        <h1 className="text-3xl font-bold text-center text-[#5491CA] mb-8">
-          My Courses
-        </h1>
-
+      }`}
+    >
+      <Sidebar />
+    </div>
+  
+    {/* Main Content */}
+    <div className={`flex-1 transition-all duration-300 ${!isMobile ? 'ml-[280px]' : ''}`}>
+      {/* Mobile Topbar with Menu */}
+      {isMobile && (
+        <div className="flex items-center justify-between px-4 py-3 bg-white shadow md:hidden sticky top-0 z-30">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="text-gray-700 dark:text-white focus:outline-none"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h1 className="text-xl font-bold text-[#5491CA]">My Courses</h1>
+          <div className="w-6" /> {/* Spacer for symmetry */}
+        </div>
+      )}
+  
+      <div className="px-6 py-10">
+        {!isMobile && (
+          <h1 className="text-3xl font-bold text-center text-[#5491CA] mb-10">
+            My Courses
+          </h1>
+        )}
+  
         {loading && (
           <p className="text-center text-gray-600">Loading your courses...</p>
         )}
-
+  
         {!loading && error && (
           <p className="text-center text-red-500 font-medium">{error}</p>
         )}
-
+  
         {!loading && myCourses.length === 0 && (
           <p className="text-center text-gray-500">
             You haven’t enrolled in any course yet.
           </p>
         )}
-
-        <div className="flex flex-wrap justify-center gap-6">
-          {myCourses.map((course) => (
-            <CourseCard key={course._id} course={course} />
+  
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center">
+          {myCourses.slice(0, 8).map((course) => (
+            <CourseCard
+              key={course._id}
+              course={course}
+              onClick={() => onSelectCourse(course.id)}
+            />
           ))}
         </div>
       </div>
-
-      {/* Mobile Overlay */}
-      {isMobile && isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
     </div>
+  
+    {/* Mobile Overlay */}
+    {isMobile && isSidebarOpen && (
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 z-30"
+        onClick={() => setIsSidebarOpen(false)}
+      />
+    )}
+  </div>
+  
+  
   );
 };
-
 
 // Main Component (Updated to include the HomePage as the entry point)
 const AssignmentsAndQuizzes = () => {
@@ -727,8 +714,12 @@ const AssignmentsAndQuizzes = () => {
         <div className="p-4 md:p-8">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
-              <div className="flex items-center gap-4 mb-4 md:mb-0">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 md:p-8 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
+
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    
+              {/* Left Side Buttons */}
+              <div className="flex items-center gap-3">
                 {isMobile && (
                   <button
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -742,18 +733,22 @@ const AssignmentsAndQuizzes = () => {
                   className="flex items-center gap-2 text-[#5491CA] hover:text-[#5491CA]/80 transition-colors"
                 >
                   <ArrowLeft className="w-5 h-5" />
-                  <span>Back to Courses</span>
+                  <span className="text-sm md:text-base">Back to Courses</span>
                 </button>
-                <div className="flex-1">
-                  <h1 className="text-2xl md:text-3xl font-bold text-center bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
-                    {coursesData.find(c => c.id === selectedCourseId)?.title || "Course"} - Assignments & Quizzes
-                  </h1>
-                  <p className="text-gray-600 dark:text-gray-400 text-center mt-2">
-                    Track your progress and manage your academic tasks
-                  </p>
-                </div>
+              </div>
+
+              {/* Title and Subtitle */}
+              <div className="text-center flex-1">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
+                  Assignments & Quizzes
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
+                  Track your progress and manage your academic tasks
+                </p>
               </div>
             </div>
+          </div>
+
 
             {/* Search and Filter Section */}
             <div className="flex flex-col md:flex-row gap-4 mb-8">

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Sidebar from "../studentComponent/Sidebar";
 import axiosInstance from "@/api/axiosInstance";
+import VideoPlayer from "../studentComponent/ui/videoplayer"; // your custom player
 
 const CourseEnrollment = () => {
   const { id } = useParams();
@@ -20,7 +21,6 @@ const CourseEnrollment = () => {
         setLoading(true);
         try {
           const response = await axiosInstance.get(`/api/course/${id}`);
-          console.log("📦 Backend response:", response.data);
           setCourse(response.data);
         } catch (error) {
           console.error("❌ Failed to fetch course", error);
@@ -34,7 +34,7 @@ const CourseEnrollment = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-white">
         <div className="w-12 h-12 border-4 border-[#7670AC] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -56,85 +56,96 @@ const CourseEnrollment = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row">
-      <Sidebar
-        sections={course.chapters || []}
-        activeSection={currentChapter}
-        onSectionChange={setCurrentChapter}
-      />
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar */}
+      <div className="w-[260px] fixed top-0 left-0 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-lg z-30">
+        <Sidebar
+          sections={course.chapters || []}
+          activeSection={currentChapter}
+          onSectionChange={setCurrentChapter}
+        />
+      </div>
 
-      <main className="flex-1 p-6 overflow-y-auto">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left section: Course info */}
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold text-[#5491CA] mb-2">
-              {course.title}
-            </h1>
-            <p className="text-gray-700 mb-4">{course.description}</p>
+      {/* Main Content */}
+      <main className="ml-[260px] w-full px-6 py-10 bg-gradient-to-br from-white via-[#f7faff] to-[#eaf3ff] overflow-y-auto">
+  <div className="max-w-7xl mx-auto space-y-12">
+    
+    {/* Course Header */}
+    <div className="space-y-2">
+      <h1 className="text-4xl font-extrabold text-[#5491CA]">
+        {course.title}
+      </h1>
+      <p className="text-gray-600 text-lg leading-relaxed">
+        {course.description}
+      </p>
+    </div>
 
-            <div className="mb-4">
-              <p><span className="font-semibold">Category:</span> {course.category}</p>
-              <p><span className="font-semibold">Level:</span> {course.level}</p>
-              <p><span className="font-semibold">Language:</span> {course.language}</p>
-              <p><span className="font-semibold">Duration:</span> {course.duration} weeks</p>
-              <p><span className="font-semibold">Start:</span> {new Date(course.startDate).toDateString()}</p>
-              <p><span className="font-semibold">End:</span> {new Date(course.endDate).toDateString()}</p>
-              <p><span className="font-semibold">Enroll By:</span> {new Date(course.enrollmentDeadline).toDateString()}</p>
-              <p><span className="font-semibold">Teacher:</span> {course.teacher}</p>
-              <p><span className="font-semibold">Price:</span> ₹{course.price} ({course.discount}% off)</p>
-            </div>
-
-            {course.tags?.length > 0 && (
-              <div className="mb-4">
-                <h4 className="font-semibold">Tags:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {course.tags.map((tag, i) => (
-                    <span
-                      key={i}
-                      className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Chapter Info */}
-            <div className="mt-6">
-              <h2 className="text-xl font-bold text-[#7670AC] mb-1">
-                {chapter.title}
-              </h2>
-              <p className="text-gray-600 mb-4">{chapter.description}</p>
-
-              {chapter.videoUrl ? (
-                <div className="aspect-video w-full max-w-4xl rounded-lg overflow-hidden shadow-md border">
-                  <iframe
-                    src={chapter.videoUrl}
-                    title={chapter.title}
-                    className="w-full h-full"
-                    frameBorder="0"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-              ) : (
-                <div className="bg-gray-100 p-6 rounded-lg text-center text-gray-500">
-                  No video content available for this chapter.
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Right section: Cover Image */}
-          <div className="w-full lg:w-1/3 flex-shrink-0">
-            <img
-              src={course.coverImage}
-              alt="Course Cover"
-              className="rounded-lg shadow-md w-full object-cover"
-            />
-          </div>
+    {/* Course Info + Image */}
+    <div className="flex flex-col lg:flex-row items-start gap-8">
+      
+      {/* Info Panel */}
+      <div className="w-full flex-1 p-6 rounded-2xl bg-white shadow-sm border border-gray-200 space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          <p><strong>📚 Category:</strong> {course.category}</p>
+          <p><strong>⚙️ Level:</strong> {course.level}</p>
+          <p><strong>🗣️ Language:</strong> {course.language}</p>
+          <p><strong>⏳ Duration:</strong> {course.duration} weeks</p>
+          <p><strong>🚀 Start:</strong> {new Date(course.startDate).toDateString()}</p>
+          <p><strong>🏁 End:</strong> {new Date(course.endDate).toDateString()}</p>
+          <p><strong>📅 Enroll By:</strong> {new Date(course.enrollmentDeadline).toDateString()}</p>
+          <p><strong>👨‍🏫 Teacher:</strong> {course.teacher}</p>
+          <p><strong>💰 Price:</strong> ₹{course.price} ({course.discount}% off)</p>
         </div>
-      </main>
+
+        {/* Tags */}
+        {course.tags?.length > 0 && (
+          <div>
+            <h4 className="text-sm font-semibold mb-1 text-gray-700">Tags:</h4>
+            <div className="flex flex-wrap gap-2">
+              {course.tags.map((tag, i) => (
+                <span
+                  key={i}
+                  className="bg-[#d4eaff] text-[#1166aa] text-xs px-3 py-1 rounded-full font-medium"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Course Image */}
+      <div className="w-full lg:w-[350px]">
+        <img
+          src={course.coverImage}
+          alt="Course Cover"
+          className="rounded-xl shadow-lg w-full object-cover border border-gray-300"
+        />
+      </div>
+    </div>
+
+    {/* Chapter Section */}
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold text-[#7670AC]">{chapter.title}</h2>
+      <p className="text-gray-700">{chapter.description}</p>
+
+      {chapter.videoUrl ? (
+        <div className="aspect-video w-full max-w-5xl rounded-xl overflow-hidden shadow-lg border border-gray-300">
+          <VideoPlayer
+            src={chapter.videoUrl}
+            title={chapter.title}
+          />
+        </div>
+      ) : (
+        <div className="bg-gray-100 p-6 rounded-xl text-center text-gray-500 border border-dashed border-gray-300">
+          🎬 No video content available for this chapter.
+        </div>
+      )}
+    </div>
+  </div>
+</main>
+
     </div>
   );
 };
