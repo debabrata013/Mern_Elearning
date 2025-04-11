@@ -136,13 +136,7 @@ const ProfileContent = () => {
     try {
       // Create a FormData object to handle file uploads
       const formData = new FormData();
-      Object.keys(profileData).forEach(key => {
-        if (key === 'skills' || key === 'Languages' ) {
-          formData.append(key, JSON.stringify(profileData[key]));
-        } else {
-          formData.append(key, profileData[key]);
-        }
-      });
+     
       
       const response = await axiosInstance.put(`/u/admin/`, profileData);
       console.log(response);
@@ -245,7 +239,7 @@ const ProfileContent = () => {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-800">{profileData.userName || user?.userName}</h1>
             <p className="text-[#5491CA] font-medium">{profileData.role}</p>
             <p className="text-gray-500 text-sm mt-1">
-              {profileData.city && profileData.country ? `${profileData.city}, ${profileData.country}` : 'Location not set'}
+              { `${profileData.city}`} 
             </p>
           </div>
           
@@ -309,26 +303,10 @@ const ProfileContent = () => {
         {/* Tabs */}
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
-            <button
-              onClick={() => setActiveTab('personal')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'personal'
-                  ? 'border-[#5491CA] text-[#5491CA]'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
+           
               Personal Information
-            </button>
-            <button
-              onClick={() => setActiveTab('security')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'security'
-                  ? 'border-[#5491CA] text-[#5491CA]'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Security
-            </button>
+            
+          
           </nav>
         </div>
       </div>
@@ -605,85 +583,9 @@ const ProfileContent = () => {
                 </div>
               </div>
 
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Skills
-                </label>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {profileData.skills.map((skill, index) => (
-                    <div key={index} className="bg-[#5491CA]/10 text-[#5491CA] px-3 py-1 rounded-full text-sm flex items-center">
-                      {skill}
-                      {isEditing && (
-                        <button
-                          type="button"
-                          onClick={() => removeSkill(skill)}
-                          className="ml-2 text-[#5491CA] hover:text-red-500"
-                        >
-                          <X size={14} />
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                {isEditing && (
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={newSkill}
-                      onChange={(e) => setNewSkill(e.target.value)}
-                      className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
-                      placeholder="Add a skill"
-                    />
-                    <button
-                      type="button"
-                      onClick={addSkill}
-                      className="px-4 py-2 bg-[#5491CA] text-white rounded-lg hover:bg-[#4a82b6] transition-colors"
-                    >
-                      Add
-                    </button>
-                  </div>
-                )}
-              </div>
+           
 
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Languages
-                </label>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {profileData.Languages.map((language, index) => (
-                    <div key={index} className="bg-[#b1a9f1]/10 text-[#b1a9f1] px-3 py-1 rounded-full text-sm flex items-center">
-                      {language}
-                      {isEditing && (
-                        <button
-                          type="button"
-                          onClick={() => removeLanguage(language)}
-                          className="ml-2 text-[#b1a9f1] hover:text-red-500"
-                        >
-                          <X size={14} />
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                {isEditing && (
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={newLanguage}
-                      onChange={(e) => setNewLanguage(e.target.value)}
-                      className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-[#5491CA] focus:border-[#5491CA]"
-                      placeholder="Add a language"
-                    />
-                    <button
-                      type="button"
-                      onClick={addLanguage}
-                      className="px-4 py-2 bg-[#5491CA] text-white rounded-lg hover:bg-[#4a82b6] transition-colors"
-                    >
-                      Add
-                    </button>
-                  </div>
-                )}
-              </div>
+              
             </form>
           </div>
         )}

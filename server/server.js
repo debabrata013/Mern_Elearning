@@ -65,7 +65,7 @@ const LRouter = require("./src/routes/lechcherRoutes");
 const todoRoutes = require('./src/routes/TodoRouters');
 const StudentAssigementRouter = require("./src/routes/studentAssignments")
 const TeacherAssigementRouter = require("./src/routes/teacherAssignments")
-
+const asdRoutes= require("./src/routes/util")
 
 
 
@@ -95,6 +95,7 @@ app.use('/pic', picRouters);
 app.use("/lac", LRouter);
 
 // 🆕 Doubt clearance feature routes
+app.use("/api/course/",asdRoutes)
 app.use('/api/doubts', doubtRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/todos', todoRoutes);
