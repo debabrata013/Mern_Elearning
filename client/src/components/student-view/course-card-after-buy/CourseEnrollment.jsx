@@ -80,3 +80,5 @@ const CourseLearningPage = () => {
     </div>
   );
 };
+
+export default CourseLearningPage;
