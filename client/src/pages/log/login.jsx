@@ -129,9 +129,9 @@ function AuthPage() {
 
           <div className="or-divider">or</div>
 
-          <button className="github-login" onClick={handleGitHubLogin}>
+          {/* <button className="github-login" onClick={handleGitHubLogin}>
             <FaGithub className="github-icon" /> Login with GitHub
-          </button>
+          </button> */}
 
           <div className="switch-auth">
             {isLogin ? (

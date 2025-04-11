@@ -41,6 +41,8 @@ import Assigment from "./components/student-view/Assigment"
 import Pr from "./pages/admin/profile"
 import Enroll from './components/student-view/studentComponent/enroll';
 import CreateQuizAssignmentForm from "./pages/teacherdashboard/quiz dashboard/createQuize";
+import MyCourses from "./components/student-view/MyCourses"
+import ContinueCourse from "./components/student-view/course-card-after-buy/CourseEnrollment"
 
 // import StudentRoutes from "./components/student-view/StudentRoutes";
 // import student from './components/student-view/AppLayout'
@@ -83,7 +85,8 @@ function App() {
           <Route path="/privacy" element={<Privacy/>} />
           <Route path="/notifications" element={<Noti/>}/>
           <Route path="/videop" element={<DemoVideoPlayer/>} />
-
+          < Route path="/mycourse/:id" element={<MyCourses/>}/>
+          <Route path="/mycourse/course/:id" element={<ContinueCourse/>} />       {/*  new added for course view*/}
           <Route path="/teacher/assignments/:courseId" element={<TeacherAssignmentList />} />
           <Route path="/teacher/assignments/:courseId/create" element={<CreateQuizAssignmentForm />} />
 

@@ -41,9 +41,8 @@ const CourseCard = ({ course }) => {
         </div>
       </div>
       <div className="buttons">
-        <button className="btn live-demo" onClick={handleLiveDemo}>Add to cart</button>
+        <button className="btn live-demo" onClick={handleDownloadCurriculum}>Download Curriculum</button>
         <button className="btn enroll-now" onClick={handleEnrollNow}>Enroll Now</button>
-        <button className="btn download-curriculum" onClick={handleDownloadCurriculum}>Download Curriculum</button>
       </div>
     </div>
   );
