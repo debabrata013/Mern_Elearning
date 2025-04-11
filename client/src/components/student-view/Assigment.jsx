@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from './studentComponent/Sidebar';
+import { getAllCourses } from "../../pages/landing-page/api/landingServices";
+import CourseCard from "./course-card-after-buy/coursecard";
 import {
   ChevronDown,
   ChevronUp,
@@ -566,153 +568,29 @@ const coursesData = [
   }
 ];
 
-// Course Card Component
-const CourseCard = ({ course, onClick }) => {
-  return (
-    <div 
-      onClick={onClick}
-      className="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-[#5491CA]/30 cursor-pointer"
-    >
-      {/* Course Image */}
-      <div className="relative h-48 overflow-hidden">
-        <img 
-          src={course.image} 
-          alt={course.title} 
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-        <div className="absolute bottom-4 left-4 right-4">
-          <div className="flex gap-1.5 mb-2">
-            {course.tags.map((tag, idx) => (
-              <span 
-                key={idx} 
-                className="px-2 py-1 bg-black/40 backdrop-blur-sm text-white text-xs rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-      
-      {/* Course Content */}
-      <div className="p-5">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-[#5491CA] transition-colors line-clamp-2">
-            {course.title}
-          </h3>
-          <div className="flex items-center text-yellow-500">
-            <Star className="w-4 h-4 fill-current" />
-            <span className="ml-1 text-sm">{course.rating}</span>
-          </div>
-        </div>
-        
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-          {course.description}
-        </p>
-        
-        {/* Course Details */}
-        <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
-          <span className="flex items-center gap-1">
-            <BookOpen className="w-4 h-4" />
-            {course.lessons} lessons
-          </span>
-          <span className="flex items-center gap-1">
-            <FileText className="w-4 h-4" />
-            {course.assignments} assignments
-          </span>
-          <span className="flex items-center gap-1">
-            <AlertCircle className="w-4 h-4" />
-            {course.quizzes} quizzes
-          </span>
-        </div>
-        
-        {/* Progress Bar */}
-        <div className="mb-4">
-          <div className="flex justify-between text-xs mb-1">
-            <span className="font-medium text-[#5491CA]">Progress</span>
-            <span className="font-medium text-[#5491CA]">{course.progress}%</span>
-          </div>
-          <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-[#5491CA] to-[#7670AC] rounded-full" 
-              style={{ width: `${course.progress}%` }}
-            ></div>
-          </div>
-        </div>
-        
-        {/* Instructor */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#5491CA] to-[#7670AC] flex items-center justify-center text-white font-medium text-xs">
-              {course.instructor.split(' ').map(n => n[0]).join('')}
-            </div>
-            <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-              {course.instructor}
-            </span>
-          </div>
-          <button className="p-2 text-[#5491CA] hover:bg-[#5491CA]/10 rounded-full transition-colors">
-            <Bookmark className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // HomePage Component
-const HomePage = ({ onSelectCourse }) => {
+const HomePage = () => {
+  const [myCourses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTag, setSelectedTag] = useState('All');
-  const [courses, setCourses] = useState(coursesData);
 
   useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-      setIsSidebarOpen(!mobile);
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Initial check
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    filterCourses(e.target.value, selectedTag);
-  };
-
-  const handleTagSelect = (tag) => {
-    setSelectedTag(tag);
-    filterCourses(searchTerm, tag);
-  };
-
-  const filterCourses = (term, tag) => {
-    let filtered = coursesData;
-    
-    if (term) {
-      filtered = filtered.filter(course => 
-        course.title.toLowerCase().includes(term.toLowerCase()) ||
-        course.description.toLowerCase().includes(term.toLowerCase()) ||
-        course.instructor.toLowerCase().includes(term.toLowerCase())
-      );
-    }
-    
-    if (tag && tag !== 'All') {
-      filtered = filtered.filter(course => 
-        course.tags.some(t => t.toLowerCase() === tag.toLowerCase())
-      );
-    }
-    
-    setCourses(filtered);
-  };
-
-  // Get unique tags
-  const allTags = ['All', ...new Set(coursesData.flatMap(course => course.tags))];
+     const fetchCourses = async () => {
+       try {
+         const data = await getAllCourses();
+         setCourses(data);
+         setLoading(false);
+       } catch (err) {
+         console.error("Error fetching courses:", err);
+         setError(err);
+         setLoading(false);
+       }
+     };
+     fetchCourses();
+   }, []);
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -724,85 +602,29 @@ const HomePage = ({ onSelectCourse }) => {
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${
-        isMobile ? 'ml-0' : 'ml-[280px]'
-      }`}>
-        <div className="p-4 md:p-8">
-          <div className="max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
-              <div className="flex items-center gap-4">
-                {isMobile && (
-                  <button
-                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-                  </button>
-                )}
-                <div>
-                  <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
-                    My Learning Dashboard
-                  </h1>
-                  <p className="text-gray-600 dark:text-gray-400 mt-1">
-                    Continue your learning journey with these courses
-                  </p>
-                </div>
-              </div>
-              
-              <div className="relative w-full md:w-auto">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  type="search"
-                  placeholder="Search courses..."
-                  value={searchTerm}
-                  onChange={handleSearch}
-                  className="w-full md:w-60 pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:border-[#5491CA] focus:ring-2 focus:ring-[#5491CA]/20 transition-all dark:bg-gray-800 dark:border-gray-700"
-                />
-              </div>
-            </div>
-            
-            {/* Stats Overview */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              {[
-                { title: "In Progress", value: "4 Courses", icon: <Clock className="w-5 h-5" />, color: "from-[#5491CA] to-[#7670AC]" },
-                { title: "Completed", value: "7 Courses", icon: <CheckCircle className="w-5 h-5" />, color: "from-green-500 to-emerald-500" },
-                { title: "Certificates", value: "3 Earned", icon: <Award className="w-5 h-5" />, color: "from-yellow-500 to-amber-500" },
-                { title: "Total Hours", value: "48 Hours", icon: <BarChart3 className="w-5 h-5" />, color: "from-purple-500 to-indigo-500" }
-              ].map((stat, index) => (
-                <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md border border-gray-100 dark:border-gray-700">
-                  <div className="flex items-center gap-4">
-                    <div className={`p-2.5 rounded-lg bg-gradient-to-r ${stat.color} text-white`}>
-                      {stat.icon}
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{stat.title}</p>
-                      <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{stat.value}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+      <div className="ml-[280px] w-full px-6 py-10">
+        <h1 className="text-3xl font-bold text-center text-[#5491CA] mb-8">
+          My Courses
+        </h1>
 
-            {/* Course Grid */}
-            {courses.length === 0 ? (
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center shadow-md border border-gray-100 dark:border-gray-700">
-                <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No courses found</h3>
-                <p className="text-gray-600 dark:text-gray-400">Try adjusting your search or filter criteria</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {courses.map(course => (
-                  <CourseCard
-                    key={course.id}
-                    course={course}
-                    onClick={() => onSelectCourse(course.id)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+        {loading && (
+          <p className="text-center text-gray-600">Loading your courses...</p>
+        )}
+
+        {!loading && error && (
+          <p className="text-center text-red-500 font-medium">{error}</p>
+        )}
+
+        {!loading && myCourses.length === 0 && (
+          <p className="text-center text-gray-500">
+            You haven’t enrolled in any course yet.
+          </p>
+        )}
+
+        <div className="flex flex-wrap justify-center gap-6">
+          {myCourses.map((course) => (
+            <CourseCard key={course._id} course={course} />
+          ))}
         </div>
       </div>
 
@@ -816,6 +638,7 @@ const HomePage = ({ onSelectCourse }) => {
     </div>
   );
 };
+
 
 // Main Component (Updated to include the HomePage as the entry point)
 const AssignmentsAndQuizzes = () => {
