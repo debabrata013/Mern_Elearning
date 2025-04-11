@@ -6,18 +6,23 @@ import {
   BarChart3, 
   Trophy,
   BriefcaseBusiness,
-  LogOut 
+  LogOut,
+  BookMarked 
 } from "lucide-react";
 
 const Sidebar = () => {
   const location = useLocation(); 
 
+  const userData = JSON.parse(localStorage.getItem("user"))
   const links = [
     { path: "/abo", icon: <BookOpen className="h-5 w-5" />, label: "Home" },
     { path: "/abca", icon: <Calendar className="h-5 w-5" />, label: "Courses" },
     { path: "/abas", icon: <BarChart3 className="h-5 w-5" />, label: "Assignment" },
     { path: "/abcd", icon: <Trophy className="h-5 w-5" />, label: "Doubts" },
     {path:"/jobs", icon: <BriefcaseBusiness className="h-5 w-5" />, label: "Jobs"},
+    {path:`/mycourse/${userData.id}`, icon: <BookMarked className="h-5 w-5" />, label: "My Courses"}
+
+
   ];
 
   const handleLogout = () => {
