@@ -9,6 +9,7 @@
     import ProfilePage from './profile/ProfilePage';
     import logo from '../../../public/aigiri logo.png';
     import NotificationContent from './NotificationContent';
+    import Doubts from "./Doubts"
     import axiosInstance from '@/api/axiosInstance';
     import moment from 'moment';
 
@@ -370,6 +371,8 @@
             return <ProfilePage onBack={() => setCurrentSection('home')} />;
           case 'quiz':
             return <QuizDashboard />;
+          case 'doubts':
+            return <Doubts />;
           default:
             return <HomeContent />;
         }
@@ -435,6 +438,13 @@
                 active={currentSection === 'quiz'}
                 onClick={() => setCurrentSection('quiz')}
               />
+              <NavItem
+              icon={<HelpCircle className="h-5 w-5" /> }
+              label="Doubts"
+              active={currentSection === 'doubts'}
+              onClick={() => setCurrentSection('doubts')}
+              />
+
             </nav>
 
             <div className="absolute bottom-4 w-full pr-8">

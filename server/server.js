@@ -95,11 +95,11 @@ app.use('/pic', picRouters);
 app.use("/lac", LRouter);
 
 // 🆕 Doubt clearance feature routes
-app.use("/api/course/",asdRoutes)
+app.use("/api/course/",asdRoutes)//
 app.use('/api/doubts', doubtRoutes);
 app.use('/api/messages', messageRoutes);
-app.use('/api/todos', todoRoutes);
-app.use("/api/teacher/assignments", TeacherAssigementRouter);
+app.use('/api/todos', todoRoutes);//
+app.use("/api/teacher/assignments", TeacherAssigementRouter);//
 app.use("/api/student/assignments",StudentAssigementRouter);
 // Start server with Socket.io support
 const PORT = process.env.PORT || 5000;

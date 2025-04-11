@@ -56,8 +56,9 @@ import Job from './components/student-view/job';
 import Tc from "./pages/T&C"
 import Privacy from "./pages/policy"
 import Noti from "./components/student-view/Notification"
-
+import CourseDoubts from "./pages/teacherdashboard/CourseDoubts";
 import TeacherAssignmentList from "./pages/teacherdashboard/quiz dashboard/TeacherAssignmentList";
+import ChatPage from "./pages/teacherdashboard/ChatPage"
 function App() {
   return (
     <ThemeProvider>
@@ -89,7 +90,9 @@ function App() {
           <Route path="/mycourse/course/:id" element={<ContinueCourse/>} />       {/*  new added for course view*/}
           <Route path="/teacher/assignments/:courseId" element={<TeacherAssignmentList />} />
           <Route path="/teacher/assignments/:courseId/create" element={<CreateQuizAssignmentForm />} />
+          <Route path="/course/:id/doubts" element={<CourseDoubts />} />
 
+          <Route path="/doubts/:doubtId/chat" element={<ChatPage />} />
           <Route
             path="/user-dashboard"
             element={
