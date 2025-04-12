@@ -59,6 +59,7 @@ import Noti from "./components/student-view/Notification"
 import CourseDoubts from "./pages/teacherdashboard/CourseDoubts";
 import TeacherAssignmentList from "./pages/teacherdashboard/quiz dashboard/TeacherAssignmentList";
 import ChatPage from "./pages/teacherdashboard/ChatPage"
+import ResourceViewer from './components/ui/ResourceViewer';
 function App() {
   return (
     <ThemeProvider>
@@ -91,7 +92,7 @@ function App() {
           <Route path="/teacher/assignments/:courseId" element={<TeacherAssignmentList />} />
           <Route path="/teacher/assignments/:courseId/create" element={<CreateQuizAssignmentForm />} />
           <Route path="/course/:id/doubts" element={<CourseDoubts />} />
-
+          <Route path="/resource-viewer" element={<ResourceViewer />} />
           <Route path="/doubts/:doubtId/chat" element={<ChatPage />} />
           <Route
             path="/user-dashboard"
