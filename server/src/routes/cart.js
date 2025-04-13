@@ -51,29 +51,43 @@ router.delete('/remove/:courseId', async (req, res) => {
         res.status(500).json({ message: "Something went wrong" });
     }
 });
-router.post('/buy', async (req, res) => {
+// Buy all courses in cart
+router.post('/buy', auth, async (req, res) => {
     const userId = req.user._id;
 
     try {
         const user = await User.findById(userId);
 
-        // Filter courses already purchased
-        const newPurchases = user.cart.filter(
-            courseId => !user.purchasedCourses.includes(courseId)
-        );
+        if (!user.cart.length) {
+            return res.status(400).json({ message: 'Cart is empty' });
+        }
 
-        if (newPurchases.length === 0) {
-            return res.status(400).json({ message: "No new courses to purchase" });
+        const newPurchases = [];
+
+        for (const courseId of user.cart) {
+            if (!user.purchasedCourses.includes(courseId)) {
+                const course = await Course.findById(courseId);
+                if (course) {
+                    newPurchases.push(courseId);
+                }
+            }
+        }
+
+        if (!newPurchases.length) {
+            return res.status(400).json({ message: 'All courses already purchased' });
         }
 
         user.purchasedCourses.push(...newPurchases);
-        user.cart = []; // clear cart
+        user.cart = []; // Clear cart after purchase
         await user.save();
 
-        res.status(200).json({ message: "Courses purchased successfully", purchasedCourses: user.purchasedCourses });
+        res.status(200).json({
+            message: 'Courses purchased successfully',
+            purchasedCourses: user.purchasedCourses
+        });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Something went wrong" });
+        res.status(500).json({ message: 'Internal server error' });
     }
 });
 
