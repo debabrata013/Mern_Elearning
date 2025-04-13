@@ -93,6 +93,8 @@ app.use('/cart', cartRoutes);
 app.use("/u", UserRoutes);
 app.use('/pic', picRouters);
 app.use("/lac", LRouter);
+const carteRoutes = require('./routes/cart');
+
 
 // 🆕 Doubt clearance feature routes
 app.use("/api/course/",asdRoutes)//
@@ -101,6 +103,7 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/todos', todoRoutes);//
 app.use("/api/teacher/assignments", TeacherAssigementRouter);//
 app.use("/api/student/assignments",StudentAssigementRouter);
+app.use('/api/cart', carteRoutes);
 // Start server with Socket.io support
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
