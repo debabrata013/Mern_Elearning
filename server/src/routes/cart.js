@@ -52,7 +52,7 @@ router.delete('/remove/:courseId', async (req, res) => {
     }
 });
 // Buy all courses in cart
-router.post('/buy', auth, async (req, res) => {
+router.post('/buy',  async (req, res) => {
     const userId = req.user._id;
 
     try {
@@ -85,6 +85,35 @@ router.post('/buy', auth, async (req, res) => {
             message: 'Courses purchased successfully',
             purchasedCourses: user.purchasedCourses
         });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+// Buy single course directly
+router.post('/buy/:courseId',  async (req, res) => {
+    const userId = req.user._id;
+    const { courseId } = req.params;
+
+    try {
+        const user = await User.findById(userId);
+        const course = await Course.findById(courseId);
+
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        if (user.purchasedCourses.includes(courseId)) {
+            return res.status(400).json({ message: 'Course already purchased' });
+        }
+
+        user.purchasedCourses.push(courseId);
+
+        // Remove from cart if it's there
+        user.cart = user.cart.filter(id => id.toString() !== courseId);
+        await user.save();
+
+        res.status(200).json({ message: 'Course purchased successfully', purchasedCourses: user.purchasedCourses });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
