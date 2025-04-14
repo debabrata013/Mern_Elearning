@@ -30,7 +30,9 @@ import { AuthProvider } from "./context/auth";
 import ProtectedRoute from "./context/ProtectedRoute";
 import Unauthorized from "./pages/Unauthorized";
 import StudentRoutes from "./components/student-view/StudentRoutes";
-import DemoVideoPlayer from "./components/student-view/studentComponent/ui/videoplayer";
+// import DemoVideoPlayer from "./components/student-view/studentComponent/ui/videoplayer";
+import VideoPage from './components/student-view/course-card-after-buy/VideoPage';
+
 import Std from "./components/student-view/StudentViewCommonHeader";
 import Projile from "./components/student-view/profile-page/profilepage"
 import StudentAnoument from "./components/student-view/AnnouncementPage"
@@ -65,6 +67,7 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <Routes>
+        <Route path="/video/:videoUrl" element={<VideoPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forget" element={<ForgetPage/>}/>
           <Route path="/" element={<LandingPage />} />
@@ -86,7 +89,7 @@ function App() {
           <Route path="/terms" element={<Tc/>} />
           <Route path="/privacy" element={<Privacy/>} />
           <Route path="/notifications" element={<Noti/>}/>
-          <Route path="/videop" element={<DemoVideoPlayer/>} />
+          {/* <Route path="/videop" element={<DemoVideoPlayer/>} /> */}
           < Route path="/mycourse/:id" element={<MyCourses/>}/>
           <Route path="/mycourse/course/:id" element={<ContinueCourse/>} />       {/*  new added for course view*/}
           <Route path="/teacher/assignments/:courseId" element={<TeacherAssignmentList />} />
