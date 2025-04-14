@@ -40,6 +40,9 @@ import Studentbuycourse from "./components/student-view/courcebuy"
 import Studentbuycourse2 from "./components/student-view/coursebuy"
 import Doubts from "./components/student-view/Doubts"
 import Assigment from "./components/student-view/Assigment"
+import Assigment2 from "./components/student-view/Assigment2"
+import AssignmentQuiz from "./components/student-view/AssignmentQuiz"
+
 import Pr from "./pages/admin/profile"
 import Enroll from './components/student-view/studentComponent/enroll';
 import CreateQuizAssignmentForm from "./pages/teacherdashboard/quiz dashboard/createQuize";
@@ -82,6 +85,10 @@ function App() {
           <Route path="/abca" element={<Studentbuycourse />} />
           <Route path="/abcd" element={<Doubts />} />
           <Route path="/abas" element={<Assigment />} />
+          <Route path="/Mycourse/:courseId/Assigment" element={<Assigment2/>} />
+          {/* /Mycourse/${courseId}/Assigment */}
+          <Route path="/student/assignment/:assignmentId/:id" element={<AssignmentQuiz />} />
+
           <Route path="/abca2" element={<Studentbuycourse2 />} />
           <Route path="/abop" element={<Pr />} />
           <Route path="/profile" element={<Projile />} />
