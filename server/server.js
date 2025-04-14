@@ -88,15 +88,12 @@ app.use("/landing", landingRoutes);
 app.use("/profile", ProfileRouters);
 app.use("/contactus/", contactRoutes);
 app.use("/mail/", MailRoutes);
-app.use('/cart', cartRoutes);
+// app.use('/cart', cartRoutes);
 // app.use('/todos', TodoRoutes);
 app.use("/u", UserRoutes);
 app.use('/pic', picRouters);
 app.use("/lac", LRouter);
-const carteRoutes = require('./routes/cart');
-
-
-// 🆕 Doubt clearance feature routes
+const carteRoutes = require('./src/routes/cart');
 app.use("/api/course/",asdRoutes)//
 app.use('/api/doubts', doubtRoutes);
 app.use('/api/messages', messageRoutes);
@@ -110,8 +107,3 @@ server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-
-// ✅ Get Pending To-Dos (GET /api/todos/pending/YOUR_USER_ID)
-// ✅ Get Pending Count (GET /api/todos/pending-count/YOUR_USER_ID)
-// ✅ Delete To-Do (DELETE /api/todos/delete/YOUR_USER_ID/TODO_ID)
-// ✅ Create To-Do (POST /api/todos/create)

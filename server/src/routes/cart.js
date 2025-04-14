@@ -5,10 +5,12 @@ const User = require('../models/User');
 const Course = require('../models/Course');
 
 // Add to Cart
-router.post('/add/:courseId', async (req, res) => {
-    const userId = req.user._id; // after authentication middleware
-    const { courseId } = req.params;
+router.post('/add/:courseId/:userId', async (req, res) => {
 
+    const { courseId,userId } = req.params;
+
+  
+    
     try {
         const user = await User.findById(userId);
         const course = await Course.findById(courseId);
@@ -36,9 +38,9 @@ router.post('/add/:courseId', async (req, res) => {
         res.status(500).json({ message: "Something went wrong" });
     }
 });
-router.delete('/remove/:courseId', async (req, res) => {
-    const userId = req.user._id;
-    const { courseId } = req.params;
+router.delete('/remove/:courseId/:userId', async (req, res) => {
+
+    const { courseId,userId } = req.params;
 
     try {
         const user = await User.findById(userId);
