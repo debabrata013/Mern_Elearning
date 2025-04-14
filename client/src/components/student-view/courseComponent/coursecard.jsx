@@ -44,10 +44,11 @@ const CourseCard = ({ course }) => {
       }
 
      try {
-      const response = await axiosInstance.post('/cart/add', {
+      const response = await axiosInstance.post(`/api/cart/add/${course._id}/${user._id}`, {
         courseId: course._id,
         userId: user._id
       });
+      
       if (response.status === 200) {
         alert('Course added to cart successfully!');
       }

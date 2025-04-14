@@ -8,35 +8,40 @@ const CartPage = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem("user"));
+ let user = JSON.parse(localStorage.getItem("user"));
+ const get=async()=>{
+ user= await axiosInstance.get(`/students/${user._id}`);}
   useEffect(() => {
+    get();
     fetchCartItems();
   }, []);
 
   const fetchCartItems = async () => {
     try {
       setLoading(true);
-      
   
-     
-  
-      // First get the user's cart with course IDs
-     
       
-      // Then fetch the full course details for each course in the cart
-      const coursePromises =  await user.cart.map(courseId => 
+      // Create an array of promises to fetch course details
+      const coursePromises = user.cart.map(courseId => 
+      
+        
         axiosInstance.get(`/courses/${courseId}`)
       );
+      console.log(user);
       
-      
-      console.log(coursePromises);
-      
+  
+      // Wait for all course detail requests to resolve
       const courseResponses = await Promise.all(coursePromises);
-      const courses = courseResponses.map(response => response.data);
+
+
+  
+      // Extract course data from each response
+      const courses = courseResponses.map(response => response.data.course); // Note the `.course`
+   
+      console.log(courses);
       
       setCartItems(courses);
-     
-      
+  
     } catch (error) {
       console.error("Error fetching cart items:", error);
       setCartItems([]);
@@ -44,6 +49,7 @@ const CartPage = () => {
       setLoading(false);
     }
   };
+  
 
   const removeFromCart = async (courseId) => {
     try {
@@ -54,13 +60,14 @@ const CartPage = () => {
         return;
       }
   
-      const response = await axiosInstance.post("/cart/remove", {
+      const response = await axiosInstance.post(`/api/cart/remove/${courseId}/${user._id}`, {
         courseId,
         userId: user._id,
       });
 
       if (response.status === 200) {
         // Refresh cart items after successful removal
+        get();
         fetchCartItems();
         alert(response.data.message);
       }
@@ -87,7 +94,7 @@ const CartPage = () => {
       alert('Failed to navigate to enrollment page. Please try again.');
     }
   };
-  console.log(cartItems);
+  // console.log(cartItems);
   
 
   return (
@@ -127,27 +134,28 @@ const CartPage = () => {
                 <div className="w-full bg-[#5491CA] rounded-xl overflow-hidden text-center text-white shadow-lg hover:-translate-y-2 transition-all duration-300 hover:shadow-xl">
                   <div className="p-6">
                     <img 
-                      src={course.course.coverImage ? course.coverImage : 'https://via.placeholder.com/150'} 
-                      alt={`${course.course. title} Logo`} 
+                      src={course.coverImage
+                        } 
+                      alt={`${course.title} Logo`} 
                       className="h-[85px] object-contain mx-auto"
                     />
                   </div>
                   
                   <div className="bg-white text-black p-4 rounded-xl h-[160px]">
-                    <h3 className="text-xl font-bold">{course.course.title}</h3>
-                    <p className="text-sm mt-3 line-clamp-3">{course.course.description}</p>
+                    <h3 className="text-xl font-bold">{course.title}</h3>
+                    <p className="text-sm mt-3 line-clamp-3">{course.description}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-1 w-full mt-2">
                   <button 
-                    onClick={() => removeFromCart(course.course._id)}
+                    onClick={() => removeFromCart(course._id)}
                     className="px-4 py-3 rounded-lg border-2 border-[#5491CA] text-[#5491CA] hover:bg-[#5491CA] hover:text-white transition-colors shadow-md text-sm font-medium"
                   >
                     Remove from Cart
                   </button>
                   <button 
-                    onClick={() => handlePurchase(course.course._id)}
+                    onClick={() => handlePurchase(course._id)}
                     className="px-4 py-3 rounded-lg bg-[#5491CA] text-white hover:bg-[#7670AC] transition-colors shadow-md text-sm font-medium"
                   >
                     Purchase Course
