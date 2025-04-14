@@ -75,7 +75,7 @@ router.get('/:courseId', courseController.getCourseById);
  */
 router.delete('/:courseId', courseController.deleteCourse);
 
-router.get('/getallCourse', courseController.getAllCourse);
+router.get('/getallCourse/op', courseController.getAllCourse);
 router.put('/edit',courseController.updateCourse)
 
 module.exports = router;
