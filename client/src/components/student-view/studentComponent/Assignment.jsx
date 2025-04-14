@@ -1,43 +1,5 @@
 import React from "react";
 
-const assignments = {
-  pending: [
-    {
-      id: 1,
-      title: "React State Management Assignment",
-      description: "Complete a task on state management using Redux Toolkit.",
-      tags: ["React", "Redux", "State Management"],
-      dueDate: "2024-11-20",
-      status: "Not Submitted",
-    },
-    {
-      id: 2,
-      title: "Database Normalization Quiz",
-      description: "Quiz on database normalization and its practical applications.",
-      tags: ["Database", "SQL"],
-      dueDate: "2024-11-22",
-      status: "Pending",
-    },
-  ],
-  completed: [
-    {
-      id: 3,
-      title: "JavaScript ES6 Features Quiz",
-      description: "Quiz focusing on modern JavaScript ES6+ syntax and features.",
-      tags: ["JavaScript", "ES6"],
-      grade: "8/10",
-      completedDate: "2024-11-10",
-    },
-    {
-      id: 4,
-      title: "CSS Grid Layout Assignment",
-      description: "Create a responsive webpage layout using CSS Grid.",
-      tags: ["CSS", "Web Design"],
-      grade: "A",
-      completedDate: "2024-11-08",
-    },
-  ],
-};
 
 const AssignmentsAndQuizzes = () => {
   return (
