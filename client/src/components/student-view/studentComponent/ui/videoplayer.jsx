@@ -2,12 +2,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   FaPlay, FaPause, FaForward, FaBackward,
-  FaExpand, FaCompress, FaCog, FaVolumeUp, FaVolumeMute
+  FaExpand, FaCompress, FaCog, FaVolumeUp, FaVolumeMute, FaArrowLeft
 } from 'react-icons/fa';
 
 const speeds = [0.5, 1, 1.25, 1.5, 2];
 
-const VideoPlayer = ({ videoUrl, thumbnailUrl, title, className = '' }) => {
+const VideoPlayer = ({ videoUrl, onBack }) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
 
@@ -99,14 +99,21 @@ const VideoPlayer = ({ videoUrl, thumbnailUrl, title, className = '' }) => {
   return (
     <div
       ref={playerRef}
-      className={`relative rounded-xl overflow-hidden bg-black group ${className}`}
+      className="relative rounded-xl overflow-hidden bg-black group w-full h-full"
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
     >
+      {/* Back Button */}
+      {/* <button
+        className="absolute top-4 left-4 z-20 bg-black/60 text-white p-2 rounded-full hover:bg-black/80"
+        onClick={onBack}
+      >
+        <FaArrowLeft size={18} />
+      </button> */}
+
       <video
         ref={videoRef}
         className="w-full h-full cursor-pointer"
-        poster={thumbnailUrl}
         onClick={togglePlay}
         src={videoUrl}
         type="video/mp4"
