@@ -4,19 +4,9 @@ import Sidebar from "../studentComponent/Sidebar";
 import axiosInstance from "@/api/axiosInstance";
 // import VideoPlayer from "../studentComponent/ui/videoplayer"; // your custom player
 import ReactPlayer from 'react-player';
-
+import VideoPlayeras from '../studentComponent/ui/videoplayer';
 import { useNavigate } from 'react-router-dom';
-const VideoPlayer = ({ src, title }) => (
-  <div className="w-full h-full">
-    <ReactPlayer
-      url={src}
-      controls
-      width="100%"
-      height="100%"
-      playing={false} // auto-play off
-    />
-  </div>
-);
+
 const CourseEnrollment = () => {
   const { id } = useParams();
   const location = useLocation();
@@ -28,8 +18,14 @@ const CourseEnrollment = () => {
     navigate('/resource-viewer', { state: { url } });
   };
 
-// Add this at top inside the component
-const [activeVideo, setActiveVideo] = useState(null);
+
+  const handlePlay = (videoUrl) => {
+    // Encode URI to avoid issues with special characters
+    const encodedUrl = encodeURIComponent(videoUrl);
+
+    navigate(`/video/${encodedUrl}`);
+  };
+
   useEffect(() => {
     console.log("✅ Received course via navigation:", location.state);
   }, []);
@@ -158,7 +154,8 @@ const [activeVideo, setActiveVideo] = useState(null);
                         {ch.lessons.map((lesson, idx) => (
                           <li key={idx} className="flex items-center justify-between">
                             <button
-                              onClick={() => setActiveVideo({ url: lesson.videoUrl, title: `Lesson ${idx + 1}` })}
+                              // onClick={() => setActiveVideo({ url: lesson.videoUrl, title: `Lesson ${idx + 1}` })}
+                              onClick={() => handlePlay(lesson.videoUrl)}
                               className="text-blue-600 btn hover:text-blue-800 "
                             >
                               Watch Video {idx + 1}
@@ -171,11 +168,7 @@ const [activeVideo, setActiveVideo] = useState(null);
                                 ) : (
                                   <p className="text-gray-500">No lessons available.</p>
                                                                         )}
-                                          {activeVideo?.url && (
-                                            <div className="mt-4 aspect-video w-full max-w-5xl rounded-xl overflow-hidden shadow-lg border border-gray-300">
-                                            <VideoPlayer src={activeVideo.url} title={activeVideo.title} />
-                                            </div>
-                                          )}
+                                         
                                         </div>
 
 
