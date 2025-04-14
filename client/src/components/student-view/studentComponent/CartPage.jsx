@@ -10,7 +10,11 @@ const CartPage = () => {
 
  let user = JSON.parse(localStorage.getItem("user"));
  const get=async()=>{
- user= await axiosInstance.get(`/students/${user._id}`);}
+ let a = await axiosInstance.get(`/students/${user._id}`);
+user = a.data;
+ 
+}
+
   useEffect(() => {
     get();
     fetchCartItems();
@@ -20,14 +24,14 @@ const CartPage = () => {
     try {
       setLoading(true);
   
-      
+      await get();
       // Create an array of promises to fetch course details
       const coursePromises = user.cart.map(courseId => 
       
         
         axiosInstance.get(`/courses/${courseId}`)
       );
-      console.log(user);
+   
       
   
       // Wait for all course detail requests to resolve
@@ -60,7 +64,7 @@ const CartPage = () => {
         return;
       }
   
-      const response = await axiosInstance.post(`/api/cart/remove/${courseId}/${user._id}`, {
+      const response = await axiosInstance.delete(`/api/cart/remove/${courseId}/${user._id}`, {
         courseId,
         userId: user._id,
       });
@@ -70,6 +74,7 @@ const CartPage = () => {
         get();
         fetchCartItems();
         alert(response.data.message);
+        get();
       }
     } catch (error) {
       console.error("Error removing item from cart:", error);
