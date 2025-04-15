@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from '@/api/axiosInstance';
 import { useParams } from 'react-router-dom';
 
@@ -8,20 +8,35 @@ const DiscussionPage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [doubt, setDoubt] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSending, setIsSending] = useState(false);
+  const messagesEndRef = useRef(null);
 
   // Fetch messages and doubt details when component mounts or doubtId changes
   useEffect(() => {
-    fetchMessages();
-    fetchDoubtDetails();
+    setIsLoading(true);
+    Promise.all([fetchMessages(), fetchDoubtDetails()])
+      .finally(() => setIsLoading(false));
   }, [doubtId]);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   // GET all messages for the doubt
   const fetchMessages = async () => {
     try {
       const response = await axiosInstance.get(`/api/messages/${doubtId}`);
       setMessages(response.data);
+      return response.data;
     } catch (error) {
       console.error("Error fetching messages:", error);
+      return [];
     }
   };
 
@@ -30,86 +45,146 @@ const DiscussionPage = () => {
     try {
       const response = await axiosInstance.get(`/api/doubts/${doubtId}`);
       setDoubt(response.data);
+      return response.data;
     } catch (error) {
       console.error("Error fetching doubt details:", error);
+      return null;
     }
   };
 
-  // Send a new message. The payload structure is as required:
-  // {
-  //    "doubtId": "67f64a8edcc2257e57fffe26",
-  //    "sender": "67e03eb3e43463d77d212662",
-  //    "message": "hello Dosto kese hget "
-  // }
+  // Handle doubt resolution
+  const handleResolveDoubt = async () => {
+    try {
+      await axiosInstance.put(`/api/doubts/${doubtId}/resolve`);
+      fetchDoubtDetails();
+    } catch (error) {
+      console.error("Error resolving doubt:", error);
+    }
+  };
+
+  // Send a new message
   const sendMessage = async (e) => {
     e.preventDefault();
+    if (!newMessage.trim() || isSending) return;
+    
+    setIsSending(true);
     try {
       const payload = {
         doubtId,
-        sender: user._id, // this should match the backend expected sender field
+        sender: user._id,
         message: newMessage,
       };
       await axiosInstance.post(`/api/messages`, payload);
       setNewMessage('');
-      fetchMessages();
+      await fetchMessages();
     } catch (error) {
       console.error("Error sending message:", error);
+    } finally {
+      setIsSending(false);
     }
   };
 
+  // Format timestamp
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  // Check if message is from current user
+  const isCurrentUser = (senderId) => {
+    return senderId === user._id;
+  };
+
   return (
-    <div className="container mx-auto p-4 flex flex-col h-screen">
+    <div className="container mx-auto px-4 sm:px-6 max-w-4xl flex flex-col h-screen bg-gray-50">
       {/* Header Section */}
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-3xl font-bold">Discussion</h1>
-        {/* If the logged-in user is the one who asked the doubt and it’s not resolved,
-            you can render a "Resolve" button here (optional as per your requirements) */}
-        {doubt && doubt.askedBy._id === user._id && !doubt.isResolved && (
+      <div className="sticky top-0 z-10 bg-white shadow-sm py-4 px-4 border-b flex items-center justify-between">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Discussion</h1>
+          {doubt && (
+            <p className="text-sm text-gray-600 mt-1 line-clamp-1">
+              {doubt.title || "Loading discussion..."}
+            </p>
+          )}
+        </div>
+        {doubt && doubt.askedBy && doubt.askedBy._id === user._id && !doubt.isResolved && (
           <button
-            onClick={async () => {
-              try {
-                await axiosInstance.put(`/api/doubts/${doubtId}/resolve`);
-                fetchDoubtDetails();
-              } catch (error) {
-                console.error("Error resolving doubt:", error);
-              }
-            }}
-            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow"
+            onClick={handleResolveDoubt}
+            className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 text-sm sm:px-4 sm:py-2 rounded-lg shadow transition-all duration-200 flex items-center"
           >
-            Resolve
+            <span className="hidden sm:inline mr-1">Mark as</span> Resolved
           </button>
         )}
       </div>
 
       {/* Messages List */}
-      <div className="flex-1 overflow-y-auto mb-4 border p-4 rounded space-y-4">
-        {messages.map((msg) => (
-          <div key={msg._id} className="mb-2">
-            <div className="flex items-center">
-              <span className="font-semibold mr-2">{msg.sender.userName}</span>
-              <span className="text-gray-500 text-xs">
-                {new Date(msg.createdAt).toLocaleTimeString()}
-              </span>
+      <div className="flex-1 overflow-y-auto py-4 px-2 sm:px-4 space-y-4">
+        {isLoading ? (
+          <div className="flex justify-center items-center h-full">
+            <div className="animate-pulse flex space-x-2">
+              <div className="h-3 w-3 bg-blue-500 rounded-full"></div>
+              <div className="h-3 w-3 bg-blue-500 rounded-full"></div>
+              <div className="h-3 w-3 bg-blue-500 rounded-full"></div>
             </div>
-            <p className="ml-4">{msg.message}</p>
           </div>
-        ))}
+        ) : messages.length === 0 ? (
+          <div className="flex justify-center items-center h-full text-gray-500">
+            No messages yet. Start the conversation!
+          </div>
+        ) : (
+          messages.map((msg) => (
+            <div 
+              key={msg._id} 
+              className={`flex ${isCurrentUser(msg.sender._id) ? 'justify-end' : 'justify-start'}`}
+            >
+              <div 
+                className={`max-w-xs sm:max-w-md md:max-w-lg rounded-lg px-4 py-2 shadow ${
+                  isCurrentUser(msg.sender._id) 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-white text-gray-800 border'
+                }`}
+              >
+                <div className="flex justify-between items-center mb-1">
+                  <span className={`font-medium text-sm ${isCurrentUser(msg.sender._id) ? 'text-blue-100' : 'text-gray-700'}`}>
+                    {msg.sender.userName}
+                  </span>
+                  <span className={`text-xs ml-2 ${isCurrentUser(msg.sender._id) ? 'text-blue-100' : 'text-gray-500'}`}>
+                    {formatTimestamp(msg.createdAt)}
+                  </span>
+                </div>
+                <p className="text-sm sm:text-base break-words">{msg.message}</p>
+              </div>
+            </div>
+          ))
+        )}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Chat Input */}
-      <form onSubmit={sendMessage} className="flex items-center">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type your message..."
-          className="flex-1 border border-gray-300 p-2 rounded mr-2"
-          required
-        />
-        <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-          Send
-        </button>
-      </form>
+      <div className="border-t bg-white p-4">
+        <form onSubmit={sendMessage} className="flex items-center gap-2">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type your message..."
+            className="flex-1 border border-gray-300 p-3 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            required
+            disabled={isSending}
+          />
+          <button 
+            type="submit" 
+            className={`bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full transition-all duration-200 ${
+              isSending ? 'opacity-70 cursor-not-allowed' : ''
+            }`}
+            disabled={isSending}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+            </svg>
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
