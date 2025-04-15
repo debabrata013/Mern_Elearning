@@ -39,6 +39,7 @@ import StudentAnoument from "./components/student-view/AnnouncementPage"
 import Studentbuycourse from "./components/student-view/courcebuy"
 import Studentbuycourse2 from "./components/student-view/coursebuy"
 import Doubts from "./components/student-view/Doubts"
+import Doubts2 from "./components/student-view/Doubts1"
 import Assigment from "./components/student-view/Assigment"
 import Assigment2 from "./components/student-view/Assigment2"
 import AssignmentQuiz from "./components/student-view/AssignmentQuiz"
@@ -65,6 +66,7 @@ import CourseDoubts from "./pages/teacherdashboard/CourseDoubts";
 import TeacherAssignmentList from "./pages/teacherdashboard/quiz dashboard/TeacherAssignmentList";
 import ChatPage from "./pages/teacherdashboard/ChatPage"
 import ResourceViewer from './components/ui/ResourceViewer';
+
 function App() {
   return (
     <ThemeProvider>
@@ -86,6 +88,7 @@ function App() {
           <Route path="/abcd" element={<Doubts />} />
           <Route path="/abas" element={<Assigment />} />
           <Route path="/Mycourse/:courseId/Assigment" element={<Assigment2/>} />
+          <Route path="/Mycourse/:courseId/Doubts" element={<Doubts2/>} />
           {/* /Mycourse/${courseId}/Assigment */}
           <Route path="/student/assignment/:assignmentId/:id" element={<AssignmentQuiz />} />
 
