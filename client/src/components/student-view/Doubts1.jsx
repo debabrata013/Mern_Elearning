@@ -55,7 +55,7 @@ const DoubtsPage = () => {
 
   // Redirect to doubt detail page on card click
   const handleCardClick = (doubtId) => {
-    navigate(`/doubt/${doubtId}`);
+    navigate(`/doubt/${doubtId}/discussion`);
   };
 
   // Close modal when clicking outside
@@ -79,35 +79,33 @@ const DoubtsPage = () => {
     };
   }, [showModal]);
 
-  // Filter doubts based on active tab
-  const filteredDoubts = doubts.filter(doubt => 
-    activeTab === 'all' ? true : 
-    activeTab === 'resolved' ? doubt.isResolved : 
-    !doubt.isResolved
-  );
+  // Get counts for each category
+  const unresolvedCount = doubts.filter(doubt => !doubt.isResolved).length;
+  const resolvedCount = doubts.filter(doubt => doubt.isResolved).length;
+  const allCount = doubts.length;
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
-      {/* Header Row with Title, Filter Tabs, and Create Button */}
-      <div className=" mb-6 sm:mb-8">
-        <div className="flex flex-row sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-3xl font-bold text-gray-800">Discussion Forum</h1>
-          <motion.button 
-            onClick={() => setShowModal(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg shadow-md transition-all duration-200 flex items-center justify-center font-medium mt-4 sm:mt-0"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            aria-label="Create new doubt"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-            Ask a Question
-          </motion.button>
-        </div>
-        
-        {/* Filter Tabs */}
-        <div className="flex border-b border-gray-200">
+    <div className="m-auto p-auto mt-9 p-10">
+      {/* Header Section with Title and Create Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Discussion Forum</h1>
+        <motion.button 
+          onClick={() => setShowModal(true)}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg shadow-md transition-all duration-200 flex items-center justify-center font-medium mt-4 sm:mt-0"
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          aria-label="Create new doubt"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+          </svg>
+          Ask a Question
+        </motion.button>
+      </div>
+      
+      {/* Navigation Tabs */}
+      <div className="mb-6 border-b border-gray-200">
+        <div className="flex flex-wrap">
           <button
             onClick={() => setActiveTab('unresolved')}
             className={`py-3 px-6 font-medium text-sm transition-colors duration-200 relative ${
@@ -118,6 +116,9 @@ const DoubtsPage = () => {
             aria-current={activeTab === 'unresolved' ? 'page' : undefined}
           >
             Unresolved
+            <span className="ml-2 bg-amber-100 text-amber-800 text-xs font-medium px-2 py-0.5 rounded-full">
+              {unresolvedCount}
+            </span>
             {activeTab === 'unresolved' && (
               <motion.div
                 className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"
@@ -135,6 +136,9 @@ const DoubtsPage = () => {
             aria-current={activeTab === 'resolved' ? 'page' : undefined}
           >
             Resolved
+            <span className="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">
+              {resolvedCount}
+            </span>
             {activeTab === 'resolved' && (
               <motion.div
                 className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"
@@ -152,6 +156,9 @@ const DoubtsPage = () => {
             aria-current={activeTab === 'all' ? 'page' : undefined}
           >
             All Questions
+            <span className="ml-2 bg-gray-100 text-gray-800 text-xs font-medium px-2 py-0.5 rounded-full">
+              {allCount}
+            </span>
             {activeTab === 'all' && (
               <motion.div
                 className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"
@@ -169,94 +176,224 @@ const DoubtsPage = () => {
         </div>
       )}
 
-      {/* Empty State */}
-      {!isLoading && filteredDoubts.length === 0 && (
-        <div className="text-center py-16 bg-gray-50 rounded-xl">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <h3 className="text-xl font-medium text-gray-700 mb-2">
-            No {activeTab !== 'all' ? activeTab : ''} questions found
-          </h3>
-          <p className="text-gray-500 mb-6">
-            {activeTab === 'unresolved' && "There are no unresolved questions in this course."}
-            {activeTab === 'resolved' && "There are no resolved questions in this course yet."}
-            {activeTab === 'all' && "There are no questions in this course yet. Be the first to ask!"}
-          </p>
-          <button 
-            onClick={() => setShowModal(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200"
-          >
-            Ask a Question
-          </button>
-        </div>
-      )}
+      {/* All Doubts Section */}
+      {!isLoading && (
+        <>
+          {/* Unresolved Section */}
+          {activeTab === 'unresolved' && (
+            <div className="mb-8">
+              {doubts.filter(doubt => !doubt.isResolved).length === 0 ? (
+                <div className="text-center py-10 bg-gray-50 rounded-xl">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3 className="text-xl font-medium text-gray-700 mb-2">No unresolved questions</h3>
+                  <p className="text-gray-500">There are no unresolved questions in this course.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {doubts.filter(doubt => !doubt.isResolved).map((doubt, index) => (
+                    <motion.div
+                      key={doubt._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      className="cursor-pointer p-6 rounded-lg shadow-md transition-all duration-300 bg-white hover:shadow-lg border-l-4 border-l-amber-500"
+                      onClick={() => handleCardClick(doubt._id)}
+                    >
+                      <div className="flex items-center mb-4">
+                        <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden mr-3">
+                          {doubt.askedBy.profileImage ? (
+                            <img
+                              src={doubt.askedBy.profileImage}
+                              alt={`${doubt.askedBy.userName}'s profile`}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-indigo-600 font-medium">
+                              {doubt.askedBy.userName?.charAt(0).toUpperCase() || "?"}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-800">{doubt.askedBy.userName}</p>
+                          <p className="text-gray-500 text-sm">
+                            {new Date(doubt.createdAt).toLocaleDateString(undefined, {
+                              month: 'short', 
+                              day: 'numeric',
+                              year: 'numeric'
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-semibold mb-3 text-gray-800 line-clamp-2">{doubt.title}</h3>
+                      <p className="text-gray-600 mb-4 line-clamp-3">
+                        {doubt.description}
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
+                          <span className="w-2 h-2 rounded-full mr-1.5 bg-amber-500"></span>
+                          Unresolved
+                        </span>
+                        <span className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                          View Details →
+                        </span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
-      {/* Doubt Cards Display */}
-      {!isLoading && filteredDoubts.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnimatePresence mode="wait">
-            {filteredDoubts.map((doubt, index) => (
-              <motion.div
-                key={doubt._id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                layout
-                className={`cursor-pointer p-6 rounded-lg shadow-md transition-all duration-300 bg-white hover:shadow-lg border-l-4 ${
-                  doubt.isResolved ? "border-l-green-500" : "border-l-amber-500"
-                }`}
-                onClick={() => handleCardClick(doubt._id)}
-              >
-                <div className="flex items-center mb-4">
-                  <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden mr-3">
-                    {doubt.askedBy.profileImage ? (
-                      <img
-                        src={doubt.askedBy.profileImage}
-                        alt={`${doubt.askedBy.userName}'s profile`}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-indigo-600 font-medium">
-                        {doubt.askedBy.userName?.charAt(0).toUpperCase() || "?"}
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-800">{doubt.askedBy.userName}</p>
-                    <p className="text-gray-500 text-sm">
-                      {new Date(doubt.createdAt).toLocaleDateString(undefined, {
-                        month: 'short', 
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
-                    </p>
-                  </div>
+          {/* Resolved Section */}
+          {activeTab === 'resolved' && (
+            <div className="mb-8">
+              {doubts.filter(doubt => doubt.isResolved).length === 0 ? (
+                <div className="text-center py-10 bg-gray-50 rounded-xl">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3 className="text-xl font-medium text-gray-700 mb-2">No resolved questions</h3>
+                  <p className="text-gray-500">There are no resolved questions in this course yet.</p>
                 </div>
-                <h3 className="text-xl font-semibold mb-3 text-gray-800 line-clamp-2">{doubt.title}</h3>
-                <p className="text-gray-600 mb-4 line-clamp-3">
-                  {doubt.description}
-                </p>
-                <div className="flex justify-between items-center">
-                  <span
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                      doubt.isResolved
-                        ? "bg-green-100 text-green-800"
-                        : "bg-amber-100 text-amber-800"
-                    }`}
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {doubts.filter(doubt => doubt.isResolved).map((doubt, index) => (
+                    <motion.div
+                      key={doubt._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      className="cursor-pointer p-6 rounded-lg shadow-md transition-all duration-300 bg-white hover:shadow-lg border-l-4 border-l-green-500"
+                      onClick={() => handleCardClick(doubt._id)}
+                    >
+                      <div className="flex items-center mb-4">
+                        <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden mr-3">
+                          {doubt.askedBy.profileImage ? (
+                            <img
+                              src={doubt.askedBy.profileImage}
+                              alt={`${doubt.askedBy.userName}'s profile`}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-indigo-600 font-medium">
+                              {doubt.askedBy.userName?.charAt(0).toUpperCase() || "?"}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-800">{doubt.askedBy.userName}</p>
+                          <p className="text-gray-500 text-sm">
+                            {new Date(doubt.createdAt).toLocaleDateString(undefined, {
+                              month: 'short', 
+                              day: 'numeric',
+                              year: 'numeric'
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-semibold mb-3 text-gray-800 line-clamp-2">{doubt.title}</h3>
+                      <p className="text-gray-600 mb-4 line-clamp-3">
+                        {doubt.description}
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                          <span className="w-2 h-2 rounded-full mr-1.5 bg-green-500"></span>
+                          Resolved
+                        </span>
+                        <span className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                          View Details →
+                        </span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* All Questions Section */}
+          {activeTab === 'all' && (
+            <div className="mb-8">
+              {doubts.length === 0 ? (
+                <div className="text-center py-10 bg-gray-50 rounded-xl">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3 className="text-xl font-medium text-gray-700 mb-2">No questions yet</h3>
+                  <p className="text-gray-500 mb-4">Be the first to ask a question in this course!</p>
+                  <button 
+                    onClick={() => setShowModal(true)}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200"
                   >
-                    <span className={`w-2 h-2 rounded-full mr-1.5 ${doubt.isResolved ? "bg-green-500" : "bg-amber-500"}`}></span>
-                    {doubt.isResolved ? "Resolved" : "Unresolved"}
-                  </span>
-                  <span className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
-                    View Details →
-                  </span>
+                    Ask a Question
+                  </button>
                 </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {doubts.map((doubt, index) => (
+                    <motion.div
+                      key={doubt._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      className={`cursor-pointer p-6 rounded-lg shadow-md transition-all duration-300 bg-white hover:shadow-lg border-l-4 ${
+                        doubt.isResolved ? "border-l-green-500" : "border-l-amber-500"
+                      }`}
+                      onClick={() => handleCardClick(doubt._id)}
+                    >
+                      <div className="flex items-center mb-4">
+                        <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden mr-3">
+                          {doubt.askedBy.profileImage ? (
+                            <img
+                              src={doubt.askedBy.profileImage}
+                              alt={`${doubt.askedBy.userName}'s profile`}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-indigo-600 font-medium">
+                              {doubt.askedBy.userName?.charAt(0).toUpperCase() || "?"}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-800">{doubt.askedBy.userName}</p>
+                          <p className="text-gray-500 text-sm">
+                            {new Date(doubt.createdAt).toLocaleDateString(undefined, {
+                              month: 'short', 
+                              day: 'numeric',
+                              year: 'numeric'
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-semibold mb-3 text-gray-800 line-clamp-2">{doubt.title}</h3>
+                      <p className="text-gray-600 mb-4 line-clamp-3">
+                        {doubt.description}
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <span
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                            doubt.isResolved
+                              ? "bg-green-100 text-green-800"
+                              : "bg-amber-100 text-amber-800"
+                          }`}
+                        >
+                          <span className={`w-2 h-2 rounded-full mr-1.5 ${doubt.isResolved ? "bg-green-500" : "bg-amber-500"}`}></span>
+                          {doubt.isResolved ? "Resolved" : "Unresolved"}
+                        </span>
+                        <span className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                          View Details →
+                        </span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </>
       )}
 
       {/* Modal for Creating a New Doubt */}
