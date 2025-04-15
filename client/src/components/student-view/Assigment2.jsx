@@ -3,7 +3,7 @@ import axios from "axios";
 import moment from "moment";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "@/api/axiosInstance";
-import { Assessment } from "@mui/icons-material";
+// import { Assessment, KayakingRounded } from "@mui/icons-material";
 
 const CourseAssignments = () => {
   const { courseId } = useParams(); // from route
@@ -19,10 +19,13 @@ const CourseAssignments = () => {
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
-     
-      
-        const res = await axiosInstance.get(`/api/student/assignments/${Assessment}/${user._id}`);
+    
         
+
+        const res = await axiosInstance.get(`/api/student/assignments/${courseId }/${user._id}`);
+        // const res = await axiosInstance.get(`http://localhost:4400/api/student/assignments/67e9f788e96fd9e008e22f43/67e405e7f896dbfcf96844fe`);
+        
+
         
 
         setSolved(res.data.submitted);
@@ -36,7 +39,7 @@ const CourseAssignments = () => {
     };
 
     fetchAssignments();
-  }, [courseId]);
+  }, []);
 
   if (loading) {
     return <p className="text-center text-gray-500 mt-10">Loading assignments...</p>;
