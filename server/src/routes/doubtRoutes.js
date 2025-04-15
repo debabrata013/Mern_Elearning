@@ -46,5 +46,32 @@ router.get('/student/:studentId', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+router.put("/:doubtId/resolve", async (req, res) => {
+  const { doubtId } = req.params;
+
+  try {
+    // Find the doubt by ID
+    const doubt = await Doubt.findById(doubtId);
+
+    // If doubt not found
+    if (!doubt) {
+      return res.status(404).json({ message: "Doubt not found" });
+    }
+
+    // Update isResolved to true
+    doubt.isResolved = true;
+
+    // Save the updated doubt
+    await doubt.save();
+
+    res.status(200).json({
+      message: "Doubt marked as resolved",
+      updatedDoubt: doubt,
+    });
+  } catch (error) {
+    console.error("Error resolving doubt:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 module.exports = router;
