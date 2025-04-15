@@ -34,23 +34,45 @@ const AssignmentQuiz = () => {
   };
 
   // Handle assignment submission
+  // const handleSubmit = async () => {
+  //   setSubmitting(true);
+  //   try {
+      
+  //     const response = await axiosInstance.post(`api/student/assignments/a/${assignmentId}/submit/op`, {
+  //       answers: answers,
+  //       userid: user._id, // Pass user ID to the backend
+  //     });
+  //     if (response.status === 201) {
+  //       setSubmitted(true); // Mark assignment as submitted
+  //     }
+  //   } catch (err) {
+  //     console.error("Error submitting assignment:", err);
+  //   } finally {
+  //     setSubmitting(false);
+  //   }
+  // };
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      const response = await axiosInstance.post(`/api/student/assignment/${assignmentId}/submit`, {
-        answers: answers,
-        userid: user._id, // Pass user ID to the backend
+      // Convert object to array
+      const answerArray = Object.values(answers); // e.g., { '0': 1, '1': 3 } → [1, 3]
+  
+      const res = await axiosInstance.post(`/api/student/assignments/a/${assignmentId}/submit/op`, {
+        userid: user._id,
+        answers: answerArray,
       });
-      if (response.status === 201) {
-        setSubmitted(true); // Mark assignment as submitted
+  
+      if (res.status === 201) {
+        setSubmitted(true);
       }
     } catch (err) {
-      console.error("Error submitting assignment:", err);
+      console.error("❌ Error submitting assignment:", err);
     } finally {
       setSubmitting(false);
     }
   };
-
+  
+  
   // Display loading state
   if (loading) {
     return (

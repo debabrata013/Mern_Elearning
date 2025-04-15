@@ -42,31 +42,38 @@ router.get("/:assignmentId" ,async(req,res)=>{
 const assignments = await Assignment.find({ _id:courseId});
 res.json(assignments)
 })
- 
-router.post("/:assignmentId/submit", async (req, res) => {
-  try {
-    const assignmentId = req.params.assignmentId;
-    const { userid, answers } = req.body;
+router.post("/a/:assignmentId/submit/op", async (req, res) => {
+  const { assignmentId } = req.params;
+  const { userid, answers } = req.body;
 
-    // Check if already submitted
-    const existing = await Submission.findOne({ assignment: assignmentId, student: userid });
-    if (existing) {
+  console.log("🔁 Submission Request Received");
+  console.log("assignmentId:", assignmentId);
+  console.log("userid:", userid);
+  console.log("answers:", answers);
+
+  if (!userid || !answers) {
+    return res.status(400).json({ message: "Please fill all the fields" });
+  }
+
+  try {
+    const alreadySubmitted = await Submission.findOne({ assignment: assignmentId, student: userid });
+    if (alreadySubmitted) {
       return res.status(400).json({ message: "You have already submitted this assignment" });
     }
 
-    // Get assignment
     const assignment = await Assignment.findById(assignmentId);
     if (!assignment) {
       return res.status(404).json({ message: "Assignment not found" });
     }
 
-    // Score calculation
-    let score = 0;
-    assignment.questions.forEach((q, i) => {
-      if (answers[i] === q.correctAnswerIndex) score++;
-    });
+    console.log("✅ Assignment fetched. Calculating score...");
 
-    // Save submission
+    const score = assignment.questions.reduce((acc, q, i) => {
+      return answers[i] === q.correctAnswerIndex ? acc + 1 : acc;
+    }, 0);
+
+    console.log("✅ Score calculated:", score);
+
     const submission = new Submission({
       assignment: assignmentId,
       student: userid,
@@ -75,9 +82,13 @@ router.post("/:assignmentId/submit", async (req, res) => {
     });
 
     await submission.save();
-    res.status(201).json({ message: "Assignment submitted", submission });
-  } catch (err) {
-    res.status(500).json({ message: "Failed to submit assignment", error: err.message });
+
+    console.log("✅ Submission saved");
+
+    return res.status(201).json({ message: "Assignment submitted successfully", submission });
+  } catch (error) {
+    console.error("❌ Error in submission route:", error);
+    return res.status(500).json({ message: "Failed to submit assignment", error: error.message });
   }
 });
 
