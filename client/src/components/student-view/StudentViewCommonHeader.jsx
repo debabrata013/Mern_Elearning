@@ -253,15 +253,7 @@ const StudentDashboard = () => {
             <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-end">
               {/* Notifications */}
               <div className="relative">
-                <button 
-                  onClick={() => setShowNotifications(!showNotifications)}
-                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
-                >
-                  <Bell className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-                  <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-                    3
-                  </span>
-                </button>
+              
                 
                 {/* Notifications Dropdown */}
                 {showNotifications && (

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from '@/api/axiosInstance';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const DiscussionPage = () => {
   const { doubtId } = useParams();
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -11,6 +12,7 @@ const DiscussionPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
   // Fetch messages and doubt details when component mounts or doubtId changes
   useEffect(() => {
@@ -23,6 +25,11 @@ const DiscussionPage = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Focus input when component mounts
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -40,11 +47,13 @@ const DiscussionPage = () => {
     }
   };
 
-  // GET doubt details (for example, to check if current user is the one who asked it)
+  // GET doubt details
   const fetchDoubtDetails = async () => {
     try {
       const response = await axiosInstance.get(`/api/doubts/${doubtId}`);
       setDoubt(response.data);
+      console.log(response.data);
+      
       return response.data;
     } catch (error) {
       console.error("Error fetching doubt details:", error);
@@ -59,6 +68,19 @@ const DiscussionPage = () => {
       fetchDoubtDetails();
     } catch (error) {
       console.error("Error resolving doubt:", error);
+    }
+  };
+
+  // Go back to previous page
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
+  // Handle key press for enter key
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(e);
     }
   };
 
@@ -77,6 +99,8 @@ const DiscussionPage = () => {
       await axiosInstance.post(`/api/messages`, payload);
       setNewMessage('');
       await fetchMessages();
+      // Focus back on input after sending
+      inputRef.current?.focus();
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
@@ -96,16 +120,27 @@ const DiscussionPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 max-w-4xl flex flex-col h-screen bg-gray-50">
+    <div className="container mx-auto px-4 sm:px-6 flex flex-col h-screen bg-gray-50">
       {/* Header Section */}
       <div className="sticky top-0 z-10 bg-white shadow-sm py-4 px-4 border-b flex items-center justify-between">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Discussion</h1>
-          {doubt && (
-            <p className="text-sm text-gray-600 mt-1 line-clamp-1">
-              {doubt.title || "Loading discussion..."}
-            </p>
-          )}
+        <div className="flex items-center">
+          <button 
+            onClick={handleGoBack} 
+            className="mr-3 text-gray-600 hover:text-gray-900 transition-colors"
+            aria-label="Go back"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Discussion</h1>
+            {doubt && (
+              <p className="text-sm text-gray-600 mt-1 line-clamp-1">
+                {doubt.title || "Loading discussion..."}
+              </p>
+            )}
+          </div>
         </div>
         {doubt && doubt.askedBy && doubt.askedBy._id === user._id && !doubt.isResolved && (
           <button
@@ -160,31 +195,48 @@ const DiscussionPage = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Chat Input */}
-      <div className="border-t bg-white p-4">
-        <form onSubmit={sendMessage} className="flex items-center gap-2">
-          <input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-1 border border-gray-300 p-3 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            required
-            disabled={isSending}
-          />
-          <button 
-            type="submit" 
-            className={`bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full transition-all duration-200 ${
-              isSending ? 'opacity-70 cursor-not-allowed' : ''
-            }`}
-            disabled={isSending}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-            </svg>
-          </button>
-        </form>
-      </div>
+      {/* Improved Chat Input */}
+      {doubt && !doubt.isResolved && (
+        <div className="sticky bottom-0 border-t bg-white p-4 shadow-lg">
+          <form onSubmit={sendMessage} className="flex items-center gap-3">
+            <input
+              ref={inputRef}
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Type your message..."
+              className="flex-1 border-2 border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-base min-w-64 max-w-2xl"
+              required
+              disabled={isSending}
+            />
+            <button
+              type="submit"
+              className={ `bg-blue-500 max-w-32 hover:bg-blue-600 text-white px-5 py-3 rounded-lg shadow transition-all duration-200 font-medium ${
+                isSending ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+              disabled={isSending}
+            >
+              {isSending ? (
+                <span className="">
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Send
+                </span>
+              ) : (
+                <span className="flex items-center">
+                  Send
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                  </svg>
+                </span>
+              )}
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
