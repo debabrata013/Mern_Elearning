@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { json, Link, useLocation, useParams } from "react-router-dom";
 import Sidebar from './studentComponent/Sidebar';
 import {
   Clock,
@@ -16,24 +16,8 @@ import {
   Send,
   Menu
 } from "lucide-react";
+import axiosInstance from "@/api/axiosInstance";
 
-// Component for Priority Badge with dynamic color
-const PriorityBadge = ({ priority }) => {
-  const colors = {
-    High: "bg-red-50 text-red-600 border border-red-200 dark:bg-red-500/10 dark:border-red-500/20",
-    Medium: "bg-yellow-50 text-yellow-600 border border-yellow-200 dark:bg-yellow-500/10 dark:border-yellow-500/20",
-    Low: "bg-emerald-50 text-emerald-600 border border-emerald-200 dark:bg-emerald-500/10 dark:border-emerald-500/20",
-  };
-
-  return (
-    <span className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 ${colors[priority]}`}>
-      <AlertCircle className="w-3.5 h-3.5" />
-      {priority}
-    </span>
-  );
-};
-
-// Reusable Modal Component for showing doubt details
 const DetailModal = ({ doubt, onClose, type }) => {
   if (!doubt) return null;
   return (
@@ -57,7 +41,6 @@ const DetailModal = ({ doubt, onClose, type }) => {
           <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
             {doubt.course}
           </span>
-          {type === "pending" && <PriorityBadge priority={doubt.priority} />}
         </div>
 
         {type === "resolved" && (
@@ -82,40 +65,43 @@ const DetailModal = ({ doubt, onClose, type }) => {
   );
 };
 
-// Modal for Creating a New Doubt
 const CreateDoubtModal = ({ onClose, onSubmit }) => {
   const [title, setTitle] = useState("");
-  const [course, setCourse] = useState("");
-  const [topic, setTopic] = useState("");
-  const [priority, setPriority] = useState("Low");
+  const { courseId } = useParams();
   const [description, setDescription] = useState("");
 
-  const handleSubmit = (e) => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (title.trim() === "" || description.trim() === "") return;
-    const newDoubt = {
-      id: `p${Date.now()}`,
-      title,
-      course,
-      topic,
-      description,
-      priority,
-      datePosted: new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      }),
-    };
-    onSubmit(newDoubt);
+
+
+    
+    
+
+    try {
+      const response = await axiosInstance.post("/api/doubts", {
+        courseId,
+        askedBy: user._id,
+        title,
+        description,
+      });
+
+       alert("Doubt create ho gaya ")
+       
+      
+
+      
+    } catch (error) {
+      console.error("Error submitting doubt:", error);
+    }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full mx-4 overflow-hidden animate-modal-slide-up">
-        {/* Gradient Top Bar */}
         <div className="h-2 bg-gradient-to-r from-[#5491CA] to-[#7670AC]" />
-
-        {/* Modal Header */}
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -134,11 +120,8 @@ const CreateDoubtModal = ({ onClose, onSubmit }) => {
             </button>
           </div>
         </div>
-
-        {/* Form Content */}
         <form onSubmit={handleSubmit} className="p-6">
           <div className="space-y-5">
-            {/* Title Input */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                 Question Title
@@ -152,52 +135,6 @@ const CreateDoubtModal = ({ onClose, onSubmit }) => {
                 required
               />
             </div>
-
-            {/* Course & Topic Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Course
-                </label>
-                <input
-                  type="text"
-                  value={course}
-                  onChange={(e) => setCourse(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 focus:border-[#5491CA] focus:ring-2 focus:ring-[#5491CA]/20 dark:bg-gray-800 dark:focus:border-[#6ba2d8] dark:focus:ring-[#6ba2d8]/20 transition-all"
-                  placeholder="Related course"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Topic
-                </label>
-                <input
-                  type="text"
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 focus:border-[#5491CA] focus:ring-2 focus:ring-[#5491CA]/20 dark:bg-gray-800 dark:focus:border-[#6ba2d8] dark:focus:ring-[#6ba2d8]/20 transition-all"
-                  placeholder="Specific topic"
-                />
-              </div>
-            </div>
-
-            {/* Priority Select */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                Priority Level
-              </label>
-              <select
-                value={priority}
-                onChange={(e) => setPriority(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 focus:border-[#5491CA] focus:ring-2 focus:ring-[#5491CA]/20 dark:bg-gray-800 dark:focus:border-[#6ba2d8] dark:focus:ring-[#6ba2d8]/20 transition-all"
-              >
-                <option value="Low">Low Priority</option>
-                <option value="Medium">Medium Priority</option>
-                <option value="High">High Priority</option>
-              </select>
-            </div>
-
-            {/* Description Textarea */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                 Detailed Description
@@ -212,8 +149,6 @@ const CreateDoubtModal = ({ onClose, onSubmit }) => {
               ></textarea>
             </div>
           </div>
-
-          {/* Action Buttons */}
           <div className="flex items-center justify-end gap-3 mt-8">
             <button
               type="button"
@@ -237,130 +172,58 @@ const CreateDoubtModal = ({ onClose, onSubmit }) => {
 };
 
 const Doubts = () => {
-  // Separate state for pending and resolved doubts.
-  const [pendingDoubts, setPendingDoubts] = useState([
-    {
-      id: "p1",
-      title: "How to implement authentication in React using JWT?",
-      course: "React - The Complete Guide",
-      instructor: "Max Schwarzmüller",
-      datePosted: "2024-11-12",
-      topic: "Authentication",
-      description:
-        "I am trying to implement JWT authentication in my React app but facing issues with token storage and refresh tokens. I have tried several approaches but none seem to be robust enough.",
-      priority: "High",
-    },
-    {
-      id: "p2",
-      title: "Redux Toolkit Query caching strategy",
-      course: "Modern Redux with Redux Toolkit",
-      instructor: "Stephen Grider",
-      datePosted: "2024-11-11",
-      topic: "State Management",
-      description:
-        "Need help understanding the best caching strategy for RTK Query in a large application. The caching mechanism sometimes seems to fetch stale data.",
-      priority: "Medium",
-    },
-    {
-      id: "p3",
-      title: "Next.js API Routes vs Express Backend",
-      course: "Next.js & React",
-      instructor: "Maximilian Schwarzmüller",
-      datePosted: "2024-11-10",
-      topic: "Architecture",
-      description:
-        "When should I use Next.js API routes versus having a separate Express backend? I want to understand the trade-offs in terms of scalability and maintainability.",
-      priority: "Low",
-    },
-  ]);
-
-  const [resolvedDoubts] = useState([
-    {
-      id: "r1",
-      title: "Understanding React useCallback Hook",
-      course: "React - The Complete Guide",
-      instructor: "Max Schwarzmüller",
-      datePosted: "2024-11-08",
-      resolvedDate: "2024-11-09",
-      topic: "React Hooks",
-      description:
-        "Can someone explain when exactly should I use useCallback hook? I find it confusing in relation to re-renders.",
-      solution:
-        "The useCallback hook is used to memoize functions and prevent unnecessary re-renders. It's particularly useful when passing callbacks to optimized child components.",
-      resolvedBy: "Sarah Wilson",
-    },
-    {
-      id: "r2",
-      title: "Tailwind CSS Custom Configuration",
-      course: "Tailwind CSS Masterclass",
-      instructor: "John Doe",
-      datePosted: "2024-11-07",
-      resolvedDate: "2024-11-08",
-      topic: "Styling",
-      description: "How can I extend Tailwind default configuration?",
-      solution:
-        "You can extend Tailwind configuration by modifying tailwind.config.js and adding your custom values to the extend section.",
-      resolvedBy: "Mike Johnson",
-    },
-    {
-      id: "r3",
-      title: "TypeScript Interface vs Type",
-      course: "TypeScript Advanced Concepts",
-      instructor: "Daniel Stern",
-      datePosted: "2024-11-06",
-      resolvedDate: "2024-11-07",
-      topic: "TypeScript",
-      description:
-        "What are the key differences between interface and type in TypeScript? I'm unsure when to use one over the other.",
-      solution:
-        "While interfaces and types are similar, interfaces are extendable and better suited for object shapes, whereas types are more versatile for union types and other complex scenarios.",
-      resolvedBy: "Emily Brown",
-    },
-  ]);
-
-  // Other UI states
+  const [pendingDoubts, setPendingDoubts] = useState([]);
+  const [resolvedDoubts, setResolvedDoubts] = useState([]);
   const [showAllPending, setShowAllPending] = useState(false);
   const [showAllResolved, setShowAllResolved] = useState(false);
   const [selectedDoubt, setSelectedDoubt] = useState(null);
   const [modalType, setModalType] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { courseId } = useParams();
 
   useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-      setIsSidebarOpen(!mobile);
+    const fetchDoubts = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/doubts/course/${courseId}`);
+        const { pending, resolved } = response.data;
+        setPendingDoubts(pending);
+        setResolvedDoubts(resolved);
+      } catch (error) {
+        console.error("Error fetching doubts:", error);
+      }
     };
 
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Initial check
+    if (typeof window !== "undefined") {
+      const handleResize = () => {
+        const mobile = window.innerWidth < 768;
+        setIsMobile(mobile);
+        setIsSidebarOpen(!mobile);
+      };
 
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+      window.addEventListener("resize", handleResize);
+      handleResize();
 
-  // Determine how many doubts to display based on the showAll toggle.
-  const displayedPendingDoubts = showAllPending
-    ? pendingDoubts
-    : pendingDoubts.slice(0, 2);
-  const displayedResolvedDoubts = showAllResolved
-    ? resolvedDoubts
-    : resolvedDoubts.slice(0, 2);
+      return () => window.removeEventListener("resize", handleResize);
+    }
 
-  // Handler to open detail modal
+    fetchDoubts();
+  }, [courseId]);
+
+  const displayedPendingDoubts = showAllPending ? pendingDoubts : pendingDoubts.slice(0, 2);
+  const displayedResolvedDoubts = showAllResolved ? resolvedDoubts : resolvedDoubts.slice(0, 2);
+
   const handleViewDetails = (doubt, type) => {
     setSelectedDoubt(doubt);
     setModalType(type);
   };
 
-  // Handler to close detail modal
   const handleCloseModal = () => {
     setSelectedDoubt(null);
     setModalType(null);
   };
 
-  // Handler for creating a new doubt
   const handleCreateDoubt = (newDoubt) => {
     setPendingDoubts((prev) => [newDoubt, ...prev]);
     setShowCreateModal(false);
@@ -368,19 +231,8 @@ const Doubts = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar */}
-      {/* <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
-        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
-      }`}>
-        <Sidebar />
-      </div> */}
-
-      {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${
-        isMobile ? 'ml-0' : 'ml-[280px]'
-      }`}>
+      <div className={`flex-1 transition-all duration-300 ${isMobile ? "ml-0" : "ml-[280px]"}`}>
         <div className="p-4 md:p-8">
-          {/* Header */}
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
             <div className="flex items-center gap-4">
               {isMobile && (
@@ -408,34 +260,37 @@ const Doubts = () => {
               Ask a Question
             </button>
           </div>
-
-          {/* Stats Overview */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
             {[
               {
                 label: "Pending Questions",
                 value: pendingDoubts.length,
                 icon: <AlertCircle className="w-5 h-5" />,
-                color: "from-orange-500 to-pink-500"
+                color: "from-orange-500 to-pink-500",
               },
               {
                 label: "Resolved Questions",
                 value: resolvedDoubts.length,
                 icon: <CheckCircle className="w-5 h-5" />,
-                color: "from-emerald-500 to-teal-500"
+                color: "from-emerald-500 to-teal-500",
               },
               {
                 label: "Total Interactions",
                 value: pendingDoubts.length + resolvedDoubts.length,
                 icon: <MessageSquare className="w-5 h-5" />,
-                color: "from-[#5491CA] to-[#7670AC]"
+                color: "from-[#5491CA] to-[#7670AC]",
               },
               {
                 label: "Resolution Rate",
-                value: `${Math.round((resolvedDoubts.length / (pendingDoubts.length + resolvedDoubts.length)) * 100)}%`,
+                value:
+                  pendingDoubts.length + resolvedDoubts.length > 0
+                    ? `${Math.round(
+                        (resolvedDoubts.length / (pendingDoubts.length + resolvedDoubts.length)) * 100
+                      )}%`
+                    : "N/A",
                 icon: <BarChart2 className="w-5 h-5" />,
-                color: "from-violet-500 to-purple-500"
-              }
+                color: "from-violet-500 to-purple-500",
+              },
             ].map((stat, index) => (
               <div
                 key={index}
@@ -453,8 +308,6 @@ const Doubts = () => {
               </div>
             ))}
           </div>
-
-          {/* Pending Doubts Section */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 rounded-lg bg-yellow-50 dark:bg-yellow-500/10">
@@ -464,7 +317,6 @@ const Doubts = () => {
                 Pending Questions
               </h3>
             </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
               {displayedPendingDoubts.map((doubt) => (
                 <div
@@ -477,7 +329,6 @@ const Doubts = () => {
                       <h4 className="font-semibold text-lg text-gray-900 dark:text-gray-100 group-hover:text-[#5491CA] transition-colors">
                         {doubt.title}
                       </h4>
-                      <PriorityBadge priority={doubt.priority} />
                     </div>
                     <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
                       {doubt.description}
@@ -507,7 +358,6 @@ const Doubts = () => {
                 </div>
               ))}
             </div>
-
             {pendingDoubts.length > 2 && (
               <button
                 onClick={() => setShowAllPending(!showAllPending)}
@@ -518,8 +368,6 @@ const Doubts = () => {
               </button>
             )}
           </section>
-
-          {/* Resolved Doubts Section */}
           <section>
             <div className="flex items-center gap-2 mb-6">
               <CheckCircle className="text-green-500" />
@@ -527,7 +375,6 @@ const Doubts = () => {
                 Resolved Doubts
               </h3>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {displayedResolvedDoubts.map((doubt) => (
                 <div
@@ -574,7 +421,6 @@ const Doubts = () => {
                 </div>
               ))}
             </div>
-
             {resolvedDoubts.length > 2 && (
               <div className="text-center mt-6">
                 <button
@@ -587,27 +433,14 @@ const Doubts = () => {
               </div>
             )}
           </section>
-
-          {/* Modal for Viewing Full Details */}
           {selectedDoubt && (
-            <DetailModal
-              doubt={selectedDoubt}
-              onClose={handleCloseModal}
-              type={modalType}
-            />
+            <DetailModal doubt={selectedDoubt} onClose={handleCloseModal} type={modalType} />
           )}
-
-          {/* Modal for Creating a New Doubt */}
           {showCreateModal && (
-            <CreateDoubtModal
-              onClose={() => setShowCreateModal(false)}
-              onSubmit={handleCreateDoubt}
-            />
+            <CreateDoubtModal onClose={() => setShowCreateModal(false)} onSubmit={handleCreateDoubt} />
           )}
         </div>
       </div>
-
-      {/* Mobile Overlay */}
       {isMobile && isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30"
