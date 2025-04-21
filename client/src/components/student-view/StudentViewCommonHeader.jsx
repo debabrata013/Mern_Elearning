@@ -17,6 +17,7 @@ import {
   Trophy,
   MessageSquare,
   Award,
+  LogOut,
   Monitor,
   FileText,
   Users,
@@ -278,37 +279,47 @@ const StudentDashboard = () => {
 
               {/* Profile */}
               <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={handleProfileClick}
-                  className="flex items-center gap-3 px-3 md:px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                >
-                  <img
-                    src={user.profileImage}
-                    alt="Profile"
-                    className="h-8 w-8 md:h-10 md:w-10 rounded-full border-2 border-[#5491CA]"
-                  />
-                  <div className="text-left hidden md:block">
-                    <p className="font-semibold text-gray-900 dark:text-gray-100">{user.userName}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Student</p>
-                  </div>
-                </button>
+  <button
+    onClick={handleProfileClick}
+    className="flex items-center gap-3 px-3 md:px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+  >
+    <img
+      src={user.profileImage}
+      alt="Profile"
+      className="h-8 w-8 md:h-10 md:w-10 rounded-full border-2 border-[#5491CA]"
+    />
+    <div className="text-left hidden md:block">
+      <p className="font-semibold text-gray-900 dark:text-gray-100">{user.userName}</p>
+      <p className="text-sm text-gray-500 dark:text-gray-400">Student</p>
+    </div>
+  </button>
 
-                {/* Dropdown Menu */}
-                {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-fadeIn">
-                    <Link
-                      to="/profile"
-                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      <FaUser className="text-[#5491CA]" />
-                      <span className="text-gray-700 dark:text-gray-200">My Profile</span>
-                    </Link>
-             
-                    
-                   
-                  </div>
-                )}
-              </div>
+  {/* Dropdown Menu */}
+  {isDropdownOpen && (
+    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-fadeIn">
+      <Link
+        to="/profile"
+        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      >
+        <FaUser className="text-[#5491CA]" />
+        <span className="text-gray-700 dark:text-gray-200">My Profile</span>
+      </Link>
+
+      {/* Divider */}
+      <div className="border-t border-gray-200 dark:border-gray-700 my-2" />
+
+      {/* Logout Button */}
+      <button
+        className="flex items-center gap-3 text-red-600 hover:text-red-800 px-4 py-2 w-full transition-colors"
+        onClick={handleLogout}
+      >
+        <LogOut className="h-5 w-5" />
+        <span>Logout</span>
+      </button>
+    </div>
+  )}
+</div>
+
             </div>
           </div>
 

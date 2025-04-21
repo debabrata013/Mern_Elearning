@@ -1,9 +1,9 @@
-import React, { useState  , useEffect} from 'react';
-import { Bell, Link as LinkIcon, Check, X, ChevronRight, Info } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Bell, Link as LinkIcon, Check, X, ChevronRight, Info, Menu } from 'lucide-react';
 import axiosInstance from '@/api/axiosInstance';
+import Sidebar from './studentComponent/Sidebar';
 
-
-// Card Components
+// Card Components (unchanged)
 const Card = ({ className = '', children, ...props }) => (
   <div className={`bg-white rounded-lg shadow-md border border-gray-200 transition-all duration-200 hover:shadow-lg ${className}`} {...props}>
     {children}
@@ -34,7 +34,7 @@ const CardContent = ({ className = '', children }) => (
   </div>
 );
 
-// Button Component with enhanced hover effects
+// Button Component (unchanged)
 const Button = ({ 
   variant = 'default', 
   size = 'default', 
@@ -65,7 +65,7 @@ const Button = ({
   );
 };
 
-// Enhanced Badge Component
+// Badge Component (unchanged)
 const Badge = ({ variant = 'default', className = '', children }) => {
   const variants = {
     default: 'bg-[#5491CA] text-white',
@@ -80,7 +80,7 @@ const Badge = ({ variant = 'default', className = '', children }) => {
   );
 };
 
-// ScrollArea Component
+// ScrollArea Component (unchanged)
 const ScrollArea = ({ className = '', children }) => (
   <div className={`overflow-auto custom-scrollbar ${className}`}>
     <style jsx global>{`
@@ -104,18 +104,24 @@ const ScrollArea = ({ className = '', children }) => (
 );
 
 const NotificationContent = () => {
-  const user= JSON.parse(localStorage.getItem('user'));
-
-
-  //  const response = axiosInstance.get("/announcements/",{u:user._id});
-  //  title
-  //  description
-  //  notificationType
-
-  //  createdAt
-
-  // const [notifications, setNotifications] = useState(response.data.announcements);
+  const user = JSON.parse(localStorage.getItem('user'));
   const [notifications, setNotifications] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Check for mobile view
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const formatDate = (dateString) => {
     const options = { 
@@ -132,9 +138,6 @@ const NotificationContent = () => {
     const fetchNotifications = async () => {
       try {
         const response = await axiosInstance.get(`/announcements/${user._id}`);
-        // const response = await axiosInstance.get(`/announcements/678a4c88c42aea3963fa4162`);
-       
-        console.log("response"+response.data);
         setNotifications(response.data.announcements);
       } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -143,130 +146,145 @@ const NotificationContent = () => {
     fetchNotifications();
   }, []);
   
-    const handleDismiss = (id) => {
+  const handleDismiss = (id) => {
     try {
-      // Call the API to delete the notification
       axiosInstance.delete(`/announcements/${user._id}/${id}`);
-      alert("Notification deleted successfully ")
+      alert("Notification deleted successfully");
       const fetchNotifications = async () => {
         try {
           const response = await axiosInstance.get(`/announcements/${user._id}`);
-          // const response = await axiosInstance.get(`/announcements/678a4c88c42aea3963fa4162`);
-         
-          console.log("response"+response.data);
           setNotifications(response.data.announcements);
         } catch (error) {
           console.error("Error fetching notifications:", error);
         }
       };
       fetchNotifications();
-
-
     } catch (error) {
       console.error("Error dismissing notification:", error);
     }
   };
 
- 
-  
   return (
-    <Card className="w-full max-w-5xl mx-auto overflow-hidden mt-28">
-      <CardHeader className="bg-gradient-to-r from-[#5491CA]/10 to-[#b1a9f1]/10 border-b border-gray-100">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-r from-[#5491CA]/20 to-[#b1a9f1]/20 rounded-lg">
-            <Bell className="h-6 w-6 text-[#5491CA]" />
-          </div>
-          <CardTitle className="bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-transparent bg-clip-text">
-            Announcements
-          </CardTitle>
-        </div>
-        <CardDescription>
-          View the latest announcements from the admin below.
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent>
-        <ScrollArea className="h-[600px] pr-4">
-          {notifications.length === 0 ? (
-            <div className="text-center py-16 text-gray-500">
-              <div className="h-20 w-20 mx-auto mb-4 rounded-full bg-[#5491CA]/10 flex items-center justify-center">
-                <Info className="h-10 w-10 text-[#5491CA]" />
+    <div className="min-h-screen bg-gray-50">
+      {/* Mobile sidebar toggle button */}
+      {isMobile && (
+        <button
+          onClick={toggleSidebar}
+          className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+      )}
+
+      {/* Sidebar backdrop for mobile */}
+      {isMobile && isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          onClick={toggleSidebar}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div
+        className={`bg-white shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 transition-transform duration-300 ease-in-out z-40 ${
+          isMobile ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0"
+        }`}
+      >
+        <Sidebar />
+      </div>
+
+      {/* Main content */}
+      <div className={`pl-0 ${!isMobile ? "md:pl-[280px]" : ""} transition-all duration-300`}>
+        <Card className="w-full max-w-5xl mx-auto overflow-hidden mt-8 md:mt-28">
+          <CardHeader className="bg-gradient-to-r from-[#5491CA]/10 to-[#b1a9f1]/10 border-b border-gray-100">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-r from-[#5491CA]/20 to-[#b1a9f1]/20 rounded-lg">
+                <Bell className="h-6 w-6 text-[#5491CA]" />
               </div>
-              <p className="text-lg font-medium text-[#5491CA]">No new announcements</p>
-              <p className="text-sm text-gray-400">Check back later for updates</p>
+              <CardTitle className="bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-transparent bg-clip-text">
+                Announcements
+              </CardTitle>
             </div>
-          ) : (
-            <div className="space-y-6 mt-6">
-              
-         
-           
-              {notifications.map((notification) => (
-                
-                <Card 
-                  key={notification.id}
-                  className={`relative transition-all duration-300 hover:transform hover:translate-x-1 border-l-4 ${
-                    notification.read 
-                      ? 'border-l-gray-200 bg-gray-50' 
-                      : 'border-l-[#5491CA] bg-white shadow-md'
-                  }`}
-                >
-                 {/* {console.log(JSON.stringify(notification._id))} */}
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-start gap-3">
-                        {notification.notificationType === 'link' ? (
-                          <div className="h-10 w-10 rounded-full bg-[#5491CA]/10 flex items-center justify-center">
-                            <LinkIcon className="h-5 w-5 text-[#5491CA]" />
+            <CardDescription>
+              View the latest announcements from the admin below.
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent>
+            <ScrollArea className="h-[calc(100vh-300px)] md:h-[600px] pr-4">
+              {notifications.length === 0 ? (
+                <div className="text-center py-16 text-gray-500">
+                  <div className="h-20 w-20 mx-auto mb-4 rounded-full bg-[#5491CA]/10 flex items-center justify-center">
+                    <Info className="h-10 w-10 text-[#5491CA]" />
+                  </div>
+                  <p className="text-lg font-medium text-[#5491CA]">No new announcements</p>
+                  <p className="text-sm text-gray-400">Check back later for updates</p>
+                </div>
+              ) : (
+                <div className="space-y-6 mt-6">
+                  {notifications.map((notification) => (
+                    <Card 
+                      key={notification.id}
+                      className={`relative transition-all duration-300 hover:transform hover:translate-x-1 border-l-4 ${
+                        notification.read 
+                          ? 'border-l-gray-200 bg-gray-50' 
+                          : 'border-l-[#5491CA] bg-white shadow-md'
+                      }`}
+                    >
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-start gap-3">
+                            {notification.notificationType === 'link' ? (
+                              <div className="h-10 w-10 rounded-full bg-[#5491CA]/10 flex items-center justify-center">
+                                <LinkIcon className="h-5 w-5 text-[#5491CA]" />
+                              </div>
+                            ) : (
+                              <div className="h-10 w-10 rounded-full bg-[#b1a9f1]/10 flex items-center justify-center">
+                                <Info className="h-5 w-5 text-[#b1a9f1]" />
+                              </div>
+                            )}
+                            <div>
+                              <h3 className="text-xl font-semibold text-[#5491CA] mb-1">
+                                {notification.title}
+                              </h3>
+                              <p className="text-sm text-gray-500">
+                                Posted on {formatDate(notification.createdAt)}
+                              </p>
+                            </div>
                           </div>
-                        ) : (
-                          <div className="h-10 w-10 rounded-full bg-[#b1a9f1]/10 flex items-center justify-center">
-                            <Info className="h-5 w-5 text-[#b1a9f1]" />
+                          <div className="flex items-center gap-2">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleDismiss(notification._id)}
+                              className="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 p-0"
+                            >
+                              <X className="h-5 w-5" />
+                            </Button>
                           </div>
-                        )}
-                        <div>
-                          <h3 className="text-xl font-semibold text-[#5491CA] mb-1">
-                            {notification.title}
-                          </h3>
-                          <p className="text-sm text-gray-500">
-                            Posted on {formatDate(notification.createdAt)}
-                          </p>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        
 
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => handleDismiss(notification._id)}
-                          className="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 p-0"
-                        >
-                          <X className="h-5 w-5" />
-                        </Button>
-                      </div>
-                    </div>
+                        <p className="text-gray-700 text-lg mt-4 leading-relaxed pl-13 ml-0">
+                          {notification.description}
+                        </p>
 
-                    <p className="text-gray-700 text-lg mt-4 leading-relaxed pl-13 ml-0">
-                      {notification.description}
-                    </p>
-
-                    <div className="flex items-center justify-between mt-6">
-                      <Badge 
-                        variant={notification.notificationType === 'link' ? 'secondary' : 'purple'}
-                      >
-                        Student
-                      </Badge>
-                      
-                     
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </ScrollArea>
-      </CardContent>
-    </Card>
+                        <div className="flex items-center justify-between mt-6">
+                          <Badge 
+                            variant={notification.notificationType === 'link' ? 'secondary' : 'purple'}
+                          >
+                            Student
+                          </Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
 

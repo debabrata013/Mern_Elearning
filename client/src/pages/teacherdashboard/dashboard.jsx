@@ -436,81 +436,127 @@
 
           {/* Main content */}
           <main className="flex-1 md:ml-64 p-6">
-            {/* Mobile Menu Button */}
-            <div className="md:hidden mb-4 flex flex-row justify-between items-center w-full">
-              <h1 className="text-xl font-bold text-[#5491CA]">Dashboard</h1>
-              <button
-                className="p-2 bg-white rounded-lg shadow-sm"
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                aria-label="Toggle sidebar"
-              >
-                <Menu className="h-6 w-6 text-[#5491CA]" />
-              </button>
+  {/* Mobile Top Section */}
+  <div className="md:hidden mb-4 flex flex-col gap-3 w-full">
+    <div className="flex justify-between items-center">
+      <h1 className="text-xl font-bold text-[#5491CA]">Dashboard</h1>
+      <button
+        className="p-2 bg-white rounded-lg shadow-sm"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label="Toggle sidebar"
+      >
+        <Menu className="h-6 w-6 text-[#5491CA]" />
+      </button>
+    </div>
+
+    {/* Mobile Profile (right aligned) */}
+    <div className="flex justify-end">
+      <div className="relative" ref={profileDropdownRef}>
+        <button 
+          onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+          className="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
+          aria-label="Profile menu"
+        >
+          <div className="h-10 w-10 rounded-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] flex items-center justify-center text-white font-bold">
+            {userName.charAt(0).toUpperCase()}
+          </div>
+          <div className="hidden md:block">
+            <p className="text-sm font-medium text-gray-800">{userName}</p>
+            <p className="text-xs text-gray-500">Teacher</p>
+          </div>
+          <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180' : ''}`} />
+        </button>
+
+        {profileDropdownOpen && (
+          <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100 animate-fadeIn">
+            <div className="px-4 py-3 border-b border-gray-100">
+              <p className="text-sm font-semibold text-gray-800">{userName}</p>
+              <p className="text-xs text-gray-500">Teacher</p>
             </div>
+            <div className="py-1">
+              <DropdownItem 
+                icon={<User className="h-4 w-4" />} 
+                label="My Profile" 
+                onClick={() => {
+                  setCurrentSection('profile');
+                  setProfileDropdownOpen(false);
+                }}
+              />
+            </div>
+            <div className="border-t border-gray-100 py-1">
+              <DropdownItem 
+                icon={<LogOut className="h-4 w-4" />} 
+                label="Sign Out" 
+                onClick={handleSignOut}
+                className="text-red-600 hover:bg-red-50"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
 
-            {/* Header */}
-            <header className="flex flex-col md:flex-row justify-between items-center mb-8">
-              <div className="w-full md:flex-1 mb-4 md:mb-0">
-                <div className="relative">
-                  <p className="text-xl font-semibold text-[#5491CA]">Teacher Dashboard</p>
-                </div>
-              </div>
+  {/* Header for desktop */}
+  <header className="hidden md:flex flex-row justify-between items-center mb-8">
+    <div className="w-full md:flex-1 mb-4 md:mb-0">
+      <div className="relative">
+        <p className="text-xl font-semibold text-[#5491CA]">Teacher Dashboard</p>
+      </div>
+    </div>
 
-              <div className="flex items-center gap-4">
-                {/* Profile Dropdown */}
-                <div className="relative" ref={profileDropdownRef}>
-                  <button 
-                    onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                    className="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
-                    aria-label="Profile menu"
-                  >
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] flex items-center justify-center text-white font-bold">
-                      {userName.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="hidden md:block">
-                      <p className="text-sm font-medium text-gray-800">{userName}</p>
-                      <p className="text-xs text-gray-500">Teacher</p>
-                    </div>
-                    <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  
-                  {/* Dropdown Menu */}
-                  {profileDropdownOpen && (
-                    <div className="absolute left-1/2 -translate-x-1/2 top-20 w-64 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100 animate-fadeIn">
-                      <div className="px-4 py-3 border-b border-gray-100">
-                        <p className="text-sm font-semibold text-gray-800">{userName}</p>
-                        <p className="text-xs text-gray-500">Teacher</p>
-                      </div>
-                      
-                      <div className="py-1">
-                        <DropdownItem 
-                          icon={<User className="h-4 w-4" />} 
-                          label="My Profile" 
-                          onClick={() => {
-                            setCurrentSection('profile');
-                            setProfileDropdownOpen(false);
-                          }}
-                        />
-                      
-                      </div>
-                      
-                      <div className="border-t border-gray-100 py-1">
-                        <DropdownItem 
-                          icon={<LogOut className="h-4 w-4" />} 
-                          label="Sign Out" 
-                          onClick={handleSignOut}
-                          className="text-red-600 hover:bg-red-50"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </header>
+    <div className="flex items-center gap-4">
+      {/* Desktop Profile Dropdown */}
+      <div className="relative" ref={profileDropdownRef}>
+        <button 
+          onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+          className="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
+          aria-label="Profile menu"
+        >
+          <div className="h-10 w-10 rounded-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] flex items-center justify-center text-white font-bold">
+            {userName.charAt(0).toUpperCase()}
+          </div>
+          <div className="hidden md:block">
+            <p className="text-sm font-medium text-gray-800">{userName}</p>
+            <p className="text-xs text-gray-500">Teacher</p>
+          </div>
+          <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180' : ''}`} />
+        </button>
 
-            {/* Dynamic Content */}
-            {renderContent()}
-          </main>
+        {profileDropdownOpen && (
+          <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100 animate-fadeIn">
+            <div className="px-4 py-3 border-b border-gray-100">
+              <p className="text-sm font-semibold text-gray-800">{userName}</p>
+              <p className="text-xs text-gray-500">Teacher</p>
+            </div>
+            <div className="py-1">
+              <DropdownItem 
+                icon={<User className="h-4 w-4" />} 
+                label="My Profile" 
+                onClick={() => {
+                  setCurrentSection('profile');
+                  setProfileDropdownOpen(false);
+                }}
+              />
+            </div>
+            <div className="border-t border-gray-100 py-1">
+              <DropdownItem 
+                icon={<LogOut className="h-4 w-4" />} 
+                label="Sign Out" 
+                onClick={handleSignOut}
+                className="text-red-600 hover:bg-red-50"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </header>
+
+  {/* Dynamic Content */}
+  {renderContent()}
+</main>
+
         </div>
       );
     };

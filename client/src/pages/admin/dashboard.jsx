@@ -557,91 +557,107 @@
 
         {/* Main content */}
         <main className="flex-1 md:ml-64 p-6">
-          {/* Mobile Menu Button */}
-          <div className="md:hidden mb-4 flex flex-row justify-between items-center w-full">
-            <h1 className="text-xl font-bold text-[#5491CA]">Admin Dashboard</h1>
+  {/* Mobile Menu Button */}
+  <div className="md:hidden mb-4 flex flex-row justify-between items-center w-full">
+    <h1 className="text-xl font-bold text-[#5491CA]">Admin Dashboard</h1>
+    <button
+      className="p-2"
+      onClick={() => setSidebarOpen(!sidebarOpen)}
+      aria-label="Toggle sidebar"
+    >
+      <Menu className="h-6 w-6 text-[#5491CA]" />
+    </button>
+  </div>
+
+  {/* Header */}
+  <header className="mb-8">
+    {/* User Info - Top right in both desktop and mobile */}
+    {currentSection !== 'profile' && (
+      <div
+        className="flex justify-end items-center gap-4 mb-4 md:mb-2 relative"
+        ref={profileMenuRef}
+      >
+        <button
+          onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+          className="h-8 w-8 rounded-full bg-[#5491CA] flex items-center justify-center text-white font-bold hover:bg-[#4a82b6] transition-colors"
+          aria-label="User profile"
+        >
+          {user.userName?.charAt(0).toUpperCase() || "A"}
+        </button>
+        <div className="text-[#5491CA] font-medium hidden sm:block">
+          <h2>{user.userName}</h2>
+        </div>
+
+        {/* Dropdown */}
+        {profileMenuOpen && (
+          <div className="absolute right-0 top-10 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-2 animate-fadeIn">
+            <div className="px-4 py-2 border-b border-gray-100">
+              <p className="font-medium text-[#5491CA]">{user.userName}</p>
+              <p className="text-sm text-gray-500">
+                {user.email || "admin@aigiri.com"}
+              </p>
+            </div>
+
             <button
-              className="p-2"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              aria-label="Toggle sidebar"
+              className="w-full text-left px-4 py-2 hover:bg-[#b1a9f1]/20 transition-colors flex items-center gap-2 text-gray-700"
+              onClick={() => {
+                setCurrentSection("profile");
+                setProfileMenuOpen(false);
+              }}
             >
-              <Menu className="h-6 w-6 text-[#5491CA]" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-[#5491CA]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+              Edit Profile
+            </button>
+
+            <div className="border-t border-gray-100 my-1"></div>
+
+            <button
+              className="w-full text-left px-4 py-2 hover:bg-red-50 transition-colors flex items-center gap-2 text-red-600"
+              onClick={() => {
+                handleLogout();
+                setProfileMenuOpen(false);
+              }}
+            >
+              <LogOut className="h-4 w-4" />
+              Sign Out
             </button>
           </div>
+        )}
+      </div>
+    )}
 
-          {/* Header */}
-          <header className="flex flex-col md:flex-row justify-between items-center mb-8">
-            <div className="w-full md:flex-1 mb-4 md:mb-0">
-              {currentSection === 'home' && (
-                <div className="relative">
-                  <input
-                    type="search"
-                    placeholder="Search Class, Documents, Activities..."
-                    className="w-full max-w-xl px-4 py-2 rounded-lg border border-[#5491CA] focus:ring-[#5491CA] focus:border-[#5491CA]"
-                    aria-label="Search"
-                  />
-                </div>
-              )}
-            </div>
-      
-            {/* Only show profile section if not on profile page */}
-            {currentSection !== 'profile' && (
-              <div className="flex items-center gap-4 relative" ref={profileMenuRef}>
-                <button 
-                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                  className="h-8 w-8 rounded-full bg-[#5491CA] flex items-center justify-center text-white font-bold hover:bg-[#4a82b6] transition-colors"
-                  aria-label="User profile"
-                >
-                  {user.userName?.charAt(0).toUpperCase() || "A"}
-                </button>
-                <div className="text-[#5491CA] font-medium">
-                  <h2>{user.userName}</h2>
-                </div>
-                
-                {/* Profile Dropdown Menu */}
-                {profileMenuOpen && (
-                  <div className="absolute right-0 top-10 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-2 animate-fadeIn">
-                    <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="font-medium text-[#5491CA]">{user.userName}</p>
-                      <p className="text-sm text-gray-500">{user.email || "admin@aigiri.com"}</p>
-                    </div>
-                    
-                    <button 
-                      className="w-full text-left px-4 py-2 hover:bg-[#b1a9f1]/20 transition-colors flex items-center gap-2 text-gray-700"
-                      onClick={() => {
-                        setCurrentSection('profile');
-                        setProfileMenuOpen(false);
-                      }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#5491CA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                      Edit Profile
-                    </button>
-                    
-                  
-                    
-                    <div className="border-t border-gray-100 my-1"></div>
-                    
-                    <button 
-                      className="w-full text-left px-4 py-2 hover:bg-red-50 transition-colors flex items-center gap-2 text-red-600"
-                      onClick={() => {
-                        handleLogout();
-                        setProfileMenuOpen(false);
-                      }}
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Sign Out
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </header>
+    {/* Search Bar - Below user info in mobile */}
+    <div className="w-full md:flex md:justify-between md:items-center">
+      {currentSection === "home" && (
+        <div className="relative w-full max-w-xl">
+          <input
+            type="search"
+            placeholder="Search Class, Documents, Activities..."
+            className="w-full px-4 py-2 rounded-lg border border-[#5491CA] focus:ring-[#5491CA] focus:border-[#5491CA]"
+            aria-label="Search"
+          />
+        </div>
+      )}
+    </div>
+  </header>
 
-          {/* Dynamic Content */}
-          {renderContent()}
-        </main>
+  {/* Dynamic Content */}
+  {renderContent()}
+</main>
+
       </div>
     );
   };

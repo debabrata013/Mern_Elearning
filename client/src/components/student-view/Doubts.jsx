@@ -9,7 +9,18 @@ const Doubts = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -32,90 +43,131 @@ const Doubts = () => {
     navigate(`/Mycourse/${courseId}/Doubts`);
   };
 
-  const CourseCard = React.memo(({ course }) => (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-      <div className="h-48 bg-gradient-to-r from-blue-200 to-purple-200 relative">
-        {course.coverImage ? (
-          <img
-            src={course.coverImage}
-            alt={course.title}
-            className="w-full h-full object-cover mix-blend-overlay"
-            loading="lazy"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <BookOpen className="w-16 h-16 text-blue-300" />
-          </div>
-        )}
-        <div className="absolute top-0 left-0 right-0 h-full bg-gradient-to-b from-transparent to-black/20"></div>
-      </div>
-      
-      <div className="p-5">
-        <h3 className="text-xl font-semibold mb-3 text-blue-600 line-clamp-2">
-          {course.title}
-        </h3>
-        <p className="text-gray-600 mb-4 text-sm line-clamp-2">
-          {course.description || "No description available."}
-        </p>
-        
-        <div className="flex flex-col space-y-3 mb-4">
-          
-          
-          <div className="flex items-center gap-2 text-sm text-blue-600">
-            <Calendar className="h-4 w-4 flex-shrink-0" />
-            <span>{moment(course.startDate).format("MMM DD, YYYY")}</span>
-          </div>
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const CourseCard = React.memo(({ course }) => {
+    const handleCourseClick = (courseId) => {
+      navigate(`/Mycourse/${courseId}/Doubts`);
+    };
+  
+    return (
+      <div className="flex flex-col w-[260px] h-[320px] cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl rounded-2xl overflow-hidden bg-white">
+        {/* Header with course image */}
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-[120px] flex justify-center items-center relative">
+          {course.coverImage ? (
+            <img
+              src={course.coverImage}
+              alt={course.title}
+              className="max-h-[80px] object-contain"
+              loading="lazy"
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <BookOpen className="w-12 h-12 text-blue-200" />
+            </div>
+          )}
+          <div className="absolute bottom-0 left-0 right-0 h-8 bg-white rounded-t-2xl"></div>
         </div>
         
-        <button
-          onClick={() => handleCourseClick(course._id)}
-          className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-medium 
-                    hover:shadow-lg transition-all duration-300 ease-in-out flex items-center justify-center gap-2 group"
-          aria-label={`View assignments for ${course.title}`}
-        >
-          <span>See All Doubts</span>
-          <span className="transform transition-transform group-hover:translate-x-1">→</span>
-        </button>
+        {/* Course content */}
+        <div className="p-4 flex flex-col flex-grow">
+          <h3 className="text-lg font-semibold text-gray-800 text-center mb-2 line-clamp-2">
+            {course.title}
+          </h3>
+          <p className="text-gray-600 text-sm text-center mb-4 line-clamp-3">
+            {course.description || "No description available."}
+          </p>
+          
+          <div className="mt-auto">
+            <div className="flex justify-center items-center gap-2 text-sm text-blue-600 mb-4">
+              <Calendar className="h-4 w-4 flex-shrink-0" />
+              <span>{moment(course.startDate).format("MMM DD, YYYY")}</span>
+            </div>
+            
+            <button
+              onClick={() => handleCourseClick(course._id)}
+              className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 rounded-lg font-medium 
+                        hover:from-blue-600 hover:to-blue-700 transition-all duration-300 ease-in-out flex items-center justify-center gap-2 group"
+              aria-label={`View doubts for ${course.title}`}
+            >
+              <span>See All Doubts</span>
+              <span className="transform transition-transform group-hover:translate-x-1">→</span>
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  ));
+    );
+  });
 
-  return (
-    <div className="min-h-screen bg-gray-50">
+  return (<div className="min-h-screen bg-gray-50">
+    {/* Mobile sidebar toggle button */}
+    {isMobile && (
+      <button
+        onClick={toggleSidebar}
+        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    )}
+  
+    {/* Sidebar backdrop for mobile */}
+    {isMobile && isSidebarOpen && (
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+        onClick={toggleSidebar}
+      />
+    )}
+  
+    {/* Sidebar */}
+    <div
+      className={`bg-white shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 transition-transform duration-300 ease-in-out z-40 ${
+        isMobile ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0"
+      }`}
+    >
+      <Sidebar />
+    </div>
+  
+    {/* Main content */}
+    <div className={`pl-0 ${!isMobile ? "md:pl-[280px]" : ""} transition-all duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Course Doubts</h1>
-          {/* <p className="text-gray-500">View and manage assignments for all your enrolled courses</p> */}
+          <h1 className="text-3xl font-bold text-[#5491CA] mb-2">Course Doubts</h1>
         </header>
-
+  
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16">
-            <Loader className="h-10 w-10 text-blue-500 animate-spin mb-4" />
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#5491CA] mb-4"></div>
             <p className="text-gray-500">Loading your courses...</p>
           </div>
         ) : error ? (
-          <div className="bg-red-50 border border-red-100 rounded-lg p-6 text-center">
-            <p className="text-red-500 mb-3">{error}</p>
+          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center max-w-md mx-auto">
+            <p className="text-red-500 mb-3 font-medium">{error}</p>
             <button 
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition-colors"
+              className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors font-medium"
             >
               Try Again
             </button>
           </div>
         ) : courses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {courses.map((course) => (
               <CourseCard key={course._id || course.courseCode} course={course} />
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm p-10 text-center">
-            <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+          <div className="bg-white rounded-xl shadow-sm p-10 text-center max-w-md mx-auto">
+            <div className="bg-[#5491CA]/10 p-4 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
+              <BookOpen className="h-10 w-10 text-[#5491CA]" />
+            </div>
             <p className="text-gray-500 mb-4">No courses available at the moment.</p>
             <button 
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors"
+              className="px-4 py-2 bg-[#5491CA] text-white rounded-lg hover:bg-[#467bb0] transition-colors font-medium"
             >
               Refresh
             </button>
@@ -123,6 +175,7 @@ const Doubts = () => {
         )}
       </div>
     </div>
+  </div>
   );
 };
 

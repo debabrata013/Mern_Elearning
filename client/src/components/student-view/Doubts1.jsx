@@ -86,6 +86,7 @@ const DoubtsPage = () => {
 
   return (
     <div className="m-auto p-auto mt-9 p-10">
+      
       {/* Header Section with Title and Create Button */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Discussion Forum</h1>
