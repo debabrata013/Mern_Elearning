@@ -30,14 +30,21 @@ import { AuthProvider } from "./context/auth";
 import ProtectedRoute from "./context/ProtectedRoute";
 import Unauthorized from "./pages/Unauthorized";
 import StudentRoutes from "./components/student-view/StudentRoutes";
-import DemoVideoPlayer from "./components/student-view/studentComponent/ui/videoplayer";
+// import DemoVideoPlayer from "./components/student-view/studentComponent/ui/videoplayer";
+import VideoPage from './components/student-view/course-card-after-buy/VideoPage';
+
 import Std from "./components/student-view/StudentViewCommonHeader";
 import Projile from "./components/student-view/profile-page/profilepage"
 import StudentAnoument from "./components/student-view/AnnouncementPage"
 import Studentbuycourse from "./components/student-view/courcebuy"
 import Studentbuycourse2 from "./components/student-view/coursebuy"
 import Doubts from "./components/student-view/Doubts"
+import Doubts3 from "./components/student-view/Doubts2"
+import Doubts2 from "./components/student-view/Doubts1"
 import Assigment from "./components/student-view/Assigment"
+import Assigment2 from "./components/student-view/Assigment2"
+import AssignmentQuiz from "./components/student-view/AssignmentQuiz"
+
 import Pr from "./pages/admin/profile"
 import Enroll from './components/student-view/studentComponent/enroll';
 import CreateQuizAssignmentForm from "./pages/teacherdashboard/quiz dashboard/createQuize";
@@ -56,13 +63,17 @@ import Job from './components/student-view/job';
 import Tc from "./pages/T&C"
 import Privacy from "./pages/policy"
 import Noti from "./components/student-view/Notification"
-
+import CourseDoubts from "./pages/teacherdashboard/CourseDoubts";
 import TeacherAssignmentList from "./pages/teacherdashboard/quiz dashboard/TeacherAssignmentList";
+import ChatPage from "./pages/teacherdashboard/ChatPage"
+import ResourceViewer from './components/ui/ResourceViewer';
+
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <Routes>
+        <Route path="/video/:videoUrl" element={<VideoPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forget" element={<ForgetPage/>}/>
           <Route path="/" element={<LandingPage />} />
@@ -77,6 +88,12 @@ function App() {
           <Route path="/abca" element={<Studentbuycourse />} />
           <Route path="/abcd" element={<Doubts />} />
           <Route path="/abas" element={<Assigment />} />
+          <Route path="/Mycourse/:courseId/Assigment" element={<Assigment2/>} />
+          <Route path="/Mycourse/:courseId/Doubts" element={<Doubts2/>} />
+          <Route path="/doubt/:doubtId/discussion" element={<Doubts3 />} />
+          {/* /Mycourse/${courseId}/Assigment */}
+          <Route path="/student/assignment/:assignmentId/:id" element={<AssignmentQuiz />} />
+
           <Route path="/abca2" element={<Studentbuycourse2 />} />
           <Route path="/abop" element={<Pr />} />
           <Route path="/profile" element={<Projile />} />
@@ -84,12 +101,14 @@ function App() {
           <Route path="/terms" element={<Tc/>} />
           <Route path="/privacy" element={<Privacy/>} />
           <Route path="/notifications" element={<Noti/>}/>
-          <Route path="/videop" element={<DemoVideoPlayer/>} />
+          {/* <Route path="/videop" element={<DemoVideoPlayer/>} /> */}
           < Route path="/mycourse/:id" element={<MyCourses/>}/>
           <Route path="/mycourse/course/:id" element={<ContinueCourse/>} />       {/*  new added for course view*/}
           <Route path="/teacher/assignments/:courseId" element={<TeacherAssignmentList />} />
           <Route path="/teacher/assignments/:courseId/create" element={<CreateQuizAssignmentForm />} />
-
+          <Route path="/course/:id/doubts" element={<CourseDoubts />} />
+          <Route path="/resource-viewer" element={<ResourceViewer />} />
+          <Route path="/doubts/:doubtId/chat" element={<ChatPage />} />
           <Route
             path="/user-dashboard"
             element={

@@ -10,7 +10,6 @@ const CourseCard = ({ course }) => {
     navigate(`/mycourse/course/${course._id}`, { state: { course } });
   };
 
- 
 
   return (
     <div

@@ -88,27 +88,22 @@ app.use("/landing", landingRoutes);
 app.use("/profile", ProfileRouters);
 app.use("/contactus/", contactRoutes);
 app.use("/mail/", MailRoutes);
-app.use('/cart', cartRoutes);
+// app.use('/cart', cartRoutes);
 // app.use('/todos', TodoRoutes);
 app.use("/u", UserRoutes);
 app.use('/pic', picRouters);
 app.use("/lac", LRouter);
-
-// 🆕 Doubt clearance feature routes
-app.use("/api/course/",asdRoutes)
+const carteRoutes = require('./src/routes/cart');
+app.use("/api/course/",asdRoutes)//
 app.use('/api/doubts', doubtRoutes);
 app.use('/api/messages', messageRoutes);
-app.use('/api/todos', todoRoutes);
-app.use("/api/teacher/assignments", TeacherAssigementRouter);
+app.use('/api/todos', todoRoutes);//
+app.use("/api/teacher/assignments", TeacherAssigementRouter);//
 app.use("/api/student/assignments",StudentAssigementRouter);
+app.use('/api/cart', carteRoutes);
 // Start server with Socket.io support
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-
-// ✅ Get Pending To-Dos (GET /api/todos/pending/YOUR_USER_ID)
-// ✅ Get Pending Count (GET /api/todos/pending-count/YOUR_USER_ID)
-// ✅ Delete To-Do (DELETE /api/todos/delete/YOUR_USER_ID/TODO_ID)
-// ✅ Create To-Do (POST /api/todos/create)
