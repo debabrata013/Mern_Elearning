@@ -131,19 +131,7 @@
                 You have <span className="font-bold text-white">{newStudents}</span> new students added to your domain. Please reach out to the
                 Head Teacher if you want them excluded from your domain.
               </p>
-              <div className="flex flex-wrap gap-4 animate-fadeIn animation-delay-300">
-               
-                  View New Students
-                  <ChevronRight className="h-4 w-4" />
-                
-                <button 
-                  
-                  className="bg-[#7670AC] text-white px-4 py-2 rounded-lg font-medium hover:bg-opacity-90 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 flex items-center gap-2"
-                >
-                  Take Attendance
-                  <CheckCircle className="h-4 w-4" />
-                </button>
-              </div>
+             
             </div>
             <div className="absolute right-0 top-0 h-full w-1/3">
               <div className="h-full w-full flex items-center justify-center">
@@ -401,9 +389,7 @@
   <span className="text-3xl font-bold tracking-wide text-[#7670AC] relative top-[5px] font-poppins">
     IGIRI
   </span>
-</div>
-
-
+        </div>
             <nav className="space-y-2">
               <NavItem 
                 icon={<Home className="h-5 w-5" />} 
@@ -436,21 +422,6 @@
                 onClick={() => setCurrentSection('quiz')}
               />
             </nav>
-
-            <div className="absolute bottom-4 w-full pr-8">
-              <div className="p-3 mb-4 rounded-lg bg-gray-100">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] flex items-center justify-center text-white font-bold">
-                    {userName.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-800">{userName}</p>
-                    <p className="text-xs text-gray-500">Teacher</p>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
           </aside>
 
           {/* Main content */}
