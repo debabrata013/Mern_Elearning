@@ -83,6 +83,9 @@ const JobsContent = () => {
       behavior: 'smooth'
     });
   };
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const resetForm = () => {
     setFormData({
@@ -175,10 +178,29 @@ const JobsContent = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+      {isMobile && (
+        <button
+          onClick={toggleSidebar}
+          className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+      )}
+
+      {/* Sidebar backdrop for mobile */}
+      {isMobile && isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          onClick={toggleSidebar}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
-        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
-      }`}>
+      <div
+        className={`bg-white shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 transition-transform duration-300 ease-in-out z-40 ${
+          isMobile ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0"
+        }`}
+      >
         <Sidebar />
       </div>
 
@@ -188,24 +210,11 @@ const JobsContent = () => {
       }`}>
         <div className="p-4 md:p-8">
           {/* Header with menu button */}
-          <div className="flex items-center gap-4 mb-6">
-            {isMobile && (
-              <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              >
-                <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-              </button>
-            )}
-            
-            <div>
-              <h2 className="text-xl font-bold text-[#5491CA] flex items-center">
-                <Briefcase className="mr-2 h-5 w-5" />
-                Job Arena  
-              </h2>
-              <p className="text-gray-500 text-sm">Here are the jobs posting on which you can apply. Happy learning!</p>
-            </div>
-          </div>
+          <header className="mb-8 md:mb-12 text-center">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#7670AC] dark:text-white">
+                  Explore <span className="text-[#5491CA] dark:text-[#7670AC]">Courses</span>
+                </h1>
+          </header>
           
           {/* Loading Spinner */}
           {loading && (

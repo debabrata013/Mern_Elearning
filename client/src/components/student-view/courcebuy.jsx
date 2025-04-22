@@ -41,6 +41,7 @@ const CoursePage = () => {
       if (sectionElement && sectionElement.classList) {
         setVisible(position > 100);
       }
+    
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -71,6 +72,9 @@ const CoursePage = () => {
   const currentCourses = filteredCourses.slice(indexOfFirstCourse, indexOfLastCourse);
 
   const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   if (loading) {
     return (
@@ -183,13 +187,31 @@ const CoursePage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+      {isMobile && (
+        <button
+          onClick={toggleSidebar}
+          className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+      )}
+
+      {/* Sidebar backdrop for mobile */}
+      {isMobile && isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          onClick={toggleSidebar}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
-        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
-      }`}>
+      <div
+        className={`bg-white shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 transition-transform duration-300 ease-in-out z-40 ${
+          isMobile ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0"
+        }`}
+      >
         <Sidebar />
       </div>
-      
       {/* Main Content */}
       <div className={`flex-1 transition-all duration-300 ${
         isMobile ? 'ml-0' : 'ml-[280px]'
@@ -202,14 +224,7 @@ const CoursePage = () => {
             {/* Header Section */}
             <div className="mb-6 md:mb-8">
               <div className="flex items-center gap-4 mb-4 md:mb-0">
-                {isMobile && (
-                  <button
-                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-                  </button>
-                )}
+                
                 <h1 className="text-2xl md:text-3xl font-bold text-[#7670AC] dark:text-white">
                   Explore <span className="text-[#5491CA] dark:text-[#7670AC]">Courses</span>
                 </h1>

@@ -194,22 +194,11 @@ const NotificationContent = () => {
       </div>
 
       {/* Main content */}
-      <div className={`pl-0 ${!isMobile ? "md:pl-[280px]" : ""} transition-all duration-300`}>
-        <Card className="w-full max-w-5xl mx-auto overflow-hidden mt-8 md:mt-28">
-          <CardHeader className="bg-gradient-to-r from-[#5491CA]/10 to-[#b1a9f1]/10 border-b border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-[#5491CA]/20 to-[#b1a9f1]/20 rounded-lg">
-                <Bell className="h-6 w-6 text-[#5491CA]" />
-              </div>
-              <CardTitle className="bg-gradient-to-r from-[#5491CA] to-[#b1a9f1] text-transparent bg-clip-text">
-                Announcements
-              </CardTitle>
-            </div>
-            <CardDescription>
-              View the latest announcements from the admin below.
-            </CardDescription>
-          </CardHeader>
-          
+      <div className={`pl-0 ${!isMobile ? "md:pl-[280px]" : ""} px-4 py-8`}>
+            <header className="mb-8 md:mb-12 text-center">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#5491CA] dark:text-white">
+                  Announcements</h1>
+          </header>
           <CardContent>
             <ScrollArea className="h-[calc(100vh-300px)] md:h-[600px] pr-4">
               {notifications.length === 0 ? (
@@ -282,7 +271,6 @@ const NotificationContent = () => {
               )}
             </ScrollArea>
           </CardContent>
-        </Card>
       </div>
     </div>
   );

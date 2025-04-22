@@ -220,13 +220,35 @@ const StudentDashboard = () => {
     { id: 2, title: 'Quiz Master', icon: <Trophy className="h-6 w-6 text-purple-500" />, progress: 75 },
     { id: 3, title: 'Assignment Ace', icon: <Medal className="h-6 w-6 text-blue-500" />, progress: 85 }
   ];
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      {isMobile && (
+        <button
+          onClick={toggleSidebar}
+          className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+      )}
+
+      {/* Sidebar backdrop for mobile */}
+      {isMobile && isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          onClick={toggleSidebar}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className={`bg-white dark:bg-gray-800 shadow-xl w-[280px] h-screen fixed top-0 left-0 transition-transform duration-300 ease-in-out z-40 ${
-        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
-      }`}>
+      <div
+        className={`bg-white shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 transition-transform duration-300 ease-in-out z-40 ${
+          isMobile ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0"
+        }`}
+      >
         <Sidebar />
       </div>
 
@@ -279,46 +301,44 @@ const StudentDashboard = () => {
 
               {/* Profile */}
               <div className="relative" ref={dropdownRef}>
-  <button
-    onClick={handleProfileClick}
-    className="flex items-center gap-3 px-3 md:px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-  >
-    <img
-      src={user.profileImage}
-      alt="Profile"
-      className="h-8 w-8 md:h-10 md:w-10 rounded-full border-2 border-[#5491CA]"
-    />
-    <div className="text-left hidden md:block">
-      <p className="font-semibold text-gray-900 dark:text-gray-100">{user.userName}</p>
-      <p className="text-sm text-gray-500 dark:text-gray-400">Student</p>
-    </div>
-  </button>
+                <button onClick={handleProfileClick} className="flex items-center gap-3 px-3 md:px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" >
+                  <img
+                    src={user.profileImage}
+                    alt="Profile"
+                    className="h-8 w-8 md:h-10 md:w-10 rounded-full border-2 border-[#5491CA]"
+                  />
+                  <div className="text-left">
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm md:text-base">{user.userName}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Student</p>
+                  </div>
+                </button>
 
-  {/* Dropdown Menu */}
-  {isDropdownOpen && (
-    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-fadeIn">
-      <Link
-        to="/profile"
-        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-      >
-        <FaUser className="text-[#5491CA]" />
-        <span className="text-gray-700 dark:text-gray-200">My Profile</span>
-      </Link>
 
-      {/* Divider */}
-      <div className="border-t border-gray-200 dark:border-gray-700 my-2" />
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-fadeIn">
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <FaUser className="text-[#5491CA]" />
+                      <span className="text-gray-700 dark:text-gray-200">My Profile</span>
+                    </Link>
 
-      {/* Logout Button */}
-      <button
-        className="flex items-center gap-3 text-red-600 hover:text-red-800 px-4 py-2 w-full transition-colors"
-        onClick={handleLogout}
-      >
-        <LogOut className="h-5 w-5" />
-        <span>Logout</span>
-      </button>
-    </div>
-  )}
-</div>
+                    {/* Divider */}
+                    <div className="border-t border-gray-200 dark:border-gray-700 my-2" />
+
+                    {/* Logout Button */}
+                    <button
+                      className="flex items-center gap-3 text-red-600 hover:text-red-800 px-4 py-2 w-full transition-colors"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="h-5 w-5" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                )}
+              </div>
 
             </div>
           </div>

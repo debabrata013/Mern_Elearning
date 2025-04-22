@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Users, Calendar, Loader, BookOpen } from "lucide-react";
+import { Users, Calendar, Loader, BookOpen,Menu } from "lucide-react";
 import axiosInstance from "@/api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -42,6 +42,10 @@ const Assignments = () => {
 
   const handleCourseClick = (courseId) => {
     navigate(`/Mycourse/${courseId}/Assigment`);
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   const CourseCard = React.memo(({ course }) => {
@@ -88,19 +92,39 @@ const Assignments = () => {
 
   return (<div className="min-h-screen bg-gray-50 flex">
     {/* Sidebar */}
-    <div
-      className={`bg-white shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 transition-transform duration-300 ease-in-out z-40 ${
-        isMobile ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0"
-      }`}
-    >
-      <Sidebar />
-    </div>
+    {isMobile && (
+        <button
+          onClick={toggleSidebar}
+          className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+      )}
+
+      {/* Sidebar backdrop for mobile */}
+      {isMobile && isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          onClick={toggleSidebar}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div
+        className={`bg-white shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 transition-transform duration-300 ease-in-out z-40 ${
+          isMobile ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0"
+        }`}
+      >
+        <Sidebar />
+      </div>
   
     {/* Main Content */}
     <div className={`flex-1 ml-0 ${!isMobile ? "ml-[280px]" : ""} px-4 sm:px-6 lg:px-8 py-8`}>
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-[#5491CA] mb-2">Course Assignments</h1>
-      </header>
+    <header className="mb-8 md:mb-12 text-center">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#7670AC] dark:text-white">
+                  Course <span className="text-[#5491CA] dark:text-[#7670AC]">Assignments</span>
+                </h1>
+          </header>
   
       {loading ? (
         <div className="flex flex-col items-center justify-center py-16">
