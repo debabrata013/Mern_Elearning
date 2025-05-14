@@ -121,53 +121,109 @@ router.post('/registration', async (req, res) => {
 /* =========================
    Course Purchase Endpoint
 ========================= */
+// router.post('/purchase', async (req, res) => {
+//   const { email, name, courseName } = req.body;
+//   if (!email || !name || !courseName) {
+//     return res.status(400).json({ error: 'Missing required fields (email, name, courseName)' });
+//   }
+
+//   const subject = 'Course Purchase Confirmation';
+//   const htmlContent = `
+//     <div style="background-color: #f7f7f7; padding: 30px;">
+//       <div style="max-width: 600px; margin: auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 3px rgba(0,0,0,0.1); overflow: hidden;">
+//         <!-- Header -->
+//         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; text-align: center;">
+//           <h1 style="color: #ffffff; margin: 0; font-family: Arial, sans-serif;">Thank You for Your Purchase!</h1>
+//         </div>
+//         <!-- Body -->
+//         <div style="padding: 20px; color: #333333; font-family: Arial, sans-serif; line-height: 1.6;">
+//           <p style="font-size: 18px;">Hello ${name},</p>
+//           <p style="font-size: 16px;">Thank you for purchasing the course:</p>
+//           <p style="font-size: 18px; font-weight: bold;">${courseName}</p>
+//           <p style="font-size: 16px;">We're excited to welcome you to our community of learners! Here are a few steps to help you get started:</p>
+//           <ul style="font-size: 16px; margin-left: 20px;">
+//             <li>Visit your <a href="https://yourplatform.com/dashboard" style="color: #667eea; text-decoration: none;">Dashboard</a> to access your course materials.</li>
+//             <li>Check your inbox for additional resources and course guides.</li>
+//             <li>Join our discussion forum to connect with instructors and fellow students.</li>
+//           </ul>
+//           <p style="font-size: 16px;">If you have any questions or need assistance, please contact our support team at <a href="mailto:support@aigiri.com" style="color: #667eea; text-decoration: none;">support@aigiri.com</a>.</p>
+//           <p style="font-size: 16px;">Thank you for choosing AIGIRI. We wish you an enriching and successful learning experience!</p>
+//           <p style="font-size: 16px;">Best regards,<br/>The AIGIRI Team</p>
+//         </div>
+//         <!-- Footer -->
+//         <div style="background-color: #f0f0f0; padding: 10px; text-align: center;">
+//           <p style="font-size: 12px; color: #777777; font-family: Arial, sans-serif;">© ${new Date().getFullYear()} AIGIRI. All rights reserved.</p>
+//         </div>
+//       </div>
+//     </div>
+//   `;
+
+//   try {
+//     await sendEmail(email, subject, htmlContent);
+//     res.status(200).json({ message: 'Purchase confirmation email sent successfully' });
+//   } catch (error) {
+//     console.error('Error sending purchase email:', error);
+//     res.status(500).json({ error: 'Failed to send email' });
+//   }
+// });
+
 router.post('/purchase', async (req, res) => {
   const { email, name, courseName } = req.body;
+
   if (!email || !name || !courseName) {
     return res.status(400).json({ error: 'Missing required fields (email, name, courseName)' });
   }
 
-  const subject = 'Course Purchase Confirmation';
-  const htmlContent = `
+  // Student email
+  const studentSubject = 'Course Purchase Request Received';
+  const studentHtmlContent = `
     <div style="background-color: #f7f7f7; padding: 30px;">
       <div style="max-width: 600px; margin: auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 3px rgba(0,0,0,0.1); overflow: hidden;">
         <!-- Header -->
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; text-align: center;">
-          <h1 style="color: #ffffff; margin: 0; font-family: Arial, sans-serif;">Thank You for Your Purchase!</h1>
+        <div style="background: linear-gradient(135deg, #28a745 0%, #218838 100%); padding: 20px; text-align: center;">
+          <h1 style="color: #ffffff; margin: 0;">Purchase Request Received</h1>
         </div>
         <!-- Body -->
-        <div style="padding: 20px; color: #333333; font-family: Arial, sans-serif; line-height: 1.6;">
-          <p style="font-size: 18px;">Hello ${name},</p>
-          <p style="font-size: 16px;">Thank you for purchasing the course:</p>
-          <p style="font-size: 18px; font-weight: bold;">${courseName}</p>
-          <p style="font-size: 16px;">We're excited to welcome you to our community of learners! Here are a few steps to help you get started:</p>
-          <ul style="font-size: 16px; margin-left: 20px;">
-            <li>Visit your <a href="https://yourplatform.com/dashboard" style="color: #667eea; text-decoration: none;">Dashboard</a> to access your course materials.</li>
-            <li>Check your inbox for additional resources and course guides.</li>
-            <li>Join our discussion forum to connect with instructors and fellow students.</li>
-          </ul>
-          <p style="font-size: 16px;">If you have any questions or need assistance, please contact our support team at <a href="mailto:support@aigiri.com" style="color: #667eea; text-decoration: none;">support@aigiri.com</a>.</p>
-          <p style="font-size: 16px;">Thank you for choosing AIGIRI. We wish you an enriching and successful learning experience!</p>
-          <p style="font-size: 16px;">Best regards,<br/>The AIGIRI Team</p>
+        <div style="padding: 20px; font-family: Arial, sans-serif;">
+          <p>Hello ${name},</p>
+          <p>Thank you for your interest in our course: <strong>${courseName}</strong>.</p>
+          <p>Our sales team will contact you shortly via email with the payment details and next steps.</p>
+          <p>If you have any questions, feel free to contact <a href="mailto:support@aigiri.com">support@aigiri.com</a>.</p>
+          <p>— AIGIRI Team</p>
         </div>
-        <!-- Footer -->
-        <div style="background-color: #f0f0f0; padding: 10px; text-align: center;">
-          <p style="font-size: 12px; color: #777777; font-family: Arial, sans-serif;">© ${new Date().getFullYear()} AIGIRI. All rights reserved.</p>
+        <div style="background-color: #f0f0f0; text-align: center; padding: 10px;">
+          <small>© ${new Date().getFullYear()} AIGIRI. All rights reserved.</small>
         </div>
       </div>
     </div>
   `;
 
+  // Admin email
+  const adminEmail = process.env.ADMIN_EMAIL || 'gameknowledge2018@gmail.com';
+  const adminSubject = 'New Course Purchase Interest';
+  const adminHtmlContent = `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h2>New Course Interest Received</h2>
+      <p><strong>Student Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Interested Course:</strong> ${courseName}</p>
+      <p>Please reach out to the student to proceed with the payment process.</p>
+    </div>
+  `;
+
   try {
-    await sendEmail(email, subject, htmlContent);
-    res.status(200).json({ message: 'Purchase confirmation email sent successfully' });
+    // Send emails to student and admin
+    await Promise.all([
+      sendEmail(email, studentSubject, studentHtmlContent),
+      sendEmail(adminEmail, adminSubject, adminHtmlContent)
+    ]);
+
+    res.status(200).json({ message: 'Emails sent to student and admin successfully' });
   } catch (error) {
-    console.error('Error sending purchase email:', error);
-    res.status(500).json({ error: 'Failed to send email' });
+    console.error('Error sending purchase emails:', error);
+    res.status(500).json({ error: 'Failed to send purchase emails' });
   }
 });
-
-
 /* =========================
    Online Class Join Endpoint
 ========================= */
