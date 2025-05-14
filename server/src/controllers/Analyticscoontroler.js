@@ -21,6 +21,8 @@
 // export { getUsersLoggedInLast6Months };
 
 const User = require("../models/User");
+const Course = require("../models/Course");
+const mongoose = require("mongoose");
 
 
 const getUsersLoggedInLast6Months = async (req, res) => {
@@ -59,5 +61,42 @@ const getUsersLoggedInLast6Months = async (req, res) => {
 };
 
 
+const getEnrollmentStats = async (req, res) => {
+  try {
+    const stats = await User.aggregate([
+      { $match: { role: 'student' } },
+      { $unwind: "$purchasedCourses" },
+      {
+        $group: {
+          _id: "$purchasedCourses",
+          studentCount: { $sum: 1 }
+        }
+      },
+      {
+        $lookup: {
+          from: "courses",
+          localField: "_id",
+          foreignField: "_id",
+          as: "course"
+        }
+      },
+      {
+        $unwind: "$course"
+      },
+      {
+        $project: {
+          _id: 0,
+          courseId: "$course._id",
+          title: "$course.title",
+          studentCount: 1
+        }
+      }
+    ]);
 
-module.exports = { getUsersLoggedInLast6Months };
+    res.json(stats);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error generating stats");
+  }
+};
+module.exports = { getUsersLoggedInLast6Months, getEnrollmentStats };
