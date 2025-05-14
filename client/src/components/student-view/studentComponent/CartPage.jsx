@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaArrowLeft, FaShoppingCart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from "../../../api/axiosInstance";
-
+import { toast } from 'react-toastify';
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +44,7 @@ user = a.data;
       // Extract course data from each response
       const courses = courseResponses.map(response => response.data.course); // Note the `.course`
    
-      console.log(courses);
+      // console.log(courses);
       
       setCartItems(courses);
   
@@ -93,22 +93,47 @@ user = a.data;
     }
   };
 
-  const handlePurchase = (courseId) => {
-    try {
-      const courseData = cartItems.find(item => item._id === courseId);
-      if (!courseData) {
-        throw new Error('Course not found in cart');
-      }
+  const handlePurchase = async(courseId,name, email, courseName) => {
+    // try {
+    //   const courseData = cartItems.find(item => item._id === courseId);
+    //   if (!courseData) {
+    //     throw new Error('Course not found in cart');
+    //   }
       
-      navigate(`/enroll/${courseId}`, { 
-        state: { 
-          course: courseData
-        }
+    //   navigate(`/enroll/${courseId}`, { 
+    //     state: { 
+    //       course: courseData
+    //     }
+    //   });
+    // } catch (error) {
+    //   console.error('Error navigating to enroll page:', error);
+    //   alert('Failed to navigate to enrollment page. Please try again.');
+    // }
+    try {
+      setLoading(true);
+      const res = await fetch('http://localhost:4400/mail/purchase', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, courseName }),
       });
-    } catch (error) {
-      console.error('Error navigating to enroll page:', error);
-      alert('Failed to navigate to enrollment page. Please try again.');
+
+      const data = await res.json();
+      setLoading(false);
+    if (res.ok) {
+
+      removeFromCart(courseId);
+      
+      toast.success('Purchase request sent successfully!'); // or alert
+
+    } else {
+      toast.error(data.error || 'Something went wrong');
     }
+  } catch (error) {
+    console.error('Purchase error:', error);
+    toast.error('Failed to send purchase request');
+  }
   };
   // console.log(cartItems);
   
@@ -171,7 +196,7 @@ user = a.data;
                     Remove from Cart
                   </button>
                   <button 
-                    onClick={() => handlePurchase(course._id)}
+                    onClick={() => handlePurchase(course._id, user.userName, user.email, course.title)}
                     className="px-4 py-3 rounded-lg bg-[#5491CA] text-white hover:bg-[#7670AC] transition-colors shadow-md text-sm font-medium"
                   >
                     Purchase Course
