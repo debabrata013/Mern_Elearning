@@ -49,6 +49,9 @@ exports.login = async (req, res) => {
             { expiresIn: '120m' }
         );
 
+  user.loginHistory.push(new Date());
+await user.save();
+
 
         // Set access token in a cookie
         res.cookie('accessToken', accessToken, { httpOnly: true });
@@ -59,9 +62,9 @@ exports.login = async (req, res) => {
 
         // Add all user data except password to the cookie
         res.cookie('userData', JSON.stringify(userData), { httpOnly: true });
-        console.log(userData);
-        console.log(accessToken);
-        console.log();
+        // console.log(userData);
+        // console.log(accessToken);
+        // console.log();
         
 
         return res.send({ userData, accessToken, success: true, message: "Login successful" });

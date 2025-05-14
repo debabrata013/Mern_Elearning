@@ -161,6 +161,7 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Course"  // Reference to the Course model
   }],
+loginHistory: [Date],
 
   // To-Do List for each user
   todos: [TodoSchema] // Each user has their own list of todos
