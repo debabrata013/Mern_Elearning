@@ -22,22 +22,59 @@ const Doubts = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        setLoading(true);
-        const response = await axiosInstance.get("/courses/getallCourse/op");
-        setCourses(response.data.courses);
-      } catch (err) {
-        setError("Failed to load courses");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchCourses = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await axiosInstance.get("/courses/getallCourse/op");
+  //       setCourses(response.data.courses);
+  //       console.log(response.data.courses);
 
-    fetchCourses();
-  }, []);
+  //     } catch (err) {
+  //       setError("Failed to load courses");
+  //       console.error(err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchCourses();
+  // }, []);
+useEffect(() => {
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+
+      // 1. Local storage se user data lena
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user || !user.purchasedCourses || user.purchasedCourses.length === 0) {
+        setCourses([]);
+        return;
+      }
+
+      const purchasedCourseIds = user.purchasedCourses; // array of course IDs
+
+      // 2. All courses fetch karna
+      const response = await axiosInstance.get("/courses/getallCourse/op");
+      const allCourses = response.data.courses;
+
+      // 3. Filter only purchased courses
+      const filteredCourses = allCourses.filter(course =>
+        purchasedCourseIds.includes(course._id)
+      );
+
+      setCourses(filteredCourses);
+    } catch (err) {
+      setError("Failed to load courses");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchCourses();
+}, []);
 
   const handleCourseClick = (courseId) => {
     navigate(`/Mycourse/${courseId}/Doubts`);

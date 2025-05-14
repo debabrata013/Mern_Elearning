@@ -9,20 +9,50 @@ const MyCourses = () => {
   const [error, setError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const data = await getAllCourses();
-        setCourses(data);
-      } catch (err) {
-        console.error("Error fetching courses:", err);
-        setError("Failed to load courses. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCourses();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCourses = async () => {
+  //     try {
+  //       const data = await getAllCourses();
+       
+
+  //       setCourses(data);
+  //     } catch (err) {
+  //       console.error("Error fetching courses:", err);
+  //       setError("Failed to load courses. Please try again later.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchCourses();
+  // }, []);
+useEffect(() => {
+  const fetchCourses = async () => {
+    try {
+      // 1. Get all courses
+      const allCourses = await getAllCourses();
+
+      // 2. Get user from localStorage
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+
+      // 3. Extract purchased course IDs
+      const purchasedCourseIds = storedUser?.purchasedCourses || [];
+
+      // 4. Filter courses that are in purchasedCourseIds
+      const filteredCourses = allCourses.filter(course =>
+        purchasedCourseIds.includes(course._id)
+      );
+
+      // 5. Set filtered courses to state
+      setCourses(filteredCourses);
+    } catch (err) {
+      console.error("Error fetching courses:", err);
+      setError("Failed to load courses. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchCourses();
+}, []);
 
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
