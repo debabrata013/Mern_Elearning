@@ -72,7 +72,7 @@ const analyticsRoutes = require("./src/routes/analyticsRoutes");
 
 // 🧠 Doubt Chat Sockets
 require('./src/sockets/doubtSocket')(io); // <-- pass io to socket handler
-const courseAssignmentRoutes = require('./routes/courseAssignment');
+const courseAssignmentRoutes = require('./src/routes/courseAssignment'); // Import the course assignment routes
 app.use('/api/course-assign', courseAssignmentRoutes);
 
 // ⛳ Mount All Routes
