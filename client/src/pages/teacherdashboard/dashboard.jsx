@@ -128,10 +128,7 @@
           >
             <div className="relative z-10">
               <h2 className="text-2xl font-bold mb-2 animate-fadeIn">Welcome back, {teacherName}</h2>
-              <p className="text-white/90 mb-4 animate-fadeIn animation-delay-200">
-                You have <span className="font-bold text-white">{newStudents}</span> new students added to your domain. Please reach out to the
-                Head Teacher if you want them excluded from your domain.
-              </p>
+             
              
             </div>
             <div className="absolute right-0 top-0 h-full w-1/3">
@@ -148,9 +145,9 @@
           {/* Stats Grid with animations */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { title: 'Total Students', value: '210', icon: <Users className="h-6 w-6" />, change: '+27 this month', color: '#5491CA' },
-              { title: 'Average Attendance', value: '92%', icon: <CheckCircle className="h-6 w-6" />, change: '+5% increase', color: '#b1a9f1' },
-              { title: 'Classes Today', value: '5', icon: <BookOpen className="h-6 w-6" />, change: '2 remaining', color: '#7670AC' },
+              // { title: 'Total Students', value: '210', icon: <Users className="h-6 w-6" />, change: '+27 this month', color: '#5491CA' },
+              // { title: 'Average Attendance', value: '92%', icon: <CheckCircle className="h-6 w-6" />, change: '+5% increase', color: '#b1a9f1' },
+              // { title: 'Classes Today', value: '5', icon: <BookOpen className="h-6 w-6" />, change: '2 remaining', color: '#7670AC' },
               { title: 'Pending Tasks', value: pandingtask, icon: <ClipboardList className="h-6 w-6" />,  color: '#5491CA' },
             ].map((stat, index) => (
               <div 
