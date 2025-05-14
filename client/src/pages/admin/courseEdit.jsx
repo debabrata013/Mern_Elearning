@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./CourseCard.css";
+// import "./CourseCard.css";
 import CourseCard from "./CourseCard";
 
 
@@ -144,7 +144,7 @@ const CoursePage = () => {
      
       <section 
         ref={sectionRef} 
-        className={`cp ${visible ? "fade-in-bottom" : ""}`}
+       
       >
         <h2 className="section-title">Explore <span>Courses</span></h2>
         <div className="filter-bar">

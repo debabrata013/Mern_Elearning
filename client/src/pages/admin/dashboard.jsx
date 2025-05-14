@@ -1,7 +1,7 @@
   import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
   import { FaHome, FaBook, FaUserGraduate,FaBriefcase,FaEnvelopeOpenText, FaChalkboardTeacher, FaCertificate, FaBullhorn, FaExclamationCircle, FaTags, FaPlusCircle, FaEdit } from 'react-icons/fa';
 
-  import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+  import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, BarChart, Bar, PieChart, Pie, Cell,Legend  } from 'recharts';
   import { PlusCircle, Book, Users, DollarSign, TrendingUp, Home, Layout, BookOpen, ClipboardList, Settings, LogOut, Menu,School, ChevronDown } from 'lucide-react';
 
   import CertificateContent from "./certificate/certificate";
@@ -25,14 +25,7 @@
   // import Profile from "./profile";
 
   // Sample data for charts
-  const userActivityData = [
-    { name: 'Jan', users: 4000 },
-    { name: 'Feb', users: 3000 },
-    { name: 'Mar', users: 500 },
-    { name: 'Apr', users: 4500 },
-    { name: 'May', users: 6000 },
-    { name: 'Jun', users: 5500 }
-  ];
+
 
   const courseData = [
     { name: 'Web Dev', students: 400 },
@@ -41,7 +34,43 @@
     { name: 'AI/ML', students: 200 }
   ];
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+const COLORS = ['#FFD166', '#4ECDC4'];
+const InstructorStudentStats = ({ totalteacher, totalstudent }) => {
+  const safeTotalTeacher = Number(totalteacher) || 0;
+  const safeTotalStudent = Number(totalstudent) || 0;
+
+  const data = [
+    { name: 'Instructors', value: safeTotalTeacher },
+    { name: 'Students', value: safeTotalStudent },
+  ];
+
+  return (
+    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-blue-400">
+      <h2 className="text-lg font-semibold text-[#5491CA] mb-4">User Distribution</h2>
+      <PieChart width={250} height={250}>
+        <Pie
+          data={data}
+          cx="50%"
+          cy="50%"
+          labelLine={false}
+          label={({ name, percent }) =>
+            `${name}: ${(percent * 100).toFixed(0)}%`
+          }
+          outerRadius={80}
+          fill="#8884d8"
+          dataKey="value"
+        >
+          {data.map((_, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </PieChart>
+    </div>
+  );
+};
 
   // Content components for each section
   const HomeContent = () => {
@@ -66,9 +95,36 @@
     // const [enrollmentRate, setEnrollmentRate] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+      const [userActivityData, setUserActivityData] = useState([]);
+    const fetchUserActivity = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4400/api/analytics/analytics/login-last-6-months"
+        );
+
+        const monthNames = [
+          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+        ];
+
+        // Convert backend data to chart-friendly format
+        const formatted = response.data.monthlyLoginStats.map((entry) => ({
+          name: `${monthNames[entry.month - 1]} ${entry.year}`,
+          users: entry.count,
+        }));
+
+        setUserActivityData(formatted);
+       
+      } catch (err) {
+        console.error("Failed to fetch user activity", err);
+      }
+    };
 
     // Fetch data from API
     useEffect(() => {
+       fetchUserActivity();
+      
+       
       const fetchData = async () => {
         try {
           const student = await axios.get("http://localhost:4400/data/totalstudent");
@@ -158,8 +214,10 @@
                   <TrendingUp className="text-[#6A0572]" />
                 </div>
                 <div>
-                  <p className="text-gray-500">Enrollment Rate</p>
-                  <p className="text-2xl font-bold">+12.5%</p>
+                  <p className="text-gray-500">Total login user </p>
+                 
+                    <p className="text-2xl font-bold">{userActivityData[0].users}</p>
+             
                 </div>
               </div>
             </div>
@@ -184,7 +242,7 @@
                   />
                 </LineChart>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow hidden lg:block">
+              {/* <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow hidden lg:block">
                 <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Course Enrollment Distribution</h2>
                 <BarChart width={600} height={300} data={courseData}>
                   <XAxis dataKey="name" stroke="#5491CA" />
@@ -199,12 +257,12 @@
                     ))}
                   </Bar>
                 </BarChart>
-              </div>
+              </div> */}
             </div>
 
             {/* Right Sidebar */}
             <div className="space-y-4">
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              {/* <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                 <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Course Categories</h2>
                 <PieChart width={300} height={300}>
                   <Pie
@@ -227,9 +285,9 @@
                   </Pie>
                   <Tooltip contentStyle={{ borderRadius: '8px' }} />
                 </PieChart>
-              </div>
+              </div> */}
 
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              {/* <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                 <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Recent Activities</h2>
                 <div className="space-y-4">
                   <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
@@ -251,10 +309,18 @@
                     </div>
                   </div>
                 </div>
+              </div> */}
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+           
+                <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Instructor and Student Distribution</h2>
+                <InstructorStudentStats totalteacher={totalteacher} totalstudent={totalstudent} />
+                <div className="flex justify-center mt-4">
+                  
+              </div>
               </div>
 
               {/* New Cards for Total Instructors and Total Students */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FFD166]">
                   <div className="bg-[#FFD166]/10 p-3 rounded-full">
                     <FaChalkboardTeacher className="text-[#FFD166]" />
@@ -274,7 +340,28 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
+            <div className="flex flex-col md:flex-row items-center gap-6">
+  <div className="flex-1 bg-white p-6 rounded-lg shadow-md border-l-4 border-[#FFD166] flex items-center">
+    <div className="bg-[#FFD166]/10 p-4 rounded-full mr-4">
+      <FaChalkboardTeacher className="text-[#FFD166] text-3xl" />
+    </div>
+    <div>
+      <p className="text-gray-500">Total Instructors</p>
+      <p className="text-3xl font-bold text-[#333]">{totalteacher}</p>
+    </div>
+  </div>
+  <div className="flex-1 bg-white p-6 rounded-lg shadow-md border-l-4 border-[#4ECDC4] flex items-center">
+    <div className="bg-[#4ECDC4]/10 p-4 rounded-full mr-4">
+      <FaUserGraduate className="text-[#4ECDC4] text-3xl" />
+    </div>
+    <div>
+      <p className="text-gray-500">Total Students</p>
+      <p className="text-3xl font-bold text-[#333]">{totalstudent}</p>
+    </div>
+  </div>
+</div>
+</div>
           </main>
 
           {/* Teacher Modal */}
@@ -396,8 +483,8 @@
           return <Teacher />;
         case 'instructor-edit':
           return <ManageTeacher />;
-        case 'certificate':
-          return <CertificateContent />;
+        // case 'certificate':
+        //   return <CertificateContent />;
         case 'announcement-add':
           return <AnnouncementContent />;
         case 'announcement-edit':
@@ -520,12 +607,12 @@
               ]}
               onItemClick={(value) => setCurrentSection(value)}
             />
-            <NavItem 
+            {/* <NavItem 
               icon={<FaCertificate className="text-[#5491CA]" />} 
               label="Certificate" 
               active={currentSection === 'certificate'}
               onClick={() => setCurrentSection('certificate')}
-            />
+            /> */}
 
             <NavItem 
               icon={<FaBriefcase className="text-[#5491CA]" />} 
