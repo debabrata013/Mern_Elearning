@@ -1,4 +1,4 @@
-  import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
+  import React, { useState, useEffect, useCallback, useRef, memo, useMemo  } from 'react';
   import { FaHome, FaBook, FaUserGraduate,FaBriefcase,FaEnvelopeOpenText, FaChalkboardTeacher, FaCertificate, FaBullhorn, FaExclamationCircle, FaTags, FaPlusCircle, FaEdit } from 'react-icons/fa';
 
   import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, BarChart, Bar, PieChart, Pie, Cell,Legend  } from 'recharts';
@@ -21,7 +21,7 @@
   import ProfileContent from './profile/ProfileContent';
   import CourseEditPage from './courseEdit';
   import EditAnnouncement from '../admin/anouncement/viewannouncement';
-
+import CourseEnrollmentGraph from './courseEnrollmentgraph';
   // import Profile from "./profile";
 
   // Sample data for charts
@@ -71,6 +71,7 @@ const InstructorStudentStats = ({ totalteacher, totalstudent }) => {
     </div>
   );
 };
+
 
   // Content components for each section
   const HomeContent = () => {
@@ -179,190 +180,97 @@ const InstructorStudentStats = ({ totalteacher, totalstudent }) => {
         {/* Welcome Banner */}
         <div className="min-h-screen bg-gray-100 flex flex-col">
           {/* Main Content Section */}
+        
           <main className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Stats Overview Cards */}
-            <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FF6B6B]">
-                <div className="bg-[#FF6B6B]/10 p-3 rounded-full">
-                  <DollarSign className="text-[#FF6B6B]" />
-                </div>
-                <div>
-                  <p className="text-gray-500">Revenue</p>
-                  <p className="text-2xl font-bold">${revenue}</p>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#4ECDC4]">
-                <div className="bg-[#4ECDC4]/10 p-3 rounded-full">
-                  <Users className="text-[#4ECDC4]" />
-                </div>
-                <div>
-                  <p className="text-gray-500">Active Users</p>
-                  <p className="text-2xl font-bold">{activeUsers}</p>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FFD166]">
-                <div className="bg-[#FFD166]/10 p-3 rounded-full">
-                  <Book className="text-[#FFD166]" />
-                </div>
-                <div>
-                  <p className="text-gray-500">Total Courses</p>
-                  <p className="text-2xl font-bold">{totalCourses}</p>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#6A0572]">
-                <div className="bg-[#6A0572]/10 p-3 rounded-full">
-                  <TrendingUp className="text-[#6A0572]" />
-                </div>
-                <div>
-                  <p className="text-gray-500">Total login user </p>
-                 
-                    <p className="text-2xl font-bold">{userActivityData[0].users}</p>
-             
-                </div>
-              </div>
-            </div>
-
-            {/* Charts Section */}
-            <div className="lg:col-span-2 space-y-4">
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow hidden lg:block">
-                <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">User Activity</h2>
-                <LineChart width={600} height={300} data={userActivityData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="name" stroke="#5491CA" />
-                  <YAxis stroke="#5491CA" />
-                  <Tooltip contentStyle={{ borderRadius: '8px' }} />
-                  <Line 
-                    type="monotone" 
-                    dataKey="users" 
-                    stroke="#5491CA" 
-                    strokeWidth={3}
-                    dot={{ fill: '#5491CA', r: 6 }}
-                    activeDot={{ fill: '#b1a9f1', r: 8, strokeWidth: 0 }}
-                    animationDuration={2000} 
-                  />
-                </LineChart>
-              </div>
-              {/* <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow hidden lg:block">
-                <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Course Enrollment Distribution</h2>
-                <BarChart width={600} height={300} data={courseData}>
-                  <XAxis dataKey="name" stroke="#5491CA" />
-                  <YAxis stroke="#5491CA" />
-                  <Tooltip contentStyle={{ borderRadius: '8px' }} />
-                  <Bar dataKey="students" barSize={40} radius={[10, 10, 0, 0]}>
-                    {courseData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={['#FF6B6B', '#4ECDC4', '#FFD166', '#6A0572'][index % 4]} 
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </div> */}
-            </div>
-
-            {/* Right Sidebar */}
-            <div className="space-y-4">
-              {/* <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Course Categories</h2>
-                <PieChart width={300} height={300}>
-                  <Pie
-                    data={courseData}
-                    cx={150}
-                    cy={150}
-                    innerRadius={60}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    paddingAngle={5}
-                    dataKey="students"
-                    animationDuration={2000}
-                  >
-                    {courseData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={['#FF6B6B', '#4ECDC4', '#FFD166', '#6A0572'][index % 4]} 
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={{ borderRadius: '8px' }} />
-                </PieChart>
-              </div> */}
-
-              {/* <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Recent Activities</h2>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="bg-[#FF6B6B]/10 p-2 rounded-full">
-                      <Book size={16} className="text-[#FF6B6B]" />
-                    </div>
-                    <div>
-                      <p className="font-medium">New Course Added</p>
-                      <p className="text-sm text-gray-500">Web Development Bootcamp</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="bg-[#4ECDC4]/10 p-2 rounded-full">
-                      <Users size={16} className="text-[#4ECDC4]" />
-                    </div>
-                    <div>
-                      <p className="font-medium">New Teacher Joined</p>
-                      <p className="text-sm text-gray-500">Sarah Johnson</p>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-           
-                <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Instructor and Student Distribution</h2>
-                <InstructorStudentStats totalteacher={totalteacher} totalstudent={totalstudent} />
-                <div className="flex justify-center mt-4">
-                  
-              </div>
-              </div>
-
-              {/* New Cards for Total Instructors and Total Students */}
-              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FFD166]">
-                  <div className="bg-[#FFD166]/10 p-3 rounded-full">
-                    <FaChalkboardTeacher className="text-[#FFD166]" />
-                  </div>
-                  <div>
-                    <p className="text-gray-500">Total Instructors</p>
-                    <p className="text-2xl font-bold">{totalteacher}</p>
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#4ECDC4]">
-                  <div className="bg-[#4ECDC4]/10 p-3 rounded-full">
-                    <FaUserGraduate className="text-[#4ECDC4]" />
-                  </div>
-                  <div>
-                    <p className="text-gray-500">Total Students</p>
-                    <p className="text-2xl font-bold">{totalstudent}</p>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-            <div className="flex flex-col md:flex-row items-center gap-6">
-  <div className="flex-1 bg-white p-6 rounded-lg shadow-md border-l-4 border-[#FFD166] flex items-center">
-    <div className="bg-[#FFD166]/10 p-4 rounded-full mr-4">
-      <FaChalkboardTeacher className="text-[#FFD166] text-3xl" />
+  {/* Stats Overview Cards */}
+  <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4">
+    {/* Revenue */}
+    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FF6B6B]">
+      <div className="bg-[#FF6B6B]/10 p-3 rounded-full">
+        <DollarSign className="text-[#FF6B6B]" />
+      </div>
+      <div>
+        <p className="text-gray-500">Revenue</p>
+        <p className="text-2xl font-bold">${revenue}</p>
+      </div>
     </div>
-    <div>
-      <p className="text-gray-500">Total Instructors</p>
-      <p className="text-3xl font-bold text-[#333]">{totalteacher}</p>
+
+    {/* Active Users */}
+    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#4ECDC4]">
+      <div className="bg-[#4ECDC4]/10 p-3 rounded-full">
+        <Users className="text-[#4ECDC4]" />
+      </div>
+      <div>
+        <p className="text-gray-500">Active Users</p>
+        <p className="text-2xl font-bold">{activeUsers}</p>
+      </div>
+    </div>
+
+    {/* Total Courses */}
+    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#FFD166]">
+      <div className="bg-[#FFD166]/10 p-3 rounded-full">
+        <Book className="text-[#FFD166]" />
+      </div>
+      <div>
+        <p className="text-gray-500">Total Courses</p>
+        <p className="text-2xl font-bold">{totalCourses}</p>
+      </div>
+    </div>
+
+    {/* Total Login User */}
+    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-4 border-l-4 border-[#6A0572]">
+      <div className="bg-[#6A0572]/10 p-3 rounded-full">
+        <TrendingUp className="text-[#6A0572]" />
+      </div>
+      <div>
+        <p className="text-gray-500">Total login user</p>
+        <p className="text-2xl font-bold">
+          {userActivityData[0]?.users || 0} {/* Display the first month's user count */}
+          {console.log(userActivityData)}
+          
+        </p>
+      </div>
     </div>
   </div>
-  <div className="flex-1 bg-white p-6 rounded-lg shadow-md border-l-4 border-[#4ECDC4] flex items-center">
-    <div className="bg-[#4ECDC4]/10 p-4 rounded-full mr-4">
-      <FaUserGraduate className="text-[#4ECDC4] text-3xl" />
+
+  {/* Charts Section */}
+  <div className="lg:col-span-2 space-y-4">
+    {/* User Activity Chart */}
+    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+      <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">User Activity</h2>
+      <LineChart width={600} height={300} data={userActivityData}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+        <XAxis dataKey="name" stroke="#5491CA" />
+        <YAxis stroke="#5491CA" />
+        <Tooltip contentStyle={{ borderRadius: '8px' }} />
+        <Line
+          type="monotone"
+          dataKey="users"
+          stroke="#5491CA"
+          strokeWidth={3}
+          dot={{ fill: '#5491CA', r: 6 }}
+          activeDot={{ fill: '#b1a9f1', r: 8, strokeWidth: 0 }}
+          animationDuration={2000}
+        />
+      </LineChart>
     </div>
-    <div>
-      <p className="text-gray-500">Total Students</p>
-      <p className="text-3xl font-bold text-[#333]">{totalstudent}</p>
+
+    {/* Course Enrollment Graph */}
+    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+      <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Course Enrollment</h2>
+      <CourseEnrollmentGraph />
     </div>
   </div>
-</div>
-</div>
-          </main>
+
+  {/* Right Sidebar */}
+  <div className="space-y-4">
+    {/* Instructor & Student Stats */}
+    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+      <InstructorStudentStats totalteacher={totalteacher} totalstudent={totalstudent} />
+    </div>
+  </div>
+</main>
+
 
           {/* Teacher Modal */}
           {isTeacherModalOpen && (
