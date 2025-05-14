@@ -354,8 +354,8 @@
             return <SettingsContent />;
           case 'profile':
             return <ProfilePage onBack={() => setCurrentSection('home')} />;
-          case 'quiz':
-            return <QuizDashboard />;
+          // case 'quiz':
+          //   return <QuizDashboard />;
           case 'doubts':
             return <Doubts />;
           default:
@@ -415,12 +415,12 @@
                 active={currentSection === 'notification'}
                 onClick={() => setCurrentSection('notification')}
               />
-              <NavItem 
+              {/* <NavItem 
                 icon={<BarChart2 className="h-5 w-5" />} 
                 label="Quiz" 
                 active={currentSection === 'quiz'}
                 onClick={() => setCurrentSection('quiz')}
-              />
+              /> */}
               <NavItem
               icon={<HelpCircle className="h-5 w-5" /> }
               label="Doubts"

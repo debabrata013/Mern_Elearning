@@ -23,7 +23,7 @@ function StudentRoutes() {
         <Route path="/doubts" element={<Doubts />} />
         <Route path="/projects" element={<Project />} />
         <Route path="/resources" element={<Resources />} />
-        <Route path="/assignments" element={<Assignment />} />
+        {/* <Route path="/assignments" element={<Assignment />} /> */}
         <Route path="/notice" element={<NoticesSection  />} />
       </Routes>
     </AppLayout>
