@@ -60,3 +60,26 @@ export const getAllStudents = async () => {
     throw new Error('Error fetching students');
   }
 };
+
+
+
+export const getAssignedCourses = async (studentId) => {
+  const { data } = await axios.get(`http://localhost:4400/api/course-assign/assigned/${studentId}`);
+  return data.assignedCourses;
+};
+
+// Fetch unassigned courses for a student
+export const getUnassignedCourses = async (studentId) => {
+  const { data } = await axios.get(`http://localhost:4400/api/course-assign/unassigned/${studentId}`);
+  return data;
+};
+
+// Assign a course to a student
+export const assignCourseToStudent = async (studentId, courseId) => {
+  await axios.post(`http://localhost:4400/api/course-assign/assign`, { studentId, courseId });
+};
+
+// Remove a course from a student
+export const removeCourseFromStudent = async (studentId, courseId) => {
+  await axios.post('http://localhost:4400/api/course-assign/remove', { studentId, courseId });
+};
