@@ -196,14 +196,11 @@ const StudentDashboard = () => {
   };
 
   const handleLogout = () => {
-    // Add your logout logic here
-    AuthProvider.logout();
-  
-    // Optionally, you can clear user data from local storage
-    localStorage.removeItem('user');
-    navigate('/login');
-    
-    console.log('Logging out...');
+    // Clear user data from sessionStorage
+    sessionStorage.clear() ; 
+
+    // Redirect the user to the home page
+    navigate('/');
   };
 
   // Mock data for quick stats
