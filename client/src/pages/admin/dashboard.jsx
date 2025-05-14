@@ -223,9 +223,9 @@ const InstructorStudentStats = ({ totalteacher, totalstudent }) => {
         <TrendingUp className="text-[#6A0572]" />
       </div>
       <div>
-        <p className="text-gray-500">Total login user</p>
+        <p className="text-gray-500">Total login user this month</p>
         <p className="text-2xl font-bold">
-          {userActivityData[0]?.users || 0} {/* Display the first month's user count */}
+          {userActivityData[userActivityData.length-1]?.users || 0} {/* Display the first month's user count */}
           {console.log(userActivityData)}
           
         </p>
