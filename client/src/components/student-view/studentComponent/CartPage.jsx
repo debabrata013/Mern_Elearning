@@ -16,6 +16,8 @@ user = a.data;
 }
 
   useEffect(() => {
+    console.log(user);
+    
     get();
     fetchCartItems();
   }, []);
@@ -70,9 +72,18 @@ user = a.data;
       });
 
       if (response.status === 200) {
+         // ✅ Step 1: Remove courseId from user.cart
+      const updatedCart = (user.cart || []).filter(id => id !== courseId);
+      user.cart = updatedCart;
+
+      // ✅ Step 2: Save updated user object back to localStorage
+      localStorage.setItem("user", JSON.stringify(user));
+
         // Refresh cart items after successful removal
         get();
         fetchCartItems();
+        console.log(response.data);
+        
         alert(response.data.message);
         get();
       }
@@ -125,12 +136,12 @@ user = a.data;
             <FaShoppingCart className="w-16 h-16 text-[#5491CA] mx-auto mb-4" />
             <h2 className="text-xl font-bold text-gray-800 mb-2">Your cart is empty!</h2>
             <p className="text-gray-600 mb-6">Add courses to your cart and they will appear here</p>
-            <button
+            {/* <button
               onClick={() => navigate('/courses')}
               className="bg-[#5491CA] text-white px-8 py-3 rounded-lg hover:bg-[#7670AC] transition-colors"
             >
               Browse Courses
-            </button>
+            </button> */}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-4">
