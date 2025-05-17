@@ -50,7 +50,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-screen w-64 bg-white shadow-lg flex flex-col p-4">
+    <div className="h-screen bg-white shadow-lg flex flex-col p-4">
       {/* Logo */}
       <div className="flex items-center mb-4">
   <img className="h-11 w-auto" src={logo} alt="logo" />

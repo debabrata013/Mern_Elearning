@@ -370,7 +370,7 @@
         // Redirect the user to the home page
         navigate('/');
       };
-
+ 
       if (loading) {
         // Show a loading spinner while the role check is in progress
         return (
