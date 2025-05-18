@@ -12,6 +12,10 @@
     import Doubts from "./Doubts"
     import axiosInstance from '@/api/axiosInstance';
     import moment from 'moment';
+import axios from "axios";
+import {
+  AreaChart, Area, CartesianGrid
+} from "recharts";
 
     const studentStats = [
       { class: 'Class A', value: 30, avgPoint: 25, attendance: 95 },
@@ -37,6 +41,11 @@
   const [newTask, setNewTask] = useState('');
   const [showAddTask, setShowAddTask] = useState(false);
   const userData = JSON.parse(localStorage.getItem("user")) 
+    const [loginHistory, setLoginHistory] = useState({});
+    const [courseStats, setCourseStats] = useState({ totalCourses: 0, categoryDistribution: {} });
+   
+     const user = JSON.parse(localStorage.getItem('user'));
+ const userId=user._id;
   let pandingtask=tasks.length;
       useEffect(() => {
       
@@ -68,6 +77,31 @@
       
       }, []);
       
+     useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        
+
+        // 1. Fetch login history
+        const loginRes = await axios.get(`http://localhost:4400/api/dashboard/login-history/${userId}`);
+        setLoginHistory(loginRes.data);
+
+        // 2. Fetch course stats
+        const courseRes = await axios.get(`http://localhost:4400/api/dashboard/course-stats/${userId}`);
+        setCourseStats(courseRes.data);
+
+     
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+       
+      }
+    };
+
+    fetchDashboardData();
+  }, [userId]);
+
+
+
       // const handleViewNewStudents = () => {
       //   navigate('/teacher/students', { state: { filter: 'new' } });
       // };
@@ -170,26 +204,22 @@
           {/* Charts and Activities Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Performance Chart */}
-            <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
-              <h3 className="text-lg font-semibold mb-4 text-[#5491CA]">Class Performance Overview</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={studentStats}>
-                  <XAxis dataKey="class" />
-                  <YAxis />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'white', 
-                      borderColor: '#5491CA',
-                      borderRadius: '8px',
-                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-                    }} 
-                  />
-                  <Bar dataKey="avgPoint" name="Average Points" fill="#5491CA" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="attendance" name="Attendance %" fill="#b1a9f1" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-
+           <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 md:p-6">
+               <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                 Login Activity (Last 30 days)
+               </h3>
+               <div className="h-64">
+                 <ResponsiveContainer width="100%" height="100%">
+                   <BarChart data={Object.entries(loginHistory).map(([date, count]) => ({ date, count }))}>
+                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                     <XAxis dataKey="date" stroke="#6b7280" />
+                     <YAxis stroke="#6b7280" allowDecimals={false} />
+                     <Tooltip />
+                     <Bar dataKey="count" fill="#5491CA" radius={[4, 4, 0, 0]} />
+                   </BarChart>
+                 </ResponsiveContainer>
+               </div>
+             </div>
             {/* Todo Section - Replacing Recent Activities */}
             <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
               <div className="flex items-center justify-between mb-4">
