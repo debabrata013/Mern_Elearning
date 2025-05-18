@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import {PieChart, Pie, Cell} from 'recharts';
 import Sidebar from './studentComponent/Sidebar';
+import axios from 'axios';
 import { 
   GraduationCap, 
   BookOpen, 
@@ -20,7 +22,7 @@ import {
   LogOut,
   Monitor,
   FileText,
-  Users,
+  Users,Layers ,
   Menu
 } from 'lucide-react';
 import { 
@@ -31,115 +33,6 @@ import { FaUser, FaSignOutAlt } from 'react-icons/fa';
 import { AuthProvider } from '@/context/auth';
 
 
-const progressData = [
-  { name: 'Week 1', progress: 20 },
-  { name: 'Week 2', progress: 35 },
-  { name: 'Week 3', progress: 45 },
-  { name: 'Week 4', progress: 60 },
-  { name: 'Week 5', progress: 75 },
-  { name: 'Week 6', progress: 85 }
-];
-const histogramData = [
-  { range: "0-20%", students: 5 },
-  { range: "21-40%", students: 8 },
-  { range: "41-60%", students: 12 },
-  { range: "61-80%", students: 7 },
-  { range: "81-100%", students: 3 },
-];
-
-const upcomingClasses = [
-  { id: 1, course: 'React Basics', date: 'Feb 4, 2025', time: '10:00 AM' },
-  { id: 2, course: 'Advanced CSS', date: 'Feb 6, 2025', time: '2:00 PM' },
-  { id: 3, course: 'JavaScript ES6', date: 'Feb 8, 2025', time: '11:00 AM' }
-];
-
-const announcements = [
-  { id: 1, title: 'New Course: GraphQL Essentials', time: '1h ago' },
-  { id: 2, title: 'Maintenance Downtime on Feb 10', time: '3h ago' },
-  { id: 3, title: 'Live Q&A Session Tomorrow', time: '5h ago' }
-];
-
-const recommendedCourses = [
-  { id: 1, title: 'Node.js for Beginners', instructor: 'Jane Doe' },
-  { id: 2, title: 'UI/UX Design Fundamentals', instructor: 'John Smith' },
-  { id: 3, title: 'Python Data Analysis', instructor: 'Emily White' }
-];
-
-const recentActivities = [
-  {
-    id: 1,
-    type: 'submission',
-    title: 'Assignment Submitted',
-    course: 'React Fundamentals',
-    time: '2 hours ago',
-    icon: <FileText className="h-5 w-5 text-blue-500" />,
-    status: 'success'
-  },
-  {
-    id: 2,
-    type: 'quiz',
-    title: 'Quiz Completed',
-    course: 'JavaScript Basics',
-    time: '5 hours ago',
-    icon: <Monitor className="h-5 w-5 text-purple-500" />,
-    score: '85%'
-  },
-  {
-    id: 3,
-    type: 'attendance',
-    title: 'Class Attended',
-    course: 'UI/UX Design',
-    time: 'Yesterday',
-    icon: <Users className="h-5 w-5 text-green-500" />,
-    duration: '2h'
-  },
-  {
-    id: 4,
-    type: 'certificate',
-    title: 'Certificate Earned',
-    course: 'HTML & CSS',
-    time: '2 days ago',
-    icon: <Award className="h-5 w-5 text-yellow-500" />
-  }
-];
-
-const upcomingEvents = [
-  {
-    id: 1,
-    title: 'React Advanced Concepts',
-    type: 'class',
-    datetime: '2024-03-10T10:00:00',
-    duration: '1.5h',
-    instructor: 'Dr. Smith',
-    icon: <Monitor className="h-5 w-5 text-blue-500" />
-  },
-  {
-    id: 2,
-    title: 'Final Project Submission',
-    type: 'deadline',
-    datetime: '2024-03-12T23:59:59',
-    course: 'Web Development',
-    icon: <FileText className="h-5 w-5 text-red-500" />
-  },
-  {
-    id: 3,
-    title: 'JavaScript Quiz',
-    type: 'quiz',
-    datetime: '2024-03-15T14:00:00',
-    duration: '1h',
-    course: 'JavaScript Basics',
-    icon: <BookOpen className="h-5 w-5 text-purple-500" />
-  },
-  {
-    id: 4,
-    title: 'Group Project Meeting',
-    type: 'meeting',
-    datetime: '2024-03-11T15:30:00',
-    duration: '1h',
-    participants: 5,
-    icon: <Users className="h-5 w-5 text-green-500" />
-  }
-];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -163,15 +56,19 @@ const StudentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const [loginHistory, setLoginHistory] = useState({});
+  const [courseStats, setCourseStats] = useState({ totalCourses: 0, categoryDistribution: {} });
+ 
 
   const user = JSON.parse(localStorage.getItem('user'));
-
+ const userId=user._id;
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
       setIsSidebarOpen(!mobile);
     };
+    
 
     window.addEventListener('resize', handleResize);
     handleResize(); // Initial check
@@ -220,6 +117,29 @@ const StudentDashboard = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        
+
+        // 1. Fetch login history
+        const loginRes = await axios.get(`http://localhost:4400/api/dashboard/login-history/${userId}`);
+        setLoginHistory(loginRes.data);
+
+        // 2. Fetch course stats
+        const courseRes = await axios.get(`http://localhost:4400/api/dashboard/course-stats/${userId}`);
+        setCourseStats(courseRes.data);
+
+     
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+       
+      }
+    };
+
+    fetchDashboardData();
+  }, [userId]);
+
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -340,47 +260,7 @@ const StudentDashboard = () => {
             </div>
           </div>
 
-          {/* Quick Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
-            {[
-              {
-                title: "Course Progress",
-                value: `${quickStats.coursesProgress}%`,
-                icon: <BookOpen />,
-                color: "from-blue-500 to-blue-600"
-              },
-              {
-                title: "Assignments Due",
-                value: quickStats.assignmentsDue,
-                icon: <FileText />,
-                color: "from-purple-500 to-purple-600"
-              },
-              {
-                title: "Upcoming Quizzes",
-                value: quickStats.upcomingQuizzes,
-                icon: <Monitor />,
-                color: "from-green-500 to-green-600"
-              },
-            ].map((stat, index) => (
-              <div
-                key={index}
-                className="bg-white dark:bg-gray-800 rounded-xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{stat.title}</p>
-                    <p className="text-xl md:text-2xl font-bold mt-1 bg-gradient-to-r from-[#5491CA] to-[#7670AC] bg-clip-text text-transparent">
-                      {stat.value}
-                    </p>
-                  </div>
-                  <div className={`p-2 md:p-3 rounded-xl bg-gradient-to-r ${stat.color}`}>
-                    {React.cloneElement(stat.icon, { className: "h-5 w-5 md:h-6 md:w-6 text-white" })}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
+   
           {/* Main Content Tabs */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 mb-6 md:mb-8">
             {/* Tab Content */}
@@ -388,61 +268,56 @@ const StudentDashboard = () => {
               {activeTab === 'overview' && (
                 <>
                   {/* Learning Progress */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 md:p-6">
-                      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                        Learning Progress
-                      </h3>
-                      <div className="h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={progressData}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                            <XAxis dataKey="name" stroke="#6b7280" />
-                            <YAxis stroke="#6b7280" />
-                            <Tooltip content={<CustomTooltip />} />
-                            <Line
-                              type="monotone"
-                              dataKey="progress"
-                              stroke="#5491CA"
-                              strokeWidth={3}
-                              dot={{ r: 4, strokeWidth: 2, fill: "#fff" }}
-                              activeDot={{ r: 6 }}
-                            />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+  {/* 📈 Login History Chart */}
+  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 md:p-6">
+    <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+      Login Activity (Last 30 days)
+    </h3>
+    <div className="h-64">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={Object.entries(loginHistory).map(([date, count]) => ({ date, count }))}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <XAxis dataKey="date" stroke="#6b7280" />
+          <YAxis stroke="#6b7280" allowDecimals={false} />
+          <Tooltip />
+          <Bar dataKey="count" fill="#5491CA" radius={[4, 4, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  </div>
 
-                    {/* Achievements */}
-                    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 md:p-6">
-                      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                        Achievements
-                      </h3>
-                      <div className="space-y-4">
-                        {achievements.map((achievement) => (
-                          <div key={achievement.id} className="flex items-center gap-4">
-                            <div className="p-2 md:p-3 bg-white dark:bg-gray-800 rounded-lg shadow">
-                              {achievement.icon}
-                            </div>
-                            <div className="flex-1">
-                              <p className="font-medium text-gray-900 dark:text-gray-100">
-                                {achievement.title}
-                              </p>
-                              <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full mt-2">
-                                <div
-                                  className="h-full bg-gradient-to-r from-[#5491CA] to-[#7670AC] rounded-full"
-                                  style={{ width: `${achievement.progress}%` }}
-                                />
-                              </div>
-                            </div>
-                            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                              {achievement.progress}%
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+  {/* 📊 Course Category Distribution */}
+  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 md:p-6">
+    <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+      Course Category Stats
+    </h3>
+    <div className="h-64">
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={Object.entries(courseStats.categoryDistribution).map(([category, value]) => ({
+              name: category,
+              value,
+            }))}
+            cx="50%"
+            cy="50%"
+            outerRadius={80}
+            fill="#8884d8"
+            label
+            dataKey="value"
+          >
+            {Object.keys(courseStats.categoryDistribution).map((_, index) => (
+              <Cell key={`cell-${index}`} fill={['#5491CA', '#7670AC', '#F59E0B', '#10B981', '#EC4899'][index % 5]} />
+            ))}
+          </Pie>
+          <Tooltip />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+  </div>
+</div>
+
                 </>
               )}
             </div>

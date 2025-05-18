@@ -67,7 +67,7 @@ const StudentAssigementRouter = require("./src/routes/studentAssignments")
 const TeacherAssigementRouter = require("./src/routes/teacherAssignments")
 const asdRoutes= require("./src/routes/util")
 const analyticsRoutes = require("./src/routes/analyticsRoutes");
-
+const dashboardRoutes = require('./src/routes/dashboardRoutes'); // Import the dashboard routes
 
 
 // 🧠 Doubt Chat Sockets
@@ -103,6 +103,7 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/todos', todoRoutes);//
 app.use("/api/teacher/assignments", TeacherAssigementRouter);//
 app.use("/api/student/assignments",StudentAssigementRouter);
+app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/cart', carteRoutes);
 app.use('/api/analytics', analyticsRoutes); // Add this line to mount the analytics routes
 // Start server with Socket.io support
