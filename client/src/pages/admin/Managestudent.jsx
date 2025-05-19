@@ -202,8 +202,8 @@ if (loading) return <div className="flex justify-center items-center h-64">Loadi
 if (error) return <div className="text-red-500 text-center mt-4">{error}</div>;
 
 return (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold mb-4 text-[#5491CA]">Manage Students</h1>
+  <div className="p-4 sm:p-6">
+    <h1 className="text-xl sm:text-2xl font-bold mb-4 text-[#5491CA]">Manage Students</h1>
 
     <input
       type="text"
@@ -217,24 +217,24 @@ return (
       <table className="min-w-full bg-white border rounded-md shadow-md">
         <thead className="bg-[#5491CA] text-white">
           <tr>
-            <th className="text-left py-2 px-4">Username</th>
-            <th className="text-left py-2 px-4">Email</th>
-            <th className="text-left py-2 px-4">Actions</th>
+            <th className="text-left py-2 px-2 sm:px-4">Username</th>
+            <th className="text-left py-2 px-2 sm:px-4 hidden sm:table-cell">Email</th>
+            <th className="text-left py-2 px-2 sm:px-4">Actions</th>
           </tr>
         </thead>
         <tbody>
           {filtered.map((student) => (
             <tr key={student._id} className="border-t">
-              <td className="py-2 px-4">{student.userName}</td>
-              <td className="py-2 px-4">{student.email}</td>
-              <td className="py-2 px-4 space-x-2">
-                <button onClick={() => setEditingStudent(student)} className="text-yellow-600 hover:text-yellow-800">
+              <td className="py-2 px-2 sm:px-4">{student.userName}</td>
+              <td className="py-2 px-2 sm:px-4 hidden sm:table-cell">{student.email}</td>
+              <td className="py-2 px-2 sm:px-4 space-x-2 whitespace-nowrap">
+                <button onClick={() => setEditingStudent(student)} className="text-yellow-600 hover:text-yellow-800" aria-label="Edit student">
                   <FaEdit />
                 </button>
-                <button onClick={() => handleDeleteStudent(student._id)} className="text-red-600 hover:text-red-800">
+                <button onClick={() => handleDeleteStudent(student._id)} className="text-red-600 hover:text-red-800" aria-label="Delete student">
                   <FaTrash />
                 </button>
-                <button onClick={() => setViewingStudent(student)} className="text-blue-600 hover:text-blue-800">
+                <button onClick={() => setViewingStudent(student)} className="text-blue-600 hover:text-blue-800" aria-label="View student courses">
                   <FaUserGraduate />
                 </button>
               </td>
@@ -253,24 +253,25 @@ return (
     )}
 
     {viewingStudent && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 backdrop-blur-sm">
-        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-3xl border border-gray-200">
-          <h2 className="text-xl font-bold mb-4 text-[#5491CA] pb-2 border-b">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 backdrop-blur-sm p-4">
+        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-xl sm:max-w-3xl border border-gray-200 max-h-[90vh] overflow-y-auto">
+          <h2 className="text-lg sm:text-xl font-bold mb-4 text-[#5491CA] pb-2 border-b">
             Manage Courses for {viewingStudent.userName}
           </h2>
           {courseLoading ? (
             <p>Loading courses...</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <h3 className="font-semibold text-lg text-gray-700 mb-2">Assigned Courses</h3>
-                <ul className="space-y-2">
+                <h3 className="font-semibold text-md sm:text-lg text-gray-700 mb-2">Assigned Courses</h3>
+                <ul className="space-y-2 max-h-60 overflow-y-auto">
                   {assignedCourses.map(course => (
                     <li key={course._id} className="flex justify-between items-center border rounded px-3 py-2">
-                      <span>{course.title}</span>
+                      <span className="truncate max-w-[70%]">{course.title}</span>
                       <button
                         onClick={() => handleRemoveCourse(course._id)}
                         className="text-red-600 hover:text-red-800"
+                        aria-label={`Remove ${course.title}`}
                       >
                         <FaMinus />
                       </button>
@@ -281,14 +282,15 @@ return (
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg text-gray-700 mb-2">Unassigned Courses</h3>
-                <ul className="space-y-2">
+                <h3 className="font-semibold text-md sm:text-lg text-gray-700 mb-2">Unassigned Courses</h3>
+                <ul className="space-y-2 max-h-60 overflow-y-auto">
                   {unassignedCourses.map(course => (
                     <li key={course._id} className="flex justify-between items-center border rounded px-3 py-2">
-                      <span>{course.title}</span>
+                      <span className="truncate max-w-[70%]">{course.title}</span>
                       <button
                         onClick={() => handleAddCourse(course._id)}
                         className="text-green-600 hover:text-green-800"
+                        aria-label={`Add ${course.title}`}
                       >
                         <FaPlus />
                       </button>
@@ -313,6 +315,7 @@ return (
     )}
   </div>
 );
+
 };
 
 export default ManageStudent;

@@ -2,108 +2,87 @@ import React, { useEffect, useState } from "react";
 import CourseCard from "./course-card-after-buy/coursecard";
 import Sidebar from "./studentComponent/Sidebar";
 import { getAllCourses } from "../../pages/landing-page/api/landingServices";
+import { Menu } from "lucide-react";
 
 const MyCourses = () => {
   const [myCourses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [error, setError] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768);
 
-  // useEffect(() => {
-  //   const fetchCourses = async () => {
-  //     try {
-  //       const data = await getAllCourses();
-       
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const allCourses = await getAllCourses();
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        const purchasedCourseIds = storedUser?.purchasedCourses || [];
+        const filteredCourses = allCourses.filter(course =>
+          purchasedCourseIds.includes(course._id)
+        );
+        setCourses(filteredCourses);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+        setError("Failed to load courses. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourses();
+  }, []);
 
-  //       setCourses(data);
-  //     } catch (err) {
-  //       console.error("Error fetching courses:", err);
-  //       setError("Failed to load courses. Please try again later.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchCourses();
-  // }, []);
-useEffect(() => {
-  const fetchCourses = async () => {
-    try {
-      // 1. Get all courses
-      const allCourses = await getAllCourses();
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setSidebarOpen(!mobile);
+    };
 
-      // 2. Get user from localStorage
-      const storedUser = JSON.parse(localStorage.getItem("user"));
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
 
-      // 3. Extract purchased course IDs
-      const purchasedCourseIds = storedUser?.purchasedCourses || [];
-
-      // 4. Filter courses that are in purchasedCourseIds
-      const filteredCourses = allCourses.filter(course =>
-        purchasedCourseIds.includes(course._id)
-      );
-
-      // 5. Set filtered courses to state
-      setCourses(filteredCourses);
-    } catch (err) {
-      console.error("Error fetching courses:", err);
-      setError("Failed to load courses. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchCourses();
-}, []);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900 relative">
       {/* Mobile Sidebar Toggle */}
-      <button
-        onClick={toggleSidebar}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-blue-500 text-white shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Toggle sidebar"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      {isMobile && (
+        <button
+          onClick={toggleSidebar}
+          className={`md:hidden fixed top-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors 
+            ${sidebarOpen ? 'right-4' : 'left-4'}`}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
-      </button>
+          <Menu className="h-6 w-6" />
+        </button>
+      )}
 
-      {/* Sidebar */}
-      <aside
-        className={`bg-white dark:bg-gray-800 fixed top-0 left-0 h-full z-40 transition-transform duration-300 ease-in-out shadow-lg ${
-          sidebarOpen ? "translate-x-0 w-64" : "-translate-x-full"
-        } lg:translate-x-0 lg:w-64`}
-      >
-        <Sidebar />
-      </aside>
-
-      {/* Overlay */}
-      {sidebarOpen && (
+      {/* Sidebar backdrop for mobile */}
+      {isMobile && sidebarOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-40 z-30"
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
           onClick={toggleSidebar}
         />
       )}
+
+      {/* Sidebar */}
+      <div
+        className={`bg-white shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 transition-transform duration-300 ease-in-out z-40 ${
+          isMobile ? (sidebarOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0"
+        }`}
+      >
+        <Sidebar />
+      </div>
 
       {/* Main Content */}
       <main className="w-full lg:pl-64 px-4 sm:px-6 md:px-8 py-6 md:py-10 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-8 ">
           <header className="mb-8 md:mb-12 text-center">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#7670AC] dark:text-white">
-                  My <span className="text-[#5491CA] dark:text-[#7670AC]">Courses</span>
-                </h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-[#7670AC] dark:text-white">
+              My <span className="text-[#5491CA] dark:text-[#7670AC]">Courses</span>
+            </h1>
           </header>
 
           {/* Loading */}
@@ -160,7 +139,7 @@ useEffect(() => {
               {myCourses.map((course) => (
                 <div
                   key={course._id}
-                  className="transform transition hover:-translate-y-1 hover:shadow-md"
+                  className="transform transition hover:-translate-y-1 "
                 >
                   <CourseCard course={course} />
                 </div>

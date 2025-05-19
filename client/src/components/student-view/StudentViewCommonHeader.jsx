@@ -144,13 +144,14 @@ const StudentDashboard = () => {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {isMobile && (
-        <button
-          onClick={toggleSidebar}
-          className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors"
-        >
-          <Menu className="h-6 w-6" />
-        </button>
-      )}
+              <button
+                onClick={toggleSidebar}
+                className={`md:hidden fixed top-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors 
+                  ${isSidebarOpen ? 'right-4' : 'left-4'}`}
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+            )}
 
       {/* Sidebar backdrop for mobile */}
       {isMobile && isSidebarOpen && (

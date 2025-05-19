@@ -1,7 +1,7 @@
   import React, { useState, useEffect, useCallback, useRef, memo, useMemo  } from 'react';
   import { FaHome, FaBook, FaUserGraduate,FaBriefcase,FaEnvelopeOpenText, FaChalkboardTeacher, FaCertificate, FaBullhorn, FaExclamationCircle, FaTags, FaPlusCircle, FaEdit } from 'react-icons/fa';
 
-  import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, BarChart, Bar, PieChart, Pie, Cell,Legend  } from 'recharts';
+  import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip,ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell,Legend  } from 'recharts';
   import { PlusCircle, Book, Users, DollarSign, TrendingUp, Home, Layout, BookOpen, ClipboardList, Settings, LogOut, Menu,School, ChevronDown } from 'lucide-react';
 
   import CertificateContent from "./certificate/certificate";
@@ -236,9 +236,11 @@ const InstructorStudentStats = ({ totalteacher, totalstudent }) => {
   {/* Charts Section */}
   <div className="lg:col-span-2 space-y-4">
     {/* User Activity Chart */}
-    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">User Activity</h2>
-      <LineChart width={600} height={300} data={userActivityData}>
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow w-full">
+  <h2 className="text-lg sm:text-xl font-semibold mb-4 text-[#5491CA]">User Activity</h2>
+  <div className="w-full h-[250px] sm:h-[300px]">
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart data={userActivityData}>
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
         <XAxis dataKey="name" stroke="#5491CA" />
         <YAxis stroke="#5491CA" />
@@ -253,24 +255,30 @@ const InstructorStudentStats = ({ totalteacher, totalstudent }) => {
           animationDuration={2000}
         />
       </LineChart>
-    </div>
+    </ResponsiveContainer>
+  </div>
+</div>
 
-    {/* Course Enrollment Graph */}
-    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      <h2 className="text-xl font-semibold mb-4 text-[#5491CA]">Course Enrollment</h2>
-      <CourseEnrollmentGraph />
-    </div>
+
+ {/* Course Enrollment Graph */}
+<div className="w-full lg:w-5/6 mx-auto">
+  <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h2 className="text-lg sm:text-xl font-semibold mb-4 text-[#5491CA]">Course Enrollment</h2>
+    <CourseEnrollmentGraph />
+  </div>
+</div>
+
   </div>
 
   {/* Right Sidebar */}
-  <div className="space-y-4">
-    {/* Instructor & Student Stats */}
-    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      <InstructorStudentStats totalteacher={totalteacher} totalstudent={totalstudent} />
-    </div>
+ <div className="w-full lg:w-1/3 space-y-4">
+  {/* Instructor & Student Stats */}
+  <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <InstructorStudentStats totalteacher={totalteacher} totalstudent={totalstudent} />
   </div>
-</main>
+</div>
 
+</main>
 
           {/* Teacher Modal */}
           {isTeacherModalOpen && (

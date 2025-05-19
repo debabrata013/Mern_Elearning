@@ -260,217 +260,228 @@ const handleDeleteResource = async (courseId, chapterId, resourceId) => {
     ));
 
     return (
-        <div className="bg-gray-50 p-6 rounded-xl">
-        
+  <div className="bg-gray-50 p-4 sm:p-6 rounded-xl">
+    {selectedCourse ? (
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+        <button
+          onClick={() => setSelectedCourse(null)}
+          className="mb-4 text-[#5491CA] flex items-center text-sm sm:text-base"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Back to Courses
+        </button>
 
-            {selectedCourse ? (
-              <div className="bg-white p-6 rounded-lg shadow-md">
-              <button onClick={() => setSelectedCourse(null)} className="mb-4 text-[#5491CA] flex items-center">
-                  <ArrowLeft className="mr-2" /> Back to Courses
-              </button>
-              <h3 className="text-2xl font-bold mb-2">{selectedCourse.title}</h3>
-              <p className="text-gray-600 mb-4">{selectedCourse.description || "No description available."}</p>
-              
-              <div className="grid grid-cols-2 gap-4 text-sm text-gray-700 mb-4">
-                  <div className="flex items-center gap-2">
-                      <Calendar className="h-5 w-5 text-[#5491CA]" />
-                      <span>Start Date: {formatDate(selectedCourse.startDate)}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                      <Calendar className="h-5 w-5 text-[#5491CA]" />
-                      <span>End Date: {formatDate(selectedCourse.endDate)}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                      <Users className="h-5 w-5 text-[#5491CA]" />
-                      <span>Max Students: {selectedCourse.maxStudents}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                      <Clock className="h-5 w-5 text-[#5491CA]" />
-                      <span>Duration: {selectedCourse.duration} weeks</span>
-                  </div>
-              </div>
-              
-              <h4 className="text-xl font-bold mt-6 mb-2">Chapters</h4>
-              <div className="space-y-4">
-                  {selectedCourse.chapters && selectedCourse.chapters.length > 0 ? (
-                      selectedCourse.chapters.map((chapter, index) => (
-                          <div key={index} className="p-4 border rounded-lg shadow-sm">
-                              <h5 className="text-lg font-semibold flex items-center gap-2">
-                                  <BookOpen className="h-5 w-5 text-[#5491CA]" />
-                                  {chapter.title}
-                              </h5>
-                              <p className="text-gray-600 mt-2">{chapter.description || "No syllabus available."}</p>
-                              
-                             
-                              <h6 className="text-md font-semibold mt-4">Lessons:</h6>
-                              <ul className="list-none ml-6 text-gray-600">
-                                  {chapter.lessons && chapter.lessons.length > 0 ? (
-                                      chapter.lessons.map((lesson, lessonIndex) => (
-                                          <li key={lessonIndex} className="mb-2">
-                                              <div className="flex flex-col gap-2">
-                                                  {lesson.videoUrl && (
-                                                      <div className="flex items-center justify-between p-2 hover:bg-gray-100 rounded">
-                                                          <div
-                                                              onClick={() => handleClick(lesson.videoUrl)}
-                                                              className="cursor-pointer flex items-center flex-1"
-                                                          >
-                                                              <Video className="h-5 w-5 text-[#5491CA]" />
-                                                              <span className="ml-2">Video Lecture</span>
-                                                          </div>
-                                                          <button
-                                                              onClick={() => handleDeleteLecture(selectedCourse._id, chapter._id, lesson._id)}
-                                                              className="text-red-500 hover:text-red-700 p-1"
-                                                          >
-                                                              <X className="h-5 w-5" />
-                                                          </button>
-                                                      </div>
-                                                  )}
-                                    
-                                    
-            
-                                                
-                                              </div>
+        <h3 className="text-xl sm:text-2xl font-bold mb-2">{selectedCourse.title}</h3>
+        <p className="text-gray-600 mb-4 text-sm sm:text-base">
+          {selectedCourse.description || "No description available."}
+        </p>
 
-                                           
-                                          </li>
-                                      ))
-
-                                    
-
-
-                                      
-                                  ) : (
-                                      <li className="text-gray-500">
-                                          <Video className="inline-block mr-2" /> No lessons available.
-                                      </li>
-                                  )}
-                              </ul>
-                              <h6> Resources :</h6>
-                              <ul className="list-none ml-6 text-gray-600">
-                                  {chapter.resourceUrl && chapter.resourceUrl.length > 0 ? (
-                                  
-                                    chapter.resourceUrl.map((resource, index) => (
-                                        <li key={resource.id || index} className="mb-2">
-                                          <div className="flex items-center justify-between p-2 hover:bg-gray-100 rounded">
-                                            <div
-                                              onClick={() => handleClick(resource.url)}
-                                              className="cursor-pointer flex items-center flex-1"
-                                            >
-                                              <File className="h-5 w-5 text-[#5491CA]" />
-                                              <span className="ml-2">{resource.type || 'Resource'}</span>
-                                            </div>
-                                            <button
-                                              onClick={() => handleDeleteResource(selectedCourse._id, chapter._id, resource._id)}
-                                              className="text-red-500 hover:text-red-700 p-1"
-                                            >
-                                              <X className="h-5 w-5" />
-                                            </button>
-                                          </div>
-                                        </li>
-                                      ))
-
-                                    
-
-
-                                      
-                                  ) : (
-                                      <li className="text-gray-500">
-                                          <File className="inline-block mr-2" /> No resources available.
-                                      </li>
-                                  )}
-                              </ul>
-
-
-
-                              <div style={styles.container}>
-                              
-                                <div className="container">
-      <label style={styles.label}>
-        Select Video:
-        <input type="file" accept="video/*" onChange={handleVideoChange} style={styles.input} disabled={uploading} />
-      </label>
-      <button onClick={() => handleUploadLecture(chapter._id)} style={styles.button} disabled={uploading}>
-        {uploading ? <Loader className="animate-spin" /> : "Upload Lecture"}
-      </button>
-     </div>
-     <div className="container">
-      <label style={styles.label}>
-        Select Resource:
-        <input
-          type="file"
-          accept="image/*,application/pdf,.ppt,.pptx"
-          onChange={handleResourceChange}
-          style={styles.input}
-          disabled={uploading}
-        /> </label>
-        <button onClick={() => handleUploadResource(chapter._id)} style={styles.button} disabled={uploading}>
-        {uploading ? <Loader className="animate-spin" /> : "Upload Resource"}
-      </button>
-     
-     </div>
-
-      
-    </div>
-                              </div>
-                      ))
-                  ) : (
-                      <p className="text-gray-500">No chapters available.</p>
-                  )}
-              </div>
-              
-              <button className="bg-[#5491CA] text-white px-4 py-2 rounded-lg hover:shadow-md transition-all mt-6" onClick={() => setShowModal(true)}>
-                  Schedule Class
-              </button>
-              {showModal && (
-                classDetails.courses=selectedCourse.title,
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                        <h3 className="text-xl font-bold mb-4">Schedule Class</h3>
-                        <label className="block text-sm font-medium">Joining Link</label>
-                        <input type="text" className="w-full border rounded-lg p-2 mb-2" 
-                            value={classDetails.link} onChange={(e) => setClassDetails({ ...classDetails, link: e.target.value })} />
-                        
-                        <label className="block text-sm font-medium">Meeting Start Time</label>
-                        <input type="datetime-local" className="w-full border rounded-lg p-2 mb-2" 
-                            value={classDetails.time} onChange={(e) => setClassDetails({ ...classDetails, time: e.target.value })} />
-                        
-                        <label className="block text-sm font-medium">Chapter Name</label>
-                        <input type="text" className="w-full border rounded-lg p-2 mb-2" 
-                            value={classDetails.chapter} onChange={(e) => setClassDetails({ ...classDetails, chapter: e.target.value })} />
-
-                        
-                        <div className="flex justify-between mt-4">
-                            <button onClick={() => setShowModal(false)} className="text-red-500">Cancel</button>
-                            <button onClick={handleScheduleClass} className="bg-[#5491CA] text-white px-4 py-2 rounded-lg">Send</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700 mb-4">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-[#5491CA]" />
+            <span>Start Date: {formatDate(selectedCourse.startDate)}</span>
           </div>
-            ) : (
-                <div>
-                    <h3 className="text-2xl font-bold mb-4">Courses</h3>
-                    {loading ? (
-                        <p className="text-gray-500 text-center">Loading courses...</p>
-                    ) : error ? (
-                        <p className="text-red-500 text-center">{error}</p>
-                    ) : courses.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {courses.map(course => (
-                                <CourseCard key={course._id || course.courseCode} course={course} />
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-gray-500 text-center">No courses available.</p>
-                    )}
-                </div>
-            )
-            
-            }
-            
+          <div className="flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-[#5491CA]" />
+            <span>End Date: {formatDate(selectedCourse.endDate)}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-[#5491CA]" />
+            <span>Max Students: {selectedCourse.maxStudents}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Clock className="h-5 w-5 text-[#5491CA]" />
+            <span>Duration: {selectedCourse.duration} weeks</span>
+          </div>
         </div>
-    );
+
+        <h4 className="text-lg sm:text-xl font-bold mt-6 mb-2">Chapters</h4>
+        <div className="space-y-4">
+          {selectedCourse.chapters?.length > 0 ? (
+            selectedCourse.chapters.map((chapter, index) => (
+              <div key={index} className="p-4 border rounded-lg shadow-sm">
+                <h5 className="text-md sm:text-lg font-semibold flex items-center gap-2">
+                  <BookOpen className="h-5 w-5 text-[#5491CA]" />
+                  {chapter.title}
+                </h5>
+                <p className="text-gray-600 mt-2 text-sm">{chapter.description || "No syllabus available."}</p>
+
+                <h6 className="text-sm font-semibold mt-4">Lessons:</h6>
+                <ul className="list-none ml-4 sm:ml-6 text-gray-600">
+                  {chapter.lessons?.length > 0 ? (
+                    chapter.lessons.map((lesson, lessonIndex) => (
+                      <li key={lessonIndex} className="mb-2">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-2 hover:bg-gray-100 rounded">
+                          <div
+                            onClick={() => handleClick(lesson.videoUrl)}
+                            className="cursor-pointer flex items-center flex-1"
+                          >
+                            <Video className="h-5 w-5 text-[#5491CA]" />
+                            <span className="ml-2 text-sm">Video Lecture</span>
+                          </div>
+                          <button
+                            onClick={() =>
+                              handleDeleteLecture(selectedCourse._id, chapter._id, lesson._id)
+                            }
+                            className="text-red-500 hover:text-red-700 p-1"
+                          >
+                            <X className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-gray-500">
+                      <Video className="inline-block mr-2" /> No lessons available.
+                    </li>
+                  )}
+                </ul>
+
+                <h6 className="mt-4 text-sm font-semibold">Resources:</h6>
+                <ul className="list-none ml-4 sm:ml-6 text-gray-600">
+                  {chapter.resourceUrl?.length > 0 ? (
+                    chapter.resourceUrl.map((resource, index) => (
+                      <li key={resource.id || index} className="mb-2">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-2 hover:bg-gray-100 rounded">
+                          <div
+                            onClick={() => handleClick(resource.url)}
+                            className="cursor-pointer flex items-center flex-1"
+                          >
+                            <File className="h-5 w-5 text-[#5491CA]" />
+                            <span className="ml-2 text-sm">{resource.type || 'Resource'}</span>
+                          </div>
+                          <button
+                            onClick={() =>
+                              handleDeleteResource(selectedCourse._id, chapter._id, resource._id)
+                            }
+                            className="text-red-500 hover:text-red-700 p-1"
+                          >
+                            <X className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-gray-500">
+                      <File className="inline-block mr-2" /> No resources available.
+                    </li>
+                  )}
+                </ul>
+
+                <div className="mt-4 space-y-4 sm:space-y-0 sm:flex sm:gap-6">
+                  <div className="w-full">
+                    <label className="block mb-1 text-sm text-gray-700">Select Video:</label>
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoChange}
+                      className="w-full border rounded-lg p-2 text-sm"
+                      disabled={uploading}
+                    />
+                    <button
+                      onClick={() => handleUploadLecture(chapter._id)}
+                      className="mt-2 w-full bg-[#7670AC] text-white py-2 px-4 rounded hover:opacity-90"
+                      disabled={uploading}
+                    >
+                      {uploading ? <Loader className="animate-spin" /> : "Upload Lecture"}
+                    </button>
+                  </div>
+
+                  <div className="w-full">
+                    <label className="block mb-1 text-sm text-gray-700">Select Resource:</label>
+                    <input
+                      type="file"
+                      accept="image/*,application/pdf,.ppt,.pptx"
+                      onChange={handleResourceChange}
+                      className="w-full border rounded-lg p-2 text-sm"
+                      disabled={uploading}
+                    />
+                    <button
+                      onClick={() => handleUploadResource(chapter._id)}
+                      className="mt-2 w-full bg-[#7670AC] text-white py-2 px-4 rounded hover:opacity-90"
+                      disabled={uploading}
+                    >
+                      {uploading ? <Loader className="animate-spin" /> : "Upload Resource"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 text-sm">No chapters available.</p>
+          )}
+        </div>
+
+        <button
+          className="bg-[#5491CA] text-white px-4 py-2 rounded-lg hover:shadow-md transition-all mt-6 w-full sm:w-auto"
+          onClick={() => setShowModal(true)}
+        >
+          Schedule Class
+        </button>
+
+        {showModal && (
+          classDetails.courses = selectedCourse.title,
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[9999] px-4">
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md">
+              <h3 className="text-lg sm:text-xl font-bold mb-4">Schedule Class</h3>
+
+              <label className="block text-sm font-medium">Joining Link</label>
+              <input
+                type="text"
+                className="w-full border rounded-lg p-2 mb-2 text-sm"
+                value={classDetails.link}
+                onChange={(e) => setClassDetails({ ...classDetails, link: e.target.value })}
+              />
+
+              <label className="block text-sm font-medium">Meeting Start Time</label>
+              <input
+                type="datetime-local"
+                className="w-full border rounded-lg p-2 mb-2 text-sm"
+                value={classDetails.time}
+                onChange={(e) => setClassDetails({ ...classDetails, time: e.target.value })}
+              />
+
+              <label className="block text-sm font-medium">Chapter Name</label>
+              <input
+                type="text"
+                className="w-full border rounded-lg p-2 mb-2 text-sm"
+                value={classDetails.chapter}
+                onChange={(e) => setClassDetails({ ...classDetails, chapter: e.target.value })}
+              />
+
+              <div className="flex justify-between mt-4">
+                <button onClick={() => setShowModal(false)} className="text-red-500 text-sm">Cancel</button>
+                <button
+                  onClick={handleScheduleClass}
+                  className="bg-[#5491CA] text-white px-4 py-2 rounded-lg text-sm"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    ) : (
+      <div>
+        <h3 className="text-xl sm:text-2xl font-bold mb-4">Courses</h3>
+        {loading ? (
+          <p className="text-gray-500 text-center">Loading courses...</p>
+        ) : error ? (
+          <p className="text-red-500 text-center">{error}</p>
+        ) : courses.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {courses.map((course) => (
+              <CourseCard key={course._id || course.courseCode} course={course} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 text-center">No courses available.</p>
+        )}
+      </div>
+    )}
+  </div>
+);
+
 };
 
 export default ClassesContent;

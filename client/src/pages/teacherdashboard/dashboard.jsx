@@ -164,7 +164,7 @@ import {
               <h2 className="text-2xl font-bold mb-2 animate-fadeIn">Welcome back, {teacherName}</h2>
              
              
-            </div>
+            </div>  
             <div className="absolute right-0 top-0 h-full w-1/3">
               <div className="h-full w-full flex items-center justify-center">
                 <Calendar className="h-24 w-24 text-white/30 animate-pulse" />
@@ -204,8 +204,8 @@ import {
           {/* Charts and Activities Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Performance Chart */}
-           <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 md:p-6">
-               <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+           <div className="bg-white p-6 rounded-xl shadow-sm  dark:bg-gray-700/50 rounded-xl p-4 md:p-6">
+               <h3 className="text-lg font-semibold mb-4 text-[#5491CA] dark:text-gray-100">
                  Login Activity (Last 30 days)
                </h3>
                <div className="h-64">

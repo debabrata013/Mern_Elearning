@@ -253,7 +253,7 @@ const CourseManagementForm = () => {
       </button>
       
       {isVisible && (
-        <div className="bg-gray-50 p-6 rounded-xl shadow-md">
+        <div className="bg-gray-50 rounded-xl shadow-md">
           {/* Error Message Display */}
           {error && (
             <div className={`
@@ -272,103 +272,126 @@ const CourseManagementForm = () => {
           {/* Course Form */}
           <form 
             onSubmit={handleSubmit} 
-            className={`bg-white p-8 rounded-lg shadow-lg space-y-8 ${loading ? 'opacity-50 pointer-events-none' : ''}`}
+            className={`bg-white p-4 rounded-lg shadow-lg space-y-8 ${loading ? 'opacity-50 pointer-events-none' : ''}`}
           >
             {/* 1. Course Details */}
             <section className="border-b pb-6">
-              <h3 className="text-2xl font-bold mb-6 text-[#5491CA]">Course Details</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="title" className="block text-sm font-medium text-gray-700">Course Title</label>
-                  <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="courseCode" className="block text-sm font-medium text-gray-700">Course Code</label>
-                  <input
-                    type="text"
-                    id="courseCode"
-                    name="courseCode"
-                    value={formData.courseCode}
-                    onChange={handleChange}
-                    className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
-                  <select
-                    id="category"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
-                    className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
-                    required
-                  >
-                    <option value="">Select Category</option>
-                    {categories.map((category, index) => (
-                      <option key={index} value={category}>{category}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="level" className="block text-sm font-medium text-gray-700">Level</label>
-                  <select
-                    id="level"
-                    name="level"
-                    value={formData.level}
-                    onChange={handleChange}
-                    className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
-                    required
-                  >
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                  </select>
-                </div>
-                <div className="col-span-2">
-                  <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
-                    rows="4"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="coverImage" className="block text-sm font-medium text-gray-700">Cover Image</label>
-                  <input
-                    type="file"
-                    id="coverImage"
-                    name="coverImage"
-                    onChange={handleFileChange}
-                    accept="image/*"
-                    className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="introVideo" className="block text-sm font-medium text-gray-700">Intro Video</label>
-                  <input
-                    type="file"
-                    id="introVideo"
-                    name="introVideo"
-                    onChange={handleFileChange}
-                    accept="video/*"
-                    className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
-                  />
-                </div>
-              </div>
-            </section>
+  <h3 className="text-2xl font-bold mb-6 text-[#5491CA]">Course Details</h3>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div>
+      <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+        Course Title
+      </label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        value={formData.title}
+        onChange={handleChange}
+        className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
+        required
+      />
+    </div>
+
+    <div>
+      <label htmlFor="courseCode" className="block text-sm font-medium text-gray-700">
+        Course Code
+      </label>
+      <input
+        type="text"
+        id="courseCode"
+        name="courseCode"
+        value={formData.courseCode}
+        onChange={handleChange}
+        className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
+        required
+      />
+    </div>
+
+    <div>
+      <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+        Category
+      </label>
+      <select
+        id="category"
+        name="category"
+        value={formData.category}
+        onChange={handleChange}
+        className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
+        required
+      >
+        <option value="">Select Category</option>
+        {categories.map((category, index) => (
+          <option key={index} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <div>
+      <label htmlFor="level" className="block text-sm font-medium text-gray-700">
+        Level
+      </label>
+      <select
+        id="level"
+        name="level"
+        value={formData.level}
+        onChange={handleChange}
+        className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
+        required
+      >
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+      </select>
+    </div>
+
+    <div className="sm:col-span-2">
+      <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+        Description
+      </label>
+      <textarea
+        id="description"
+        name="description"
+        value={formData.description}
+        onChange={handleChange}
+        className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
+        rows="4"
+        required
+      />
+    </div>
+
+    <div>
+      <label htmlFor="coverImage" className="block text-sm font-medium text-gray-700">
+        Cover Image
+      </label>
+      <input
+        type="file"
+        id="coverImage"
+        name="coverImage"
+        onChange={handleFileChange}
+        accept="image/*"
+        className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
+      />
+    </div>
+
+    <div>
+      <label htmlFor="introVideo" className="block text-sm font-medium text-gray-700">
+        Intro Video
+      </label>
+      <input
+        type="file"
+        id="introVideo"
+        name="introVideo"
+        onChange={handleFileChange}
+        accept="video/*"
+        className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
+      />
+    </div>
+  </div>
+</section>
+
 
             {/* 2. Schedule & Duration */}
             <section className="border-b pb-6">
@@ -427,49 +450,54 @@ const CourseManagementForm = () => {
                 />
               </div>
               <div className="mt-6">
-                <h4 className="text-xl font-semibold mb-4 text-[#b1a9f1]">Add Chapters/Modules</h4>
-                {formData.chapters.map((chapter, index) => (
-                  <div key={index} className="flex flex-col md:flex-row items-start gap-4 mb-6 border border-gray-200 p-4 rounded-md bg-gray-50 hover:shadow-sm transition-shadow">
-                    <div className="w-full">
-                      <label className="block text-sm font-medium text-gray-700">Chapter Title</label>
-                      <input
-                        type="text"
-                        name="title"
-                        value={chapter.title}
-                        onChange={(e) => handleChapterChange(index, e)}
-                        className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
-                        required
-                      />
-                    </div>
-                    <div className="w-full">
-                      <label className="block text-sm font-medium text-gray-700">Chapter Description</label>
-                      <textarea
-                        name="description"
-                        value={chapter.description}
-                        onChange={(e) => handleChapterChange(index, e)}
-                        className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
-                        rows="2"
-                        required
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => removeChapter(index)}
-                      className="text-[#b1a9f1] hover:text-[#9f97e8] self-end mt-2 md:mt-0 p-2 rounded-full hover:bg-gray-100"
-                    >
-                      <Trash className="h-5 w-5" />
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={addChapter}
-                  className="flex items-center text-[#5491CA] font-medium hover:text-[#4a82b6] bg-white px-4 py-2 rounded-md shadow-sm border border-gray-200"
-                >
-                  <Plus className="h-5 w-5 mr-2" />
-                  Add Chapter
-                </button>
-              </div>
+  <h4 className="text-xl font-semibold mb-4 text-[#b1a9f1]">Add Chapters/Modules</h4>
+  {formData.chapters.map((chapter, index) => (
+    <div
+      key={index}
+      className="flex flex-col md:flex-row items-start gap-4 mb-6 border border-gray-200 p-4 rounded-md bg-gray-50 hover:shadow-sm transition-shadow"
+    >
+      <div className="w-full md:w-1/2">
+        <label className="block text-sm font-medium text-gray-700">Chapter Title</label>
+        <input
+          type="text"
+          name="title"
+          value={chapter.title}
+          onChange={(e) => handleChapterChange(index, e)}
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
+          required
+        />
+      </div>
+      <div className="w-full md:w-1/2">
+        <label className="block text-sm font-medium text-gray-700">Chapter Description</label>
+        <textarea
+          name="description"
+          value={chapter.description}
+          onChange={(e) => handleChapterChange(index, e)}
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-[#5491CA] focus:border-[#5491CA]"
+          rows="2"
+          required
+        />
+      </div>
+      <button
+        type="button"
+        onClick={() => removeChapter(index)}
+        className="text-[#b1a9f1] hover:text-[#9f97e8] self-end mt-2 md:mt-0 p-2 rounded-full hover:bg-gray-100"
+        aria-label={`Remove chapter ${index + 1}`}
+      >
+        <Trash className="h-5 w-5" />
+      </button>
+    </div>
+  ))}
+  <button
+    type="button"
+    onClick={addChapter}
+    className="flex items-center text-[#5491CA] font-medium hover:text-[#4a82b6] bg-white px-4 py-2 rounded-md shadow-sm border border-gray-200"
+  >
+    <Plus className="h-5 w-5 mr-2" />
+    Add Chapter
+  </button>
+</div>
+
             </section>
 
             {/* 4. Additional Information */}

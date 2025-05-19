@@ -181,7 +181,8 @@ const JobsContent = () => {
       {isMobile && (
         <button
           onClick={toggleSidebar}
-          className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors"
+          className={`md:hidden fixed top-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors 
+            ${isSidebarOpen ? 'right-4' : 'left-4'}`}
         >
           <Menu className="h-6 w-6" />
         </button>
@@ -212,7 +213,7 @@ const JobsContent = () => {
           {/* Header with menu button */}
           <header className="mb-8 md:mb-12 text-center">
           <h1 className="text-2xl md:text-3xl font-bold text-[#7670AC] dark:text-white">
-                  Explore <span className="text-[#5491CA] dark:text-[#7670AC]">Courses</span>
+                  Explore <span className="text-[#5491CA] dark:text-[#7670AC]">Jobs</span>
                 </h1>
           </header>
           

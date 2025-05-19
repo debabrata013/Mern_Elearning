@@ -94,7 +94,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
-    margin-top: 30px;
+    justify-items: center;
   }
 
   .no-results {
@@ -118,10 +118,15 @@
     background-color: #e5e7eb;
     cursor: pointer;
   }
+  .sort-dropdown{
+    
+    color: #666;
+
+  }
 
   .page-btn.active,
   .page-btn:hover {
-    background-color: #2563eb;
+    background-color: #5491CA;
     color: white;
   }
 

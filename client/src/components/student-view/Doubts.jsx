@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Users, Calendar, Loader, BookOpen } from "lucide-react";
+import { Users, Calendar, Loader, BookOpen,Menu } from "lucide-react";
 import axiosInstance from "@/api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -141,15 +141,14 @@ useEffect(() => {
   return (<div className="min-h-screen bg-gray-50">
     {/* Mobile sidebar toggle button */}
     {isMobile && (
-      <button
-        onClick={toggleSidebar}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-    )}
+        <button
+          onClick={toggleSidebar}
+          className={`md:hidden fixed top-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors 
+            ${isSidebarOpen ? 'right-4' : 'left-4'}`}
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+      )}
   
     {/* Sidebar backdrop for mobile */}
     {isMobile && isSidebarOpen && (
@@ -193,7 +192,7 @@ useEffect(() => {
             </button>
           </div>
         ) : courses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
             {courses.map((course) => (
               <CourseCard key={course._id || course.courseCode} course={course} />
             ))}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from '@/api/axiosInstance';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Menu } from "lucide-react";
 
 const DoubtsPage = () => {
   const [doubts, setDoubts] = useState([]);
@@ -64,6 +65,9 @@ const DoubtsPage = () => {
       setShowModal(false);
     }
   };
+   const onBack = () => {
+    navigate(-1);
+  };
 
   // Handle escape key press to close modal
   useEffect(() => {
@@ -85,21 +89,25 @@ const DoubtsPage = () => {
   const allCount = doubts.length;
 
   return (
-    <div className="m-auto p-auto mt-9 p-10">
-      
+    <div className="m-auto p-auto p-10">
+      <button
+        onClick={onBack}
+        className="flex text-xl mb-4 items-center text-[#5491CA]  hover:text-[#5491CA]-900 transition-colors"
+      >
+        ← Go Back
+      </button>
       {/* Header Section with Title and Create Button */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Discussion Forum</h1>
+        <h1 className="text-2xl mb-2 md:text-3xl font-bold text-[#7670AC] dark:text-white" >
+                  Discussion <span className="text-[#5491CA] dark:text-[#7670AC]">Forum</span>
+                </h1>
         <motion.button 
           onClick={() => setShowModal(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg shadow-md transition-all duration-200 flex items-center justify-center font-medium mt-4 sm:mt-0"
+          className="bg-[#7670AC] hover:bg-[#5491CA] text-white px-6 py-2.5 rounded-lg shadow-md transition-all duration-200 flex items-center justify-center font-medium mt-4 sm:mt-0"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
           aria-label="Create new doubt"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-          </svg>
           Ask a Question
         </motion.button>
       </div>
@@ -111,18 +119,18 @@ const DoubtsPage = () => {
             onClick={() => setActiveTab('unresolved')}
             className={`py-3 px-6 font-medium text-sm transition-colors duration-200 relative ${
               activeTab === 'unresolved'
-                ? 'text-indigo-600'
+                ? 'text-[#5491CA]-600'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
             aria-current={activeTab === 'unresolved' ? 'page' : undefined}
           >
             Unresolved
-            <span className="ml-2 bg-amber-100 text-amber-800 text-xs font-medium px-2 py-0.5 rounded-full">
+            <span className="ml-2 bg-[#5491CA] text-white text-xs font-medium px-2 py-0.5 rounded-full">
               {unresolvedCount}
             </span>
             {activeTab === 'unresolved' && (
               <motion.div
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"
+                className="absolute bottom-0 left-0 right-0 h-0.5 [#5491CA]"
                 layoutId="activeTabIndicator"
               />
             )}
@@ -131,18 +139,18 @@ const DoubtsPage = () => {
             onClick={() => setActiveTab('resolved')}
             className={`py-3 px-6 font-medium text-sm transition-colors duration-200 relative ${
               activeTab === 'resolved'
-                ? 'text-indigo-600'
+                ? 'text-[#5491CA]-600'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
             aria-current={activeTab === 'resolved' ? 'page' : undefined}
           >
             Resolved
-            <span className="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">
+            <span className="ml-2 bg-[#5491CA] text-white text-xs font-medium px-2 py-0.5 rounded-full">
               {resolvedCount}
             </span>
             {activeTab === 'resolved' && (
               <motion.div
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#5491CA]"
                 layoutId="activeTabIndicator"
               />
             )}
@@ -151,7 +159,7 @@ const DoubtsPage = () => {
             onClick={() => setActiveTab('all')}
             className={`py-3 px-6 font-medium text-sm transition-colors duration-200 relative ${
               activeTab === 'all'
-                ? 'text-indigo-600'
+                ? 'text-[#5491CA]-600'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
             aria-current={activeTab === 'all' ? 'page' : undefined}
@@ -162,7 +170,7 @@ const DoubtsPage = () => {
             </span>
             {activeTab === 'all' && (
               <motion.div
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#5491CA]"
                 layoutId="activeTabIndicator"
               />
             )}
@@ -173,7 +181,7 @@ const DoubtsPage = () => {
       {/* Loading State */}
       {isLoading && (
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#5491CA]-500"></div>
         </div>
       )}
 
@@ -199,11 +207,11 @@ const DoubtsPage = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
-                      className="cursor-pointer p-6 rounded-lg shadow-md transition-all duration-300 bg-white hover:shadow-lg border-l-4 border-l-amber-500"
+                      className="cursor-pointer p-6 rounded-lg shadow-md transition-all duration-300 bg-white hover:shadow-lg border-l-4 border-l-[#7670AC]"
                       onClick={() => handleCardClick(doubt._id)}
                     >
                       <div className="flex items-center mb-4">
-                        <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden mr-3">
+                        <div className="h-10 w-10 rounded-full bg-[#5491CA] flex items-center justify-center overflow-hidden mr-3">
                           {doubt.askedBy.profileImage ? (
                             <img
                               src={doubt.askedBy.profileImage}
@@ -211,7 +219,7 @@ const DoubtsPage = () => {
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <span className="text-indigo-600 font-medium">
+                            <span className="text-[#5491CA] font-medium">
                               {doubt.askedBy.userName?.charAt(0).toUpperCase() || "?"}
                             </span>
                           )}
@@ -232,11 +240,11 @@ const DoubtsPage = () => {
                         {doubt.description}
                       </p>
                       <div className="flex justify-between items-center">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
-                          <span className="w-2 h-2 rounded-full mr-1.5 bg-amber-500"></span>
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#5491CA]-100 text-white">
+                          <span className="w-2 h-2 rounded-full mr-1.5 bg-[#5491CA]"></span>
                           Unresolved
                         </span>
-                        <span className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <span className="text-[#5491CA]-600 hover:text-indigo-800 text-sm font-medium">
                           View Details →
                         </span>
                       </div>
@@ -270,7 +278,7 @@ const DoubtsPage = () => {
                       onClick={() => handleCardClick(doubt._id)}
                     >
                       <div className="flex items-center mb-4">
-                        <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden mr-3">
+                        <div className="h-10 w-10 rounded-full bg-[#5491CA]-100 flex items-center justify-center overflow-hidden mr-3">
                           {doubt.askedBy.profileImage ? (
                             <img
                               src={doubt.askedBy.profileImage}
@@ -278,7 +286,7 @@ const DoubtsPage = () => {
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <span className="text-indigo-600 font-medium">
+                            <span className="text-[#5491CA]-600 font-medium">
                               {doubt.askedBy.userName?.charAt(0).toUpperCase() || "?"}
                             </span>
                           )}
@@ -303,7 +311,7 @@ const DoubtsPage = () => {
                           <span className="w-2 h-2 rounded-full mr-1.5 bg-green-500"></span>
                           Resolved
                         </span>
-                        <span className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <span className="text-[#5491CA] hover:text-[#5491CA] text-sm font-medium">
                           View Details →
                         </span>
                       </div>
@@ -326,7 +334,7 @@ const DoubtsPage = () => {
                   <p className="text-gray-500 mb-4">Be the first to ask a question in this course!</p>
                   <button 
                     onClick={() => setShowModal(true)}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200"
+                    className="bg-indigo-600 hover:bg-[#5491CA] text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200"
                   >
                     Ask a Question
                   </button>
@@ -428,7 +436,7 @@ const DoubtsPage = () => {
               </div>
               <form onSubmit={createDoubt}>
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2" htmlFor="doubt-title">
+                  <label className="block text-[#7670AC] font-medium mb-2" htmlFor="doubt-title">
                     Title
                   </label>
                   <input
@@ -436,7 +444,7 @@ const DoubtsPage = () => {
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                    className="w-full border border-[#7670AC] p-3 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-[#7670AC] transition-all duration-200"
                     placeholder="What's your question about?"
                     required
                   />
@@ -449,7 +457,7 @@ const DoubtsPage = () => {
                     id="doubt-description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full border border-gray-300 p-3 rounded-lg h-32 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                    className="w-full border border-[#7670AC] p-3 rounded-lg h-32 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
                     placeholder="Provide details about your question..."
                     required
                   ></textarea>
@@ -464,7 +472,7 @@ const DoubtsPage = () => {
                   </button>
                   <button 
                     type="submit"
-                    className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-all duration-200 flex items-center"
+                    className="px-5 py-2.5 rounded-lg bg-[#5491CA] hover:bg-[#7670AC] text-white font-medium transition-all duration-200 flex items-center"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />

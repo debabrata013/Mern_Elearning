@@ -82,8 +82,10 @@ function AuthPage() {
   return (
     <div className="auth-page-container">
       <header className="auth-header">
-        <img src={logo} alt="AIGIRI Logo" className="auth-logo" onClick={() => navigate("/")} style={{ cursor: "pointer" }} />
-        <h1 className="auth-name" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>AIGIRI</h1>
+        <img className="h-11 w-auto" src={logo} alt="logo" onClick={() => navigate("/")} style={{ cursor: "pointer" }} />
+              <span className="text-4xl font-bold tracking-wide text-[#7670AC] relative top-[1px] font-poppins">
+                IGIRI
+              </span>
       </header>
 
       <div className="auth-container">

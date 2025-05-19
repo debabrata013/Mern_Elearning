@@ -188,13 +188,14 @@ const CoursePage = () => {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       {isMobile && (
-        <button
-          onClick={toggleSidebar}
-          className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors"
-        >
-          <Menu className="h-6 w-6" />
-        </button>
-      )}
+              <button
+                onClick={toggleSidebar}
+                className={`md:hidden fixed top-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors 
+                  ${isSidebarOpen ? 'right-4' : 'left-4'}`}
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+            )}
 
       {/* Sidebar backdrop for mobile */}
       {isMobile && isSidebarOpen && (
@@ -222,14 +223,9 @@ const CoursePage = () => {
         >
           <div className="max-w-7xl mx-auto">
             {/* Header Section */}
-            <div className="mb-6 md:mb-8">
-              <div className="flex items-center gap-4 mb-4 md:mb-0">
-                
-                <h1 className="text-2xl md:text-3xl font-bold text-[#7670AC] dark:text-white">
+                <h1 className="text-2xl mb-4 md:text-3xl font-bold text-[#7670AC] dark:text-white" >
                   Explore <span className="text-[#5491CA] dark:text-[#7670AC]">Courses</span>
                 </h1>
-              </div>
-            </div>
 
             {/* Search and Filter Section */}
             <div className="flex flex-col gap-4 mb-6 md:mb-8">
@@ -249,7 +245,7 @@ const CoursePage = () => {
                 <div className="relative flex-1">
                   <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <select
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white appearance-none"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border text-gray-400 border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white appearance-none"
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                   >
@@ -261,7 +257,7 @@ const CoursePage = () => {
                 </div>
                 <div className="relative flex-1">
                   <select 
-                    className="w-full pl-4 pr-4 py-2.5 rounded-xl border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white appearance-none"
+                    className="w-full pl-4 pr-4 py-2.5 rounded-xl text-gray-400 border border-[#5491CA]/20 focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:border-[#5491CA] dark:bg-gray-700 dark:border-[#7670AC]/30 dark:text-white appearance-none"
                     aria-label="Sort courses"
                   >
                     <option>Sort by Popularity</option>
@@ -276,7 +272,7 @@ const CoursePage = () => {
 
             {/* Courses Grid */}
             {filteredCourses.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8 justify-items-center">
                 {currentCourses.map((course, index) => (
                   <CourseCard 
                     key={course._id || `course-${index}`} 
@@ -342,12 +338,7 @@ const CoursePage = () => {
       </div>
 
       {/* Mobile Overlay */}
-      {isMobile && isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
+      
     </div>
   );
 };

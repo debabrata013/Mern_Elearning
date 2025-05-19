@@ -168,13 +168,14 @@ const NotificationContent = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Mobile sidebar toggle button */}
       {isMobile && (
-        <button
-          onClick={toggleSidebar}
-          className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors"
-        >
-          <Menu className="h-6 w-6" />
-        </button>
-      )}
+                    <button
+                      onClick={toggleSidebar}
+                      className={`md:hidden fixed top-4 z-50 p-2 rounded-md bg-[#5491CA] text-white shadow-lg hover:bg-[#467bb0] transition-colors 
+                        ${isSidebarOpen ? 'right-4' : 'left-4'}`}
+                    >
+                      <Menu className="h-6 w-6" />
+                    </button>
+                  )}
 
       {/* Sidebar backdrop for mobile */}
       {isMobile && isSidebarOpen && (
@@ -186,7 +187,7 @@ const NotificationContent = () => {
 
       {/* Sidebar */}
       <div
-        className={`bg-white shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 transition-transform duration-300 ease-in-out z-40 ${
+        className={`bg-white  shadow-xl w-[280px] h-screen fixed top-0 left-0 border-r border-gray-200 transition-transform duration-300 ease-in-out z-40 ${
           isMobile ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0"
         }`}
       >
@@ -194,13 +195,13 @@ const NotificationContent = () => {
       </div>
 
       {/* Main content */}
-      <div className={`pl-0 ${!isMobile ? "md:pl-[280px]" : ""} px-4 py-8`}>
+      <div className={`pl-0 ${!isMobile ? " md:pl-[280px]" : ""} px-4 py-8`}>
             <header className="mb-8 md:mb-12 text-center">
           <h1 className="text-2xl md:text-3xl font-bold text-[#5491CA] dark:text-white">
                   Announcements</h1>
           </header>
           <CardContent>
-            <ScrollArea className="h-[calc(100vh-300px)] md:h-[600px] pr-4">
+            <ScrollArea className="h-[calc(100vh-300px)]md:h-[600px] pr-4">
               {notifications.length === 0 ? (
                 <div className="text-center py-16 text-gray-500">
                   <div className="h-20 w-20 mx-auto mb-4 rounded-full bg-[#5491CA]/10 flex items-center justify-center">
@@ -210,7 +211,7 @@ const NotificationContent = () => {
                   <p className="text-sm text-gray-400">Check back later for updates</p>
                 </div>
               ) : (
-                <div className="space-y-6 mt-6">
+                <div className="space-y-6  mt-6">
                   {notifications.map((notification) => (
                     <Card 
                       key={notification.id}

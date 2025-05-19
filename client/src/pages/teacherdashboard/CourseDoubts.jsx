@@ -293,245 +293,244 @@ const CourseDoubts = () => {
     );
   }
 
-  return (
-    <div className="bg-slate-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        {/* Header with Back Button */}
-        <div className="mb-6">
-          <button 
-            onClick={handleGoBack}
-            className="flex items-center text-slate-600 hover:text-blue-600 transition-colors mb-4 group"
-            aria-label="Go back"
-          >
-            <ArrowLeft className="h-4 w-4 mr-1 transform group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm">Back to courses</span>
-          </button>
-          
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-800 flex items-center">
-            <BookOpen className="mr-3 text-blue-500 hidden sm:block" size={28} />
-            <span>Course Doubts & Questions</span>
-          </h1>
-        </div>
+  // ...unchanged imports
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
-          <div className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between hover:shadow-md transition-shadow duration-300 border border-slate-100">
-            <div>
-              <p className="text-sm text-slate-500">Total Questions</p>
-              <p className="text-2xl font-bold text-slate-800">{resolved.length + unresolved.length}</p>
-            </div>
-            <div className="bg-blue-100 p-2 rounded-full">
-              <HelpCircle className="text-blue-600" size={24} />
-            </div>
+return (
+  <div className="bg-slate-50 min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      {/* Header with Back Button */}
+      <div className="mb-6">
+        <button 
+          onClick={handleGoBack}
+          className="flex items-center text-[#7670AC] hover:text-[#5491CA] transition-colors mb-4 group"
+          aria-label="Go back"
+        >
+          <ArrowLeft className="h-4 w-4 mr-1 transform group-hover:-translate-x-1 transition-transform" />
+          <span className="text-sm">Back to courses</span>
+        </button>
+        
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 flex items-center">
+          <BookOpen className="mr-3 text-[#5491CA] hidden sm:block" size={28} />
+          <span>Course Doubts & Questions</span>
+        </h1>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
+        <div className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between hover:shadow-md transition-shadow duration-300 border border-slate-100">
+          <div>
+            <p className="text-sm text-slate-500">Total Questions</p>
+            <p className="text-2xl font-bold text-slate-800">{resolved.length + unresolved.length}</p>
           </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between hover:shadow-md transition-shadow duration-300 border border-slate-100">
-            <div>
-              <p className="text-sm text-slate-500">Unresolved</p>
-              <p className="text-2xl font-bold text-amber-600">{unresolved.length}</p>
-            </div>
-            <div className="bg-amber-100 p-2 rounded-full">
-              <AlertCircle className="text-amber-600" size={24} />
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between hover:shadow-md transition-shadow duration-300 border border-slate-100">
-            <div>
-              <p className="text-sm text-slate-500">Resolved</p>
-              <p className="text-2xl font-bold text-emerald-600">{resolved.length}</p>
-            </div>
-            <div className="bg-emerald-100 p-2 rounded-full">
-              <CheckCircle className="text-emerald-600" size={24} />
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between hover:shadow-md transition-shadow duration-300 border border-slate-100">
-            <div>
-              <p className="text-sm text-slate-500">Response Rate</p>
-              <p className="text-2xl font-bold text-indigo-600">
-                {unresolved.length + resolved.length > 0 
-                  ? Math.round((resolved.length / (unresolved.length + resolved.length)) * 100) 
-                  : 0}%
-              </p>
-            </div>
-            <div className="bg-indigo-100 p-2 rounded-full">
-              <MessageCircle className="text-indigo-600" size={24} />
-            </div>
+          <div className="bg-[#5491CA]/20 p-2 rounded-full">
+            <HelpCircle className="text-[#5491CA]" size={24} />
           </div>
         </div>
 
-        {/* Mobile Tabs */}
-        <div className="md:hidden mb-6">
-          <div className="flex rounded-lg bg-slate-200 p-1">
-            <button
-              onClick={() => setActiveTab("unresolved")}
-              className={`flex-1 py-2 text-sm font-medium rounded-md flex justify-center items-center transition-colors ${
-                activeTab === "unresolved" 
-                  ? "bg-white text-amber-700 shadow-sm" 
-                  : "text-slate-600 hover:text-slate-800"
-              }`}
-            >
-              <AlertCircle size={16} className={`mr-1 ${activeTab === "unresolved" ? "text-amber-500" : ""}`} />
-              Unresolved ({unresolved.length})
-            </button>
-            <button
-              onClick={() => setActiveTab("resolved")}
-              className={`flex-1 py-2 text-sm font-medium rounded-md flex justify-center items-center transition-colors ${
-                activeTab === "resolved" 
-                  ? "bg-white text-emerald-700 shadow-sm" 
-                  : "text-slate-600 hover:text-slate-800"
-              }`}
-            >
-              <CheckCircle size={16} className={`mr-1 ${activeTab === "resolved" ? "text-emerald-500" : ""}`} />
-              Resolved ({resolved.length})
-            </button>
+        <div className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between hover:shadow-md transition-shadow duration-300 border border-slate-100">
+          <div>
+            <p className="text-sm text-slate-500">Unresolved</p>
+            <p className="text-2xl font-bold text-[#7670AC]">{unresolved.length}</p>
+          </div>
+          <div className="bg-[#7670AC]/20 p-2 rounded-full">
+            <AlertCircle className="text-[#7670AC]" size={24} />
           </div>
         </div>
 
-        {/* Desktop Sections / Mobile Tab Content */}
-        <div className="space-y-10">
-          {/* Unresolved Doubts Section */}
-          <section className={`${activeTab === "resolved" ? "hidden md:block" : ""}`}>
-            <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
-              <div className="bg-amber-100 p-1.5 rounded-lg mr-3">
-                <HelpCircle className="text-amber-600" size={20} />
-              </div>
-              <span>Unresolved Doubts</span>
-              <span className="ml-3 text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
-                {unresolved.length}
-              </span>
-            </h2>
-            
-            {unresolved.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {unresolved.map((doubt, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleCardClick(doubt._id)}
-                    className="bg-white flex flex-col rounded-xl shadow-sm p-5 border-l-4 border-amber-500 transition-all duration-300 hover:shadow-md hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-                    tabIndex={0}
-                    aria-label={`Unresolved doubt: ${doubt.title}`}
-                  >
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-lg font-semibold text-slate-800 line-clamp-2 flex-1">
-                        {doubt.title}
-                      </h3>
-                      <span className="bg-amber-100 text-amber-700 px-2 py-1 rounded-full text-xs font-medium flex items-center whitespace-nowrap ml-2">
-                        <Clock size={12} className="mr-1" /> Pending
-                      </span>
-                    </div>
-                    
-                    <p className="text-slate-600 mb-4 flex-grow line-clamp-3 text-sm">{doubt.description}</p>
-                    
-                    <div className="mt-auto">
-                      <div className="flex items-center justify-between text-xs sm:text-sm">
-                        <span className="flex items-center text-slate-600">
-                          <User size={14} className="mr-1" />
-                          <span className="truncate max-w-20">{doubt.askedBy?.userName || "Anonymous"}</span>
-                        </span>
-                        <span className="flex items-center text-slate-600">
-                          <ThumbsUp size={14} className="mr-1" />
-                          {doubt.upvotes}
-                        </span>
-                      </div>
-                      
-                      <div className="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 text-xs text-slate-500">
-                        <span className="flex items-center">
-                          <MessageCircle size={14} className="mr-1" />
-                          Reply
-                        </span>
-                        <span>
-                          {formatDate(doubt.createdAt)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 text-center">
-                <div className="bg-amber-50 w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center">
-                  <AlertCircle className="text-amber-500" size={32} />
-                </div>
-                <p className="text-slate-700 font-medium">No unresolved doubts at the moment.</p>
-                <p className="text-sm text-slate-500 mt-1">All questions have been addressed!</p>
-              </div>
-            )}
-          </section>
+        <div className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between hover:shadow-md transition-shadow duration-300 border border-slate-100">
+          <div>
+            <p className="text-sm text-slate-500">Resolved</p>
+            <p className="text-2xl font-bold text-[#5491CA]">{resolved.length}</p>
+          </div>
+          <div className="bg-[#5491CA]/20 p-2 rounded-full">
+            <CheckCircle className="text-[#5491CA]" size={24} />
+          </div>
+        </div>
 
-          {/* Resolved Doubts Section */}
-          <section className={`${activeTab === "unresolved" ? "hidden md:block" : ""}`}>
-            <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
-              <div className="bg-emerald-100 p-1.5 rounded-lg mr-3">
-                <CheckCircle className="text-emerald-600" size={20} />
-              </div>
-              <span>Resolved Doubts</span>
-              <span className="ml-3 text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
-                {resolved.length}
-              </span>
-              
-              <div className="ml-auto flex items-center">
-                <button className="text-xs flex items-center text-slate-500 hover:text-slate-700 bg-white py-1 px-2 rounded border border-slate-200 shadow-sm hover:shadow transition-all">
-                  <Filter size={12} className="mr-1" /> Filter
-                </button>
-              </div>
-            </h2>
-
-            {resolved.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {resolved.map((doubt, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleCardClick(doubt._id)}
-                    className="bg-white flex flex-col rounded-xl shadow-sm border border-slate-100 p-5 transition-all duration-300 hover:shadow-md hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-                    tabIndex={0}
-                    aria-label={`Resolved doubt: ${doubt.title}`}
-                  >
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="flex-1">
-                        <div className="flex items-center mb-1.5">
-                          <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full text-xs font-medium flex items-center">
-                            <CheckCircle size={12} className="mr-1" /> Resolved
-                          </span>
-                        </div>
-                        <h3 className="text-lg font-semibold text-slate-800 line-clamp-2">
-                          {doubt.title}
-                        </h3>
-                      </div>
-                    </div>
-                    
-                    <p className="text-slate-600 text-sm mb-4 flex-grow line-clamp-3">
-                      {doubt.description}
-                    </p>
-                    
-                    <div className="mt-auto">
-                      <div className="flex justify-between items-center pt-3 border-t border-slate-100 text-xs text-slate-500">
-                        <span className="flex items-center">
-                          <User size={14} className="mr-1" />
-                          <span className="truncate max-w-20">{doubt.askedBy?.userName || "Anonymous"}</span>
-                        </span>
-                        <span>
-                          {formatDate(doubt.createdAt)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 text-center">
-                <div className="bg-slate-50 w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center">
-                  <CheckCircle className="text-slate-300" size={32} />
-                </div>
-                <p className="text-slate-700 font-medium">No resolved doubts yet.</p>
-                <p className="text-sm text-slate-500 mt-1">Questions will appear here once they're resolved.</p>
-              </div>
-            )}
-          </section>
+        <div className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between hover:shadow-md transition-shadow duration-300 border border-slate-100">
+          <div>
+            <p className="text-sm text-slate-500">Response Rate</p>
+            <p className="text-2xl font-bold text-[#7670AC]">
+              {unresolved.length + resolved.length > 0 
+                ? Math.round((resolved.length / (unresolved.length + resolved.length)) * 100) 
+                : 0}%
+            </p>
+          </div>
+          <div className="bg-[#7670AC]/20 p-2 rounded-full">
+            <MessageCircle className="text-[#7670AC]" size={24} />
+          </div>
         </div>
       </div>
+
+      {/* Mobile Tabs */}
+      <div className="md:hidden mb-6">
+        <div className="flex rounded-lg bg-slate-200 p-1">
+          <button
+            onClick={() => setActiveTab("unresolved")}
+            className={`flex-1 py-2 text-sm font-medium rounded-md flex justify-center items-center transition-colors ${
+              activeTab === "unresolved" 
+                ? "bg-white text-[#7670AC] shadow-sm" 
+                : "text-slate-600 hover:text-slate-800"
+            }`}
+          >
+            <AlertCircle size={16} className={`mr-1 ${activeTab === "unresolved" ? "text-[#7670AC]" : ""}`} />
+            Unresolved ({unresolved.length})
+          </button>
+          <button
+            onClick={() => setActiveTab("resolved")}
+            className={`flex-1 py-2 text-sm font-medium rounded-md flex justify-center items-center transition-colors ${
+              activeTab === "resolved" 
+                ? "bg-white text-[#5491CA] shadow-sm" 
+                : "text-slate-600 hover:text-slate-800"
+            }`}
+          >
+            <CheckCircle size={16} className={`mr-1 ${activeTab === "resolved" ? "text-[#5491CA]" : ""}`} />
+            Resolved ({resolved.length})
+          </button>
+        </div>
+      </div>
+
+      {/* Sections */}
+      <div className="space-y-10">
+        {/* Unresolved Section */}
+        <section className={`${activeTab === "resolved" ? "hidden md:block" : ""}`}>
+          <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
+            <div className="bg-[#7670AC]/20 p-1.5 rounded-lg mr-3">
+              <HelpCircle className="text-[#7670AC]" size={20} />
+            </div>
+            <span>Unresolved Doubts</span>
+            <span className="ml-3 text-xs bg-[#7670AC]/20 text-[#7670AC] px-2 py-0.5 rounded-full">
+              {unresolved.length}
+            </span>
+          </h2>
+
+          {unresolved.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {unresolved.map((doubt, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleCardClick(doubt._id)}
+                  className="bg-white flex flex-col rounded-xl shadow-sm p-5 border-l-4 border-[#7670AC] transition-all duration-300 hover:shadow-md hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#7670AC] focus:ring-offset-2"
+                  tabIndex={0}
+                  aria-label={`Unresolved doubt: ${doubt.title}`}
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="text-lg font-semibold text-slate-800 line-clamp-2 flex-1">
+                      {doubt.title}
+                    </h3>
+                    <span className="bg-[#7670AC]/20 text-[#7670AC] px-2 py-1 rounded-full text-xs font-medium flex items-center whitespace-nowrap ml-2">
+                      <Clock size={12} className="mr-1" /> Pending
+                    </span>
+                  </div>
+
+                  <p className="text-slate-600 mb-4 flex-grow line-clamp-3 text-sm">{doubt.description}</p>
+
+                  <div className="mt-auto">
+                    <div className="flex items-center justify-between text-xs sm:text-sm">
+                      <span className="flex items-center text-slate-600">
+                        <User size={14} className="mr-1" />
+                        <span className="truncate max-w-20">{doubt.askedBy?.userName || "Anonymous"}</span>
+                      </span>
+                      <span className="flex items-center text-slate-600">
+                        <ThumbsUp size={14} className="mr-1" />
+                        {doubt.upvotes}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 text-xs text-slate-500">
+                      <span className="flex items-center">
+                        <MessageCircle size={14} className="mr-1" />
+                        Reply
+                      </span>
+                      <span>{formatDate(doubt.createdAt)}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 text-center">
+              <div className="bg-[#7670AC]/10 w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center">
+                <AlertCircle className="text-[#7670AC]" size={32} />
+              </div>
+              <p className="text-slate-700 font-medium">No unresolved doubts at the moment.</p>
+              <p className="text-sm text-slate-500 mt-1">All questions have been addressed!</p>
+            </div>
+          )}
+        </section>
+
+        {/* Resolved Section */}
+        <section className={`${activeTab === "unresolved" ? "hidden md:block" : ""}`}>
+          <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
+            <div className="bg-[#5491CA]/20 p-1.5 rounded-lg mr-3">
+              <CheckCircle className="text-[#5491CA]" size={20} />
+            </div>
+            <span>Resolved Doubts</span>
+            <span className="ml-3 text-xs bg-[#5491CA]/20 text-[#5491CA] px-2 py-0.5 rounded-full">
+              {resolved.length}
+            </span>
+
+            <div className="ml-auto flex items-center">
+              <button className="text-xs flex items-center text-slate-500 hover:text-slate-700 bg-white py-1 px-2 rounded border border-slate-200 shadow-sm hover:shadow transition-all">
+                <Filter size={12} className="mr-1" /> Filter
+              </button>
+            </div>
+          </h2>
+
+          {resolved.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {resolved.map((doubt, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleCardClick(doubt._id)}
+                  className="bg-white flex flex-col rounded-xl shadow-sm border border-slate-100 p-5 transition-all duration-300 hover:shadow-md hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#5491CA] focus:ring-offset-2"
+                  tabIndex={0}
+                  aria-label={`Resolved doubt: ${doubt.title}`}
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex-1">
+                      <div className="flex items-center mb-1.5">
+                        <span className="bg-[#5491CA]/20 text-[#5491CA] px-2 py-0.5 rounded-full text-xs font-medium flex items-center">
+                          <CheckCircle size={12} className="mr-1" /> Resolved
+                        </span>
+                      </div>
+                      <h3 className="text-lg font-semibold text-slate-800 line-clamp-2">
+                        {doubt.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <p className="text-slate-600 text-sm mb-4 flex-grow line-clamp-3">
+                    {doubt.description}
+                  </p>
+
+                  <div className="mt-auto">
+                    <div className="flex justify-between items-center pt-3 border-t border-slate-100 text-xs text-slate-500">
+                      <span className="flex items-center">
+                        <User size={14} className="mr-1" />
+                        <span className="truncate max-w-20">{doubt.askedBy?.userName || "Anonymous"}</span>
+                      </span>
+                      <span>{formatDate(doubt.createdAt)}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 text-center">
+              <div className="bg-slate-50 w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center">
+                <CheckCircle className="text-slate-300" size={32} />
+              </div>
+              <p className="text-slate-700 font-medium">No resolved doubts yet.</p>
+              <p className="text-sm text-slate-500 mt-1">Questions will appear here once they're resolved.</p>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default CourseDoubts;
