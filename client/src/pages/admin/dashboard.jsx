@@ -46,29 +46,30 @@ const InstructorStudentStats = ({ totalteacher, totalstudent }) => {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-blue-400">
-      <h2 className="text-lg font-semibold text-[#5491CA] mb-4">User Distribution</h2>
-      <PieChart width={250} height={250}>
-        <Pie
-          data={data}
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          label={({ name, percent }) =>
-            `${name}: ${(percent * 100).toFixed(0)}%`
-          }
-          outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
-        >
-          {data.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-        <Tooltip />
-        <Legend />
-      </PieChart>
-    </div>
+  <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-blue-400 w-full md:w-[350px]">
+  <h2 className="text-lg font-semibold text-[#5491CA] mb-4">User Distribution</h2>
+  <PieChart width={250} height={250}>
+    <Pie
+      data={data}
+      cx="50%"
+      cy="50%"
+      labelLine={false}
+      label={({ name, percent }) =>
+        `${name}: ${(percent * 100).toFixed(0)}%`
+      }
+      outerRadius={80}
+      fill="#8884d8"
+      dataKey="value"
+    >
+      {data.map((_, index) => (
+        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+      ))}
+    </Pie>
+    <Tooltip />
+    <Legend />
+  </PieChart>
+</div>
+
   );
 };
 
@@ -261,8 +262,8 @@ const InstructorStudentStats = ({ totalteacher, totalstudent }) => {
 
 
  {/* Course Enrollment Graph */}
-<div className="w-full lg:w-5/6 mx-auto">
-  <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+<div className="w-full lg:w-5/6">
+  <div className="bg-white mb-4 p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
     <h2 className="text-lg sm:text-xl font-semibold mb-4 text-[#5491CA]">Course Enrollment</h2>
     <CourseEnrollmentGraph />
   </div>
@@ -271,7 +272,7 @@ const InstructorStudentStats = ({ totalteacher, totalstudent }) => {
   </div>
 
   {/* Right Sidebar */}
- <div className="w-full lg:w-1/3 space-y-4">
+ <div className="w-full md:w-[380px] space-y-4">
   {/* Instructor & Student Stats */}
   <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
     <InstructorStudentStats totalteacher={totalteacher} totalstudent={totalstudent} />
