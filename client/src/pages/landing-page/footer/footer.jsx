@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faLinkedin, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { createSubscriber } from "../api/landingServices"
+import logo from '../../../../../client/public/aigiri logo.png';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -39,16 +40,17 @@ const Footer = () => {
       <div className="max-w-screen-xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Logo and Description Section */}
         <div className="text-center md:text-left">
-          <div className="text-4xl font-bold text-[#5491CA] mb-6">
-            <span className="text-white">AIGIRI</span>
-          </div>
-          <p className="text-lg mb-6">
-            Let Us build your career together. Be the first person to transform yourself with our unique & world-class corporate-level trainings.
+          <div className="flex items-center">
+                  <img className="h-11 w-auto" src={logo} alt="logo" />
+                </div>
+          <p className="text-lg mb-6 text-justify">
+            Empowering minds through innovation. Unlock your potential with Aigiri where future leaders are made.
           </p>
+
           
           {/* Newsletter Subscription */}
           <div className="mt-6">
-            <h3 className="text-2xl font-semibold mb-3">Subscribe to Our Newsletter</h3>
+            <h3 className="text-2xl font-bold mb-3">Subscribe to Our Newsletter</h3>
             <form onSubmit={handleSubscribe} className="flex justify-center md:justify-start gap-4">
               <input 
                 type="email" 
@@ -90,7 +92,7 @@ const Footer = () => {
               <a href="/coursess" className="hover:text-[#7670AC] transition duration-300">Courses</a>
             </li>
             <li className="mb-3">
-              <a href="/about-us" className="hover:text-[#7670AC] transition duration-300">About Us</a>
+              <a href="/aboutus" className="hover:text-[#7670AC] transition duration-300">About Us</a>
             </li>
             <li className="mb-3">
               <a href="/contactus" className="hover:text-[#7670AC] transition duration-300">Contact Us</a>

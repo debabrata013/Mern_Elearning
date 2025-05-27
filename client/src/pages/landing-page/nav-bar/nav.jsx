@@ -17,9 +17,6 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
       <div className="flex items-center">
         <img className="h-11 w-auto" src={logo} alt="logo" />
-        <span className="text-4xl font-bold tracking-wide text-[#7670AC] relative top-[1px] font-poppins">
-          IGIRI
-        </span>
       </div>
 
         {/* <Link to="/" className="text-2xl font-bold text-[#7670AC]">AIGIRI</Link> */}

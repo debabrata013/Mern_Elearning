@@ -52,9 +52,7 @@ function ForgotPasswordPage() {
     <div className="auth-page-container">
       <header className="auth-header">
               <img className="h-11 w-auto" src={logo} alt="logo" onClick={() => navigate("/")} style={{ cursor: "pointer" }} />
-                    <span className="text-4xl font-bold tracking-wide text-[#7670AC] relative top-[1px] font-poppins">
-                      IGIRI
-                    </span>
+                    
             </header>
 
       <div className="auth-container">

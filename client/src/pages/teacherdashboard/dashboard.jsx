@@ -416,9 +416,7 @@ import {
           <aside className={`fixed left-0 top-0 h-full w-64 bg-white text-gray-700 p-4 shadow-lg transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform z-20`}>
           <div className="flex items-center mb-4">
   <img className="h-11 w-auto" src={logo} alt="logo" />
-  <span className="text-3xl font-bold tracking-wide text-[#7670AC] relative top-[5px] font-poppins">
-    IGIRI
-  </span>
+  
         </div>
             <nav className="space-y-2">
               <NavItem 

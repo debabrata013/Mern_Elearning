@@ -53,10 +53,7 @@ const Sidebar = () => {
     <div className="h-screen bg-white shadow-lg flex flex-col p-4">
       {/* Logo */}
       <div className="flex items-center mb-4">
-  <img className="h-11 w-auto" src={logo} alt="logo" />
-  <span className="text-3xl font-bold tracking-wide text-[#7670AC] relative top-[5px] font-poppins">
-    IGIRI
-  </span>
+        <img className="h-11 w-auto " src={logo} alt="logo" />
 </div>
 
 

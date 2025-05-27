@@ -106,15 +106,6 @@ const ScrollArea = ({ className = '', children }) => (
 const NotificationContent = () => {
   const user= JSON.parse(localStorage.getItem('user'));
 
-
-  //  const response = axiosInstance.get("/announcements/",{u:user._id});
-  //  title
-  //  description
-  //  notificationType
-
-  //  createdAt
-
-  // const [notifications, setNotifications] = useState(response.data.announcements);
   const [notifications, setNotifications] = useState([]);
 
   const formatDate = (dateString) => {
@@ -158,7 +149,7 @@ const NotificationContent = () => {
   console.log(notifications);
   
   return (
-    <Card className="w-full max-w-5xl mx-auto overflow-hidden">
+    <Card className="w-full max-w-5xl mx-auto overflow-hidden ">
       <CardHeader className="bg-gradient-to-r from-[#5491CA]/10 to-[#b1a9f1]/10 border-b border-gray-100">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-gradient-to-r from-[#5491CA]/20 to-[#b1a9f1]/20 rounded-lg">
@@ -174,7 +165,7 @@ const NotificationContent = () => {
       </CardHeader>
       
       <CardContent>
-        <ScrollArea className="h-[600px] pr-4">
+        <ScrollArea className="h-[600px]">
           {notifications.length === 0 ? (
             <div className="text-center py-16 text-gray-500">
               <div className="h-20 w-20 mx-auto mb-4 rounded-full bg-[#5491CA]/10 flex items-center justify-center">
