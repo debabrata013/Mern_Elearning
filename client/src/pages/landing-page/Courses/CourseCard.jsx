@@ -40,7 +40,7 @@ const CourseCard = ({ course }) => {
           <p className="course-description">{course.description}</p>
         </div>
       </div>
-      <div className="buttons">
+      <div className="buttonsi">
         <button className="btn live-demo" onClick={handleDownloadCurriculum}>Download Curriculum</button>
         <button className="btn enroll-now" onClick={handleEnrollNow}>Enroll Now</button>
       </div>

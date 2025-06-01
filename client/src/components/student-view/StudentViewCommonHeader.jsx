@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {PieChart, Pie, Cell} from 'recharts';
 import Sidebar from './studentComponent/Sidebar';
+ import { FaBell } from "react-icons/fa";
 import axios from 'axios';
 import { 
   GraduationCap, 
@@ -48,7 +49,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [showNotifications, setShowNotifications] = useState(false);
+  // const [showNotifications, setShowNotifications] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -117,6 +118,9 @@ const StudentDashboard = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+  const [showNotifications, setShowNotifications] = useState(false);
+const [cartItemCount, setCartItemCount] = useState(0);
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -193,18 +197,32 @@ const StudentDashboard = () => {
             
             <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-end">
               {/* Notifications */}
-              <div className="relative">
-              
-                
-                {/* Notifications Dropdown */}
-                {showNotifications && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-                    {/* Add your notifications list here */}
-                  </div>
-                )}
-              </div>
+             
 
-              {/* Cart */}
+<div className="relative">
+  {/* Notification Icon with Badge */}
+  <button
+    onClick={() => setShowNotifications(!showNotifications)}
+    className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+  >
+    <FaBell className="text-xl text-gray-700 dark:text-white" />
+    {cartItemCount > 0 && (
+      <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-semibold px-1.5 py-0.5 rounded-full">
+        {cartItemCount}
+      </span>
+    )}
+  </button>
+
+  {/* Notifications Dropdown */}
+  {showNotifications && (
+    <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+      {/* Add your notifications list here */}
+    </div>
+  )}
+</div>
+
+
+              {/*    */}
               <button 
                 onClick={() => navigate('/cart')}
                 className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
