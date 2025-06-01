@@ -108,13 +108,14 @@ const Footer = () => {
           <h3 className="text-2xl font-bold mb-6">Contact Us</h3>
           <ul className="list-none">
             <li className="mb-3">
-              <p className="hover:text-[#7670AC] transition duration-300">info@digitoria.com</p>
+              <p className="hover:text-[#7670AC] transition duration-300">aigiri.company@gmail.com</p>
             </li>
             <li className="mb-3">
               <p className="hover:text-[#7670AC] transition duration-300">+91 1234567890</p>
             </li>
             <li className="mb-3">
-              <p className="hover:text-[#7670AC] transition duration-300">123, XYZ Street, City, Country</p>
+              <p className="hover:text-[#7670AC] transition duration-300">Balaram Nagar, Main Road,<br/>
+Gunupur, Orissa 765022, India</p>
             </li>
           </ul>
         </div>
