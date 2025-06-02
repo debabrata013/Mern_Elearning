@@ -1,4 +1,6 @@
-  import React, { useState } from 'react';
+  import React, { useRef,useState,useEffect } from 'react';
+  
+  import toast from "react-hot-toast";
   import { Button } from '@/components/ui/button';
   import { Input } from '@/components/ui/input';
   import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -22,6 +24,7 @@ import axiosInstance from '@/api/axiosInstance';
 
 const ProfilePage = ({ onBack }) => {
   const user= JSON.parse(localStorage.getItem('user'));
+    const mountedRef = useRef(true);
     const [userData, setUserData] = useState({
       id:user._id,
       userName: user?.userName,
@@ -37,30 +40,19 @@ const ProfilePage = ({ onBack }) => {
 
     });
 
+    useEffect(() => {
+        mountedRef.current = true;
+        return () => {
+          mountedRef.current = false;
+          toast.dismiss(); // Dismiss all toasts on unmount/route change
+        };
+      }, [location]);
+    
     const [selectedImage, setSelectedImage] = useState(null);
-    // const handelChangeProifle= async(e)=>{
-    //   try {
-    //     const response = await axiosInstance.post("/pic/upload/", { userId: user._id, image: selectedImage });
-    
-    //     if (response.data) {
-    //       // Remove old user data from localStorage
-    //       localStorage.removeItem("user");
-    
-    //       // Store updated user data in localStorage
-    //       localStorage.setItem("user", JSON.stringify(response.data.user));
-    //       alert(response.data.message)
-    //       window.location.reload();
-    //     }
-    //   } catch (error) {
-    //     console.error("Error updating profile:", error);
-    //   }
-      
-      
-    // }
     const handelChangeProifle = async (e) => {
       try {
         if (!selectedImage) {
-          alert("Please select an image.");
+          toast.error("Please select an image.");
           return;
         }
     
@@ -80,13 +72,13 @@ const ProfilePage = ({ onBack }) => {
           // Optionally, update the UI without reloading the page
          // Assuming you have a state management hook
     
-          alert(response.data.message);
+          toast.error(response.data.message);
         
           window.location.reload();
         }
       } catch (error) {
-        console.error("Error updating profile:", error);
-        alert("Failed to update profile picture. Please try again.");
+        toast.error("Error updating profile:", error);
+        toast.error("Failed to update profile picture. Please try again.");
       }
     };
     
@@ -94,17 +86,15 @@ const ProfilePage = ({ onBack }) => {
     const handleProfileSubmit = async(e) => {
       e.preventDefault();
       try {
-        const response= await axiosInstance.put("/u/teacher",userData);
-        if(response.status==200){
-          alert("Profile updated");
-        }
-        
-      } catch (error) {
-        console.log(error);
-        
-        alert("server error")
-        
-      }
+  const response = await axiosInstance.put("/u/teacher", userData);
+  if (response.status === 200) {
+    toast.success("Profile updated");
+  }
+} catch (error) {
+  console.log(error);
+  toast.error("Server error");
+}
+
      
     };
 

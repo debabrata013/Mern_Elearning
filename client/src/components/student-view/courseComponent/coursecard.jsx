@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./CourseCard.css";
 import axiosInstance from "../../../api/axiosInstance";
+import toast from "react-hot-toast";
 
 const CourseCard = ({ course }) => {
   const navigate = useNavigate();
@@ -15,9 +16,7 @@ const CourseCard = ({ course }) => {
   };
 
   const handleDownloadCurriculum = () => {
-    // Check if curriculum PDF exists
     if (course.curriculumPDF) {
-      // Create a temporary anchor element
       const link = document.createElement('a');
       link.href = course.curriculumPDF;
       link.download = `${course.title}-curriculum.pdf`;
@@ -25,46 +24,43 @@ const CourseCard = ({ course }) => {
       link.click();
       document.body.removeChild(link);
     } else {
-      // If no PDF is available, show an alert
-      alert("Curriculum PDF is not available for this course.");
+      toast.dismiss();
+      toast.error("Curriculum PDF is not available for this course.");
     }
   };
 
   const handleAddToCart = async () => {
     try {
-      // Get existing cart items
-      // const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
       const user = JSON.parse(localStorage.getItem('user'));
       const existingCart = user.cart || [];
-      
-      // Check if course is already in cart
+
       if (existingCart.some(item => item.id === course.id)) {
-        alert('This course is already in your cart!');
+        toast.dismiss();
+        toast("This course is already in your cart!");
         return;
       }
 
-     try {
-      const response = await axiosInstance.post(`/api/cart/add/${course._id}/${user._id}`, {
-        courseId: course._id,
-        userId: user._id
-      });
-      
-      if (response.status === 200) {
-        alert('Course added to cart successfully!');
-      }
-      
+      try {
+        const response = await axiosInstance.post(`/api/cart/add/${course._id}/${user._id}`, {
+          courseId: course._id,
+          userId: user._id
+        });
 
-     } catch (error) {
-      console.error('Error adding to cart:', error);
-      
-        
+        if (response.status === 200) {
+          toast.dismiss();
+          toast.success('Course added to cart successfully!');
+        }
+
+      } catch (error) {
         console.error('Error adding to cart:', error);
-        
-     }
-     
+        toast.dismiss();
+        toast.error('Error adding to cart.');
+      }
+
     } catch (error) {
       console.error('Error adding to cart:', error);
-      alert('Failed to add course to cart. Please try again.');
+      toast.dismiss();
+      toast.error('Failed to add course to cart. Please try again.');
     }
   };
 

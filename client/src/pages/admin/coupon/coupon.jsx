@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import couponService from "../api/couponService"; // Update the import path
+import toast from "react-hot-toast";
 
 const HomePage = ({
   coupons,
@@ -9,6 +10,17 @@ const HomePage = ({
   onToggleStatus,
   onSearch,
 }) => {
+
+    useEffect(() => {
+      mountedRef.current = true;
+      return () => {
+        mountedRef.current = false;
+        toast.dismiss(); // Dismiss all toasts on unmount/route change
+      };
+    }, [location]);
+  
+    
+
   return (
     <div className="max-w-7xl mx-auto p-6 bg-white rounded-xl shadow-md mt-10">
       <h1 className="text-3xl font-bold text-center text-[#5491CA] mb-6">Coupons</h1>
@@ -126,26 +138,28 @@ const AddCouponPage = ({ couponToEdit, onBack }) => {
     setErrors({});
     setLoading(true);
 
-    try {
-      if (couponToEdit) {
-        // Update existing coupon
-        await couponService.updateCoupon(couponToEdit.couponCode, formData); // Use the service
-      } else {
-        // Add a new coupon
-        await couponService.createCoupon(formData); // Use the service
-      }
-      alert("Coupon saved successfully!");
-      onBack();
-    } catch (error) {
-      console.error("Error saving coupon:", error);
-      if (error.response && error.response.data.errors) {
-        setErrors(error.response.data.errors);
-      } else {
-        alert("An unexpected error occurred.");
-      }
-    } finally {
-      setLoading(false);
-    }
+try {
+  if (couponToEdit) {
+    // Update existing coupon
+    await couponService.updateCoupon(couponToEdit.couponCode, formData); // Use the service
+    toast.success("Coupon updated successfully!");
+  } else {
+    // Add a new coupon
+    await couponService.createCoupon(formData); // Use the service
+    toast.success("Coupon created successfully!");
+  }
+  onBack();
+} catch (error) {
+  console.error("Error saving coupon:", error);
+  if (error.response && error.response.data.errors) {
+    setErrors(error.response.data.errors);
+  } else {
+    toast.error("An unexpected error occurred.");
+  }
+} finally {
+  setLoading(false);
+}
+
   };
 
   return (
@@ -307,31 +321,34 @@ const CouponDashboard = () => {
     setIsAdding(true);
   };
 
-  const handleDeleteCoupon = async (index) => {
-    if (!window.confirm("Are you sure you want to delete this coupon?")) return;
+const handleDeleteCoupon = async (index) => {
+  if (!window.confirm("Are you sure you want to delete this coupon?")) return;
 
-    const couponToDelete = coupons[index];
-    try {
-      await couponService.deleteCoupon(couponToDelete.couponCode); // Use the service
-      fetchCoupons(); // Refresh the list
-    } catch (error) {
-      console.error("Error deleting coupon:", error);
-      alert("Failed to delete coupon. Please try again.");
-    }
-  };
+  const couponToDelete = coupons[index];
+  try {
+    await couponService.deleteCoupon(couponToDelete.couponCode);
+    toast.success("Coupon deleted successfully!");
+    fetchCoupons();
+  } catch (error) {
+    console.error("Error deleting coupon:", error);
+    toast.error("Failed to delete coupon. Please try again.");
+  }
+};
 
-  const handleToggleStatus = async (index) => {
-    const coupon = coupons[index];
-    const updatedStatus = !coupon.active;
+const handleToggleStatus = async (index) => {
+  const coupon = coupons[index];
+  const updatedStatus = !coupon.active;
 
-    try {
-      await couponService.updateCoupon(coupon.couponCode, { ...coupon, active: updatedStatus }); // Use the service
-      fetchCoupons(); // Refresh the list
-    } catch (error) {
-      console.error("Error toggling status:", error);
-      alert("Failed to update coupon status. Please try again.");
-    }
-  };
+  try {
+    await couponService.updateCoupon(coupon.couponCode, { ...coupon, active: updatedStatus });
+    toast.success(`Coupon marked as ${updatedStatus ? "Active" : "Inactive"}!`);
+    fetchCoupons();
+  } catch (error) {
+    console.error("Error toggling status:", error);
+    toast.error("Failed to update coupon status. Please try again.");
+  }
+};
+
 
   return isAdding ? (
     <AddCouponPage

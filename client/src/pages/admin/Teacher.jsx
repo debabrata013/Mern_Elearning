@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect,useRef } from 'react';
 import { Plus, X } from 'lucide-react';
 import { createTeacher } from './api/apiServices'; // Updated import path
+
+import toast from "react-hot-toast";
 import axiosInstance from '../../api/axiosInstance';
 
 const ManageTeachersContent = () => {
   const [showTeacherForm, setShowTeacherForm] = useState(false);
+  const mountedRef = useRef(true);
   const [formData, setFormData] = useState({
     userName: '',
     email: '',
@@ -19,6 +22,14 @@ const ManageTeachersContent = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+      mountedRef.current = true;
+      return () => {
+        mountedRef.current = false;
+        toast.dismiss(); // Dismiss all toasts on unmount/route change
+      };
+    }, [location]);
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -68,31 +79,34 @@ const ManageTeachersContent = () => {
       salary: formData.salary
     };
 
-    try {
-      setLoading(true);
-      const response = await axiosInstance.post('/teachers/', userData);
-      console.log(response);
-      setShowTeacherForm(false);
-      alert('Teacher added successfully!');
-      
-      // Reset form
-      setFormData({
-        userName: '',
-        email: '',
-        password: '',
-        role: 'teacher',
-        description: '',
-        profileImage: null,
-        subjectKnowledge: [''],
-        salary: '',
-      });
-      setError("");
-    } catch (error) {
-      console.error('Error creating teacher:', error.response?.data || error.message);
-      setError(error.response?.data?.message || 'An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+try {
+  setLoading(true);
+  const response = await axiosInstance.post('/teachers/', userData);
+  console.log(response);
+  setShowTeacherForm(false);
+  toast.success('Teacher added successfully!');
+
+  // Reset form
+  setFormData({
+    userName: '',
+    email: '',
+    password: '',
+    role: 'teacher',
+    description: '',
+    profileImage: null,
+    subjectKnowledge: [''],
+    salary: '',
+  });
+  setError("");
+} catch (error) {
+  console.error('Error creating teacher:', error.response?.data || error.message);
+  const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
+  setError(errorMessage);
+  toast.error(errorMessage);
+} finally {
+  setLoading(false);
+}
+
   };
 
   return (

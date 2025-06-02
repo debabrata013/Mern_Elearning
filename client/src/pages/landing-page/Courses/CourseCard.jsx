@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./CourseCard.css";
+import toast from "react-hot-toast";
 
 const CourseCard = ({ course }) => {
   const navigate = useNavigate();
@@ -24,8 +25,8 @@ const CourseCard = ({ course }) => {
       link.click();
       document.body.removeChild(link);
     } else {
-      // If no PDF is available, show an alert
-      alert("Curriculum PDF is not available for this course.");
+      toast.dismiss();
+      toast.error("Curriculum PDF is not available for this course.");
     }
   };
 

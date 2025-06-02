@@ -1,218 +1,219 @@
-    import React, { useState, useEffect } from 'react';
-    import { Button } from '@/components/ui/button';
-    import { Input } from '@/components/ui/input';
-    import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-    import { Label } from '@/components/ui/label';
-    import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-    import { Switch } from '@/components/ui/switch';
-    import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-    import { Textarea } from '@/components/ui/textarea';
-    import { useTheme } from '@/context/ThemeContext';
-    import { 
-    Camera, 
-    User, 
-    Mail, 
-    Phone, 
-    MapPin, 
-    Book, 
-    Bell, 
-    Shield, 
-    Globe, 
-    Palette, 
-    Moon, 
-    Sun, 
-    Clock, 
-    Languages, 
-    Save, 
-    Trash2, 
-    Download, 
-    Upload, 
-    AlertCircle
-    } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { useTheme } from '@/context/ThemeContext';
+import { 
+  Camera, 
+  User, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Book, 
+  Bell, 
+  Shield, 
+  Globe, 
+  Palette, 
+  Moon, 
+  Sun, 
+  Clock, 
+  Languages, 
+  Save, 
+  Trash2, 
+  Download, 
+  Upload, 
+  AlertCircle
+} from 'lucide-react';
 
-    const TeacherSettings = () => {
-    const { theme, toggleTheme } = useTheme();
-    const [userData, setUserData] = useState({
-        userName: 'John Doe',
-        email: 'john.doe@example.com',
-        phone: '+1 (555) 123-4567',
-        address: '123 Education St, Teaching City',
-        description: 'Experienced mathematics teacher with a passion for making complex concepts simple.',
-        salary: 50000,
-        profileImage: '',
-        specialization: 'Mathematics',
-        experience: '5 years',
-        education: 'M.Ed in Education, University of Teaching',
-        certifications: ['Teaching License', 'Advanced Mathematics Certification']
-    });
+import { toast } from 'react-hot-toast';
 
-    const [passwords, setPasswords] = useState({
-        current: '',
-        new: '',
-        confirm: ''
-    });
+const TeacherSettings = () => {
+  const { theme, toggleTheme } = useTheme();
+  const [userData, setUserData] = useState({
+    userName: 'John Doe',
+    email: 'john.doe@example.com',
+    phone: '+1 (555) 123-4567',
+    address: '123 Education St, Teaching City',
+    description: 'Experienced mathematics teacher with a passion for making complex concepts simple.',
+    salary: 50000,
+    profileImage: '',
+    specialization: 'Mathematics',
+    experience: '5 years',
+    education: 'M.Ed in Education, University of Teaching',
+    certifications: ['Teaching License', 'Advanced Mathematics Certification']
+  });
 
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [activeTab, setActiveTab] = useState('profile');
+  const [passwords, setPasswords] = useState({
+    current: '',
+    new: '',
+    confirm: ''
+  });
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [activeTab, setActiveTab] = useState('profile');
+  
+  // New states for additional features
+  const [language, setLanguage] = useState('english');
+  const [notifications, setNotifications] = useState({
+    email: true,
+    browser: true,
+    mobile: false,
+    updates: true,
+    studentMessages: true,
+    adminMessages: true
+  });
+  const [privacy, setPrivacy] = useState({
+    showEmail: false,
+    showPhone: false,
+    publicProfile: true,
+    allowStudentMessages: true
+  });
+  const [appearance, setAppearance] = useState({
+    colorScheme: 'blue',
+    fontSize: 'medium',
+    reducedMotion: false,
+    highContrast: false
+  });
+
+  // Load user data from localStorage if available
+  useEffect(() => {
+    const savedUserData = localStorage.getItem('teacherUserData');
+    if (savedUserData) {
+      setUserData(JSON.parse(savedUserData));
+    }
     
-    // New states for additional features
-    const [language, setLanguage] = useState('english');
-    const [notifications, setNotifications] = useState({
-        email: true,
-        browser: true,
-        mobile: false,
-        updates: true,
-        studentMessages: true,
-        adminMessages: true
-    });
-    const [privacy, setPrivacy] = useState({
-        showEmail: false,
-        showPhone: false,
-        publicProfile: true,
-        allowStudentMessages: true
-    });
-    const [appearance, setAppearance] = useState({
-        colorScheme: 'blue',
-        fontSize: 'medium',
-        reducedMotion: false,
-        highContrast: false
-    });
+    const savedAppearance = localStorage.getItem('teacherAppearance');
+    if (savedAppearance) {
+      setAppearance(JSON.parse(savedAppearance));
+    }
+    
+    const savedNotifications = localStorage.getItem('teacherNotifications');
+    if (savedNotifications) {
+      setNotifications(JSON.parse(savedNotifications));
+    }
+    
+    const savedPrivacy = localStorage.getItem('teacherPrivacy');
+    if (savedPrivacy) {
+      setPrivacy(JSON.parse(savedPrivacy));
+    }
+    
+    const savedLanguage = localStorage.getItem('teacherLanguage');
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
 
-    // Load user data from localStorage if available
-    useEffect(() => {
-        const savedUserData = localStorage.getItem('teacherUserData');
-        if (savedUserData) {
-        setUserData(JSON.parse(savedUserData));
-        }
-        
-        const savedAppearance = localStorage.getItem('teacherAppearance');
-        if (savedAppearance) {
-        setAppearance(JSON.parse(savedAppearance));
-        }
-        
-        const savedNotifications = localStorage.getItem('teacherNotifications');
-        if (savedNotifications) {
-        setNotifications(JSON.parse(savedNotifications));
-        }
-        
-        const savedPrivacy = localStorage.getItem('teacherPrivacy');
-        if (savedPrivacy) {
-        setPrivacy(JSON.parse(savedPrivacy));
-        }
-        
-        const savedLanguage = localStorage.getItem('teacherLanguage');
-        if (savedLanguage) {
-        setLanguage(savedLanguage);
-        }
-    }, []);
+  const handleProfileSubmit = (e) => {
+    e.preventDefault();
+    // Save to localStorage
+    localStorage.setItem('teacherUserData', JSON.stringify(userData));
+    console.log('Profile updated:', userData);
+    // Show success message
+    toast.success('Profile updated successfully!');
+  };
 
-    const handleProfileSubmit = (e) => {
-        e.preventDefault();
-        // Save to localStorage
-        localStorage.setItem('teacherUserData', JSON.stringify(userData));
-        console.log('Profile updated:', userData);
-        // Show success message
-        alert('Profile updated successfully!');
+  const handleImageSubmit = (e) => {
+    e.preventDefault();
+    if (selectedImage) {
+      // In a real app, you would upload the image to a server
+      // For now, we'll just update the state and pretend it worked
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const updatedUserData = { ...userData, profileImage: reader.result };
+        setUserData(updatedUserData);
+        localStorage.setItem('teacherUserData', JSON.stringify(updatedUserData));
+      };
+      reader.readAsDataURL(selectedImage);
+    }
+    console.log('Image updated:', selectedImage);
+    // Show success message
+    toast.success('Profile image updated successfully!');
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (passwords.new !== passwords.confirm) {
+      toast.error('Passwords do not match!');
+      return;
+    }
+    console.log('Password update:', passwords);
+    // Show success message
+    toast.success('Password updated successfully!');
+    setPasswords({ current: '', new: '', confirm: '' });
+  };
+
+  const handleNotificationChange = (key, value) => {
+    const updatedNotifications = {
+      ...notifications,
+      [key]: value
     };
+    setNotifications(updatedNotifications);
+    localStorage.setItem('teacherNotifications', JSON.stringify(updatedNotifications));
+  };
 
-    const handleImageSubmit = (e) => {
-        e.preventDefault();
-        if (selectedImage) {
-        // In a real app, you would upload the image to a server
-        // For now, we'll just update the state and pretend it worked
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const updatedUserData = { ...userData, profileImage: reader.result };
-            setUserData(updatedUserData);
-            localStorage.setItem('teacherUserData', JSON.stringify(updatedUserData));
-        };
-        reader.readAsDataURL(selectedImage);
-        }
-        console.log('Image updated:', selectedImage);
-        // Show success message
-        alert('Profile image updated successfully!');
+  const handlePrivacyChange = (key, value) => {
+    const updatedPrivacy = {
+      ...privacy,
+      [key]: value
     };
+    setPrivacy(updatedPrivacy);
+    localStorage.setItem('teacherPrivacy', JSON.stringify(updatedPrivacy));
+  };
 
-    const handlePasswordSubmit = (e) => {
-        e.preventDefault();
-        if (passwords.new !== passwords.confirm) {
-        alert('Passwords do not match!');
-        return;
-        }
-        console.log('Password update:', passwords);
-        // Show success message
-        alert('Password updated successfully!');
-        setPasswords({ current: '', new: '', confirm: '' });
+  const handleAppearanceChange = (key, value) => {
+    const updatedAppearance = {
+      ...appearance,
+      [key]: value
     };
+    setAppearance(updatedAppearance);
+    localStorage.setItem('teacherAppearance', JSON.stringify(updatedAppearance));
+  };
 
-    const handleNotificationChange = (key, value) => {
-        const updatedNotifications = {
-        ...notifications,
-        [key]: value
-        };
-        setNotifications(updatedNotifications);
-        localStorage.setItem('teacherNotifications', JSON.stringify(updatedNotifications));
-    };
+  const handleSaveAppearance = () => {
+    localStorage.setItem('teacherAppearance', JSON.stringify(appearance));
+    toast.success('Appearance settings saved successfully!');
+  };
 
-    const handlePrivacyChange = (key, value) => {
-        const updatedPrivacy = {
-        ...privacy,
-        [key]: value
-        };
-        setPrivacy(updatedPrivacy);
-        localStorage.setItem('teacherPrivacy', JSON.stringify(updatedPrivacy));
-    };
+  const handleSaveNotifications = () => {
+    localStorage.setItem('teacherNotifications', JSON.stringify(notifications));
+    toast.success('Notification settings saved successfully!');
+  };
 
-    const handleAppearanceChange = (key, value) => {
-        const updatedAppearance = {
-        ...appearance,
-        [key]: value
-        };
-        setAppearance(updatedAppearance);
-        localStorage.setItem('teacherAppearance', JSON.stringify(updatedAppearance));
-    };
+  const handleSavePrivacy = () => {
+    localStorage.setItem('teacherPrivacy', JSON.stringify(privacy));
+    toast.success('Privacy settings saved successfully!');
+  };
 
-    const handleSaveAppearance = () => {
-        localStorage.setItem('teacherAppearance', JSON.stringify(appearance));
-        alert('Appearance settings saved successfully!');
-    };
+  const handleLanguageChange = (value) => {
+    setLanguage(value);
+    localStorage.setItem('teacherLanguage', value);
+  };
 
-    const handleSaveNotifications = () => {
-        localStorage.setItem('teacherNotifications', JSON.stringify(notifications));
-        alert('Notification settings saved successfully!');
-    };
+  const handleUpdateLanguage = () => {
+    toast.success(`Language updated to ${language}!`);
+  };
 
-    const handleSavePrivacy = () => {
-        localStorage.setItem('teacherPrivacy', JSON.stringify(privacy));
-        alert('Privacy settings saved successfully!');
-    };
+  const handleExportData = () => {
+    const dataStr = JSON.stringify(userData);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    const exportFileDefaultName = 'teacher-profile-data.json';
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
 
-    const handleLanguageChange = (value) => {
-        setLanguage(value);
-        localStorage.setItem('teacherLanguage', value);
-    };
-
-    const handleUpdateLanguage = () => {
-        alert(`Language updated to ${language}!`);
-    };
-
-    const handleExportData = () => {
-        const dataStr = JSON.stringify(userData);
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        const exportFileDefaultName = 'teacher-profile-data.json';
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri);
-        linkElement.setAttribute('download', exportFileDefaultName);
-        linkElement.click();
-    };
-
-    const handleDeleteAccount = () => {
-        if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-        console.log('Account deletion requested');
-        alert('Account deletion request submitted. An administrator will contact you.');
-        }
-    };
-
+  const handleDeleteAccount = () => {
+    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      console.log('Account deletion requested');
+      toast.success('Account deletion request submitted. An administrator will contact you.');
+    }
+  };
     return (
         <div className="w-full max-w-5xl mx-auto p-6 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
         <div className="mb-8">

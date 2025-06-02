@@ -1,5 +1,6 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route,useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { useContext } from "react";
 // import { AuthContext } from "./context/auth-context";
 // import AuthPage from "./pages/auth";
@@ -32,6 +33,7 @@ import Unauthorized from "./pages/Unauthorized";
 import StudentRoutes from "./components/student-view/StudentRoutes";
 // import DemoVideoPlayer from "./components/student-view/studentComponent/ui/videoplayer";
 import VideoPage from './components/student-view/course-card-after-buy/VideoPage';
+import { Toaster, toast } from 'react-hot-toast';
 
 import Std from "./components/student-view/StudentViewCommonHeader";
 import Projile from "./components/student-view/profile-page/profilepage"
@@ -69,6 +71,11 @@ import ChatPage from "./pages/teacherdashboard/ChatPage"
 import ResourceViewer from './components/ui/ResourceViewer';
 
 function App() {
+  const location = useLocation();
+
+  useEffect(() => {
+    toast.dismiss(); // Clear any toasts when navigating
+  }, [location.pathname]);
   return (
     <ThemeProvider>
       <AuthProvider>
@@ -141,6 +148,21 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: 'linear-gradient(to right, #5491CA, #7670AC)',
+            color: '#fff',
+            fontWeight: '500',
+            borderRadius: '8px',
+            padding: '12px 16px',
+          },
+        }}
+      />
+
       </AuthProvider>
     </ThemeProvider>
   );

@@ -1,7 +1,8 @@
-import React, { useState  , useEffect} from 'react';
-import { Bell, Link as LinkIcon, Check, X, ChevronRight, Info } from 'lucide-react';
+import React, { useRef, useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
+import { Bell, Link as LinkIcon, X, ChevronRight, Info } from 'lucide-react';
 import axiosInstance from '@/api/axiosInstance';
-
+import { toast } from "react-hot-toast";
 
 // Card Components
 const Card = ({ className = '', children, ...props }) => (
@@ -104,7 +105,18 @@ const ScrollArea = ({ className = '', children }) => (
 );
 
 const NotificationContent = () => {
-  const user= JSON.parse(localStorage.getItem('user'));
+  const location = useLocation();
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      toast.dismiss(); // Dismiss all toasts on unmount/route change
+    };
+  }, [location]);
+
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const [notifications, setNotifications] = useState([]);
 
@@ -123,31 +135,25 @@ const NotificationContent = () => {
     const fetchNotifications = async () => {
       try {
         const response = await axiosInstance.get(`/announcements/${user._id}`);
-        // const response = await axiosInstance.get(`/announcements/678a4c88c42aea3963fa4162`);
-       
-        console.log("response"+response.data);
         setNotifications(response.data.announcements);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
     };
     fetchNotifications();
-  }, []);
-  
-    const handleDismiss = (id) => {
+  }, [user._id]);
+
+  const handleDismiss = async (id) => {
     try {
-      // Call the API to delete the notification
-      axiosInstance.delete(`/announcements/${user._id}/${id}`);
-      alert("Notification deleted successfully ")
-      // Update the notification state to remove the dismissed notification
-      setNotifications(notifications.filter(notif => notif.id !== id));
+      await axiosInstance.delete(`/announcements/${user._id}/${id}`);
+      toast.success("Notification deleted successfully");
+      setNotifications(notifications.filter(notif => notif._id !== id));
     } catch (error) {
       console.error("Error dismissing notification:", error);
+      toast.error("Failed to delete notification");
     }
   };
 
-  console.log(notifications);
-  
   return (
     <Card className="w-full max-w-5xl mx-auto overflow-hidden ">
       <CardHeader className="bg-gradient-to-r from-[#5491CA]/10 to-[#b1a9f1]/10 border-b border-gray-100">
@@ -163,7 +169,7 @@ const NotificationContent = () => {
           View the latest announcements from the admin below.
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent>
         <ScrollArea className="h-[600px]">
           {notifications.length === 0 ? (
@@ -176,20 +182,15 @@ const NotificationContent = () => {
             </div>
           ) : (
             <div className="space-y-6 mt-6">
-              
-         
-           
               {notifications.map((notification) => (
-                
                 <Card 
-                  key={notification.id}
+                  key={notification._id}
                   className={`relative transition-all duration-300 hover:transform hover:translate-x-1 border-l-4 ${
                     notification.read 
                       ? 'border-l-gray-200 bg-gray-50' 
                       : 'border-l-[#5491CA] bg-white shadow-md'
                   }`}
                 >
-                 {/* {console.log(JSON.stringify(notification._id))} */}
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-start gap-3">
@@ -212,8 +213,6 @@ const NotificationContent = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        
-
                         <Button 
                           variant="ghost" 
                           size="sm"
@@ -235,7 +234,7 @@ const NotificationContent = () => {
                       >
                         Teacher
                       </Badge>
-                      
+
                       {notification.notificationType === 'link' && (
                         <Button 
                           variant="outline" 

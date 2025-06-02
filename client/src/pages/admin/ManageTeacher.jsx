@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {  useRef,useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
+import toast from "react-hot-toast";
 import { getAllTeachers, deleteTeacher } from './api/apiServices'; // Import the API calls
 import axiosInstance from '../../api/axiosInstance';
 
@@ -22,9 +23,17 @@ const EditTeacher = ({ teacher, onSave, onCancel }) => {
         subjectKnowledge: subjectKnowledge.split(',').map((subject) => subject.trim())
       });
     } else {
-      alert('All fields are required!');
+      toast.error('All fields are required!');
     }
   };
+    useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      toast.dismiss(); // Dismiss all toasts on unmount/route change
+    };
+  }, [location]);
+
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">

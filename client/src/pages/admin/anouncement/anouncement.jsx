@@ -1,27 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
 import "./noti.css";
-import axios from 'axios';
+import axios from "axios";
 
 const AddNotificationPage = () => {
+  const location = useLocation();
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     link: "",
     type: "text",
-    targetAudience: "student"
+    targetAudience: "student",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    // Dismiss toast when route changes or component unmounts
+    return () => {
+      toast.dismiss();
+    };
+  }, [location]);
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData(prevData => ({ 
-      ...prevData, 
-      [name]: value 
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
     }));
-    setErrors(prevErrors => ({ 
-      ...prevErrors, 
-      [name]: "" 
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
     }));
   };
 
@@ -31,7 +42,7 @@ const AddNotificationPage = () => {
       description: "",
       link: "",
       type: "text",
-      targetAudience: "student"
+      targetAudience: "student",
     });
     setErrors({});
     setLoading(false);
@@ -43,15 +54,17 @@ const AddNotificationPage = () => {
 
     // Validation checks
     if (!formData.title) validationErrors.title = "Title is required";
-    if (!formData.description) validationErrors.description = "Description is required";
+    if (!formData.description)
+      validationErrors.description = "Description is required";
     if (!formData.type) validationErrors.type = "Notification type is required";
-    if (formData.type === "link" && !formData.link) validationErrors.link = "Link is required";
+    if (formData.type === "link" && !formData.link)
+      validationErrors.link = "Link is required";
 
     // Set validation errors
     setErrors(validationErrors);
 
     // If there are validation errors, stop submission
-    if (Object.keys(validationErrors).length > 0) {       
+    if (Object.keys(validationErrors).length > 0) {
       setLoading(false);
       return;
     }
@@ -63,20 +76,26 @@ const AddNotificationPage = () => {
         description: formData.description,
         link: formData.link || "",
         type: formData.type,
-        targetAudience: formData.targetAudience
+        targetAudience: formData.targetAudience,
       };
 
       // Submit notification
-      const response = await axios.post("http://localhost:4400/announcements/", submissionData);
-      
-      // Reset form and show success
+      await axios.post("http://localhost:4400/announcements/", submissionData);
+
+      // Reset form and show success toast
       onCancel();
-      alert("Notification added successfully!");
+      toast.success("Notification added successfully!");
     } catch (error) {
       console.error("Error submitting notification:", error);
       setErrors({
-        general: error.response?.data?.message || "An error occurred while submitting the notification."
+        general:
+          error.response?.data?.message ||
+          "An error occurred while submitting the notification.",
       });
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred while submitting the notification."
+      );
     } finally {
       setLoading(false);
     }
@@ -85,7 +104,7 @@ const AddNotificationPage = () => {
   return (
     <div className="add-notification">
       <h1>Add Notification</h1>
-      
+
       {/* Title Input */}
       <div className="form-group">
         <label>Title</label>
@@ -98,7 +117,7 @@ const AddNotificationPage = () => {
         />
         {errors.title && <span className="error">{errors.title}</span>}
       </div>
-{/* Description Input */}
+      {/* Description Input */}
       <div className="form-group">
         <label>Description</label>
         <textarea
@@ -113,11 +132,7 @@ const AddNotificationPage = () => {
       {/* Notification Type */}
       <div className="form-group">
         <label>Notification Type</label>
-        <select
-          name="type"
-          value={formData.type}
-          onChange={handleInputChange}
-        >
+        <select name="type" value={formData.type} onChange={handleInputChange}>
           <option value="text">Text</option>
           <option value="link">Link</option>
         </select>
@@ -157,10 +172,7 @@ const AddNotificationPage = () => {
 
       {/* Action Buttons */}
       <div className="buttons">
-        <button 
-          onClick={handleSubmit} 
-          disabled={loading}
-        >
+        <button onClick={handleSubmit} disabled={loading}>
           {loading ? "Submitting..." : "Submit"}
         </button>
         <button onClick={onCancel} disabled={loading}>
