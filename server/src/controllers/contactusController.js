@@ -65,9 +65,8 @@ const deleteContact = async (req, res) => {
 // @access Private (Admin)
 const updateContact = async (req, res) => {
   try {
-    const updatedContact = await Contact.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
+    const updatedContact = await Contact.findByIdAndUpdate(req.params.id, {
+      isreplayed: true
     });
 
     if (!updatedContact) return res.status(404).json({ error: 'Contact not found' });

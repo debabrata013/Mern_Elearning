@@ -5,19 +5,20 @@ const Queries = () => {
   const [queries, setQueries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchEmail, setSearchEmail] = useState("");
+  const [activeSection, setActiveSection] = useState("not-replied"); // Default to not-replied section
 
   const fetchQueries = async () => {
     try {
       const response = await axios.get("http://localhost:4400/contactus");
-      console.log("API Response:", response.data); // Debugging log
+      console.log("API Response:", response.data);
 
-      // Ensure the response is an array
       if (Array.isArray(response.data)) {
         setQueries(response.data);
       } else if (response.data && Array.isArray(response.data.data)) {
-        setQueries(response.data.data); // If API returns { data: [...] }
+        setQueries(response.data.data);
       } else {
-        setQueries([]); // Fallback to empty array
+        setQueries([]);
       }
     } catch (err) {
       console.error("Error fetching queries:", err);
@@ -34,7 +35,6 @@ const Queries = () => {
   const handleDelete = async (queryId) => {
     try {
       await axios.delete(`http://localhost:4400/contactus/${queryId}`);
-      // Refresh the queries list after successful deletion
       fetchQueries();
     } catch (err) {
       console.error("Error deleting query:", err);
@@ -42,7 +42,8 @@ const Queries = () => {
     }
   };
 
-  const handleReply = (query) => {
+  const handleReply = async(query) => {
+    await axios.put(`http://localhost:4400/contactus/${query._id}`);
     const subject = encodeURIComponent(`Re: ${query.issueRelated}`);
     const body = encodeURIComponent(`
 message recived:
@@ -64,59 +65,99 @@ ${query.message}
     window.open(gmailComposeUrl, '_blank');
   };
 
+  // Split queries by isreplayed
+  const replied = queries.filter(q => q.isreplayed && (!searchEmail || q.contactEmail.toLowerCase().includes(searchEmail.toLowerCase())));
+  const notReplied = queries.filter(q => !q.isreplayed && (!searchEmail || q.contactEmail.toLowerCase().includes(searchEmail.toLowerCase())));
+
+  const renderTable = (queries) => (
+    <table className="w-full border border-[#5491CA] rounded-lg shadow-md">
+      <thead className="bg-[#5491CA] text-white">
+        <tr>
+          <th className="px-4 py-2">Name</th>
+          <th className="px-4 py-2">Email</th>
+          <th className="px-4 py-2">Phone</th>
+          <th className="px-4 py-2">Issue</th>
+          <th className="px-4 py-2">Message</th>
+          <th className="px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {queries.length === 0 ? (
+          <tr><td colSpan="6" className="text-center py-4">No queries found.</td></tr>
+        ) : queries.map((query, index) => (
+          <tr key={index} className="border-b hover:bg-gray-100">
+            <td className="px-4 py-2">{query.name}</td>
+            <td className="px-4 py-2">{query.contactEmail}</td>
+            <td className="px-4 py-2">{query.phoneNumber}</td>
+            <td className="px-4 py-2">{query.issueRelated}</td>
+            <td className="px-4 py-2">{query.message}</td>
+            <td className="px-4 py-2 space-y-2">
+              <button 
+                onClick={() => handleReply(query)}
+                className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors block w-full"
+              >
+                Reply
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+
   return (
     <div className="queries-container pt-20 bg-white min-h-screen px-4">
-      <h1 className="text-4xl font-extrabold text-[#5491CA] text-center mb-6">
-        User Queries
-      </h1>
+      <h1 className="text-4xl font-extrabold text-[#5491CA] text-center mb-6">User Queries</h1>
+      
+      {/* Navigation Bar */}
+      <div className="flex justify-center space-x-4 mb-6">
+        <button
+          className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+            activeSection === 'not-replied'
+              ? 'bg-red-600 text-white'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+          onClick={() => setActiveSection('not-replied')}
+        >
+          Not Replied ({notReplied.length})
+        </button>
+        <button
+          className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+            activeSection === 'replied'
+              ? 'bg-green-600 text-white'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+          onClick={() => setActiveSection('replied')}
+        >
+          Replied ({replied.length})
+        </button>
+      </div>
 
-      {loading ? (
-        <p className="text-center text-gray-700">Loading queries...</p>
-      ) : error ? (
-        <p className="text-center text-red-600">{error}</p>
-      ) : queries.length === 0 ? (
-        <p className="text-center text-gray-500">No queries available.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border border-[#5491CA] rounded-lg shadow-md">
-            <thead className="bg-[#5491CA] text-white">
-              <tr>
-                <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2">Email</th>
-                <th className="px-4 py-2">Phone</th>
-                <th className="px-4 py-2">Issue</th>
-                <th className="px-4 py-2">Message</th>
-                <th className="px-4 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {queries.map((query, index) => (
-                <tr key={index} className="border-b hover:bg-gray-100">
-                  <td className="px-4 py-2">{query.name}</td>
-                  <td className="px-4 py-2">{query.contactEmail}</td>
-                  <td className="px-4 py-2">{query.phoneNumber}</td>
-                  <td className="px-4 py-2">{query.issueRelated}</td>
-                  <td className="px-4 py-2">{query.message}</td>
-                  <td className="px-4 py-2 space-y-2">
-                    <button 
-                      onClick={() => handleDelete(query._id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors block w-full"
-                    >
-                      Delete
-                    </button>
-                    <button 
-                      onClick={() => handleReply(query)}
-                      className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors block w-full"
-                    >
-                      Reply
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      {/* Search Bar */}
+      <div className="mb-6 flex justify-center">
+        <input
+          type="text"
+          placeholder="Search by email..."
+          className="border border-[#5491CA] rounded px-4 py-2 w-full max-w-md"
+          value={searchEmail}
+          onChange={e => setSearchEmail(e.target.value)}
+        />
+      </div>
+
+      {/* Conditional Rendering of Sections */}
+      <div className="overflow-x-auto">
+        {activeSection === 'replied' ? (
+          <div>
+            <h2 className="text-2xl font-bold text-green-600 mb-2">Replied Queries</h2>
+            {renderTable(replied)}
+          </div>
+        ) : (
+          <div>
+            <h2 className="text-2xl font-bold text-red-600 mb-2">Pending Queries</h2>
+            {renderTable(notReplied)}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

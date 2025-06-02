@@ -31,7 +31,12 @@ const contactSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  isreplayed: {
+    type: Boolean,
+    default: false
+  },
+
 });
 
 const Contact = mongoose.model('Contact', contactSchema);
