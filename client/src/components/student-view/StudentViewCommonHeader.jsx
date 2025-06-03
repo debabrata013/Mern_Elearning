@@ -4,6 +4,8 @@ import {PieChart, Pie, Cell} from 'recharts';
 import Sidebar from './studentComponent/Sidebar';
  import { FaBell } from "react-icons/fa";
 import axios from 'axios';
+import TopBar from './studentComponent/Topbar';
+
 import { 
   GraduationCap, 
   BookOpen, 
@@ -194,89 +196,22 @@ const [cartItemCount, setCartItemCount] = useState(0);
               
               
             </div>
-            
-            <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-end">
-              {/* Notifications */}
-             
+            <TopBar
+              isMobile={isMobile}
+              isSidebarOpen={isSidebarOpen}
+              toggleSidebar={toggleSidebar}
+              showNotifications={showNotifications}
+              setShowNotifications={setShowNotifications}
+              cartItemCount={cartItemCount}
+              cartCount={cartCount}
+              navigate={navigate}
+              user={user}
+              isDropdownOpen={isDropdownOpen}
+              handleProfileClick={handleProfileClick}
+              handleLogout={handleLogout}
+              dropdownRef={dropdownRef}
+            />
 
-<div className="relative">
-  {/* Notification Icon with Badge */}
-  <button
-    onClick={() => setShowNotifications(!showNotifications)}
-    className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-  >
-    <FaBell className="text-xl text-gray-700 dark:text-white" />
-    {cartItemCount > 0 && (
-      <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-semibold px-1.5 py-0.5 rounded-full">
-        {cartItemCount}
-      </span>
-    )}
-  </button>
-
-  {/* Notifications Dropdown */}
-  {showNotifications && (
-    <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-      {/* Add your notifications list here */}
-    </div>
-  )}
-</div>
-
-
-              {/*    */}
-              <button 
-                onClick={() => navigate('/cart')}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
-              >
-                <ShoppingCart className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-                {cartCount > 0 && (
-                  <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-
-              {/* Profile */}
-              <div className="relative" ref={dropdownRef}>
-                <button onClick={handleProfileClick} className="flex items-center gap-3 px-3 md:px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" >
-                  <img
-                    src={user.profileImage}
-                    alt="Profile"
-                    className="h-8 w-8 md:h-10 md:w-10 rounded-full border-2 border-[#5491CA]"
-                  />
-                  <div className="text-left">
-                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm md:text-base">{user.userName}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Student</p>
-                  </div>
-                </button>
-
-
-                {/* Dropdown Menu */}
-                {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-fadeIn">
-                    <Link
-                      to="/profile"
-                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      <FaUser className="text-[#5491CA]" />
-                      <span className="text-gray-700 dark:text-gray-200">My Profile</span>
-                    </Link>
-
-                    {/* Divider */}
-                    <div className="border-t border-gray-200 dark:border-gray-700 my-2" />
-
-                    {/* Logout Button */}
-                    <button
-                      className="flex items-center gap-3 text-red-600 hover:text-red-800 px-4 py-2 w-full transition-colors"
-                      onClick={handleLogout}
-                    >
-                      <LogOut className="h-5 w-5" />
-                      <span>Logout</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-
-            </div>
           </div>
 
    

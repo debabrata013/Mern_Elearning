@@ -3,6 +3,7 @@ import { Plus, X, Briefcase, BadgeIndianRupee, Clock, Calendar, Link, Image, Awa
 // import jobService from '/api/jobService';
 import jobService from '../../pages/admin/api/jobService';
 import Sidebar from './studentComponent/Sidebar';
+import TopBar from './studentComponent/Topbar';
 import { format } from 'date-fns';
 const JobsContent = () => {
   const [showJobForm, setShowJobForm] = useState(false);
@@ -61,7 +62,7 @@ const JobsContent = () => {
   };
 
   
-
+const [showNotifications, setShowNotifications] = useState(false);
 
   const handleEditJob = (job) => {
     setFormData({
@@ -209,6 +210,9 @@ const JobsContent = () => {
       <div className={`flex-1 transition-all duration-300 ${
         isMobile ? 'ml-0' : 'ml-[280px]'
       }`}>
+        <TopBar />
+
+
         <div className="p-4 md:p-8">
           {/* Header with menu button */}
           <header className="mb-8 md:mb-12 text-center">
