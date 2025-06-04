@@ -3,6 +3,7 @@ import CourseCard from "./course-card-after-buy/coursecard";
 import Sidebar from "./studentComponent/Sidebar";
 import { getAllCourses } from "../../pages/landing-page/api/landingServices";
 import { Menu } from "lucide-react";
+import TopBar from './studentComponent/Topbar';
 
 const MyCourses = () => {
   const [myCourses, setCourses] = useState([]);
@@ -78,6 +79,8 @@ const MyCourses = () => {
 
       {/* Main Content */}
       <main className="w-full lg:pl-64 px-4 sm:px-6 md:px-8 py-6 md:py-10 transition-all duration-300">
+        
+      <TopBar />
         <div className="max-w-7xl mx-auto px-8 ">
           <header className="mb-8 md:mb-12 text-center">
             <h1 className="text-2xl md:text-3xl font-bold text-[#7670AC] dark:text-white">

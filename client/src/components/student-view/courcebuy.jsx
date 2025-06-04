@@ -3,6 +3,7 @@ import CourseCard from "./courseComponent/coursecard";
 import { getAllCourses } from "../../pages/landing-page/api/landingServices";
 import Sidebar from './studentComponent/Sidebar';
 import { Menu, Search, Filter, X } from "lucide-react";
+import TopBar from './studentComponent/Topbar';
 
 const CoursePage = () => {
   const [courses, setCourses] = useState([]);
@@ -221,7 +222,9 @@ const CoursePage = () => {
           ref={sectionRef} 
           className="p-4 md:p-8 overflow-y-auto"
         >
-          <div className="max-w-7xl mx-auto">
+          
+        <TopBar />
+          <div className="max-w-7xl mx-auto text-center">
             {/* Header Section */}
                 <h1 className="text-2xl mb-4 md:text-3xl font-bold text-[#7670AC] dark:text-white" >
                   Explore <span className="text-[#5491CA] dark:text-[#7670AC]">Courses</span>
@@ -272,7 +275,7 @@ const CoursePage = () => {
 
             {/* Courses Grid */}
             {filteredCourses.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-2 mb-6 md:mb-8 ">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-2 mb-6 md:mb-8 place-items-center">
                 {currentCourses.map((course, index) => (
                   <CourseCard 
                     key={course._id || `course-${index}`} 
@@ -280,6 +283,7 @@ const CoursePage = () => {
                   />
                 ))}
               </div>
+
             ) : (
               <div className="flex flex-col items-center justify-center py-12 md:py-16">
                 <div className="relative w-24 md:w-32 h-24 md:h-32 mb-6">

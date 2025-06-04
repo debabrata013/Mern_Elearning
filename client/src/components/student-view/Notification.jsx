@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Bell, Link as LinkIcon, Check, X, ChevronRight, Info, Menu } from 'lucide-react';
 import axiosInstance from '@/api/axiosInstance';
 import Sidebar from './studentComponent/Sidebar';
-
+import TopBar from './studentComponent/Topbar';
 // Card Components (unchanged)
 const Card = ({ className = '', children, ...props }) => (
   <div className={`bg-white rounded-lg shadow-md border border-gray-200 transition-all duration-200 hover:shadow-lg ${className}`} {...props}>
@@ -197,6 +197,8 @@ const NotificationContent = () => {
       {/* Main content */}
       <div className={`pl-0 ${!isMobile ? " md:pl-[280px]" : ""} px-4 py-8`}>
             <header className="mb-8 md:mb-12 text-center">
+              
+      <TopBar />
           <h1 className="text-2xl md:text-3xl font-bold text-[#5491CA] dark:text-white">
                   Announcements</h1>
           </header>

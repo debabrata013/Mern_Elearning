@@ -207,9 +207,9 @@ const [showNotifications, setShowNotifications] = useState(false);
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${
-        isMobile ? 'ml-0' : 'ml-[280px]'
-      }`}>
+      <div className={`flex-1 transition-all duration-300 ${isMobile ? 'ml-0' : 'ml-[280px]'}`}>
+
+      <div className='p-4 md:p-8 overflow-y-auto'>
         <TopBar />
 
 
@@ -252,6 +252,7 @@ const [showNotifications, setShowNotifications] = useState(false);
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
+      </div>
     </div>
   );
 };

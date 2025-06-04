@@ -2,12 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaBell, FaUser } from 'react-icons/fa';
 import { ShoppingCart, LogOut, Menu } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const TopBar = ({ isMobile, toggleSidebar, cartItemCount, cartCount, user }) => {
+const TopBar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
+  const [loginHistory, setLoginHistory] = useState({});
+  const [cartCount, setCartCount] = useState(0);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const [courseStats, setCourseStats] = useState({ totalCourses: 0, categoryDistribution: {} });
 
   const handleProfileClick = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -17,7 +23,63 @@ const TopBar = ({ isMobile, toggleSidebar, cartItemCount, cartCount, user }) => 
     sessionStorage.clear();
     navigate('/');
   };
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsSidebarOpen(!mobile);
+    };
+      
+  
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+  
+      return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
+   const user = JSON.parse(localStorage.getItem('user'));
+   const userId=user._id;
+    useEffect(() => {
+      const handleResize = () => {
+        const mobile = window.innerWidth < 768;
+        setIsMobile(mobile);
+        setIsSidebarOpen(!mobile);
+      };
+      
+  
+      window.addEventListener('resize', handleResize);
+      handleResize(); // Initial check
+  
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        
+
+        // 1. Fetch login history
+        const loginRes = await axios.get(`http://localhost:4400/api/dashboard/login-history/${userId}`);
+        setLoginHistory(loginRes.data);
+
+        // 2. Fetch course stats
+        const courseRes = await axios.get(`http://localhost:4400/api/dashboard/course-stats/${userId}`);
+        setCourseStats(courseRes.data);
+
+     
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+       
+      }
+    };
+
+    fetchDashboardData();
+  }, [userId]);
   // Copied function: close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -30,6 +92,30 @@ const TopBar = ({ isMobile, toggleSidebar, cartItemCount, cartCount, user }) => 
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+const [cartItemCount, setCartItemCount] = useState(0);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        
+
+        // 1. Fetch login history
+        const loginRes = await axios.get(`http://localhost:4400/api/dashboard/login-history/${userId}`);
+        setLoginHistory(loginRes.data);
+
+        // 2. Fetch course stats
+        const courseRes = await axios.get(`http://localhost:4400/api/dashboard/course-stats/${userId}`);
+        setCourseStats(courseRes.data);
+
+     
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+       
+      }
+    };
+
+    fetchDashboardData();
+  }, [userId]);
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 md:mb-8">
       <div className="flex items-center gap-4 w-full md:w-auto">

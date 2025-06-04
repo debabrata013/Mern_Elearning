@@ -3,6 +3,7 @@ import { Users, Calendar, Loader, BookOpen,Menu } from "lucide-react";
 import axiosInstance from "@/api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import TopBar from './studentComponent/Topbar';
 import Sidebar from './studentComponent/Sidebar';
 
 const Doubts = () => {
@@ -167,10 +168,14 @@ useEffect(() => {
       <Sidebar />
     </div>
   
+  <div className="p-4 md:p-8 overflow-y-auto">
+    
+    <TopBar />
     {/* Main content */}
     <div className={`pl-0 ${!isMobile ? "md:pl-[280px]" : ""} transition-all duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <header className="mb-8 md:mb-12 text-center">
+
           <h1 className="text-2xl md:text-3xl font-bold text-[#7670AC] dark:text-white">
                   Course <span className="text-[#5491CA] dark:text-[#7670AC]">Doubts</span>
                 </h1>
@@ -212,6 +217,7 @@ useEffect(() => {
           </div>
         )}
       </div>
+    </div>
     </div>
   </div>
   );
