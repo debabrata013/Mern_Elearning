@@ -124,7 +124,7 @@ const [cartItemCount, setCartItemCount] = useState(0);
             onClick={toggleSidebar}
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
-            <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+            {/* <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" /> */}
           </button>
         )}
       </div>
