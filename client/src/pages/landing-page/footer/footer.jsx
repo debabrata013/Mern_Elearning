@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faLinkedin, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { createSubscriber } from "../api/landingServices"
-import logo from '../../../../../client/public/aigiri logo.png';
+import logo from './logo.png';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -41,7 +41,7 @@ const Footer = () => {
         {/* Logo and Description Section */}
         <div className="text-center md:text-left">
           <div className="flex items-center">
-                  <img className="h-11 w-auto" src={logo} alt="logo" />
+                  <h1 className='text-4xl text-white font-bold mb-6'>AIGIRI</h1>
                 </div>
           <p className="text-lg mb-6 text-justify">
             Empowering minds through innovation. Unlock your potential with Aigiri where future leaders are made.
