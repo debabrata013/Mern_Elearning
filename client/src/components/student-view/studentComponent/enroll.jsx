@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
-import VideoPlayer from "../studentComponent/ui/videoplayer";
+
 import SyllabusViewer from "./ui/syllabusviewer";
 import axiosInstance from "../../../api/axiosInstance";
-
+import moment from 'moment';
 const CourseEnrollment = () => {
   const { courseId } = useParams();
   const location = useLocation();
@@ -233,56 +233,36 @@ const CourseEnrollment = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <div className="w-full h-[400px] rounded-xl overflow-hidden shadow-md bg-black">
-              {videoData.isLoading ? (
-                <div className="w-full h-full flex items-center justify-center text-white">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#5491CA]"></div>
-                </div>
-              ) : videoData.error ? (
-                <div className="w-full h-full flex flex-col items-center justify-center text-white gap-3">
-                  <p>{videoData.error}</p>
-                  <button 
-                    onClick={fetchCourseVideo}
-                    className="px-4 py-2 bg-[#5491CA] rounded-lg hover:bg-[#7670AC] transition-colors"
-                  >
-                    Retry
-                  </button>
-                </div>
-              ) : videoData.videoUrl ? (
-                <VideoPlayer 
-                  videoUrl={videoData.videoUrl}
-                  thumbnailUrl={videoData.thumbnailUrl}
-                  title={course.title}
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-white">
-                  <p>Video preview not available</p>
-                </div>
-              )}
+            <div className="w-full h-[400px] rounded-xl overflow-hidden shadow-md bg-black ">
+              <video src={course.introVideo} className="w-full h-full object-cover" controls />
             </div>
 
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-gray-800">{course.title}</h2>
               
               <div className="flex items-center gap-2">
-                <span className="text-gray-600 font-medium">Instructor:</span>
-                <span className="text-gray-800 font-semibold">{course.instructor || "Expert Instructor"}</span>
+                <span className="text-gray-600 font-medium">Instructor email:</span>
+                <span className="text-gray-800 font-semibold">{course.teacher}</span>
               </div>
               
               <div className="flex flex-wrap gap-6 py-3 border-y border-gray-200">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">⏱️</span>
-                  <span className="text-gray-700">{course.duration || "Self-paced"}</span>
+                  <span className="text-xl">Period</span>
+                  <span className="text-gray-700">{course.duration} Weeks</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">📚</span>
-                  <span className="text-gray-700">{course.level || "All Levels"}</span>
+                  <span className="text-xl">Tier:</span>
+                  <span className="text-gray-700">{course.level }</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">👥</span>
-                  <span className="text-gray-700">{course.students || 0} Students</span>
+                  <span className="text-xl">Capacity</span> 
+                  <span className="text-gray-700">{course.maxStudents} Students</span>
                 </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">Language</span>
+                  <span className="text-gray-700">{course.language}</span>
+                </div>
+                 
               </div>
 
               <div>
@@ -292,39 +272,54 @@ const CourseEnrollment = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-3">What You'll Learn</h3>
-                <ul className="space-y-2">
-                  {course.highlights ? (
-                    course.highlights.map((highlight, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <span className="text-[#7670AC] font-bold">✓</span>
-                        <span className="text-gray-600">{highlight}</span>
-                      </li>
-                    ))
-                  ) : (
-                    <>
-                      <li className="flex items-start gap-2">
-                        <span className="text-[#7670AC] font-bold">✓</span>
-                        <span className="text-gray-600">Comprehensive understanding of the subject</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-[#7670AC] font-bold">✓</span>
-                        <span className="text-gray-600">Practical skills you can apply immediately</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-[#7670AC] font-bold">✓</span>
-                        <span className="text-gray-600">Industry-relevant knowledge and techniques</span>
-                      </li>
-                    </>
-                  )}
-                </ul>
+<ul className="space-y-2">
+  {course.learningOutcomes && course.learningOutcomes.length > 0 ? (
+    course.learningOutcomes.map((outcome, index) => (
+      <li key={index} className="flex items-start gap-2">
+        <span className="text-[#7670AC] font-bold">✓</span>
+        <span className="text-gray-600">{outcome}</span>
+      </li>
+    ))
+  ) : (
+    <>
+      <li className="flex items-start gap-2">
+        <span className="text-[#7670AC] font-bold">✓</span>
+        <span className="text-gray-600">Comprehensive understanding of the subject</span>
+      </li>
+      <li className="flex items-start gap-2">
+        <span className="text-[#7670AC] font-bold">✓</span>
+        <span className="text-gray-600">Practical skills you can apply immediately</span>
+      </li>
+      <li className="flex items-start gap-2">
+        <span className="text-[#7670AC] font-bold">✓</span>
+        <span className="text-gray-600">Industry-relevant knowledge and techniques</span>
+      </li>
+    </>
+  )}
+</ul>
+
               </div>
             </div>
+            {/* Prerequisites */}
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">Prerequisites</h3>
+
+              <ul className="list-disc list-inside text-gray-600">
+                {course.prerequisites && course.prerequisites.length > 0 ? (
+                  course.prerequisites.map((prerequisite, index) => (
+                    <li key={index}>{prerequisite}</li>
+                  ))
+                ) : (
+                  <li>No prerequisites required.</li>
+                )}
+              </ul>
+            </div>
+
 
             <div className="bg-gray-50 p-6 rounded-xl">
               <div className="lg:col-span-1">
             <SyllabusViewer 
-              syllabus={syllabus} 
-              onVideoSelect={handleVideoSelect}
+              course={course}  
             />
           </div>
             </div>
@@ -393,23 +388,23 @@ const CourseEnrollment = () => {
               )}
 
               <div className="mt-6 pt-6 border-t border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">This Course Includes:</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Course Overview</h3>
                 <ul className="space-y-3">
                   <li className="flex items-center gap-3">
-                    <span className="text-xl">📹</span>
-                    <span className="text-gray-600">{course.videoHours || "10 hours"} on-demand video</span>
+                    <span className="text-xl">Modules</span>
+                    <span className="text-gray-600">{course.chapters.length }</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <span className="text-xl">📝</span>
-                    <span className="text-gray-600">{course.textHours || "10 hours"} of text</span>
+                    <span className="text-xl">Starting:</span>
+                    <span className="text-gray-600">{moment(course.startDate).format('DD MMMM YYYY')}</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <span className="text-xl">📚</span>
-                    <span className="text-gray-600">{course.practiceHours || "10 hours"} of practice</span>
+                    <span className="text-xl">Ending :</span>
+                    <span className="text-gray-600">{moment(course.endDate).format('DD MMMM YYYY')}</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <span className="text-xl">🎓</span>
-                    <span className="text-gray-600">{course.certificate || "Certificate of Completion"}</span>
+                    <span className="text-xl">Closure:</span>
+                    <span className="text-gray-600">{moment(course.enrollmentDeadline).format('DD MMMM YYYY')}</span>
                   </li>
                 </ul>
               </div>
