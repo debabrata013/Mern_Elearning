@@ -290,6 +290,7 @@ const VideoPlayer = ({ videoUrl, onBack }) => {
 
   // Email watermark timer
   useEffect(() => {
+  
     const showEmail = () => {
       setEmailPosition(generateRandomPosition());
       setEmailVisible(true);
@@ -298,7 +299,7 @@ const VideoPlayer = ({ videoUrl, onBack }) => {
 
     const emailInterval = setInterval(() => {
       showEmail();
-    }, 120000); // Show every 2 minutes
+    }, 60000); // Show every 1 minutes
 
     // Show email initially
     showEmail();
